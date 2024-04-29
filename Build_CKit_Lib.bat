@@ -6,6 +6,7 @@ if not exist .\build (
 )
 pushd .\build
 cl /std:c++20 /c "..\source\*.cpp"
+:: MAKE SURE YOU HAVE AN OPTION FOR DEBUG LIBS
 :: cl -DCUSTOM_PLATFORM_IMPL /std:c++20 /c "..\source\*.cpp"
 lib /OUT:"./CKit.lib" "./*.obj"
 
