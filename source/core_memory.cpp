@@ -1,6 +1,6 @@
 #include "../include/core_memory.h"
 #include "../include/core_logger.h"
-#include "../../platform/platform_services.h"
+#include "../include/platform_services.h"
 
 void* memory_allocate(u64 number_of_bytes, MemoryTag memory_tag) {
     if (memory_tag == MEMORY_TAG_UNKNOWN) {
@@ -11,6 +11,7 @@ void* memory_allocate(u64 number_of_bytes, MemoryTag memory_tag) {
 	memory_zero(number_of_bytes, data);
     return data;
 }
+
 void memory_free(u64 number_of_bytes, void** data, MemoryTag memory_tag) {
     global_memory_tags[memory_tag] -= number_of_bytes;
 	memory_zero(number_of_bytes, *data);
@@ -47,7 +48,7 @@ void console_write_memory_tags() {
 
         char out_message2[320];
         memory_zero(sizeof(out_message2), out_message2);
-        sprintf(out_message2, "%ld", global_memory_tags[level]);
+        sprintf(out_message2, "%lld", global_memory_tags[level]);
 
         char out_message3[320];
         sprintf(out_message3, "%s%s", out_message, out_message2);

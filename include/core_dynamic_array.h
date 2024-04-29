@@ -7,6 +7,7 @@
 #include "./core_types.h"
 #include "./core_assert.h"
 
+
 //************************* Begin Functions *************************
 void* _dynamic_array_create(u64 capacity, u32 type_size_in_bytes);
 void _dynamic_array_push(void** dynamic_array, void* element);

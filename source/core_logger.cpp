@@ -1,6 +1,6 @@
 #include "../include/core_logger.h"
 #include "../include/core_memory.h"
-#include "../../platform/platform_services.h"
+#include "../include/platform_services.h"
 #include "../include/core_assert.h"
 
 Boolean __logger_init(const char* func, u32 line, const char* file) {
@@ -62,10 +62,10 @@ void _log_output(LogLevel log_level,  const char* message,  const char* func, u3
         memory_zero(LOG_CHARACTER_LIMIT, message_buffer);
         sprintf(message_buffer, "%s | file: %s:%d | Function: %s", out_message2, file, line, func);
         _platform_console_write(sizeof(char) * LOG_CHARACTER_LIMIT, message_buffer, log_level_format[log_level]);
-        _platform_console_write(sizeof(char), "\n", TEXT_CLEAR);
+        _platform_console_write(sizeof(char), "\n", TEXT_WHITE);
     } else {
         _platform_console_write(sizeof(char) * LOG_CHARACTER_LIMIT, out_message2, log_level_format[log_level]);
-        _platform_console_write(sizeof(char), "\n", TEXT_CLEAR);
+        _platform_console_write(sizeof(char), "\n", TEXT_WHITE);
     }
 
 }
