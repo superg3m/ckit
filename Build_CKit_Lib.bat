@@ -1,13 +1,10 @@
 @echo off
 call clean_CKit.bat
-:: powershell -nologo -command "Write-Host 'running CKit build.bat...' -ForegroundColor Green"
+powershell -nologo -command "Write-Host 'running CKit build.bat...' -ForegroundColor Green"
 if not exist .\build (
     mkdir .\build
 )
 pushd .\build
-if not defined cl (
-    call "..\vars.bat"
-)
 
 :: MAKE SURE YOU HAVE AN OPTION FOR DEBUG LIBS
 :: cl -DCUSTOM_PLATFORM_IMPL /std:c++20 /c "..\source\*.cpp"
