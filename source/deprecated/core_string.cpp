@@ -76,6 +76,6 @@ void string_destroy(String* string) {
     StringHeader header = _string_extract_header(*string);
     size_t string_allocation_size = sizeof(header) + (sizeof(u8) * (header.string_length + 1));
     *string -= sizeof(header);
-    memory_free(string_allocation_size, string, MEMORY_TAG_STRING);
+    memory_free(string_allocation_size, (void**)(&string), MEMORY_TAG_STRING);
     string = NULL;
 }
