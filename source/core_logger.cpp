@@ -65,7 +65,7 @@ void _log_output(LogLevel log_level,  const char* message,  const char* func, u3
         _platform_console_write(sizeof(char), "\n", TEXT_WHITE);
     } else {
         _platform_console_write(sizeof(char) * LOG_CHARACTER_LIMIT, out_message2, log_level_format[log_level]);
-        _platform_console_write(sizeof(char), "\n", TEXT_WHITE);
+        _platform_console_write(sizeof(char), "\n", TEXT_CLEAR);
     }
 
 }
