@@ -1,5 +1,9 @@
 #pragma once
-
+/*===========================================================
+ * File: core_memory.h
+ * Date: April 30, 2024
+ * Creator: Jovanni Djonaj
+===========================================================*/
 #include "./core_types.h"
 
 typedef enum MemoryTag {

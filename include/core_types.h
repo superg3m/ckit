@@ -1,12 +1,14 @@
+#pragma once
 /*===========================================================
  * File: core_types.h
  * Date: April 23, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-#pragma once
 #include <stdint.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <typeinfo>
+#include <type_traits>
 
 typedef int8_t  s8;
 typedef int16_t s16;
@@ -47,3 +49,23 @@ typedef u8 Boolean;
 #define global_variable static
 #define local_persist static
 #define internal static
+
+template<typename T>
+const char* type_name() {
+    return typeid(T).name();
+}
+
+template<typename T>
+struct is_char_array : std::false_type {};
+
+template<typename T, std::size_t N>
+struct is_char_array<T[N]> : std::is_same<T, char> {};
+
+template<typename T>
+Boolean isCharArray(T& array) {
+    if constexpr (is_char_array<T>::value) {
+        return TRUE;
+    }
+	
+	return FALSE;
+}

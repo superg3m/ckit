@@ -1,4 +1,4 @@
-#include "./core_types.h"
+#include "../core_types.h"
 
 struct DynamicArray {
 	u32 size;

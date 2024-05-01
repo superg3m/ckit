@@ -5,7 +5,7 @@
 	#ifdef PLATFORM_WINDOWS
 		#include <windows.h>
 		void* _platform_allocate(size_t  number_of_bytes) {
-			return VirtualAlloc(NULL, number_of_bytes, MEM_COMMIT, PAGE_READWRITE);
+			return VirtualAlloc(NULL, number_of_bytes, MEM_COMMIT|MEM_RESERVE, PAGE_READWRITE);
 		}
 
 		void _platform_free(size_t number_of_bytes, void* data) {

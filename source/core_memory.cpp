@@ -12,7 +12,20 @@ void* memory_allocate(u64 number_of_bytes, MemoryTag memory_tag) {
     return data;
 }
 
+void* memory_reallocate(u64 number_of_bytes, void** data, MemoryTag memory_tag) {
+    if (memory_tag == MEMORY_TAG_UNKNOWN) {
+        LOG_WARN("Reallocation | memory tag unknown");
+    }
+    global_memory_tags[memory_tag] += number_of_bytes;
+	void* data = _platform_allocate(number_of_bytes);
+	memory_zero(number_of_bytes, data);
+    return data;
+}
+
 void memory_free(u64 number_of_bytes, void** data, MemoryTag memory_tag) {
+	if (memory_tag == MEMORY_TAG_UNKNOWN) {
+        LOG_WARN("Free | memory tag unknown");
+    }
     global_memory_tags[memory_tag] -= number_of_bytes;
 	memory_zero(number_of_bytes, *data);
     _platform_free(number_of_bytes, *data);
@@ -25,12 +38,6 @@ void memory_copy(u32 source_size, const void* source, u32 destination_size, void
         ((u8*)destination)[i] = ((u8*)source)[i];
     }
 }
-
-#define memory_set(data_size_in_bytes, data, element) \
-	decltype(element) e = element; \
-	for (int i = 0; i < data_size_in_bytes; i++) { \
-			((u8*)data)[i] = e; \
-	} \
 
 void memory_zero(u32 data_size_in_bytes, void* data) {
     for (int i = 0; i < data_size_in_bytes; i++) {

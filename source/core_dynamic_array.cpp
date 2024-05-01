@@ -74,7 +74,16 @@ void _dynamic_array_push(void** dynamic_array, void* element) {
     u8* dest_ptr = (((u8*)(*dynamic_array)) + (header.size * header.type_size_in_bytes));
 	header.size++;
     memory_copy(header.type_size_in_bytes, element, header.type_size_in_bytes, dest_ptr);
-    _dynamic_array_update_header(header, &(*dynamic_array));
+    _dynamic_array_update_header(header, dynamic_array);
+}
+
+void* _dynamic_array_pop(void** dynamic_array) {
+	assert(_dynamic_array_validate(*dynamic_array), "The dynamic array push failed (freed before this call!)");
+    DynamicArrayHeader header = _dynamic_array_extract_header(*dynamic_array);
+	assert(header.size > 0, "The dynamic array push failed (no elements to pop!)");
+	header.size--;
+    _dynamic_array_update_header(header, dynamic_array);
+	return dynamic_array[header.size];
 }
 
 void _dynamic_array_free(void** dynamic_array) {

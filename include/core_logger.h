@@ -1,4 +1,9 @@
 #pragma once
+/*===========================================================
+ * File: core_logger.h
+ * Date: April 30, 2024
+ * Creator: Jovanni Djonaj
+===========================================================*/
 #include "./core_types.h"
 #include "./core_assert.h"
 

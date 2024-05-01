@@ -1,3 +1,9 @@
+#pragma once
+/*===========================================================
+ * File: core_arena.h
+ * Date: April 30, 2024
+ * Creator: Jovanni Djonaj
+===========================================================*/
 #include "./core_memory.h"
 
 struct Arena;
