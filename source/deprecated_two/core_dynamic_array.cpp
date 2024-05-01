@@ -3,7 +3,7 @@
  * Date: April 23, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-#include "../include/core_dynamic_array.h"
+#include "../include/deprecated/core_dynamic_array.h"
 #include "../include/core_memory.h" // Actually think about this maybe don't expose this to the user?
 
 #define DYNAMIC_ARRAY_DEFAULT_CAPACITY 1

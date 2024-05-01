@@ -4,8 +4,8 @@
  * Creator: Jovanni Djonaj
 ===========================================================*/
 #pragma once
-#include "./core_types.h"
-#include "./core_assert.h"
+#include "../core_types.h"
+#include "../core_assert.h"
 
 
 //************************* Begin Functions *************************
@@ -35,7 +35,7 @@ u64 dynamic_array_size(void* dynamic_array);
 // Date: April 23, 2024
 #define dynamic_array_push(dynamic_array, element)                                           \
 {                                                                                            \
-	_dynamic_array_validate_push_type(dynamic_array, element, __func__, __LINE__, __FILE__); \
+	_dynamic_array_validate_push_type(dynamic_array, element); \
     decltype(element) temp_element = element;					                             \
     _dynamic_array_push(MUTABLE_VOID_POINTER(dynamic_array), &temp_element);                 \
 }                                                                                            \

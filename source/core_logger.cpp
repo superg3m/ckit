@@ -57,15 +57,15 @@ void _log_output(LogLevel log_level,  const char* message,  const char* func, u3
     memory_zero(sizeof(out_message2), out_message2);  
     sprintf(out_message2, "%s%s", log_level_strings[log_level], out_message);
 
-    if (is_fatal) {
+	// TODO(Jovanni): There is no reason for this we should just a seperate out this concern this makes no sense fix this
+	// Date: May 01, 2024
+    if (is_fatal) { 
         char message_buffer[LOG_CHARACTER_LIMIT];
         memory_zero(LOG_CHARACTER_LIMIT, message_buffer);
         sprintf(message_buffer, "%s | file: %s:%d | Function: %s", out_message2, file, line, func);
         _platform_console_write(sizeof(char) * LOG_CHARACTER_LIMIT, message_buffer, log_level_format[log_level]);
-        _platform_console_write(sizeof(char), "\n", TEXT_WHITE);
     } else {
         _platform_console_write(sizeof(char) * LOG_CHARACTER_LIMIT, out_message2, log_level_format[log_level]);
-        _platform_console_write(sizeof(char), "\n", TEXT_CLEAR);
     }
 
 }

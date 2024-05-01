@@ -17,7 +17,7 @@
 			HANDLE console_output_handle = GetStdHandle(STD_OUTPUT_HANDLE );
 			SetConsoleTextAttribute(console_output_handle, color);
 			WriteConsoleA(console_output_handle, message, message_size_in_bytes, &num_written_bytes, NULL);
-			SetConsoleTextAttribute(console_output_handle, 0);
+			SetConsoleTextAttribute(console_output_handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 		}
 	#elif PLATFORM_LINUX
 		#define COLOR_RESET "\033[0"

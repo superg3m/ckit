@@ -3,7 +3,7 @@
 #include <windows.h>
 
 void test_dynamic_array_operations() {
-	LOG_DEBUG("TESING!");
+	LOG_DEBUG("TESING!\n");
 	// Test types
 	int intArray[] = {1, 2, 3, 4, 5};
 	bool boolArray[] = {true, false, true, true, false};
@@ -22,7 +22,7 @@ void test_dynamic_array_operations() {
 		dynamic_array_push(boolVector, boolArray[i]);
 	}
 
-	LOG_DEBUG("TESING!");
+	LOG_DEBUG("TESING!\n");
 
 	// Create vector of char
 	char* charVector = dynamic_array_reserve(5, char);
@@ -41,7 +41,7 @@ void test_dynamic_array_operations() {
 		assert(intVector[i] == intArray[i], "Error: Incorrect element value");
 	}
 
-	LOG_DEBUG("TESING!");
+	LOG_DEBUG("TESING!\n");
 
 	for (int i = 0; i < dynamic_array_size(boolVector); i++) {
 		assert(boolVector[i] == boolArray[i], "Error: Incorrect element value");
@@ -51,7 +51,7 @@ void test_dynamic_array_operations() {
 		assert(charVector[i] == charArray[i], "Error: Incorrect element value");
 	}
 
-	LOG_DEBUG("TESING!");
+	LOG_DEBUG("TESING!\n");
 
 	for (int i = 0; i < dynamic_array_size(stringVector); i++) {
 		assert(strcmp(stringVector[i], stringArray[i]) == 0, "Error: Incorrect element value");
@@ -80,7 +80,7 @@ void test_dynamic_array_operations() {
 	assert(charVector == NULL, "Error: Vector data is not NULL");
 	assert(stringVector == NULL, "Error: Vector data is not NULL");
 
-	LOG_INFO("All vector tests passed!");
+	LOG_INFO("All vector tests passed!\n");
 }
 
 int main() {

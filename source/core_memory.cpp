@@ -7,16 +7,18 @@ struct MemoryHeader {
 };
 
 void memory_byte_advance(u32 size_in_bytes, void** data) {
-	((u8*)(*((u8**)data))) += size_in_bytes;
+	u8* base_address = ((u8*)(*data));
+	*base_address += size_in_bytes;
 }
 
 void memory_byte_retreat(u32 size_in_bytes, void** data) {
-	((u8*)(*((u8**)data))) -= size_in_bytes;
+	u8* base_address = ((u8*)(*data));
+	*base_address -= size_in_bytes;
 }
 
 internal void _memory_insert_header(MemoryHeader header, void** data) {
 	memory_copy(sizeof(header), &header, sizeof(header), (*((u8**)data)) - sizeof(header));
-	((u8*)(*((u8**)data))) += sizeof(header);
+	memory_byte_advance(sizeof(header), data);
 }
 
 MemoryHeader memory_extract_header(void* data) {
