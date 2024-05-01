@@ -5,6 +5,7 @@
 ===========================================================*/
 #include "../include/deprecated/core_dynamic_array.h"
 #include "../include/core_memory.h" // Actually think about this maybe don't expose this to the user?
+#include "../include/core_assert.h"
 
 #define DYNAMIC_ARRAY_DEFAULT_CAPACITY 1
 //========================== Begin Structs ==========================

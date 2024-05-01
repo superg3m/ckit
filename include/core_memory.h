@@ -4,7 +4,7 @@
  * Date: April 30, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-#include "./core_types.h"
+#include "core_types.h"
 
 typedef enum MemoryTag {
     MEMORY_TAG_UNKNOWN,

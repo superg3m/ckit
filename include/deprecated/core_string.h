@@ -1,5 +1,5 @@
 #pragma once
-#include "./core_types.h"
+#include "core_types.h"
 
 typedef char* String;
 

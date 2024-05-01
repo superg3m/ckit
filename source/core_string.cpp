@@ -1,6 +1,6 @@
-#include "../../include/deprecated/core_string.h"
-#include "../../include/core_memory.h"
-#include "../../include/core_assert.h"
+#include "../include/core_string.h"
+#include "../include/core_memory.h"
+#include "../include/core_assert.h"
 
 u32 c_string_length(const char* c_string) {
     u32 length = 0;

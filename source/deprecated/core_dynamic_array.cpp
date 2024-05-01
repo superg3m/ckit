@@ -1,5 +1,7 @@
 #include "../../include/deprecated/core_dynamic_array.h"
-#include "../../include/core_memory.h" // Actually thinkj about this maybe don't expose this to the user?
+// Actually thinkj about this maybe don't expose this to the user?
+#include "../../include/core_memory.h"
+
 
 #define DYNAMIC_ARRAY_DEFAULT_CAPACITY 1
 

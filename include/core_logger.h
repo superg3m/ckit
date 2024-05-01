@@ -4,8 +4,8 @@
  * Date: April 30, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-#include "./core_types.h"
-#include "./core_assert.h"
+#include "core_types.h"
+#include "core_assert.h"
 
 #define LOGGING_ENABLED TRUE
 #define LOG_PRINT_ENABLED TRUE
@@ -39,7 +39,6 @@ void __logger_shutdown(const char* func, u32 line, const char* file);
 
 void _log_output(LogLevel log_level, const char* message, const char* func, u32 line, const char* file ...);
 #define log_output(log_level, message, func, line, file, ...) _log_output(log_level, message, func, line, file, ##__VA_ARGS__)
-#define log_output_in_function(log_level, message, func, line, file, ...) _log_output(log_level, message, func, line, file, ##__VA_ARGS__)
 
 #if (LOG_PRINT_ENABLED)
     #define LOG_PRINT(message, ...) log_output(LOG_LEVEL_PRINT, message, __FILE__, __LINE__, __func__, ##__VA_ARGS__)

@@ -4,7 +4,7 @@
  * Date: April 30, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-#include "./core_memory.h"
+#include "core_memory.h"
 
 struct Arena;
 
