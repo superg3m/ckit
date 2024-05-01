@@ -18,7 +18,7 @@ Boolean __logger_init(const char* func, u32 line, const char* file) {
 }
 
 /**
- * @brief Includes a newline. This has a imposed limit of (LOG_CHARACTER_LIMIT = 3200)
+ * @brief Includes a newline. This has a imposed limit of (PLATFORM_COMMON_CHARACTER_LIMIT = 3200)
  * Also another note this might want to allow the user of the log call to specify if its a new line or not instead of forcing it upon them.
  * @param log_level 
  * @param message 
@@ -45,16 +45,16 @@ void _log_output(LogLevel log_level,  const char* message,  const char* func, u3
 
     Boolean is_fatal = log_level == 0;
 
-    char out_message[LOG_CHARACTER_LIMIT];
+    char out_message[PLATFORM_COMMON_CHARACTER_LIMIT];
     memory_zero(sizeof(out_message), out_message);
 
     va_list args_list;
     va_start(args_list, file);
-    vsnprintf(out_message, LOG_CHARACTER_LIMIT, message, args_list);
+    vsnprintf(out_message, PLATFORM_COMMON_CHARACTER_LIMIT, message, args_list);
     va_end(args_list);
 
-    char out_message2[LOG_CHARACTER_LIMIT]; 
+    char out_message2[PLATFORM_COMMON_CHARACTER_LIMIT]; 
     memory_zero(sizeof(out_message2), out_message2);  
     sprintf(out_message2, "%s%s", log_level_strings[log_level], out_message);
-    _platform_console_write(sizeof(char) * LOG_CHARACTER_LIMIT, out_message2, log_level_format[log_level]);
+    _platform_console_write(sizeof(char) * PLATFORM_COMMON_CHARACTER_LIMIT, out_message2, log_level_format[log_level]);
 }

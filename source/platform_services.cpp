@@ -1,4 +1,5 @@
 #include "../include/platform_services.h"
+#include "../include/core_types.h"
 
 // DEFAULT IMPLEMENTATION
 #ifndef CUSTOM_PLATFORM_IMPL
@@ -13,8 +14,8 @@
 		}
 
 		void _platform_console_write(size_t message_size_in_bytes, const char* message, unsigned char color) {
-			// TODO(Jovanni): This code is very flaky I would suggest fixing it
 			// Date: May 01, 2024
+			// TODO(Jovanni): This code is very flaky I would suggest fixing it
 			DWORD num_written_bytes = 0;
 			HANDLE console_output_handle = GetStdHandle(STD_OUTPUT_HANDLE );
 			char out_message[PLATFORM_COMMON_CHARACTER_LIMIT];
@@ -98,8 +99,8 @@
 			free(data);
 		}
 		
-		// TODO(Jovanni): Fix this to use linux's platfomr specific std console out
 		// Date: April 13, 2024
+		// TODO(Jovanni): Fix this to use linux's platfomr specific std console out
 		void _platform_console_write(size_t message_size_in_bytes, const char* message, unsigned char color) {
 			const char* color_strings[] = {COLOR_RESET, BLU, GRN, RED, MAG, WHT, BLKB, GRNB, REDB};
 			printf("\033[%sm%s\033[0m", color_strings[translate_color(color)], message);

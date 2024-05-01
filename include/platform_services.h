@@ -9,8 +9,6 @@
   #define PLATFORM_MACOS
 #endif
 
-#define PLATFORM_COMMON_CHARACTER_LIMIT 3200
-
 
 // Supported Platform Operations
 void* _platform_allocate(size_t  number_of_bytes);

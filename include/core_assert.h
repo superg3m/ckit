@@ -18,8 +18,8 @@ void _assert_in_function(char* message, char* file, int line, char* function);
 	if (!(expression))                                                               \
 	{                                                                                \
 		LOG_FATAL("%s", message);                                                    \
-		char message_buffer[LOG_CHARACTER_LIMIT];                                    \
-		memory_zero(LOG_CHARACTER_LIMIT, message_buffer);                            \
+		char message_buffer[PLATFORM_COMMON_CHARACTER_LIMIT];                                    \
+		memory_zero(PLATFORM_COMMON_CHARACTER_LIMIT, message_buffer);                            \
 		sprintf(message_buffer, "file: %s:%d | Function: %s", file, line, function); \
 		LOG_FATAL(" | %s", message);                                                 \
 		CRASH;                                                                       \

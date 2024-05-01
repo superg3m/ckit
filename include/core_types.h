@@ -7,8 +7,6 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include <stdio.h>
-#include <typeinfo>
-#include <type_traits>
 
 typedef int8_t  s8;
 typedef int16_t s16;
@@ -51,24 +49,8 @@ typedef u8 Boolean;
 #define local_persist static
 #define internal static
 
+// Date: May 01, 2024
+// TODO(Jovanni): This shouldn't be here it doesn't make sense 
 #define MUTABLE_VOID_POINTER(buffer) (void**)(&buffer)
 
-template<typename T>
-const char* type_name() {
-    return typeid(T).name();
-}
-
-template<typename T>
-struct is_char_array : std::false_type {};
-
-template<typename T, std::size_t N>
-struct is_char_array<T[N]> : std::is_same<T, char> {};
-
-template<typename T>
-Boolean isCharArray(T& array) {
-    if constexpr (is_char_array<T>::value) {
-        return TRUE;
-    }
-	
-	return FALSE;
-}
+#define PLATFORM_COMMON_CHARACTER_LIMIT 3200
