@@ -5,7 +5,6 @@
  * Creator: Jovanni Djonaj
 ===========================================================*/
 #include "core_types.h"
-#include "core_assert.h"
 
 #define LOGGING_ENABLED TRUE
 #define LOG_PRINT_ENABLED TRUE
@@ -14,7 +13,6 @@
 #define LOG_WARN_ENABLED TRUE
 
 #define LOG_LEVEL_CHARACTER_LIMIT 11
-
 #define LOG_CHARACTER_LIMIT 3200
 
 enum LogLevel {
@@ -30,11 +28,11 @@ enum LogLevel {
 static Boolean logging_is_initialized = FALSE;
 
 Boolean __logger_init(const char* file, u32 line, const char* func);
-#define _logger_init(func, line, file) __logger_init(file, line, func)
+#define _logger_init(file, line, func) __logger_init(file, line, func)
 #define logger_init() assert(_logger_init(__FILE__, __LINE__, __func__) == TRUE, "The logger system is already initalized"); LOG_INFO("The logger has been successfully initalized")
 
 void __logger_shutdown(const char* func, u32 line, const char* file);
-#define _logger_shutdown(func, line, file) __logger_shutdown(file, line, func)
+#define _logger_shutdown(file, line, func) __logger_shutdown(file, line, func)
 #define logger_shutdown() _logger_shutdown(__FILE__, __LINE__, __func__)
 
 void _log_output(LogLevel log_level, const char* message, const char* func, u32 line, const char* file ...);

@@ -1,6 +1,7 @@
 #include "../include/core_memory.h"
 #include "../include/core_logger.h"
 #include "../include/platform_services.h"
+#include "../include/core_assert.h"
 
 struct MemoryHeader {
 	u32 allocation_size;

@@ -1,16 +1,28 @@
 @echo off
+
+powershell -nologo -command "Write-Host 'running normalize_path.bat...' -ForegroundColor Green"
+
 setlocal enabledelayedexpansion
 
 set "rootpath=C:\Users\Jovanni Djonaj\Documents\Coding\vscode\C++\CKit\"
-set "tempfile=unique_errors.txt"
+set "tempfile=compilation_errors_temp.txt"
 
+rem Create a new, empty temporary file
+type nul > %tempfile%
+
+rem Read each line from compilation_errors.txt
 for /f "tokens=*" %%f in (compilation_errors.txt) do (
     set "line=%%f"
-    if not "%%f" == "!line:%rootpath%=%!" (
-        set "line=!line:%rootpath%=%!"
-        echo !line! >> !tempfile!
-    )
+    
+    rem Replace rootpath with nothing in the line
+    set "line=!line:%rootpath%=!"
+
+    rem Write the modified line to the temporary file
+    echo !line! >> !tempfile!
 )
 
-type !tempfile!
-del !tempfile!
+move /y %tempfile% compilation_errors.txt > nul
+type compilation_errors.txt
+del compilation_errors.txt
+
+endlocal
