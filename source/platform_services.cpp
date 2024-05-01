@@ -13,6 +13,8 @@
 		}
 
 		void _platform_console_write(size_t message_size_in_bytes, const char* message, unsigned char color) {
+			// TODO(Jovanni): This code is very flaky I would suggest fixing it
+			// Date: May 01, 2024
 			DWORD num_written_bytes = 0;
 			HANDLE console_output_handle = GetStdHandle(STD_OUTPUT_HANDLE );
 			char out_message[PLATFORM_COMMON_CHARACTER_LIMIT];
