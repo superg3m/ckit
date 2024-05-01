@@ -11,7 +11,7 @@
 #include "include/core_event_system.h"
 
 #ifdef DEPRECATED_STRING
-	#include "include/deprecated/core_string.h"
+	#include "deprecated/core_string.h"
 #else 
 	#include "include/core_string.h"
 #endif
