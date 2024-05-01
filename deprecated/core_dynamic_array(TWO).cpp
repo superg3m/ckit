@@ -3,7 +3,7 @@
  * Date: April 23, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-#include "../include/deprecated/core_dynamic_array.h"
+#include "deprecated/core_dynamic_array(TWO).h"
 #include "../include/core_memory.h" // Actually think about this maybe don't expose this to the user?
 #include "../include/core_assert.h"
 

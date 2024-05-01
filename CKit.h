@@ -15,9 +15,3 @@
 #else 
 	#include "include/core_string.h"
 #endif
-
-#ifdef DEPRECATED_DYNAMIC_ARRAY
-	#include "include/deprecated/core_dynamic_array.h"
-#else 
-	#include "include/deprecated_two/core_dynamic_array.h"
-#endif

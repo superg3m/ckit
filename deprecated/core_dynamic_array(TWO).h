@@ -4,8 +4,8 @@
  * Creator: Jovanni Djonaj
 ===========================================================*/
 #pragma once
-#include "core_types.h"
-#include "core_assert.h"
+#include "../include/core_types.h"
+#include "../include/core_assert.h"
 
 
 //************************* Begin Functions *************************

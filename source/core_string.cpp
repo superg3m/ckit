@@ -35,6 +35,13 @@ String string_create(const char* c_string) {
     return str;
 }
 
+void string_free(String* string) {
+	assert(_string_validate(string), "The string free failed because the string is not valid it has been freed before this call!");
+    size_t string_allocation_size = (sizeof(u8) * (string->length + 1));
+    memory_free(string_allocation_size, (void**)(&string->data), MEMORY_TAG_STRING);
+    string->data = NULL;
+}
+
 
 /**
  * @brief Make these all macros so it works with assert
@@ -62,11 +69,4 @@ Boolean string_compare(const String* s1, const char* s2) {
 }
 Boolean string_compare(const String* s1, const String* s2) {
 	return FALSE;
-}
-
-void string_free(String* string) {
-	assert(_string_validate(string), "The string free failed because the string is not valid it has been freed before this call!");
-    size_t string_allocation_size = (sizeof(u8) * (string->length + 1));
-    memory_free(string_allocation_size, (void**)(&string->data), MEMORY_TAG_STRING);
-    string->data = NULL;
 }

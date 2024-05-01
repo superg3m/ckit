@@ -1,6 +1,6 @@
-#include "../../include/deprecated/core_dynamic_array.h"
+#include "deprecated/core_dynamic_array.h"
 // Actually thinkj about this maybe don't expose this to the user?
-#include "../../include/core_memory.h"
+#include "../include/core_memory.h"
 
 
 #define DYNAMIC_ARRAY_DEFAULT_CAPACITY 1
