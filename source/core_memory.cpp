@@ -2,24 +2,54 @@
 #include "../include/core_logger.h"
 #include "../include/platform_services.h"
 
+struct MemoryHeader {
+	u32 allocation_size;
+};
+
+void memory_byte_advance(u32 size_in_bytes, void** data) {
+	((u8*)(*((u8**)data))) += size_in_bytes;
+}
+
+void memory_byte_retreat(u32 size_in_bytes, void** data) {
+	((u8*)(*((u8**)data))) -= size_in_bytes;
+}
+
+internal void _memory_insert_header(MemoryHeader header, void** data) {
+	memory_copy(sizeof(header), &header, sizeof(header), (*((u8**)data)) - sizeof(header));
+	((u8*)(*((u8**)data))) += sizeof(header);
+}
+
+MemoryHeader memory_extract_header(void* data) {
+	MemoryHeader header;
+	memory_zero(sizeof(header), &header);
+	memory_copy(sizeof(header), ((u8*)data) - sizeof(header), sizeof(header), &header);
+	return header;
+}
+
 void* memory_allocate(u64 number_of_bytes, MemoryTag memory_tag) {
+	MemoryHeader header = {0};
+	header.allocation_size = sizeof(MemoryHeader) + + number_of_bytes;
     if (memory_tag == MEMORY_TAG_UNKNOWN) {
         LOG_WARN("Allocation | memory tag unknown");
     }
-    global_memory_tags[memory_tag] += number_of_bytes;
-	void* data = _platform_allocate(number_of_bytes);
+    global_memory_tags[memory_tag] += header.allocation_size;
+	
+	int* data = (int*)_platform_allocate(header.allocation_size);
+	
+	_memory_insert_header(header, MUTABLE_VOID_POINTER(data));
 	memory_zero(number_of_bytes, data);
     return data;
 }
 
-void* memory_reallocate(u64 number_of_bytes, void** data, MemoryTag memory_tag) {
+void* memory_reallocate(u64 old_number_of_bytes, void** data, u64 new_number_of_bytes, MemoryTag memory_tag) {
     if (memory_tag == MEMORY_TAG_UNKNOWN) {
         LOG_WARN("Reallocation | memory tag unknown");
     }
-    global_memory_tags[memory_tag] += number_of_bytes;
-	void* data = _platform_allocate(number_of_bytes);
-	memory_zero(number_of_bytes, data);
-    return data;
+    global_memory_tags[memory_tag] += new_number_of_bytes;
+	void* ret_data = memory_allocate(new_number_of_bytes, memory_tag);
+	memory_copy(old_number_of_bytes, *data, new_number_of_bytes, ret_data);
+	memory_free(old_number_of_bytes, data, memory_tag);
+    return ret_data;
 }
 
 void memory_free(u64 number_of_bytes, void** data, MemoryTag memory_tag) {

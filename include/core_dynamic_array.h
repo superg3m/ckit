@@ -37,7 +37,7 @@ u64 dynamic_array_size(void* dynamic_array);
 {                                                                                            \
 	_dynamic_array_validate_push_type(dynamic_array, element, __func__, __LINE__, __FILE__); \
     decltype(element) temp_element = element;					                             \
-    _dynamic_array_push((void**)(&dynamic_array), &temp_element);                            \
+    _dynamic_array_push(MUTABLE_VOID_POINTER(dynamic_array), &temp_element);                 \
 }                                                                                            \
 
 #define dynamic_array_pop(dynamic_array, type) *((type*)_dynamic_array_pop((void**)(&dynamic_array)));

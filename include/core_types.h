@@ -50,6 +50,8 @@ typedef u8 Boolean;
 #define local_persist static
 #define internal static
 
+#define MUTABLE_VOID_POINTER(buffer) (void**)(&buffer)
+
 template<typename T>
 const char* type_name() {
     return typeid(T).name();

@@ -29,6 +29,7 @@ static char known_memory_tag_strings[MEMORY_TAG_COUNT][MEMORY_TAG_CHARACTER_LIMI
 static u64 global_memory_tags[MEMORY_TAG_COUNT];
 
 void* memory_allocate(u64 number_of_bytes, MemoryTag memory_tag);
+void* memory_reallocate(u64 number_of_bytes, void** data, MemoryTag memory_tag);
 void memory_free(u64 number_of_bytes, void** data, MemoryTag memory_tag);
 
 void memory_copy(u32 source_size, const void* source, u32 destination_size, void* destination);

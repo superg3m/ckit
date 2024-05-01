@@ -66,7 +66,7 @@ void _dynamic_array_push(void** dynamic_array, void* element) {
         void* new_dynamic_array = _dynamic_array_create(header.capacity, header.type_size_in_bytes);
 		_dynamic_array_update_header(header, &new_dynamic_array);
         memory_copy(old_dynamic_array_allocation_size - sizeof(header), *dynamic_array, new_dynamic_array_allocation_size - sizeof(header), new_dynamic_array);
-		*((u8*)dynamic_array) -= sizeof(header); 
+		*((u8*)dynamic_array) -= sizeof(header); // Might be broken
         memory_free(old_dynamic_array_allocation_size, dynamic_array, MEMORY_TAG_DYNAMIC_ARRAY);
         *dynamic_array = new_dynamic_array;
     }
