@@ -17,6 +17,7 @@
 			// Date: May 01, 2024
 			DWORD num_written_bytes = 0;
 			HANDLE console_output_handle = GetStdHandle(STD_OUTPUT_HANDLE );
+			/*
 			char out_message[PLATFORM_COMMON_CHARACTER_LIMIT];
 			for (int i = 0; i < PLATFORM_COMMON_CHARACTER_LIMIT; i++) { // Zeroing out the buffer
 				out_message[i] = '\0';
@@ -32,13 +33,15 @@
 				}
 				out_message[count++] = c;
 			}
+			*/
 			SetConsoleTextAttribute(console_output_handle, color);
 			WriteConsoleA(console_output_handle, message, message_size_in_bytes, &num_written_bytes, NULL);
 			SetConsoleTextAttribute(console_output_handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+			/*
 			if (new_line_required == 1) {
 				WriteConsoleA(console_output_handle, "\n", 1, &num_written_bytes, NULL);
 			}
-			
+			*/
 		}
 	#elif PLATFORM_LINUX
 		#define COLOR_RESET "\033[0"
