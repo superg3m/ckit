@@ -35,7 +35,7 @@ void _log_output(LogLevel log_level,  const char* message,  const char* func, u3
     };
 
     u8 log_level_format[LOG_LEVEL_COUNT] = {
-        TEXT_TEST,
+        TEXT_CYAN,
         TEXT_RED,
         TEXT_PURPLE,
         TEXT_BLUE,
