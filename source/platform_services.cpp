@@ -34,7 +34,7 @@
 				out_message[count++] = c;
 			}
 			SetConsoleTextAttribute(console_output_handle, color);
-			WriteConsoleA(console_output_handle, message, message_size_in_bytes, &num_written_bytes, NULL);
+			WriteConsoleA(console_output_handle, out_message, message_size_in_bytes, &num_written_bytes, NULL);
 			SetConsoleTextAttribute(console_output_handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 			if (new_line_required == 1) {
 				WriteConsoleA(console_output_handle, "\n", 1, &num_written_bytes, NULL);
