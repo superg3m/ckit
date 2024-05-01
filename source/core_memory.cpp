@@ -79,8 +79,7 @@ void memory_zero(u32 data_size_in_bytes, void* data) {
 }
 
 void console_write_memory_tags() {
-    LOG_PRINT("");
-    LOG_DEBUG("========================");
+    LOG_DEBUG("========================\n");
     for (int level = 0; level < MEMORY_TAG_COUNT; level++) {
         char out_message[320];
         memory_zero(sizeof(out_message), out_message);
@@ -92,7 +91,7 @@ void console_write_memory_tags() {
 
         char out_message3[320];
         sprintf(out_message3, "%s%s", out_message, out_message2);
-        LOG_DEBUG("%s", out_message3);
+        LOG_DEBUG("%s\n", out_message3);
     }
     LOG_DEBUG("========================\n");
 }
