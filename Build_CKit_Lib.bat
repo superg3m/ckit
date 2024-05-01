@@ -1,12 +1,12 @@
 @echo off
 
-call clean_CKit.bat
-
-powershell -nologo -command "Write-Host 'running CKit build.bat...' -ForegroundColor Green"
-
 if not exist .\build (
     mkdir .\build
+) else (
+    call clean_CKit.bat
 )
+
+powershell -nologo -command "Write-Host 'running CKit build.bat...' -ForegroundColor Green"
 
 if exist compilation_errors.txt (
 	del compilation_errors.txt
