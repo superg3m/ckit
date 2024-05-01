@@ -35,7 +35,7 @@ void _log_output(LogLevel log_level,  const char* message,  const char* func, u3
     };
 
     u8 log_level_format[LOG_LEVEL_COUNT] = {
-        BACK_RED,
+        TEXT_TEST,
         TEXT_RED,
         TEXT_PURPLE,
         TEXT_BLUE,
@@ -56,6 +56,5 @@ void _log_output(LogLevel log_level,  const char* message,  const char* func, u3
     char out_message2[LOG_CHARACTER_LIMIT]; 
     memory_zero(sizeof(out_message2), out_message2);  
     sprintf(out_message2, "%s%s", log_level_strings[log_level], out_message);
-
-	_platform_console_write(sizeof(char) * LOG_CHARACTER_LIMIT, out_message2, log_level_format[log_level]);
+    _platform_console_write(sizeof(char) * LOG_CHARACTER_LIMIT, out_message2, log_level_format[log_level]);
 }
