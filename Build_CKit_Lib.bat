@@ -20,3 +20,9 @@ lib /OUT:".\CKit.lib" ".\*.obj" > NUL
 popd
 
 call normalize_path.bat
+
+pushd .\examples
+cl /Zi /Fo /c ".\*.cpp"
+link /out:".\CKit_Test.exe" ".\*.obj" "..\build\CKit.lib"
+popd
+".\examples\CKit_Test.exe"

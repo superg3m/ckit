@@ -12,15 +12,12 @@ u32 c_string_length(const char* c_string) {
 }
 
 void _string_grow(String* string) {
-	u32 old_allocation_size = string->capacity;
 	string->capacity *= 2;
-	u32 new_allocation_size = string->capacity;
-	memory_free(old_allocation_size, (void**)(&string->data), MEMORY_TAG_STRING);
-	string->data = (char*)memory_allocate(new_allocation_size, MEMORY_TAG_STRING);
+	memory_reallocate(sizeof(char) * string->capacity, MUTABLE_VOID_POINTER(string->data));
 }
 
 Boolean _string_validate(const String* string) {
-	return string != NULL;
+	return string != NULL && string->data != NULL;
 }
 
 String string_create(const char* c_string) {
@@ -38,7 +35,7 @@ String string_create(const char* c_string) {
 void string_free(String* string) {
 	assert_in_function(_string_validate(string), "The string free failed because the string is not valid it has been freed before this call!");
     size_t string_allocation_size = (sizeof(u8) * (string->length + 1));
-    memory_free(string_allocation_size, (void**)(&string->data), MEMORY_TAG_STRING);
+    memory_free(MUTABLE_VOID_POINTER(string->data));
     string->data = NULL;
 }
 
