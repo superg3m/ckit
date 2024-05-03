@@ -29,7 +29,7 @@ void memory_byte_retreat(u32 size_in_bytes, void** data) {
 }
 
 /**
- * @brief memory Copies the header into the data and then advnaces the pointer
+ * @brief memory Copies the header into the data and then advances the pointer
  * 
  * @param header 
  * @param data 
@@ -41,7 +41,7 @@ internal void _memory_insert_header(MemoryHeader header, void** data) {
 }
 
 /**
- * @brief memory Copies the header into the data and then advnaces the pointer
+ * @brief just update don't advance
  * 
  * @param header 
  * @param data 
@@ -53,7 +53,6 @@ internal void _memory_update_header(MemoryHeader header, void** data) {
 	memory_byte_advance(sizeof(header), data);
 }
 
-
 MemoryHeader _memory_extract_header(void* data) {
 	MemoryHeader header;
 	memory_zero(sizeof(header), &header);
@@ -63,35 +62,60 @@ MemoryHeader _memory_extract_header(void* data) {
 	return header;
 }
 
+void memory_temporary_header_print(void* data) {
+    MemoryHeader header = _memory_extract_header(data);
+    LOG_PRINT("\n");
+    LOG_WARN("============= HEADER PRINT OUT =================\n");
+    LOG_INFO("Allocation Size: %d\n", header.allocation_size);
+    LOG_INFO("Memory Tag: %d\n", header.memory_tag);
+    LOG_WARN("================================================\n");
+    LOG_PRINT("\n");
+}
+
 // Date: May 03, 2024
 // TODO(Jovanni): Actually implement the memory header lmao
-void* memory_allocate(u64 number_of_bytes, MemoryTag memory_tag) {
+void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
+    assert_in_function(memory_tag >= 0, "Invalid memory tag value! Below Zero");
+    assert_in_function(memory_tag < MEMORY_TAG_COUNT, "Invalid memory tag value! Above max count of memory tags");
     if (memory_tag == MEMORY_TAG_UNKNOWN) {
         LOG_WARN("Allocation | memory tag unknown");
     }
-	MemoryHeader header = {0};
-	header.allocation_size = sizeof(MemoryHeader) + number_of_bytes;
+	MemoryHeader header;
+    memory_zero(sizeof(header), &header);
+	header.allocation_size = sizeof(header) + byte_allocation_size;
+    header.memory_tag = memory_tag;
     global_memory_tags[memory_tag] += header.allocation_size;
-	
-	void* data = _platform_allocate(header.allocation_size);
-    
 
+	void* data = _platform_allocate(header.allocation_size);
 	memory_zero(header.allocation_size, data);
-   
 	_memory_insert_header(header, MUTABLE_VOID_POINTER(data));
     return data;
 }
 
-void* memory_reallocate(u64 new_number_of_bytes, void** data) {
+/**
+ * @brief Returns the new allocation and frees the data provided
+ * 
+ * @param new_byte_allocation_size 
+ * @param data 
+ * @return void* 
+ */
+void* memory_reallocate(u64 new_byte_allocation_size, void** data) {
+    LOG_DEBUG("Reallocation Triggered!\n");
     assert_in_function(data, "Data passed is null in reallocation");
 
     MemoryHeader header = _memory_extract_header(*data);
-    global_memory_tags[header.memory_tag] += new_number_of_bytes;
-	void* ret_data = memory_allocate(new_number_of_bytes, header.memory_tag);
-	memory_copy(header.allocation_size, *data, new_number_of_bytes, ret_data);
+	void* ret_data = memory_allocate(new_byte_allocation_size, header.memory_tag);
+
+    global_memory_tags[header.memory_tag] += new_byte_allocation_size;
+    memory_byte_retreat(sizeof(header), data);
+    memory_byte_retreat(sizeof(header), MUTABLE_VOID_POINTER(ret_data));
+	memory_copy(header.allocation_size, *data, new_byte_allocation_size, ret_data);
+    memory_byte_advance(sizeof(header), data);
+    memory_byte_advance(sizeof(header), MUTABLE_VOID_POINTER(ret_data));
 	memory_free(data);
-    header.allocation_size = new_number_of_bytes;
-    _memory_update_header(header, data);
+
+    global_memory_tags[header.memory_tag] -= header.allocation_size;
+    header.allocation_size = new_byte_allocation_size;
     return ret_data;
 }
 
@@ -101,11 +125,16 @@ void* memory_reallocate(u64 new_number_of_bytes, void** data) {
  * @param data 
  */
 void memory_free(void** data) {
-    assert_in_function(data, "Data passed is null in free");
+    assert_in_function(data != NULL && *data != NULL, "Data passed is null in free");
     MemoryHeader header = _memory_extract_header(*data);
+    LOG_INFO("ALLOCATION SIZE: %d\n", header.allocation_size);
+    LOG_INFO("MEMORY_TAG: %d\n", header.memory_tag);
     global_memory_tags[header.memory_tag] -= header.allocation_size;
+    
+    memory_byte_retreat(sizeof(header), data);
 	memory_zero(header.allocation_size, *data);
-    _platform_free(header.allocation_size, *data);
+    
+    _platform_free(header.allocation_size, data);
 	*data = NULL;
 }
 

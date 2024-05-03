@@ -1,13 +1,13 @@
 #include "../CKit.h"
 
 int main() {
-    String str = string_create("JESTER");
+    String str = string_create("what about how?");
     
     LOG_PRINT("String: %s\n", str.data);
     LOG_PRINT("String Length: %d\n", str.length);
-	//console_write_memory_tags();
+	console_write_memory_tags();
     
-    //string_free(&str);
+    string_free(&str);
     
     console_write_memory_tags();
 

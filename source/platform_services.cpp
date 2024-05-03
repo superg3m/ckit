@@ -9,8 +9,8 @@
 			return VirtualAlloc(NULL, number_of_bytes, MEM_COMMIT|MEM_RESERVE, PAGE_READWRITE);
 		}
 
-		void _platform_free(size_t number_of_bytes, void* data) {
-			VirtualFree(data, number_of_bytes, MEM_DECOMMIT);
+		void _platform_free(size_t number_of_bytes, void** data) {
+			VirtualFree(*data, number_of_bytes, MEM_DECOMMIT);
 		}
 
 		void _platform_console_write(size_t message_size_in_bytes, const char* message, unsigned char color) {
@@ -95,8 +95,8 @@
 			return malloc(number_of_bytes);
 		}
 
-		void _platform_free(size_t number_of_bytes, void* data) {
-			free(data);
+		void _platform_free(size_t number_of_bytes, void** data) {
+			free(*data);
 		}
 		
 		// Date: April 13, 2024
