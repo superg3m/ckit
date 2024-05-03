@@ -13,27 +13,28 @@
 
 void _assert_in_function(char* message, char* file, int line, char* function);
 
-#if CORE_ASSERT == TRUE
-#define assert_info(expression, message, file, line, function)                       \
-	if (!(expression))                                                               \
-	{                                                                                \
-		LOG_FATAL("%s", message);                                                    \
-		char message_buffer[PLATFORM_COMMON_CHARACTER_LIMIT];                                    \
-		memory_zero(PLATFORM_COMMON_CHARACTER_LIMIT, message_buffer);                            \
-		sprintf(message_buffer, "file: %s:%d | Function: %s", file, line, function); \
-		LOG_FATAL(" | %s", message);                                                 \
-		CRASH;                                                                       \
-	}
+#define assert_info() {}
 
-#define assert(expression, message) assert_info(expression, message, __FILE__, __LINE__, __func__)
+#if CORE_ASSERT == TRUE	
+	#define assert_in_macro(expression, message) 										         \
+		if (!(expression))                                                       		         \
+		{                                                                        		         \
+			LOG_FATAL("%s", message);                                            		         \
+			char message_buffer[PLATFORM_COMMON_CHARACTER_LIMIT];                                \
+			memory_zero(PLATFORM_COMMON_CHARACTER_LIMIT, message_buffer);                        \
+			sprintf(message_buffer, "file: %s:%d | Function: %s", __FILE__, __LINE__, __func__); \
+			LOG_FATAL(" | %s", message);                                                         \
+			CRASH;                                                                               \
+		}                                                                                        \
 
-#define assert_in_function(expression, message, file, line, function) \
-	if (!(expression))                                                \
-	{                                                                 \
-		_assert_in_function(message, file, line, function)            \
-	}
+	#define assert_in_function(expression, message) \
+		if (!(expression))                          \
+		{                                           \
+			LOG_FATAL("%s", message);               \
+			CRASH;                                  \
+		}                                           \
 
 #else
-#define assert(expression, message)
-#define assert_in_function(expression, message, file, line, function)
+		#define assert_in_function(expression, message)
+		#define assert_in_macro(expression, message) 
 #endif

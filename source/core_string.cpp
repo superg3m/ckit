@@ -36,7 +36,7 @@ String string_create(const char* c_string) {
 }
 
 void string_free(String* string) {
-	assert(_string_validate(string), "The string free failed because the string is not valid it has been freed before this call!");
+	assert_in_function(_string_validate(string), "The string free failed because the string is not valid it has been freed before this call!");
     size_t string_allocation_size = (sizeof(u8) * (string->length + 1));
     memory_free(string_allocation_size, (void**)(&string->data), MEMORY_TAG_STRING);
     string->data = NULL;
@@ -50,7 +50,7 @@ void string_free(String* string) {
  * @param source 
  */
 void string_copy(String* string, const char* source) {
-	assert(_string_validate(string), "The string copy failed because the string is not valid it has been freed before this call!");
+	assert_in_function(_string_validate(string), "The string copy failed because the string is not valid it has been freed before this call!");
 	u32 source_size = c_string_length(source);
 	if (source_size > string->capacity) {
 		_string_grow(string);
@@ -58,7 +58,7 @@ void string_copy(String* string, const char* source) {
 	memory_copy(source_size, source, string->capacity, string->data);
 }
 void string_append(String* string, const char* source) {
-	assert(_string_validate(string), "The string append failed because the string is not valid it has been freed before this call!");
+	assert_in_function(_string_validate(string), "The string append failed because the string is not valid it has been freed before this call!");
 }
 
 Boolean string_compare(const char* s1, const char* s2) {

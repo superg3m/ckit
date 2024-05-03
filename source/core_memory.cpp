@@ -66,7 +66,7 @@ void memory_free(u64 number_of_bytes, void** data, MemoryTag memory_tag) {
 }
 
 void memory_copy(u32 source_size, const void* source, u32 destination_size, void* destination) {
-    assert((source_size <= destination_size), "MEMORY COPY SOURCE IS TOO BIG FOR DESTINATION\n");
+    assert_in_function((source_size <= destination_size), "MEMORY COPY SOURCE IS TOO BIG FOR DESTINATION\n");
     for (int i = 0; i < source_size; i++) {
         ((u8*)destination)[i] = ((u8*)source)[i];
     }
