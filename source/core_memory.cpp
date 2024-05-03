@@ -19,13 +19,15 @@ struct MemoryHeader {
 };
 
 void memory_byte_advance(u32 size_in_bytes, void** data) {
-	u8* base_address = ((u8*)(*data));
-	*base_address += size_in_bytes;
+	u8* base_address = (u8*)*data;
+	base_address += size_in_bytes;
+    *data = base_address;
 }
 
 void memory_byte_retreat(u32 size_in_bytes, void** data) {
-	u8* base_address = ((u8*)(*data));
-	*base_address -= size_in_bytes;
+	u8* base_address = (u8*)*data;
+	base_address -= size_in_bytes;
+    *data = base_address;
 }
 
 /**
@@ -62,19 +64,10 @@ MemoryHeader _memory_extract_header(void* data) {
 	return header;
 }
 
-void memory_temporary_header_print(void* data) {
-    MemoryHeader header = _memory_extract_header(data);
-    LOG_PRINT("\n");
-    LOG_WARN("============= HEADER PRINT OUT =================\n");
-    LOG_INFO("Allocation Size: %d\n", header.allocation_size);
-    LOG_INFO("Memory Tag: %d\n", header.memory_tag);
-    LOG_WARN("================================================\n");
-    LOG_PRINT("\n");
-}
-
 // Date: May 03, 2024
 // TODO(Jovanni): Actually implement the memory header lmao
 void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
+    assert_in_function(byte_allocation_size > 0, "Invalid allocation size zero or below");
     assert_in_function(memory_tag >= 0, "Invalid memory tag value! Below Zero");
     assert_in_function(memory_tag < MEMORY_TAG_COUNT, "Invalid memory tag value! Above max count of memory tags");
     if (memory_tag == MEMORY_TAG_UNKNOWN) {
@@ -88,6 +81,7 @@ void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
 
 	void* data = _platform_allocate(header.allocation_size);
 	memory_zero(header.allocation_size, data);
+    //memory_byte_advance(sizeof(header), MUTABLE_VOID_POINTER(data));
 	_memory_insert_header(header, MUTABLE_VOID_POINTER(data));
     return data;
 }
