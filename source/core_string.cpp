@@ -29,11 +29,9 @@ String string_create(const char* c_string) {
     size_t string_data_allocation_size = (sizeof(char) * (c_str_length + 1));
 	str.capacity = string_data_allocation_size;
     str.data = (char*)memory_allocate(string_data_allocation_size, MEMORY_TAG_STRING); // Zeros the memory to account for null term
-	memory_temporary_header_print(str.data);
 	// Date: May 03, 2024
 	// TODO(Jovanni): Dude somehow the str.data isn't advancing properly or something because that shouldn't be possible
     memory_copy(c_str_length, c_string, c_str_length, str.data);
-	memory_temporary_header_print(str.data);
     return str;
 }
 

@@ -121,8 +121,6 @@ void* memory_reallocate(u64 new_byte_allocation_size, void** data) {
 void memory_free(void** data) {
     assert_in_function(data != NULL && *data != NULL, "Data passed is null in free");
     MemoryHeader header = _memory_extract_header(*data);
-    LOG_INFO("ALLOCATION SIZE: %d\n", header.allocation_size);
-    LOG_INFO("MEMORY_TAG: %d\n", header.memory_tag);
     global_memory_tags[header.memory_tag] -= header.allocation_size;
     
     memory_byte_retreat(sizeof(header), data);
