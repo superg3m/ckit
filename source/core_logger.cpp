@@ -73,6 +73,6 @@ void _log_output(LogLevel log_level,  const char* message,  const char* func, u3
 
     char out_message2[PLATFORM_COMMON_CHARACTER_LIMIT]; 
     memory_zero(sizeof(out_message2), out_message2);  
-    sprintf(out_message2, "%s%s", log_level_strings[log_level], out_message);
+    sprintf(out_message2, "%s%s\0", log_level_strings[log_level], out_message);
     _platform_console_write(sizeof(char) * PLATFORM_COMMON_CHARACTER_LIMIT, out_message2, log_level_format[log_level]);
 }
