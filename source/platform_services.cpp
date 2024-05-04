@@ -36,7 +36,7 @@
 			freopen("CONOUT$", "w", stdout); 
 			freopen("CONOUT$", "w", stderr);
 
-			set_console_buffer_size(2000, 2000);
+			set_console_buffer_size(PLATFORM_COMMON_CHARACTER_LIMIT, PLATFORM_COMMON_CHARACTER_LIMIT);
 		}
 
 		void _platform_console_shutdown() {
