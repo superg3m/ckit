@@ -21,7 +21,7 @@
 
 			system("MODE CON COLS=25 LINES=22"); //sets window size!
 
-			system("MODE CON COLS=59 LINES=50"); //sets window size!
+			system("MODE CON COLS=50 LINES=50"); //sets window size!
 		}
 
 		void _platform_console_shutdown() {
