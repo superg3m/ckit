@@ -14,7 +14,10 @@
 		}
 
 		void _platform_console_init() {
-			BOOL WINAPI AttachConsole(_In_ DWORD dwProcessId);
+			AllocConsole();
+			freopen("CONIN$", "r", stdin); 
+			freopen("CONOUT$", "w", stdout); 
+			freopen("CONOUT$", "w", stderr); 
 		}
 
 		void _platform_console_shutdown() {
