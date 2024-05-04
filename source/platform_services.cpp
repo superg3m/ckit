@@ -13,7 +13,7 @@
 			VirtualFree(*data, number_of_bytes, MEM_DECOMMIT);
 		}
 
-		void set_console_screen_size(int x, int y){
+		void set_console_buffer_size(int x, int y){
 
 			COORD coord;
 			coord.X = x;
@@ -36,7 +36,7 @@
 			freopen("CONOUT$", "w", stdout); 
 			freopen("CONOUT$", "w", stderr);
 
-			set_console_screen_size(1920, 1080);
+			set_console_buffer_size(PLATFORM_COMMON_CHARACTER_LIMIT, 0);
 		}
 
 		void _platform_console_shutdown() {
