@@ -139,7 +139,7 @@ void memory_copy(u32 source_size, const void* source, u32 destination_size, void
 
 void memory_zero(u32 data_size_in_bytes, void* data) {
     for (int i = 0; i < data_size_in_bytes; i++) {
-        ((u8*)data)[i] = 0;
+        ((u8*)data)[i] = '\0';
     }
 }
 
