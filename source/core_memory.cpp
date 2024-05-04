@@ -81,7 +81,6 @@ void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
 
 	void* data = _platform_allocate(header.allocation_size);
 	memory_zero(header.allocation_size, data);
-    //memory_byte_advance(sizeof(header), MUTABLE_VOID_POINTER(data));
 	_memory_insert_header(header, MUTABLE_VOID_POINTER(data));
     return data;
 }

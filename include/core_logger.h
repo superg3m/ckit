@@ -30,7 +30,7 @@ void __logger_shutdown(const char* func, u32 line, const char* file);
 #define _logger_shutdown(file, line, func) __logger_shutdown(file, line, func)
 #define logger_shutdown() _logger_shutdown(__FILE__, __LINE__, __func__)
 
-void _log_output(LogLevel log_level, const char* message, const char* func, u32 line, const char* file ...);
+void _log_output(LogLevel log_level, const char* message, const char* func, u32 line, const char* file, ...);
 #define log_output(log_level, message, func, line, file, ...) _log_output(log_level, message, func, line, file, ##__VA_ARGS__)
 
 #if (LOG_PRINT_ENABLED)

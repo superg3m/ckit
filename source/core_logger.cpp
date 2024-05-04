@@ -42,7 +42,7 @@ Boolean __logger_init(const char* func, u32 line, const char* file) {
  * @param message 
  * @param ... 
  */
-void _log_output(LogLevel log_level,  const char* message,  const char* func, u32 line,  const char* file ...) {
+void _log_output(LogLevel log_level,  const char* message, const char* func, u32 line, const char* file, ...) {
     char log_level_strings[LOG_LEVEL_COUNT][LOG_LEVEL_CHARACTER_LIMIT] = {
         "[FATAL]: ",
         "[ERROR]: ",
@@ -61,8 +61,7 @@ void _log_output(LogLevel log_level,  const char* message,  const char* func, u3
         TEXT_WHITE,
     };
 
-    Boolean is_fatal = log_level == 0;
-
+    Boolean is_fatal = (log_level == 0);
     char out_message[PLATFORM_COMMON_CHARACTER_LIMIT];
     memory_zero(sizeof(out_message), out_message);
 
@@ -73,6 +72,6 @@ void _log_output(LogLevel log_level,  const char* message,  const char* func, u3
 
     char out_message2[PLATFORM_COMMON_CHARACTER_LIMIT]; 
     memory_zero(sizeof(out_message2), out_message2);  
-    sprintf(out_message2, "%s%s\0", log_level_strings[log_level], out_message);
+    sprintf(out_message2, "%s%s", log_level_strings[log_level], out_message);
     _platform_console_write(sizeof(char) * PLATFORM_COMMON_CHARACTER_LIMIT, out_message2, log_level_format[log_level]);
 }

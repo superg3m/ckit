@@ -52,23 +52,24 @@
 			for (int i = 0; i < PLATFORM_COMMON_CHARACTER_LIMIT; i++) { // Zeroing out the buffer
 				out_message[i] = '\0';
 			}
-
+			/*
 			int count = 0;
 			int new_line_required = 0; 
 			while (count < message_size_in_bytes) {
 				char c = message[count];
 				if (c == '\n') {
 					new_line_required = 1;
-					break;
+					//break;
 				}
 				out_message[count++] = c;
 			}
+			*/
 			SetConsoleTextAttribute(console_output_handle, color);
-			WriteConsoleA(console_output_handle, out_message, message_size_in_bytes, &num_written_bytes, NULL);
+			WriteConsoleA(console_output_handle, message, message_size_in_bytes, &num_written_bytes, NULL);
 			SetConsoleTextAttribute(console_output_handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
-			if (new_line_required == 1) {
-				WriteConsoleA(console_output_handle, "\n", 1, &num_written_bytes, NULL);
-			}
+			//if (new_line_required == 1) {
+				//WriteConsoleA(console_output_handle, "\n", 1, &num_written_bytes, NULL);
+			//}
 		}
 	#elif PLATFORM_LINUX
 		#define COLOR_RESET "\033[0"
