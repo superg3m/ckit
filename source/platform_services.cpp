@@ -13,6 +13,26 @@
 			VirtualFree(*data, number_of_bytes, MEM_DECOMMIT);
 		}
 
+		void ScreenSize(int x, int y){
+
+			COORD coord;
+			coord.X = x;
+			coord.Y = y;
+
+			_SMALL_RECT Rect;
+			Rect.Top = 0;
+			Rect.Left = 0;
+			Rect.Bottom = x - 1;
+			Rect.Right = y - 1;
+
+			// Adjust buffer size:
+			HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);    
+			SetConsoleScreenBufferSize(handle, coord);
+
+			// display as a maximized window
+			ShowWindow(GetConsoleWindow(), SW_MAXIMIZE);
+		}
+
 		void _platform_console_init() {
 			AllocConsole();
 			freopen("CONIN$", "r", stdin); 
