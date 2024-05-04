@@ -40,6 +40,7 @@
 			set_console_screen_size(800, 600);
 			set_console_screen_size(850, 600);
 			set_console_screen_size(800, 600);
+			set_console_screen_size(600, 100);
 		}
 
 		void _platform_console_shutdown() {
