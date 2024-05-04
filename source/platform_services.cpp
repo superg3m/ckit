@@ -19,26 +19,7 @@
 			freopen("CONOUT$", "w", stdout); 
 			freopen("CONOUT$", "w", stderr);
 
-			// Get handle to console output buffer
-			HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-			if (hConsole == INVALID_HANDLE_VALUE) {
-				// Handle error
-				return;
-			}
-
-			// Set console buffer size
-			COORD bufferSize = { 120, 300 }; // Adjust the buffer size as needed
-			if (!SetConsoleScreenBufferSize(hConsole, bufferSize)) {
-				// Handle error
-				return;
-			}
-
-			// Set console window size
-			SMALL_RECT windowSize = { 0, 0, bufferSize.X - 1, bufferSize.Y - 1 };
-			if (!SetConsoleWindowInfo(hConsole, TRUE, &windowSize)) {
-				// Handle error
-				return;
-			} 
+			system("MODE CON COLS=25 LINES=22"); //sets window size!
 		}
 
 		void _platform_console_shutdown() {
