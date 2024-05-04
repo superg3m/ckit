@@ -14,15 +14,7 @@
 		}
 
 		void _platform_console_init() {
-			if (AllocConsole()) {
-				FILE* fpstdin = stdin;
-				FILE* fpstdout = stdout;
-				FILE* fpstderr = stderr;
-		
-				freopen_s(&fpstdin, "CONIN$", "r", stdin);  
-				freopen_s(&fpstdout, "CONOUT$", "w", stdout);  
-				freopen_s(&fpstderr, "CONOUT$", "w", stderr);  
-			}
+			BOOL WINAPI AttachConsole(_In_ DWORD dwProcessId);
 		}
 
 		void _platform_console_shutdown() {
@@ -33,7 +25,7 @@
 			// Date: May 01, 2024
 			// TODO(Jovanni): This code is very flaky I would suggest fixing it
 			DWORD num_written_bytes = 0;
-			HANDLE console_output_handle = GetStdHandle(STD_OUTPUT_HANDLE );
+			HANDLE console_output_handle = GetStdHandle(STD_OUTPUT_HANDLE);
 			char out_message[PLATFORM_COMMON_CHARACTER_LIMIT];
 			for (int i = 0; i < PLATFORM_COMMON_CHARACTER_LIMIT; i++) { // Zeroing out the buffer
 				out_message[i] = '\0';
