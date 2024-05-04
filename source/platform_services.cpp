@@ -22,8 +22,8 @@
 			_SMALL_RECT Rect;
 			Rect.Top = 0;
 			Rect.Left = 0;
-			Rect.Bottom = x - 1;
-			Rect.Right = y - 1;
+			Rect.Bottom = x;
+			Rect.Right = y;
 
 			// Adjust buffer size:
 			HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);    
