@@ -13,7 +13,7 @@
 			VirtualFree(*data, number_of_bytes, MEM_DECOMMIT);
 		}
 
-		void ScreenSize(int x, int y){
+		void set_console_screen_size(int x, int y){
 
 			COORD coord;
 			coord.X = x;
@@ -39,9 +39,8 @@
 			freopen("CONOUT$", "w", stdout); 
 			freopen("CONOUT$", "w", stderr);
 
-			system("MODE CON COLS=25 LINES=22"); //sets window size!
-
-			system("MODE CON COLS=50 LINES=50"); //sets window size!
+			set_console_screen_size(100, 100);
+			set_console_screen_size(800, 600);
 		}
 
 		void _platform_console_shutdown() {
