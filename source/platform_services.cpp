@@ -13,6 +13,22 @@
 			VirtualFree(*data, number_of_bytes, MEM_DECOMMIT);
 		}
 
+		void _platform_console_init() {
+			if (AllocConsole()) {
+				FILE* fpstdin = stdin;
+				FILE* fpstdout = stdout;
+				FILE* fpstderr = stderr;
+		
+				freopen_s(&fpstdin, "CONIN$", "r", stdin);  
+				freopen_s(&fpstdout, "CONOUT$", "w", stdout);  
+				freopen_s(&fpstderr, "CONOUT$", "w", stderr);  
+			}
+		}
+
+		void _platform_console_shutdown() {
+			FreeConsole();
+		}
+
 		void _platform_console_write(size_t message_size_in_bytes, const char* message, unsigned char color) {
 			// Date: May 01, 2024
 			// TODO(Jovanni): This code is very flaky I would suggest fixing it
