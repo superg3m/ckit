@@ -143,17 +143,18 @@ void memory_zero(u32 data_size_in_bytes, void* data) {
 }
 
 void console_write_memory_tags() {
+    char out_message[PLATFORM_COMMON_CHARACTER_LIMIT];
+    char out_message2[PLATFORM_COMMON_CHARACTER_LIMIT];
+    char out_message3[PLATFORM_COMMON_CHARACTER_LIMIT];
+    
     LOG_DEBUG("========================\n");
     for (int level = 0; level < MEMORY_TAG_COUNT; level++) {
-        char out_message[320];
         memory_zero(sizeof(out_message), out_message);
-        sprintf(out_message, "%s", known_memory_tag_strings[level]);
-
-        char out_message2[320];
         memory_zero(sizeof(out_message2), out_message2);
-        sprintf(out_message2, "%lld", global_memory_tags[level]);
+        memory_zero(sizeof(out_message3), out_message3);
 
-        char out_message3[320];
+        sprintf(out_message, "%s", known_memory_tag_strings[level]);
+        sprintf(out_message2, "%lld", global_memory_tags[level]);
         sprintf(out_message3, "%s%s", out_message, out_message2);
         LOG_DEBUG("%s\n", out_message3);
     }

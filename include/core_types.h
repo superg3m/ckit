@@ -53,4 +53,4 @@ typedef u8 Boolean;
 // TODO(Jovanni): This shouldn't be here it doesn't make sense 
 #define MUTABLE_VOID_POINTER(buffer) (void**)(&buffer)
 
-#define PLATFORM_COMMON_CHARACTER_LIMIT 3200
+#define PLATFORM_COMMON_CHARACTER_LIMIT 320

@@ -26,33 +26,31 @@ enum LogLevel {
 
 Boolean logger_init();
 
-void __logger_shutdown(const char* func, u32 line, const char* file);
-#define _logger_shutdown(file, line, func) __logger_shutdown(file, line, func)
-#define logger_shutdown() _logger_shutdown(__FILE__, __LINE__, __func__)
+void logger_shutdown();
 
-void _log_output(LogLevel log_level, const char* message, const char* func, u32 line, const char* file, ...);
-#define log_output(log_level, message, func, line, file, ...) _log_output(log_level, message, func, line, file, ##__VA_ARGS__)
+void _log_output(LogLevel log_level, const char* message, ...);
+#define log_output(log_level, message, ...) _log_output(log_level, message, ##__VA_ARGS__)
 
 #if (LOG_PRINT_ENABLED)
-    #define LOG_PRINT(message, ...) log_output(LOG_LEVEL_PRINT, message, __FILE__, __LINE__, __func__, ##__VA_ARGS__)
+    #define LOG_PRINT(message, ...) log_output(LOG_LEVEL_PRINT, message, ##__VA_ARGS__)
 #else
     #define LOG_PRINT(message, ...)
 #endif
 
 #if (LOG_INFO_ENABLED)
-    #define LOG_INFO(message, ...) log_output(LOG_LEVEL_INFO, message, __FILE__, __LINE__, __func__, ##__VA_ARGS__)
+    #define LOG_INFO(message, ...) log_output(LOG_LEVEL_INFO, message, ##__VA_ARGS__)
 #else
     #define LOG_INFO(message, ...)
 #endif
 
 #if (LOG_DEBUG_ENABLED)
-    #define LOG_DEBUG(message, ...) log_output(LOG_LEVEL_DEBUG, message, __FILE__, __LINE__, __func__, ##__VA_ARGS__)
+    #define LOG_DEBUG(message, ...) log_output(LOG_LEVEL_DEBUG, message, ##__VA_ARGS__)
 #else
     #define LOG_DEBUG(message, ...)
 #endif
 
 #if (LOG_WARN_ENABLED)
-    #define LOG_WARN(message, ...) log_output(LOG_LEVEL_WARN, message, __FILE__, __LINE__, __func__, ##__VA_ARGS__)
+    #define LOG_WARN(message, ...) log_output(LOG_LEVEL_WARN, message, ##__VA_ARGS__)
 #else
     #define LOG_WARN(message, ...)
 #endif
@@ -62,5 +60,5 @@ void _log_output(LogLevel log_level, const char* message, const char* func, u32 
  * in a function
  * 
  */
-#define LOG_ERROR(message, ...) log_output(LOG_LEVEL_ERROR, message, __FILE__, __LINE__, __func__, ##__VA_ARGS__)
-#define LOG_FATAL(message, ...) log_output(LOG_LEVEL_FATAL, message, __FILE__, __LINE__, __func__, ##__VA_ARGS__)
+#define LOG_ERROR(message, ...) log_output(LOG_LEVEL_ERROR, message, ##__VA_ARGS__)
+#define LOG_FATAL(message, ...) log_output(LOG_LEVEL_FATAL, message, ##__VA_ARGS__)
