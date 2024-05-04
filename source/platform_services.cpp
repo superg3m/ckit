@@ -28,9 +28,6 @@
 			// Adjust buffer size:
 			HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);    
 			SetConsoleScreenBufferSize(handle, coord);
-
-			// display as a maximized window
-			ShowWindow(GetConsoleWindow(), SW_MAXIMIZE);
 		}
 
 		void _platform_console_init() {
