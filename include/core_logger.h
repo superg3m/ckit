@@ -24,11 +24,7 @@ enum LogLevel {
     LOG_LEVEL_COUNT
 };
 
-static Boolean logging_is_initialized = FALSE;
-
-Boolean __logger_init(const char* file, u32 line, const char* func);
-#define _logger_init(file, line, func) __logger_init(file, line, func)
-#define logger_init() assert(_logger_init(__FILE__, __LINE__, __func__) == TRUE, "The logger system is already initalized"); LOG_INFO("The logger has been successfully initalized")
+Boolean logger_init();
 
 void __logger_shutdown(const char* func, u32 line, const char* file);
 #define _logger_shutdown(file, line, func) __logger_shutdown(file, line, func)

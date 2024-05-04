@@ -1,6 +1,7 @@
 #include "../CKit.h"
 
 int main() {
+    logger_init();
     String str = string_create("aasfhsdfsdfjsdljflsdkf");
     
     LOG_PRINT("String: %s\n", str.data);

@@ -3,6 +3,23 @@
 #include "../include/platform_services.h"
 #include "../include/core_assert.h"
 
+static Boolean logging_is_initialized = FALSE;
+Boolean logger_init() {
+    if (!LOGGING_ENABLED) {
+        // The logging system is disabled!
+        return 1;
+    }
+
+    if (logging_is_initialized == FALSE) {
+        logging_is_initialized = TRUE;
+        _platform_console_init();
+        return TRUE;
+    } else {
+        LOG_FATAL("The logger system is already initalized!");
+        return FALSE;
+    }
+}
+
 Boolean __logger_init(const char* func, u32 line, const char* file) {
     if (!LOGGING_ENABLED) {
         LOG_ERROR("The logging system is disabled!");
@@ -11,6 +28,7 @@ Boolean __logger_init(const char* func, u32 line, const char* file) {
 
     if (logging_is_initialized == FALSE) {
         logging_is_initialized = TRUE;
+        _platform_console_init();
         return TRUE;
     } else {
         return FALSE;
