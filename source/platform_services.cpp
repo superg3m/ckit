@@ -36,7 +36,7 @@
 			freopen("CONOUT$", "w", stdout); 
 			freopen("CONOUT$", "w", stderr);
 
-			set_console_screen_size(100, 100);
+			set_console_screen_size(1920, 1080);
 		}
 
 		void _platform_console_shutdown() {
