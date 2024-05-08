@@ -30,6 +30,7 @@ int main() {
     LOG_WARN("TESTING\n");
     LOG_DEBUG("TESTING\n");
     LOG_INFO("TESTING\n");
+    LOG_PRINT("TESTING %s\n", str.data);
 
     return 0;
 }
