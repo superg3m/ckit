@@ -53,12 +53,12 @@ static inline StringHeader _string_extract_header(String string) {
  * @return char* 
  */
 char* formated_string_buffer(const char* message, ...) {
-    //char out_message[PLATFORM_COMMON_CHARACTER_LIMIT];
+    //char out_message[PLATFORM_CHARACTER_LIMIT];
     //memory_zero(sizeof(out_message), out_message);
     //
     //va_list args_list;
     //va_start(args_list, message);
-    //vsnprintf(out_message, PLATFORM_COMMON_CHARACTER_LIMIT, message, args_list);
+    //vsnprintf(out_message, PLATFORM_CHARACTER_LIMIT, message, args_list);
     //va_end(args_list);
     //return out_message;
     return NULL;

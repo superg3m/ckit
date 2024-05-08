@@ -143,9 +143,9 @@ void memory_zero(u32 data_size_in_bytes, void* data) {
 }
 
 void console_write_memory_tags() {
-    char out_message[PLATFORM_COMMON_CHARACTER_LIMIT];
-    char out_message2[PLATFORM_COMMON_CHARACTER_LIMIT];
-    char out_message3[PLATFORM_COMMON_CHARACTER_LIMIT];
+    char out_message[PLATFORM_CHARACTER_LIMIT];
+    char out_message2[PLATFORM_CHARACTER_LIMIT];
+    char out_message3[PLATFORM_CHARACTER_LIMIT];
     
     LOG_DEBUG("========================\n");
     for (int level = 0; level < MEMORY_TAG_COUNT; level++) {

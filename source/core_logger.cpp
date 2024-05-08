@@ -21,7 +21,7 @@ Boolean logger_init() {
 }
 
 /**
- * @brief Includes a newline. This has a imposed limit of (PLATFORM_COMMON_CHARACTER_LIMIT = 3200)
+ * @brief Includes a newline. This has a imposed limit of (PLATFORM_CHARACTER_LIMIT = 3200)
  * Also another note this might want to allow the user of the log call to specify if its a new line or not instead of forcing it upon them.
  * @param log_level 
  * @param message 
@@ -48,17 +48,17 @@ void _log_output(LogLevel log_level,  const char* message, ...) {
 
     Boolean is_fatal = (log_level == 0);
 
-    char out_message[PLATFORM_COMMON_CHARACTER_LIMIT];
+    char out_message[PLATFORM_CHARACTER_LIMIT];
     memory_zero(sizeof(out_message), out_message);
 
-    char out_message2[PLATFORM_COMMON_CHARACTER_LIMIT];
+    char out_message2[PLATFORM_CHARACTER_LIMIT];
     memory_zero(sizeof(out_message2), out_message2);  
     
     va_list args_list;
     va_start(args_list, message);
-    vsnprintf(out_message, PLATFORM_COMMON_CHARACTER_LIMIT, message, args_list);
+    vsnprintf(out_message, PLATFORM_CHARACTER_LIMIT, message, args_list);
     va_end(args_list);
 
     sprintf(out_message2, "%s%s", log_level_strings[log_level], out_message);
-    _platform_console_write(PLATFORM_COMMON_CHARACTER_LIMIT, out_message2, log_level_format[log_level]);
+    _platform_console_write(PLATFORM_CHARACTER_LIMIT, out_message2, log_level_format[log_level]);
 }

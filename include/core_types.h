@@ -55,4 +55,4 @@ typedef u8 Boolean;
 
 // Date: May 04, 2024
 // TODO(Jovanni): This is gonna be a problem no doubt
-#define PLATFORM_COMMON_CHARACTER_LIMIT 160
+#define PLATFORM_CHARACTER_LIMIT 160

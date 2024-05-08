@@ -36,7 +36,6 @@
 			freopen("CONOUT$", "w", stdout); 
 			freopen("CONOUT$", "w", stderr);
 
-			//set_console_buffer_size(PLATFORM_COMMON_CHARACTER_LIMIT, PLATFORM_COMMON_CHARACTER_LIMIT);
 			HANDLE console_handle = GetStdHandle(STD_OUTPUT_HANDLE);   
 			SetConsoleDisplayMode(console_handle, CONSOLE_FULLSCREEN_MODE, 0);
 		}
@@ -50,8 +49,8 @@
 			// TODO(Jovanni): This code is very flaky I would suggest fixing it
 			DWORD num_written_bytes = 0;
 			HANDLE console_output_handle = GetStdHandle(STD_OUTPUT_HANDLE);
-			char out_message[PLATFORM_COMMON_CHARACTER_LIMIT];
-			for (int i = 0; i < PLATFORM_COMMON_CHARACTER_LIMIT; i++) { // Zeroing out the buffer
+			char out_message[PLATFORM_CHARACTER_LIMIT];
+			for (int i = 0; i < PLATFORM_CHARACTER_LIMIT; i++) { // Zeroing out the buffer
 				out_message[i] = '\0';
 			}
 
