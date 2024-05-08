@@ -36,7 +36,9 @@
 			freopen("CONOUT$", "w", stdout); 
 			freopen("CONOUT$", "w", stderr);
 
-			set_console_buffer_size(PLATFORM_COMMON_CHARACTER_LIMIT, PLATFORM_COMMON_CHARACTER_LIMIT);
+			//set_console_buffer_size(PLATFORM_COMMON_CHARACTER_LIMIT, PLATFORM_COMMON_CHARACTER_LIMIT);
+			HANDLE console_handle = GetStdHandle(STD_OUTPUT_HANDLE);   
+			SetConsoleDisplayMode(console_handle, CONSOLE_FULLSCREEN_MODE, 0);
 		}
 
 		void _platform_console_shutdown() {
