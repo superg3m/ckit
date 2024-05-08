@@ -125,7 +125,7 @@ void memory_free(void** data) {
     memory_byte_retreat(sizeof(header), data);
 	memory_zero(header.allocation_size, *data);
     
-    _platform_free(header.allocation_size, data);
+    _platform_free(data);
 	*data = NULL;
 }
 

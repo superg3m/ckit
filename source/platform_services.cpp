@@ -6,11 +6,11 @@
 	#ifdef PLATFORM_WINDOWS
 		#include <windows.h>
 		void* _platform_allocate(size_t  number_of_bytes) {
-			return VirtualAlloc(NULL, number_of_bytes, MEM_COMMIT|MEM_RESERVE, PAGE_READWRITE);
+			return VirtualAlloc(NULL, number_of_bytes, MEM_COMMIT, PAGE_READWRITE);
 		}
 
-		void _platform_free(size_t number_of_bytes, void** data) {
-			VirtualFree(*data, number_of_bytes, MEM_DECOMMIT);
+		void _platform_free(void** data) {
+			VirtualFree(*data, 0, MEM_RELEASE); // This is really interesting
 		}
 
 		void set_console_buffer_size(int x, int y){
