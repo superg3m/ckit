@@ -10,7 +10,10 @@
 		}
 
 		void _platform_free(void** data) {
-			VirtualFree(*data, 0, MEM_RELEASE); // This is really interesting
+			VirtualFree(*data, 0, MEM_RELEASE); // This is really interesting 
+			// Date: May 08, 2024
+			// TODO(Jovanni): Look into VirtualProtect() this allows you to change memory access to NO_ACCESS
+			// can help find use after free bugs interesting concept
 		}
 
 		void set_console_buffer_size(int x, int y){
