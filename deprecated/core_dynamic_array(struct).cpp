@@ -1,5 +1,4 @@
-#include "deprecated/core_dynamic_array.h"
-// Actually thinkj about this maybe don't expose this to the user?
+#include "../include/core_dynamic_array.h"
 #include "../include/core_memory.h"
 
 
@@ -31,7 +30,7 @@ u32 _resize(DynamicArray* dynamic_array) {
 	size_t new_dynamic_array_data_size = dynamic_array->element_size * dynamic_array->capacity;
 	void* newBuffer = memory_allocate(new_dynamic_array_data_size, MEMORY_TAG_DYNAMIC_ARRAY);
 	memory_copy(old_dynamic_array_data_size, dynamic_array->data, new_dynamic_array_data_size, newBuffer);
-	memory_free(old_dynamic_array_data_size, &dynamic_array->data, MEMORY_TAG_DYNAMIC_ARRAY);
+	memory_free(&dynamic_array->data, MEMORY_TAG_DYNAMIC_ARRAY);
 	dynamic_array->data = newBuffer;
 }
 

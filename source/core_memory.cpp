@@ -18,6 +18,12 @@ struct MemoryHeader {
     MemoryTag memory_tag;
 };
 
+u8* memory_offset_source_ptr(u32 size_in_bytes, const void* data) {
+	u8* base_address = (u8*)data;
+	base_address += size_in_bytes;
+    return base_address;
+}
+
 void memory_byte_advance(u32 size_in_bytes, void** data) {
 	u8* base_address = (u8*)*data;
 	base_address += size_in_bytes;
@@ -140,6 +146,19 @@ void memory_zero(u32 data_size_in_bytes, void* data) {
     for (int i = 0; i < data_size_in_bytes; i++) {
         ((u8*)data)[i] = 0;
     }
+}
+
+Boolean memory_byte_compare(u32 buffer_one_size, const void* buffer_one, u32 buffer_two_size, const void* buffer_two) {
+    assert_in_function(buffer_one == buffer_two, "memory_byte_compare buffer sizes are not equal!");
+    u8* buffer_one_data = (u8*)buffer_one;
+    u8* buffer_two_data = (u8*)buffer_two;
+    for (int i = 0; i < buffer_one_size; i++) {
+        if (buffer_one_data[i] != buffer_two_data[i]) {
+            return FALSE;
+        }
+    }
+    
+    return TRUE;
 }
 
 void console_write_memory_tags() {

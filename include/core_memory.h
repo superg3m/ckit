@@ -32,13 +32,15 @@ void* memory_allocate(u64 number_of_bytes, MemoryTag memory_tag);
 void* memory_reallocate(u64 new_number_of_bytes, void** data);
 void memory_free(void** data);
 
+Boolean memory_byte_compare(u32 buffer_one_size, const void* buffer_one, u32 buffer_two_size, const void* buffer_two);
 void memory_copy(u32 source_size, const void* source, u32 destination_size, void* destination);
-void memory_set(u32 data_size_in_bytes, void* data, const void* element);
+//void memory_set(u32 data_size_in_bytes, void* data, const void* element);
 void memory_zero(u32 data_size_in_bytes, void* data);
-Boolean memory_compare(u32 buffer_one_size, const void* buffer_one, u32 buffer_two_size, const void* buffer_two);
+
 
 void memory_byte_advance(u32 size_in_bytes, void** data);
 void memory_byte_retreat(u32 size_in_bytes, void** data);
+u8* memory_offset_source_ptr(u32 size_in_bytes, const void* data);
 
 
 void console_write_memory_tags();

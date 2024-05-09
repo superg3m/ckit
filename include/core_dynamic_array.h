@@ -3,9 +3,14 @@
  * Date: April 23, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
+
+/*
+	Header Based
+*/
+
 #pragma once
-#include "../include/core_types.h"
-#include "../include/core_assert.h"
+#include "./core_types.h"
+#include "./core_assert.h"
 
 
 //************************* Begin Functions *************************
@@ -44,5 +49,3 @@ u64 dynamic_array_size(void* dynamic_array);
 
 #define dynamic_array_free(dynamic_array) _dynamic_array_free((void**)(&dynamic_array));
 //+++++++++++++++++++++++++++ End Macros ++++++++++++++++++++++++++++
-
-

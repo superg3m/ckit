@@ -2,8 +2,8 @@
 
 int main() {
     String str = string_create("aasfhsdfsdfjsdljflsdkf");
-    LOG_PRINT("String: %s\n", str.data);
-    LOG_PRINT("String Length: %d\n", str.length);
+    LOG_PRINT("String: %s\n", str);
+    LOG_PRINT("String Length: %d\n", string_length(str));
 	console_write_memory_tags();
     
     string_free(&str);
@@ -30,7 +30,7 @@ int main() {
     LOG_WARN("TESTING\n");
     LOG_DEBUG("TESTING\n");
     LOG_INFO("TESTING\n");
-    LOG_PRINT("TESTING %s\n", str.data);
+    LOG_PRINT("TESTING %s\n", str);
 
     return 0;
 }

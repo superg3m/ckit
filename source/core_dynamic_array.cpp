@@ -3,7 +3,7 @@
  * Date: April 23, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-#include "deprecated/core_dynamic_array(TWO).h"
+#include "../include/core_dynamic_array.h"
 #include "../include/core_memory.h" // Actually think about this maybe don't expose this to the user?
 #include "../include/core_assert.h"
 
@@ -19,9 +19,7 @@ struct DynamicArrayHeader {
 //************************* Begin Functions *************************
 static inline void _dynamic_array_insert_header(DynamicArrayHeader header, void** dynamic_array) {
     memory_copy(sizeof(header), &header, sizeof(header), *dynamic_array);
-    u8* temp_ptr = ((u8*)(*dynamic_array));
-    temp_ptr += sizeof(header);
-    *dynamic_array = temp_ptr;
+    memory_byte_advance(sizeof(header), dynamic_array);
 }
 
 static inline Boolean _dynamic_array_validate(void* dynamic_array) {
@@ -34,7 +32,7 @@ static inline void _dynamic_array_update_header(DynamicArrayHeader newHeader, vo
 
 static inline DynamicArrayHeader _dynamic_array_extract_header(void* dynamic_array) {
     DynamicArrayHeader header;
-    u8* source_ptr = ((u8*)dynamic_array) - sizeof(header);
+    u8* source_ptr = memory_offset_source_ptr(sizeof(header), dynamic_array);
     memory_copy(sizeof(header), source_ptr, sizeof(header), &header);
     return header;
 }
@@ -52,13 +50,13 @@ void* _dynamic_array_create(u64 capacity, u32 type_size_in_bytes) {
 }
 
 u64 dynamic_array_size(void* dynamic_array) {
-	assert(_dynamic_array_validate(dynamic_array), "The dynamic array size failed (freed before this call!)");
+	assert_in_function(_dynamic_array_validate(dynamic_array), "The dynamic array size failed (freed before this call!)");
     DynamicArrayHeader header = _dynamic_array_extract_header(dynamic_array);
     return header.size;
 }
 
 void _dynamic_array_push(void** dynamic_array, void* element) {
-	assert(_dynamic_array_validate(*dynamic_array), "The dynamic array push failed (freed before this call!)");
+	assert_in_function(_dynamic_array_validate(*dynamic_array), "The dynamic array push failed (freed before this call!)");
     DynamicArrayHeader header = _dynamic_array_extract_header(*dynamic_array);
     if (header.size >= header.capacity) {
         u32 old_dynamic_array_allocation_size = sizeof(header) + (header.type_size_in_bytes * header.capacity);
@@ -68,7 +66,7 @@ void _dynamic_array_push(void** dynamic_array, void* element) {
 		_dynamic_array_update_header(header, &new_dynamic_array);
         memory_copy(old_dynamic_array_allocation_size - sizeof(header), *dynamic_array, new_dynamic_array_allocation_size - sizeof(header), new_dynamic_array);
 		*((u8*)dynamic_array) -= sizeof(header); // Might be broken
-        memory_free(old_dynamic_array_allocation_size, dynamic_array, MEMORY_TAG_DYNAMIC_ARRAY);
+        memory_free(dynamic_array);
         *dynamic_array = new_dynamic_array;
     }
 	
@@ -79,19 +77,19 @@ void _dynamic_array_push(void** dynamic_array, void* element) {
 }
 
 void* _dynamic_array_pop(void** dynamic_array) {
-	assert(_dynamic_array_validate(*dynamic_array), "The dynamic array push failed (freed before this call!)");
+	assert_in_function(_dynamic_array_validate(*dynamic_array), "The dynamic array push failed (freed before this call!)");
     DynamicArrayHeader header = _dynamic_array_extract_header(*dynamic_array);
-	assert(header.size > 0, "The dynamic array push failed (no elements to pop!)");
+	assert_in_function(header.size > 0, "The dynamic array push failed (no elements to pop!)");
 	header.size--;
     _dynamic_array_update_header(header, dynamic_array);
 	return dynamic_array[header.size];
 }
 
 void _dynamic_array_free(void** dynamic_array) {
-	assert(_dynamic_array_validate(*dynamic_array), "The dynamic array free failed (freed before this call!)");
+	assert_in_function(_dynamic_array_validate(*dynamic_array), "The dynamic array free failed (freed before this call!)");
 	DynamicArrayHeader header = _dynamic_array_extract_header(*dynamic_array);
 	*((u8*)dynamic_array) -= sizeof(header); 
 	u32 dynamic_array_allocation_size = sizeof(header) + (header.type_size_in_bytes * header.capacity);
-	memory_free(dynamic_array_allocation_size, dynamic_array, MEMORY_TAG_DYNAMIC_ARRAY);
+	memory_free(dynamic_array);
 }
 //************************** End Functions **************************

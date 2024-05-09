@@ -1,4 +1,15 @@
+/*===========================================================
+ * File: core_dynamic_array.h
+ * Date: May 09, 2024
+ * Creator: Jovanni Djonaj
+===========================================================*/
+
+/*
+	Struct Based Dynamic Array
+*/
+
 #include "../include/core_types.h"
+
 
 struct DynamicArray {
 	u32 size;

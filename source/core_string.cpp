@@ -1,6 +1,10 @@
 #include "../include/core_string.h"
 #include "../include/core_memory.h"
-#include "../include/core_assert.h"
+
+struct StringHeader {
+    u32 length;
+    u32 capacity;
+};
 
 u32 c_string_length(const char* c_string) {
     u32 length = 0;
@@ -11,61 +15,72 @@ u32 c_string_length(const char* c_string) {
     return length;
 }
 
-void _string_grow(String* string) {
-	string->capacity *= 2;
-	memory_reallocate(sizeof(char) * string->capacity, MUTABLE_VOID_POINTER(string->data));
+static inline void _string_insert_header(StringHeader header, String* string) {
+    memory_copy(sizeof(header), &header, sizeof(header), *string);
+    *string += sizeof(header);
 }
 
-Boolean _string_validate(const String* string) {
-	return string != NULL && string->data != NULL;
+static inline void _string_update_header(StringHeader newHeader, String* string) {
+    memory_copy(sizeof(newHeader), &newHeader, sizeof(newHeader), (*string) - sizeof(newHeader));
+}
+
+static inline StringHeader _string_extract_header(String string) {
+    StringHeader header;
+    memory_copy(sizeof(header), (string - sizeof(header)), sizeof(header), &header);
+    return header;
 }
 
 String string_create(const char* c_string) {
-	String str;
-	memory_zero(sizeof(str), &str);
+    StringHeader header;
     u32 c_str_length = c_string_length(c_string);
-    str.length = c_str_length;
-	
-    size_t string_data_allocation_size = (sizeof(char) * (c_str_length + 1));
-	str.capacity = string_data_allocation_size;
-    str.data = (char*)memory_allocate(string_data_allocation_size, MEMORY_TAG_STRING); // Zeros the memory to account for null term
-    memory_copy(c_str_length, c_string, c_str_length, str.data);
-    return str;
+    header.length = c_str_length;
+
+    size_t string_allocation_size = sizeof(header) + (sizeof(char) * (c_str_length + 1));
+    String ret = (String)memory_allocate(string_allocation_size, MEMORY_TAG_STRING);
+
+    memory_zero(string_allocation_size,  ret);
+    _string_insert_header(header, &ret);
+
+    memory_copy(c_str_length, c_string, c_str_length, ret);
+    return ret;
 }
 
-void string_free(String* string) {
-	assert_in_function(_string_validate(string), "The string free failed because the string is not valid it has been freed before this call!");
-    memory_free(MUTABLE_VOID_POINTER(string->data));
-	string->capacity = 0;
-	string->length = 0;
-    string->data = NULL;
+static inline void _string_grow(String* string) {
+    StringHeader header = _string_extract_header(*string);
+	header.capacity *= 2;
+	memory_reallocate(sizeof(char) * header.capacity, (void**)string);
 }
 
-
-/**
- * @brief Make these all macros so it works with assert
- * 
- * @param string 
- * @param source 
- */
-void string_copy(String* string, const char* source) {
-	assert_in_function(_string_validate(string), "The string copy failed because the string is not valid it has been freed before this call!");
-	u32 source_size = c_string_length(source);
-	if (source_size > string->capacity) {
-		_string_grow(string);
-	}
-	memory_copy(source_size, source, string->capacity, string->data);
-}
-void string_append(String* string, const char* source) {
-	assert_in_function(_string_validate(string), "The string append failed because the string is not valid it has been freed before this call!");
+void string_copy(); // Careful about the header
+void string_concat();
+u64 string_length(String string) {
+    StringHeader header = _string_extract_header(string);
+    return header.length;
 }
 
 Boolean string_compare(const char* s1, const char* s2) {
-	return FALSE;
+	u32 s1_length = c_string_length(s1);
+	u32 s2_length = c_string_length(s2);
+
+	return memory_byte_compare(s1_length, s1, s2_length, s2);
 }
-Boolean string_compare(const String* s1, const char* s2) {
-	return FALSE;
+
+Boolean string_compare(const String s1, const char* s2) {
+	u32 s1_length = string_length(s1);
+	u32 s2_length = c_string_length(s2);
+
+	return memory_byte_compare(s1_length, s1, s2_length, s2);
 }
-Boolean string_compare(const String* s1, const String* s2) {
-	return FALSE;
+
+Boolean string_compare(const String s1, const String s2) {
+	u32 s1_length = string_length(s1);
+	u32 s2_length = string_length(s2);
+
+	return memory_byte_compare(s1_length, s1, s2_length, s2);
+}
+
+void string_free(String* string) {
+    memory_byte_retreat(sizeof(StringHeader), (void**)string);
+    memory_free((void**)string);
+    string = NULL;
 }
