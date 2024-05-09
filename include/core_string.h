@@ -21,7 +21,7 @@ u32 string_length(String string);
 Boolean string_compare(const char* s1, const char* s2);
 
 void string_append(String* string, const char* source);
-void string_append(String* string, const String source);
+void string_append_char(String* string, const char source);
 void string_insert(String* string, const u32 index);
 void string_clear(String* string);
 

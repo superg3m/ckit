@@ -1,3 +1,8 @@
+/*===========================================================
+ * File: core_string.cpp
+ * Date: May 09, 2024
+ * Creator: Jovanni Djonaj
+===========================================================*/
 #include "../include/core_string.h"
 #include "../include/core_memory.h"
 #include "../include/core_assert.h"
@@ -16,20 +21,34 @@ u32 c_string_length(const char* c_string) {
     return length;
 }
 
-static inline void _string_insert_header(StringHeader header, String* string) {
+#pragma region Private Functions
+internal inline void _string_insert_header(StringHeader header, String* string) {
     memory_copy(sizeof(header), &header, sizeof(header), *string);
     *string += sizeof(header);
 }
 
-static inline void _string_update_header(StringHeader newHeader, String* string) {
+internal inline void _string_update_header(StringHeader newHeader, String* string) {
     memory_copy(sizeof(newHeader), &newHeader, sizeof(newHeader), (*string) - sizeof(newHeader));
 }
 
-static inline StringHeader _string_extract_header(String string) {
+internal inline StringHeader _string_extract_header(String string) {
     StringHeader header;
     memory_copy(sizeof(header), (string - sizeof(header)), sizeof(header), &header);
     return header;
 }
+
+internal inline String _string_grow(u32 new_allocation_size, String* string) {
+    StringHeader header = _string_extract_header(*string);
+    header.capacity = new_allocation_size;
+    memory_byte_retreat(sizeof(header), (void**)string);
+    String ret = (String)memory_reallocate(sizeof(header) + new_allocation_size, (void**)string);
+    _string_insert_header(header, &ret);
+    
+    return ret;
+}
+
+
+#pragma endregion
 
 String string_create(const char* c_string) {
     StringHeader header;
@@ -44,12 +63,6 @@ String string_create(const char* c_string) {
 
     memory_copy(c_str_length, c_string, c_str_length, ret);
     return ret;
-}
-
-static inline void _string_grow(String* string) {
-    StringHeader header = _string_extract_header(*string);
-	header.capacity *= 2;
-	memory_reallocate(sizeof(char) * header.capacity, (void**)string);
 }
 
 void string_copy(); // Careful about the header
@@ -80,4 +93,34 @@ void string_free(String* string) {
     memory_byte_retreat(sizeof(StringHeader), (void**)string);
     memory_free((void**)string);
     string = NULL;
+}
+
+void string_append_char(String* string, const char source) {
+    u32 source_size = 1;
+
+    StringHeader header = _string_extract_header(*string);
+    if (header.length + source_size >= header.capacity) {
+        *string = _string_grow((header.length + source_size) * 2, string);
+        header = _string_extract_header(*string);
+    }
+
+    (*string)[header.length] = source;
+	header.length++;
+    _string_update_header(header, string);
+}
+
+void string_append(String* string, const char* source) {
+    u32 source_size = c_string_length(source); 
+
+    StringHeader header = _string_extract_header(*string);
+    if (header.length + source_size >= header.capacity) {
+        *string = _string_grow((header.length + source_size) * 2, string);
+        header = _string_extract_header(*string);
+    }
+
+    u8* dest_ptr = memory_advance_new_ptr(header.length, *string);
+	header.length++;
+    memory_copy(source_size, source, source_size, dest_ptr);
+    
+    _string_update_header(header, string);
 }

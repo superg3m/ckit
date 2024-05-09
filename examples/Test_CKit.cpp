@@ -96,6 +96,11 @@ int main() {
     LOG_PRINT("String: %s\n", str);
     LOG_PRINT("String Length: %d\n", string_length(str));
 	  console_write_memory_tags(LOG_LEVEL_INFO);
+    string_append_char(&str, 'a');
+    LOG_PRINT("String: %s\n", str);
+
+    string_append(&str, " | FEEL THE WORLD AROUND ME!");
+    LOG_PRINT("String: %s\n", str);
 
     test_vector_operations();
 
