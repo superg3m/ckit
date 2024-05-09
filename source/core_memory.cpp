@@ -13,14 +13,22 @@ Be aware anything allocated from this has a header
 #include "../include/platform_services.h"
 #include "../include/core_assert.h"
 
+
+
 struct MemoryHeader {
-	u32 allocation_size;
+    u32 total_allocation_size;
     MemoryTag memory_tag;
 };
 
-u8* memory_offset_source_ptr(u32 size_in_bytes, const void* data) {
+u8* memory_advance_new_ptr(u32 size_in_bytes, const void* data) {
 	u8* base_address = (u8*)data;
 	base_address += size_in_bytes;
+    return base_address;
+}
+
+u8* memory_retreat_new_ptr(u32 size_in_bytes, const void* data) {
+	u8* base_address = (u8*)data;
+	base_address -= size_in_bytes;
     return base_address;
 }
 
@@ -70,8 +78,6 @@ MemoryHeader _memory_extract_header(void* data) {
 	return header;
 }
 
-// Date: May 03, 2024
-// TODO(Jovanni): Actually implement the memory header lmao
 void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
     assert_in_function(byte_allocation_size > 0, "Invalid allocation size zero or below");
     assert_in_function(memory_tag >= 0, "Invalid memory tag value! Below Zero");
@@ -81,12 +87,15 @@ void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
     }
 	MemoryHeader header;
     memory_zero(sizeof(header), &header);
-	header.allocation_size = sizeof(header) + byte_allocation_size;
-    header.memory_tag = memory_tag;
-    global_memory_tags[memory_tag] += header.allocation_size;
+	header.total_allocation_size = sizeof(header) + byte_allocation_size; 
 
-	void* data = _platform_allocate(header.allocation_size);
-	memory_zero(header.allocation_size, data);
+    header.memory_tag = memory_tag;
+    global_memory_tags[memory_tag] += header.total_allocation_size;
+
+	void* data = _platform_allocate(header.total_allocation_size);
+    // Date: May 09, 2024
+    // TODO(Jovanni): Technically you are repeating work here
+	memory_zero(header.total_allocation_size, data);
 	_memory_insert_header(header, MUTABLE_VOID_POINTER(data));
     return data;
 }
@@ -103,18 +112,14 @@ void* memory_reallocate(u64 new_byte_allocation_size, void** data) {
     assert_in_function(data, "Data passed is null in reallocation");
 
     MemoryHeader header = _memory_extract_header(*data);
+    u32 old_allocation_size = header.total_allocation_size;
+    header.total_allocation_size = sizeof(header) + new_byte_allocation_size;
 	void* ret_data = memory_allocate(new_byte_allocation_size, header.memory_tag);
+    _memory_insert_header(header, MUTABLE_VOID_POINTER(ret_data));
 
-    global_memory_tags[header.memory_tag] += new_byte_allocation_size;
-    memory_byte_retreat(sizeof(header), data);
-    memory_byte_retreat(sizeof(header), MUTABLE_VOID_POINTER(ret_data));
-	memory_copy(header.allocation_size, *data, new_byte_allocation_size, ret_data);
-    memory_byte_advance(sizeof(header), data);
-    memory_byte_advance(sizeof(header), MUTABLE_VOID_POINTER(ret_data));
+    memory_copy(header.total_allocation_size - sizeof(header), *data, new_byte_allocation_size, ret_data);
 	memory_free(data);
 
-    global_memory_tags[header.memory_tag] -= header.allocation_size;
-    header.allocation_size = new_byte_allocation_size;
     return ret_data;
 }
 
@@ -126,10 +131,12 @@ void* memory_reallocate(u64 new_byte_allocation_size, void** data) {
 void memory_free(void** data) {
     assert_in_function(data != NULL && *data != NULL, "Data passed is null in free");
     MemoryHeader header = _memory_extract_header(*data);
-    global_memory_tags[header.memory_tag] -= header.allocation_size;
+    global_memory_tags[header.memory_tag] -= header.total_allocation_size;
     
     memory_byte_retreat(sizeof(header), data);
-	memory_zero(header.allocation_size, *data);
+    // Date: May 09, 2024
+    // NOTE(Jovanni): Should I actually do this? Should I zero out the memory I free?
+	memory_zero(header.total_allocation_size , *data);
     
     _platform_free(data);
 	*data = NULL;
@@ -161,12 +168,12 @@ Boolean memory_byte_compare(u32 buffer_one_size, const void* buffer_one, u32 buf
     return TRUE;
 }
 
-void console_write_memory_tags() {
+void console_write_memory_tags(LogLevel log_level) {
     char out_message[PLATFORM_CHARACTER_LIMIT];
     char out_message2[PLATFORM_CHARACTER_LIMIT];
     char out_message3[PLATFORM_CHARACTER_LIMIT];
     
-    LOG_DEBUG("========================\n");
+    log_output(log_level, "========================\n");
     for (int level = 0; level < MEMORY_TAG_COUNT; level++) {
         memory_zero(sizeof(out_message), out_message);
         memory_zero(sizeof(out_message2), out_message2);
@@ -175,7 +182,7 @@ void console_write_memory_tags() {
         sprintf(out_message, "%s", known_memory_tag_strings[level]);
         sprintf(out_message2, "%lld", global_memory_tags[level]);
         sprintf(out_message3, "%s%s", out_message, out_message2);
-        LOG_DEBUG("%s\n", out_message3);
+        log_output(log_level, "%s\n", out_message3);
     }
-    LOG_DEBUG("========================\n");
+    log_output(log_level, "========================\n");
 }

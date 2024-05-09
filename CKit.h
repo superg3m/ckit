@@ -9,5 +9,5 @@
 #include "include/core_arena.h"
 #include "include/core_assert.h"
 #include "include/core_event_system.h"
-#include "include/core_dynamic_array.h"
+#include "include/core_vector.h"
 #include "include/core_string.h"

@@ -1,10 +1,105 @@
 #include "../CKit.h"
 
+void test_vector_operations() {
+  // Test types
+  int intArray[] = {1, 2, 3, 4, 5};
+  bool boolArray[] = {true, false, true, true, false};
+  char charArray[] = {'a', 'b', 'c', 'd', 'e'};
+  char* stringArray[] = {"Hello", "World", "!", "OpenAI", "GPT-3"};
+
+  // Create vector of int
+  int* intVector = vector_reserve(5, int);
+  for (int i = 0; i < 5; i++) {
+    vector_push(intVector, intArray[i]);
+  }
+
+  // Create vector of bool
+  bool* boolVector = vector_reserve(5, bool);
+  for (int i = 0; i < 5; i++) {
+    vector_push(boolVector, boolArray[i]);
+  }
+
+  // Create vector of char
+  char* charVector = vector_reserve(5, char);
+  for (int i = 0; i < 5; i++) {
+    vector_push(charVector, charArray[i]);
+  }
+
+  // Create vector of strings
+  char** stringVector = vector_create(char*);
+  for (int i = 0; i < 5; i++) {
+    vector_push(stringVector, stringArray[i]);
+  }
+
+  // Test get
+  for (int i = 0; i < vector_size(intVector); i++) {
+    int element = intVector[i];
+    assert_in_function(element == intArray[i], "Error: Incorrect element value");
+  }
+
+  for (int i = 0; i < vector_size(boolVector); i++) {
+    bool element = boolVector[i];
+    assert_in_function(element == boolArray[i], "Error: Incorrect element value");
+  }
+
+  for (int i = 0; i < vector_size(charVector); i++) {
+    char element = charVector[i];
+    assert_in_function(element == charArray[i], "Error: Incorrect element value");
+  }
+
+  for (int i = 0; i < vector_size(stringVector); i++) {
+    char* element = stringVector[i];
+    assert_in_function(string_compare(element, stringArray[i]), "Error: Incorrect element value");
+  }
+
+  // Test pop
+  for (int i = 0; i < vector_size(intVector); i++) {
+    int element = intVector[i];
+  }
+
+  int before_popped_int = intVector[vector_size(intVector) - 1];
+  int after_popped_int = vector_pop(intVector, int);
+
+  for (int i = 0; i < vector_size(intVector); i++) {
+    int element = intVector[i];
+  }
+
+  assert_in_function(before_popped_int == after_popped_int, "Error: popped expected: %d | got %d", before_popped_int, after_popped_int);
+
+  char* before_popped_string = stringVector[vector_size(stringVector) - 1];
+  char* after_popped_string = vector_pop(stringVector, char*);
+
+  assert_in_function(string_compare(before_popped_string, after_popped_string), "Error: Incorrect popped element value");
+
+  console_write_memory_tags(LOG_LEVEL_ERROR);
+
+  // Test free
+  vector_free(intVector);
+  vector_free(boolVector);
+  vector_free(charVector);
+  vector_free(stringVector);
+
+  console_write_memory_tags(LOG_LEVEL_WARN);
+
+  // Assert that the data is NULL
+  assert_in_function(intVector == NULL, "Error: Vector data is not NULL");
+  assert_in_function(boolVector == NULL, "Error: Vector data is not NULL");
+  assert_in_function(charVector == NULL, "Error: Vector data is not NULL");
+  assert_in_function(stringVector == NULL, "Error: Vector data is not NULL");
+
+  LOG_INFO("All vector tests passed!\n"); 
+  return;
+}
+
 int main() {
     String str = string_create("aasfhsdfsdfjsdljflsdkf");
     LOG_PRINT("String: %s\n", str);
     LOG_PRINT("String Length: %d\n", string_length(str));
-	console_write_memory_tags();
+	  console_write_memory_tags(LOG_LEVEL_INFO);
+
+    test_vector_operations();
+
+    return 0;
     
     string_free(&str);
 

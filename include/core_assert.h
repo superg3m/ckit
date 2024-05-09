@@ -16,20 +16,21 @@ void _assert_in_function(char* message, char* file, int line, char* function);
 #define assert_info() {}
 
 #if CORE_ASSERT == TRUE	
-	#define assert_in_macro(expression, message) 										                       \
-		if (!(expression))                                                       		                       \
-		{                                                                        		                       \
-			char message_buffer[PLATFORM_CHARACTER_LIMIT];                                              \
-			memory_zero(PLATFORM_CHARACTER_LIMIT, message_buffer);                                      \
-			sprintf(message_buffer, "%s | file: %s:%d | Function: %s", message, __FILE__, __LINE__, __func__); \
+	#define assert_in_macro(expression, message, ...) 										        \
+		if (!(expression))                                                       		            \
+		{                                                                        		            \
+			char message_buffer[PLATFORM_CHARACTER_LIMIT];                                          \
+			memory_zero(PLATFORM_CHARACTER_LIMIT, message_buffer);                                  \
+			LOG_FATAL(message, ##__VA_ARGS__);                                                      \
+			sprintf(message_buffer, " | file: %s:%d | Function: %s", __FILE__, __LINE__, __func__); \
 			LOG_FATAL("%s\n", message_buffer);                                                        \
 			CRASH;                                                                                             \
 		}                                                                                                      \
 
-	#define assert_in_function(expression, message) \
+	#define assert_in_function(expression, message, ...) \
 		if (!(expression))                          \
 		{                                           \
-			LOG_FATAL("%s", message);               \
+			LOG_FATAL(message, ##__VA_ARGS__);               \
 			CRASH;                                  \
 		}                                           \
 

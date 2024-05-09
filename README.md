@@ -8,4 +8,4 @@
 - BINARY WITH CUSTOM PLATFORM IMPL (---)
 
 Thoughts:
-I think that dynamic_array is just not correct I think there has to be a better implementation with all of this.
+I think that vector is just not correct I think there has to be a better implementation with all of this.

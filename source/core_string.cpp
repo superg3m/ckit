@@ -1,5 +1,6 @@
 #include "../include/core_string.h"
 #include "../include/core_memory.h"
+#include "../include/core_assert.h"
 
 struct StringHeader {
     u32 length;
@@ -53,28 +54,24 @@ static inline void _string_grow(String* string) {
 
 void string_copy(); // Careful about the header
 void string_concat();
-u64 string_length(String string) {
+u32 string_length(String string) {
     StringHeader header = _string_extract_header(string);
     return header.length;
 }
 
+/**
+ * @brief Returns TRUE(1) if strings are equal and returns FALSE(0) if they are not
+ * 
+ * @param s1 
+ * @param s2 
+ * @return Boolean 
+ */
 Boolean string_compare(const char* s1, const char* s2) {
+    assert_in_function(s1, "string_compare first argument is not valid | null");
+    assert_in_function(s2, "string_compare second argument is not valid | null");
+
 	u32 s1_length = c_string_length(s1);
 	u32 s2_length = c_string_length(s2);
-
-	return memory_byte_compare(s1_length, s1, s2_length, s2);
-}
-
-Boolean string_compare(const String s1, const char* s2) {
-	u32 s1_length = string_length(s1);
-	u32 s2_length = c_string_length(s2);
-
-	return memory_byte_compare(s1_length, s1, s2_length, s2);
-}
-
-Boolean string_compare(const String s1, const String s2) {
-	u32 s1_length = string_length(s1);
-	u32 s2_length = string_length(s2);
 
 	return memory_byte_compare(s1_length, s1, s2_length, s2);
 }

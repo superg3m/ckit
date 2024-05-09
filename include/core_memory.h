@@ -9,7 +9,7 @@
 enum MemoryTag {
     MEMORY_TAG_UNKNOWN,
     MEMORY_TAG_STRING,
-    MEMORY_TAG_DYNAMIC_ARRAY,
+    MEMORY_TAG_VECTOR,
     MEMORY_TAG_APPLICATION,
     MEMORY_TAG_ENGINE,
     MEMORY_TAG_TEMPORARY,
@@ -40,9 +40,10 @@ void memory_zero(u32 data_size_in_bytes, void* data);
 
 void memory_byte_advance(u32 size_in_bytes, void** data);
 void memory_byte_retreat(u32 size_in_bytes, void** data);
-u8* memory_offset_source_ptr(u32 size_in_bytes, const void* data);
+u8* memory_advance_new_ptr(u32 size_in_bytes, const void* data);
+u8* memory_retreat_new_ptr(u32 size_in_bytes, const void* data);
 
-
-void console_write_memory_tags();
+enum LogLevel;
+void console_write_memory_tags(LogLevel log_level);
 
 // Memory Arena
