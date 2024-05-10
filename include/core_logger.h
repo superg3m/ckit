@@ -14,7 +14,7 @@
 
 #define LOG_LEVEL_CHARACTER_LIMIT 11
 
-enum LogLevel {
+typedef enum LogLevel {
     LOG_LEVEL_FATAL,
     LOG_LEVEL_ERROR,
     LOG_LEVEL_WARN,
@@ -22,7 +22,7 @@ enum LogLevel {
     LOG_LEVEL_INFO,
     LOG_LEVEL_PRINT,
     LOG_LEVEL_COUNT
-};
+} LogLevel;
 
 Boolean logger_init();
 

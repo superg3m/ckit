@@ -6,11 +6,11 @@
 ===========================================================*/
 #include "core_types.h"
 
-struct String {
+typedef struct String {
 	u32 length;
 	u32 capacity;
 	char* data;
-};
+} String;
 
 String string_create(const char* c_string);
 void string_free(String* string);
