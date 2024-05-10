@@ -110,7 +110,7 @@ void string_append_char(String* string, const char source) {
 }
 
 void string_append(String* string, const char* source) {
-    u32 source_size = c_string_length(source); 
+    u32 source_size = c_string_length(source) + 1; 
 
     StringHeader header = _string_extract_header(*string);
     if (header.length + source_size >= header.capacity) {
