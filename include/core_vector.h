@@ -33,10 +33,16 @@ u64 vector_size(void* vector);
 
 // TODO(Jovanni): I want to clean this up a bit
 // Date: April 23, 2024
-#define vector_push(vector, element)                           \
+#define vector_push(vector, element)                      \
+{                                                         \
+    _vector_validate_push_type(vector, element);          \
+    _vector_push(MUTABLE_VOID_POINTER(vector), &element); \
+}                                                         \
+
+#define vector_push_literal(vector, element)                   \
 {                                                              \
-	_vector_validate_push_type(vector, element);               \
-    decltype(element) temp_element = element;				   \
+    _vector_validate_push_type(vector, element);               \
+    decltype(element) temp_element = element;                  \
     _vector_push(MUTABLE_VOID_POINTER(vector), &temp_element); \
 }                                                              \
 

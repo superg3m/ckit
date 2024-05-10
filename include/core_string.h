@@ -5,6 +5,8 @@
 // TODO(Jovanni): Maybe change this char* to a s8*
 typedef char* String;
 
+#define string_literal_ptr(str) &str
+
 u32 c_string_length(const char* c_string);
 /**
  * @brief string_create allocates memory
