@@ -46,6 +46,7 @@ void* _vector_create(u64 capacity, u32 type_size_in_bytes) {
 
     u32 vector_allocation_size = sizeof(header) + (header.type_size_in_bytes * header.capacity);
     void* ret = memory_allocate(vector_allocation_size, MEMORY_TAG_VECTOR);
+    assert_in_function(ret, "vector_create: failed to allocate - %d bytes", vector_allocation_size);
     _vector_insert_header(header, &ret);
     return ret;
 }
