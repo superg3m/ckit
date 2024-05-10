@@ -13,8 +13,6 @@ u32 c_string_length(const char* c_string);
  * @param cString 
  */
 String string_create(const char* c_string);
-
-String string_create(const char* c_string);
 void string_free(String* string);
 u32 string_length(String string);
 
