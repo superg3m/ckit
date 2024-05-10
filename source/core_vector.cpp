@@ -71,7 +71,7 @@ void* _vector_grow(void** vector) {
 
 
 u64 vector_size(void* vector) {
-	assert_in_function(_vector_validate(vector), "The dynamic array size failed (freed before this call!)");
+	assert_in_function(_vector_validate(vector), "The dynamic array size failed (freed before this call!)\n");
     VectorHeader header = _vector_extract_header(vector);
     return header.size;
 }
@@ -92,16 +92,16 @@ void _vector_push(void** vector, const void* element) {
 }
 
 void* _vector_pop(void** vector) {
-	assert_in_function(_vector_validate(*vector), "The vector pop failed (freed before this call!)");
+	assert_in_function(_vector_validate(*vector), "The vector pop failed (freed before this call!)\n");
     VectorHeader header = _vector_extract_header(*vector);
-	assert_in_function(header.size > 0, "The vector pop failed (no elements to pop!)");
+	assert_in_function(header.size > 0, "The vector pop failed (no elements to pop!)\n");
 	header.size--;
     _vector_update_header(header, vector);
 	return memory_advance_new_ptr(header.size * header.type_size_in_bytes, *vector);
 }
 
 void _vector_free(void** vector) {
-	assert_in_function(_vector_validate(*vector), "The vector free failed (freed before this call!)");
+	assert_in_function(_vector_validate(*vector), "The vector free failed (freed before this call!)\n");
 	VectorHeader header = _vector_extract_header(*vector);
 	u32 vector_allocation_size = sizeof(header) + (header.type_size_in_bytes * header.capacity);
     memory_byte_retreat(sizeof(header), vector);

@@ -34,22 +34,22 @@ void test_vector_operations() {
   // Test get
   for (int i = 0; i < vector_size(intVector); i++) {
     int element = intVector[i];
-    assert_in_function(element == intArray[i], "Error: Incorrect element value");
+    assert_in_function(element == intArray[i], "Error: Incorrect element value\n");
   }
 
   for (int i = 0; i < vector_size(boolVector); i++) {
     bool element = boolVector[i];
-    assert_in_function(element == boolArray[i], "Error: Incorrect element value");
+    assert_in_function(element == boolArray[i], "Error: Incorrect element value\n");
   }
 
   for (int i = 0; i < vector_size(charVector); i++) {
     char element = charVector[i];
-    assert_in_function(element == charArray[i], "Error: Incorrect element value");
+    assert_in_function(element == charArray[i], "Error: Incorrect element value\n");
   }
 
   for (int i = 0; i < vector_size(stringVector); i++) {
     char* element = stringVector[i];
-    assert_in_function(string_compare(element, stringArray[i]), "Error: Incorrect element value");
+    assert_in_function(string_compare(element, stringArray[i]), "Error: Incorrect element value\n");
   }
 
   // Test pop
@@ -65,14 +65,14 @@ void test_vector_operations() {
     int element = intVector[i];
   }
 
-  assert_in_function(before_popped_int == after_popped_int, "Error: popped expected: %d | got %d", before_popped_int, after_popped_int);
+  assert_in_function(before_popped_int == after_popped_int, "Error: popped expected: %d | got %d\n", before_popped_int, after_popped_int);
   LOG_WARN("New PUSH: %d\n", intVector[vector_size(intVector) - 1]);
 
   char* before_popped_string = stringVector[vector_size(stringVector) - 1];
   char* after_popped_string = vector_pop(stringVector, char*);
-  vector_push_literal(stringVector, string_literal_ptr("TRYING TO PUSH A LITERAL!"));
+  vector_push_literal(stringVector, string_literal_ptr("TRYING TO PUSH A LITERAL!\n"));
 
-  assert_in_function(string_compare(before_popped_string, after_popped_string), "Error: Incorrect popped element value");
+  assert_in_function(string_compare(before_popped_string, after_popped_string), "Error: Incorrect popped element value\n");
   LOG_WARN("New PUSH: %s\n", stringVector[vector_size(intVector) - 1]);
 
   console_write_memory_tags(LOG_LEVEL_ERROR);
@@ -86,10 +86,10 @@ void test_vector_operations() {
   console_write_memory_tags(LOG_LEVEL_WARN);
 
   // Assert that the data is NULL
-  assert_in_function(intVector == NULL, "Error: Vector data is not NULL");
-  assert_in_function(boolVector == NULL, "Error: Vector data is not NULL");
-  assert_in_function(charVector == NULL, "Error: Vector data is not NULL");
-  assert_in_function(stringVector == NULL, "Error: Vector data is not NULL");
+  assert_in_function(intVector == NULL, "Error: Vector data is not NULL\n");
+  assert_in_function(boolVector == NULL, "Error: Vector data is not NULL\n");
+  assert_in_function(charVector == NULL, "Error: Vector data is not NULL\n");
+  assert_in_function(stringVector == NULL, "Error: Vector data is not NULL\n");
 
   LOG_INFO("All vector tests passed!\n"); 
   return;

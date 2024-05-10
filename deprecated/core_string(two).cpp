@@ -34,7 +34,7 @@ String string_create(const char* c_string) {
 }
 
 void string_free(String* string) {
-	assert_in_function(_string_validate(string), "The string free failed because the string is not valid it has been freed before this call!");
+	assert_in_function(_string_validate(string), "The string free failed because the string is not valid it has been freed before this call!\n");
     memory_free(MUTABLE_VOID_POINTER(string->data));
 	string->capacity = 0;
 	string->length = 0;

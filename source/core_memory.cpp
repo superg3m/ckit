@@ -79,9 +79,9 @@ MemoryHeader _memory_extract_header(void* data) {
 }
 
 void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
-    assert_in_function(byte_allocation_size > 0, "Invalid allocation size zero or below");
-    assert_in_function(memory_tag >= 0, "Invalid memory tag value! Below Zero");
-    assert_in_function(memory_tag < MEMORY_TAG_COUNT, "Invalid memory tag value! Above max count of memory tags");
+    assert_in_function(byte_allocation_size > 0, "Invalid allocation size zero or below\n");
+    assert_in_function(memory_tag >= 0, "Invalid memory tag value! Below Zero\n");
+    assert_in_function(memory_tag < MEMORY_TAG_COUNT, "Invalid memory tag value! Above max count of memory tags\n");
     if (memory_tag == MEMORY_TAG_UNKNOWN) {
         LOG_WARN("Allocation | memory tag unknown");
     }
@@ -109,7 +109,7 @@ void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
  */
 void* memory_reallocate(u64 new_byte_allocation_size, void** data) {
     LOG_DEBUG("Reallocation Triggered!\n");
-    assert_in_function(data && *data, "Data passed is null in reallocation");
+    assert_in_function(data && *data, "Data passed is null in reallocation\n");
 
     MemoryHeader header = _memory_extract_header(*data);
     u32 old_allocation_size = header.total_allocation_size;
@@ -129,7 +129,7 @@ void* memory_reallocate(u64 new_byte_allocation_size, void** data) {
  * @param data 
  */
 void memory_free(void** data) {
-    assert_in_function(data && *data, "Data passed is null in free");
+    assert_in_function(data && *data, "Data passed is null in free\n");
     MemoryHeader header = _memory_extract_header(*data);
     global_memory_tags[header.memory_tag] -= header.total_allocation_size;
     
@@ -160,7 +160,7 @@ void memory_zero(u32 data_size_in_bytes, void* data) {
 Boolean memory_byte_compare(u32 buffer_one_size, const void* buffer_one, u32 buffer_two_size, const void* buffer_two) {
     assert_in_function(buffer_one, "memory_byte_compare buffer_one IS NULL\n");
     assert_in_function(buffer_two_size, "memory_byte_compare buffer_two IS NULL\n");
-    assert_in_function(buffer_one == buffer_two, "memory_byte_compare buffer sizes are not equal!");
+    assert_in_function(buffer_one == buffer_two, "memory_byte_compare buffer sizes are not equal!\n");
     u8* buffer_one_data = (u8*)buffer_one;
     u8* buffer_two_data = (u8*)buffer_two;
     for (int i = 0; i < buffer_one_size; i++) {

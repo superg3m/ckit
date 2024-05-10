@@ -80,8 +80,8 @@ u32 string_length(String string) {
  * @return Boolean 
  */
 Boolean string_compare(const char* s1, const char* s2) {
-    assert_in_function(s1, "string_compare first argument is not valid | null");
-    assert_in_function(s2, "string_compare second argument is not valid | null");
+    assert_in_function(s1, "string_compare first argument is not valid | null\n");
+    assert_in_function(s2, "string_compare second argument is not valid | null\n");
 
 	u32 s1_length = c_string_length(s1);
 	u32 s2_length = c_string_length(s2);
@@ -96,8 +96,8 @@ void string_free(String* string) {
 }
 
 void string_append_char(String* string, const char source) {
-    assert_in_function(string && *string, "string_append_char: String passed is null");
-    assert_in_function(source, "string_append_char: Source passed is null");
+    assert_in_function(string && *string, "string_append_char: String passed is null\n");
+    assert_in_function(source, "string_append_char: Source passed is null\n");
 
     u32 source_size = 1;
     StringHeader header = _string_extract_header(*string);
@@ -112,8 +112,8 @@ void string_append_char(String* string, const char source) {
 }
 
 void string_append(String* string, const char* source) {
-    assert_in_function(string && *string, "string_append: String passed is null");
-    assert_in_function(source, "string_append: Source passed is null");
+    assert_in_function(string && *string, "string_append: String passed is null\n");
+    assert_in_function(source, "string_append: Source passed is null\n");
 
     u32 source_size = c_string_length(source) + 1; 
 
