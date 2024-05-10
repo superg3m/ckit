@@ -143,6 +143,8 @@ void memory_free(void** data) {
 }
 
 void memory_copy(u32 source_size, const void* source, u32 destination_size, void* destination) {
+    assert_in_function(source, "MEMORY COPY SOURCE IS NULL\n");
+    assert_in_function(destination, "MEMORY COPY SOURCE IS NULL\n");
     assert_in_function((source_size <= destination_size), "MEMORY COPY SOURCE IS TOO BIG FOR DESTINATION\n");
     for (int i = 0; i < source_size; i++) {
         ((u8*)destination)[i] = ((u8*)source)[i];
@@ -156,6 +158,8 @@ void memory_zero(u32 data_size_in_bytes, void* data) {
 }
 
 Boolean memory_byte_compare(u32 buffer_one_size, const void* buffer_one, u32 buffer_two_size, const void* buffer_two) {
+    assert_in_function(buffer_one, "memory_byte_compare buffer_one IS NULL\n");
+    assert_in_function(buffer_two_size, "memory_byte_compare buffer_two IS NULL\n");
     assert_in_function(buffer_one == buffer_two, "memory_byte_compare buffer sizes are not equal!");
     u8* buffer_one_data = (u8*)buffer_one;
     u8* buffer_two_data = (u8*)buffer_two;
