@@ -96,8 +96,10 @@ void string_free(String* string) {
 }
 
 void string_append_char(String* string, const char source) {
-    u32 source_size = 1;
+    assert_in_function(string && *string, "string_append_char: String passed is null");
+    assert_in_function(source, "string_append_char: Source passed is null");
 
+    u32 source_size = 1;
     StringHeader header = _string_extract_header(*string);
     if (header.length + source_size >= header.capacity) {
         *string = _string_grow((header.length + source_size) * 2, string);
@@ -110,6 +112,9 @@ void string_append_char(String* string, const char source) {
 }
 
 void string_append(String* string, const char* source) {
+    assert_in_function(string && *string, "string_append: String passed is null");
+    assert_in_function(source, "string_append: Source passed is null");
+
     u32 source_size = c_string_length(source) + 1; 
 
     StringHeader header = _string_extract_header(*string);

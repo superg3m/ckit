@@ -109,7 +109,7 @@ void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
  */
 void* memory_reallocate(u64 new_byte_allocation_size, void** data) {
     LOG_DEBUG("Reallocation Triggered!\n");
-    assert_in_function(data, "Data passed is null in reallocation");
+    assert_in_function(data && *data, "Data passed is null in reallocation");
 
     MemoryHeader header = _memory_extract_header(*data);
     u32 old_allocation_size = header.total_allocation_size;
@@ -129,7 +129,7 @@ void* memory_reallocate(u64 new_byte_allocation_size, void** data) {
  * @param data 
  */
 void memory_free(void** data) {
-    assert_in_function(data != NULL && *data != NULL, "Data passed is null in free");
+    assert_in_function(data && *data, "Data passed is null in free");
     MemoryHeader header = _memory_extract_header(*data);
     global_memory_tags[header.memory_tag] -= header.total_allocation_size;
     
