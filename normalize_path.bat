@@ -4,7 +4,7 @@ powershell -nologo -command "Write-Host 'running normalize_path.bat...' -Foregro
 
 setlocal enabledelayedexpansion
 
-set "rootpath=C:\Users\Jovanni Djonaj\Documents\Coding\vscode\C++\CKit\"
+set "rootpath=%~dp0"
 set "tempfile=compilation_errors_temp.txt"
 
 rem Create a new, empty temporary file
