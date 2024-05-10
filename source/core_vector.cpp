@@ -9,11 +9,11 @@
 
 #define VECTOR_DEFAULT_CAPACITY 1
 //========================== Begin Structs ==========================
-struct VectorHeader {
+typedef struct VectorHeader {
     u64 size;
     u64 capacity;
     u16 type_size_in_bytes;
-};
+} VectorHeader;
 //=========================== End Structs ===========================
 
 //************************* Begin Functions *************************

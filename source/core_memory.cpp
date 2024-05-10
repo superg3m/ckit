@@ -15,10 +15,10 @@ Be aware anything allocated from this has a header
 
 
 
-struct MemoryHeader {
+typedef struct MemoryHeader {
     u32 total_allocation_size;
     MemoryTag memory_tag;
-};
+} MemoryHeader;
 
 u8* memory_advance_new_ptr(u32 size_in_bytes, const void* data) {
 	u8* base_address = (u8*)data;

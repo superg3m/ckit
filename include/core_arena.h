@@ -6,7 +6,7 @@
 ===========================================================*/
 #include "core_memory.h"
 
-struct Arena;
+typedef struct Arena Arena;
 
 void _arena_create(Arena *arena, const char* name);
 

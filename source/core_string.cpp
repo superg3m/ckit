@@ -7,10 +7,10 @@
 #include "../include/core_memory.h"
 #include "../include/core_assert.h"
 
-struct StringHeader {
+typedef struct StringHeader {
     u32 length;
     u32 capacity;
-};
+} StringHeader;
 
 u32 c_string_length(const char* c_string) {
     u32 length = 0;

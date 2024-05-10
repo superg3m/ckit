@@ -6,7 +6,7 @@
 ===========================================================*/
 #include "core_types.h"
 
-enum MemoryTag {
+typedef enum MemoryTag {
     MEMORY_TAG_UNKNOWN,
     MEMORY_TAG_STRING,
     MEMORY_TAG_VECTOR,
@@ -14,7 +14,7 @@ enum MemoryTag {
     MEMORY_TAG_ENGINE,
     MEMORY_TAG_TEMPORARY,
     MEMORY_TAG_COUNT
-};
+} MemoryTag;
 
 #define MEMORY_TAG_CHARACTER_LIMIT 16
 static char known_memory_tag_strings[MEMORY_TAG_COUNT][MEMORY_TAG_CHARACTER_LIMIT] = {
@@ -43,7 +43,7 @@ void memory_byte_retreat(u32 size_in_bytes, void** data);
 u8* memory_advance_new_ptr(u32 size_in_bytes, const void* data);
 u8* memory_retreat_new_ptr(u32 size_in_bytes, const void* data);
 
-enum LogLevel;
+typedef enum LogLevel LogLevel;
 void console_write_memory_tags(LogLevel log_level);
 
 // Memory Arena

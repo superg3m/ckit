@@ -13,7 +13,7 @@
  * 
  */
 
-enum ErrorCode {
+typedef enum ErrorCode {
     SUCCESS = 0x0,
     INVALID_ARGUMENT_VALUE = 0x1,
     INVALID_ARGUMENT_VALUE = 0x2,
@@ -24,6 +24,6 @@ enum ErrorCode {
     INVALID_ARGUMENT_VALUE = 0x40,
     INVALID_ARGUMENT_VALUE = 0x80,
     INVALID_ARGUMENT_VALUE = 0x100,
-};
+} ErrorCode;
 
 const char* error_code_readout(ErrorCode error_code);
