@@ -2,11 +2,11 @@
 
 typedef struct Arena {
     char* name;
-    u64 memory_tag_values[MEMORY_TAG_COUNT];
     u64 size;
     u64 used;
+    u64 memory_tag_values[MEMORY_TAG_COUNT];
 } Arena;
 
-void _arena_create(Arena arena, char* name) {
+void _arena_create(Arena arena, const char* name) {
 
 }

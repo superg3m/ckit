@@ -28,6 +28,7 @@ Boolean logger_init();
 
 void logger_shutdown();
 
+
 void _log_output(LogLevel log_level, const char* message, ...);
 #define log_output(log_level, message, ...) _log_output(log_level, message, ##__VA_ARGS__)
 

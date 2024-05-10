@@ -11,9 +11,9 @@
 
 
 // Supported Platform Operations
-void* _platform_allocate(size_t  number_of_bytes);
+void* _platform_allocate(unsigned long long number_of_bytes);
 void _platform_free(void** data);
-void _platform_console_write(size_t message_size_in_bytes, const char* message, unsigned char color);
+void _platform_console_write(unsigned long long message_size_in_bytes, const char* message, unsigned char color);
 void _platform_console_init();
 void _platform_console_shutdown();
 // void _platform_open_window();

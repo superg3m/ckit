@@ -1,6 +1,11 @@
 {
     "files.associations": {
         "type_traits": "cpp",
-        "xtr1common": "cpp"
+        "xtr1common": "cpp",
+        "core_types.h": "c",
+        "platform_services.h": "c",
+        "core_assert.h": "c",
+        "core_memory.h": "c",
+        "core_logger.h": "c"
     }
 }

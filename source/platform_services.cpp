@@ -5,7 +5,7 @@
 #ifndef CUSTOM_PLATFORM_IMPL
 	#ifdef PLATFORM_WINDOWS
 		#include <windows.h>
-		void* _platform_allocate(size_t  number_of_bytes) {
+		void* _platform_allocate(unsigned long long  number_of_bytes) {
 			return VirtualAlloc(NULL, number_of_bytes, MEM_COMMIT, PAGE_READWRITE);
 		}
 
@@ -14,23 +14,6 @@
 			// Date: May 08, 2024
 			// TODO(Jovanni): Look into VirtualProtect() this allows you to change memory access to NO_ACCESS
 			// can help find use after free bugs interesting concept
-		}
-
-		void set_console_buffer_size(int x, int y){
-
-			COORD coord;
-			coord.X = x;
-			coord.Y = y;
-
-			_SMALL_RECT Rect;
-			Rect.Top = 0;
-			Rect.Left = 0;
-			Rect.Bottom = x;
-			Rect.Right = y;
-
-			// Adjust buffer size:
-			HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);    
-			SetConsoleScreenBufferSize(handle, coord);
 		}
 
 		void _platform_console_init() {
@@ -47,7 +30,7 @@
 			FreeConsole();
 		}
 
-		void _platform_console_write(size_t message_size_in_bytes, const char* message, unsigned char color) {
+		void _platform_console_write(unsigned long long message_size_in_bytes, const char* message, unsigned char color) {
 			// Date: May 01, 2024
 			// TODO(Jovanni): This code is very flaky I would suggest fixing it
 			DWORD num_written_bytes = 0;
