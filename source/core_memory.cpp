@@ -71,8 +71,11 @@ void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
     memory_zero(&header, sizeof(header));
 	header.total_allocation_size = sizeof(header) + byte_allocation_size; 
 
+    // Date: May 11, 2024
+    // TODO(Jovanni): Look at this because this is really odd having to subtract sizeof(header)
     header.memory_tag = memory_tag;
-    global_memory_tags[memory_tag] += header.total_allocation_size;
+    global_memory_tags[MEMORY_TAG_INTERNAL] += sizeof(header);
+    global_memory_tags[memory_tag] += (header.total_allocation_size - sizeof(header));
 
 	void* data = platform_allocate(header.total_allocation_size);
     // Date: May 09, 2024
@@ -95,6 +98,10 @@ void* memory_reallocate(void* data, u64 new_byte_allocation_size) {
 
     MemoryHeader header = *_memory_extract_header(data);
     u32 old_allocation_size = header.total_allocation_size;
+    // Date: May 11, 2024
+    // TODO(Jovanni): I want to show the amount of internal allocations happening so i want to say
+    // global_memory[MEMORY_TAG_INTERNAL] += sizeof(header) for each allocation
+    //  for each free
     header.total_allocation_size = sizeof(header) + new_byte_allocation_size;
 	void* ret_data = memory_allocate(new_byte_allocation_size, header.memory_tag);
     _memory_insert_header(ret_data, header);
@@ -114,7 +121,8 @@ void* MACRO_memory_free(void* data) {
     assert_in_function(data, "Data passed is null in free\n");
     const MemoryHeader header = *_memory_extract_header(data);
     assert_in_function(header.memory_tag >= 0 && header.memory_tag < MEMORY_TAG_COUNT, "Data passed is null in free\n");
-    global_memory_tags[header.memory_tag] -= header.total_allocation_size;
+    global_memory_tags[MEMORY_TAG_INTERNAL] -= sizeof(header);
+    global_memory_tags[header.memory_tag] -= (header.total_allocation_size - sizeof(header));
     
     memory_byte_retreat(data, sizeof(header));
     // Date: May 09, 2024

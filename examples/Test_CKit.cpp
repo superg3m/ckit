@@ -93,7 +93,7 @@ void test_vector_operations() {
   assert_in_macro(charVector == NULLPTR, "Error: Vector data is not NULL");
   assert_in_macro(stringVector == NULLPTR, "Error: Vector data is not NULL");
 
-  LOG_INFO("All vector tests passed!\n"); 
+  LOG_INFO("All vector tests passed!\n\n"); 
   return;
 }
 
@@ -109,25 +109,21 @@ int main() {
     LOG_PRINT("String: %s\n", str);
 
     test_vector_operations();
-
-    return 0;
     
     string_free(str);
 
     int* int_array = (int*)memory_allocate(sizeof(int) * 5, MEMORY_TAG_TEMPORARY);
     int* int_array2 = (int*)memory_allocate(sizeof(int) * 5, MEMORY_TAG_TEMPORARY);
-    LOG_ERROR("Element: %d\n", int_array[0]);
+    LOG_ERROR("Element: %d (SHOULD BE ZERO)\n\n", int_array[0]);
     for (int i = 0; i < 5; i++) {
         int_array2[i] = 1432;
     }
 
     memory_copy(int_array2, int_array, sizeof(int) * 5, sizeof(int) * 5);
     for (int i = 0; i < 5; i++) {
-        assert_in_macro(int_array[i] == 1432, "Memory copy is fucked!\n");
+        assert_in_macro(int_array[i] == 1432, "Memory copy is fucked!");
         LOG_INFO("Element: %d\n", int_array[i]);
     }
-    
-    //console_write_memory_tags();
 
     LOG_DEBUG("Element: %d\n", int_array[0]);
 
@@ -136,7 +132,16 @@ int main() {
     LOG_WARN("TESTING\n");
     LOG_DEBUG("TESTING\n");
     LOG_INFO("TESTING\n");
-    LOG_PRINT("TESTING %s\n", str);
+    LOG_PRINT("TESTING %s\n\n", str);
+
+    memory_write_memory_tags(LOG_LEVEL_WARN);
+
+    memory_free(int_array);
+    memory_free(int_array2);
+    
+    memory_write_memory_tags(LOG_LEVEL_ERROR);
+
+    
 
     return 0;
 }

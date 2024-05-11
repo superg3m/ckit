@@ -16,16 +16,20 @@ typedef enum MemoryTag {
     MEMORY_TAG_APPLICATION,
     MEMORY_TAG_ENGINE,
     MEMORY_TAG_TEMPORARY,
+    MEMORY_TAG_ARENA,
+    MEMORY_TAG_INTERNAL,
     MEMORY_TAG_COUNT
 } MemoryTag;
 
 static char known_memory_tag_strings[MEMORY_TAG_COUNT][MEMORY_TAG_CHARACTER_LIMIT] = {
     "UNKNOWN      : ",
     "STRING       : ",
-    "DYNAMIC_ARRAY: ",
+    "VECTOR       : ",
     "APPLICATION  : ",
     "ENGINE       : ",
     "TEMPORARY    : ",
+    "ARENA        : ",
+    "INTERNAL     : ",
 };
 
 static u64 global_memory_tags[MEMORY_TAG_COUNT];

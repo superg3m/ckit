@@ -14,8 +14,7 @@
  */
 
 typedef enum ErrorCode {
-    SUCCESS = 0x0,
-    INVALID_ARGUMENT_VALUE = 0x1,
+    SUCCESS = 0x1,
     INVALID_ARGUMENT_VALUE = 0x2,
     INVALID_ARGUMENT_VALUE = 0x4,
     INVALID_ARGUMENT_VALUE = 0x8,
@@ -24,6 +23,7 @@ typedef enum ErrorCode {
     INVALID_ARGUMENT_VALUE = 0x40,
     INVALID_ARGUMENT_VALUE = 0x80,
     INVALID_ARGUMENT_VALUE = 0x100,
+    INVALID_ARGUMENT_VALUE = 0x200,
 } ErrorCode;
 
 const char* error_code_readout(ErrorCode error_code);
