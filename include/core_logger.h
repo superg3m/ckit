@@ -1,9 +1,10 @@
 #pragma once
 /*===========================================================
  * File: core_logger.h
- * Date: April 30, 2024
+ * Date: May 11, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
+
 #include "core_types.h"
 
 #define LOGGING_ENABLED TRUE
@@ -13,7 +14,7 @@
 #define LOG_WARN_ENABLED TRUE
 
 #define LOG_LEVEL_CHARACTER_LIMIT 11
-
+//========================== Begin Structs ==========================
 typedef enum LogLevel {
     LOG_LEVEL_FATAL,
     LOG_LEVEL_ERROR,
@@ -23,7 +24,9 @@ typedef enum LogLevel {
     LOG_LEVEL_PRINT,
     LOG_LEVEL_COUNT
 } LogLevel;
+//=========================== End Structs ===========================
 
+//************************* Begin Functions *************************
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -33,7 +36,9 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
+//************************** End Functions **************************
 
+//+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
 #define log_output(log_level, message, ...) MACRO_log_output(log_level, message, ##__VA_ARGS__)
 
 #if (LOG_PRINT_ENABLED)
@@ -60,10 +65,13 @@ extern "C" {
     #define LOG_WARN(message, ...)
 #endif
 
-/**
- * @brief Fix this the function and line should carry from here but it should also be pushed into the assert that way you can change it if you are 
- * in a function
- * 
- */
 #define LOG_ERROR(message, ...) log_output(LOG_LEVEL_ERROR, message, ##__VA_ARGS__)
 #define LOG_FATAL(message, ...) log_output(LOG_LEVEL_FATAL, message, ##__VA_ARGS__)
+//++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
+
+
+
+
+
+
+

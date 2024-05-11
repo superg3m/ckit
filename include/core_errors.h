@@ -1,3 +1,39 @@
+/*===========================================================
+ * File: core_errors.h
+ * Date: May 11, 2024
+ * Creator: Jovanni Djonaj
+===========================================================*/
+
+//========================== Begin Structs ==========================
+typedef enum ErrorCode {
+    SUCCESS = 0x1,
+    INVALID_ARGUMENT_VALUE = 0x2,
+    INVALID_ARGUMENT_VALUE = 0x4,
+    INVALID_ARGUMENT_VALUE = 0x8,
+    INVALID_ARGUMENT_VALUE = 0x10,
+    INVALID_ARGUMENT_VALUE = 0x20,
+    INVALID_ARGUMENT_VALUE = 0x40,
+    INVALID_ARGUMENT_VALUE = 0x80,
+    INVALID_ARGUMENT_VALUE = 0x100,
+    INVALID_ARGUMENT_VALUE = 0x200,
+} ErrorCode;
+//=========================== End Structs ===========================
+
+//************************* Begin Functions *************************
+#ifdef __cplusplus
+extern "C" {
+#endif
+    const char* error_code_readout(ErrorCode error_code);
+#ifdef __cplusplus
+}
+#endif
+//************************** End Functions **************************
+
+//+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
+
+
+
 
 /**
  * @brief Powers of Two for quick lookups
@@ -13,17 +49,4 @@
  * 
  */
 
-typedef enum ErrorCode {
-    SUCCESS = 0x1,
-    INVALID_ARGUMENT_VALUE = 0x2,
-    INVALID_ARGUMENT_VALUE = 0x4,
-    INVALID_ARGUMENT_VALUE = 0x8,
-    INVALID_ARGUMENT_VALUE = 0x10,
-    INVALID_ARGUMENT_VALUE = 0x20,
-    INVALID_ARGUMENT_VALUE = 0x40,
-    INVALID_ARGUMENT_VALUE = 0x80,
-    INVALID_ARGUMENT_VALUE = 0x100,
-    INVALID_ARGUMENT_VALUE = 0x200,
-} ErrorCode;
 
-const char* error_code_readout(ErrorCode error_code);

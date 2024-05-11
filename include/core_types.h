@@ -20,7 +20,20 @@ typedef uint64_t u64;
 
 typedef u8 Boolean;
 
+//========================== Begin Structs ==========================
+//=========================== End Structs ===========================
 
+//************************* Begin Functions *************************
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifdef __cplusplus
+}
+#endif
+//************************** End Functions **************************
+
+//+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
 #define TRUE 1
 #define FALSE 0
 #define NULLPTR 0
@@ -54,3 +67,4 @@ typedef u8 Boolean;
 // Date: May 04, 2024
 // TODO(Jovanni): This is gonna be a problem no doubt
 #define PLATFORM_CHARACTER_LIMIT 200
+//++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++

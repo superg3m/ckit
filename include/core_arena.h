@@ -1,11 +1,12 @@
 #pragma once
 /*===========================================================
  * File: core_arena.h
- * Date: April 30, 2024
+ * Date: May 11, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
 #include "core_memory.h"
 
+//========================== Begin Structs ==========================
 typedef enum ArenaFlags {
     ARENA_CIRCULAR = 0x1,
     ARENA_VECTOR = 0x2,
@@ -19,13 +20,25 @@ typedef struct Arena {
     void* base_address;
     u64 memory_tag_values[MEMORY_TAG_COUNT];
 } Arena;
+//=========================== End Structs ===========================
 
-Arena _arena_create(const char* name, ArenaFlags flags);
+//************************* Begin Functions *************************
+#ifdef __cplusplus
+extern "C" {
+#endif
+  Arena _arena_create(const char* name, ArenaFlags flags);
+#ifdef __cplusplus
+}
+#endif
+//************************** End Functions **************************
 
-/**
- * @brief Modifies the provided arena
- * 
- */
+//+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
 #define arena_create(arena, flags) arena = _arena_create(stringify(arena), flags)
+//++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
+
+
+
+
+
 
 

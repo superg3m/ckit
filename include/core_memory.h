@@ -6,9 +6,9 @@
 ===========================================================*/
 #include "core_types.h"
 
-
-//========================== Begin Constants ==========================
 #define MEMORY_TAG_CHARACTER_LIMIT 16
+typedef enum LogLevel LogLevel;
+//========================== Begin Structs ==========================
 typedef enum MemoryTag {
     MEMORY_TAG_UNKNOWN,
     MEMORY_TAG_STRING,
@@ -33,11 +33,7 @@ static char known_memory_tag_strings[MEMORY_TAG_COUNT][MEMORY_TAG_CHARACTER_LIMI
 };
 
 static u64 global_memory_tags[MEMORY_TAG_COUNT];
-//=========================== End Constants ===========================
-
-
-typedef enum LogLevel LogLevel;
-
+//=========================== End Structs ===========================
 
 //************************* Begin Functions *************************
 #ifdef __cplusplus
@@ -60,8 +56,6 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-
-
 //************************** End Functions **************************
 
 
