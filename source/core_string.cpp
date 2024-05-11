@@ -97,7 +97,7 @@ String MACRO_string_free(String string) {
 }
 
 String MACRO_string_append(String string, const char* source) {
-    assert_in_function(string && *string, "string_append: String passed is null\n");
+    assert_in_function(string, "string_append: String passed is null\n");
     assert_in_function(source, "string_append: Source passed is null\n");
 
     u32 source_size = c_string_length(source) + 1; 
@@ -116,7 +116,7 @@ String MACRO_string_append(String string, const char* source) {
 }
 
 String MACRO_string_append_char(String string, const char source) {
-    assert_in_function(string && *string, "string_append_char: String passed is null\n");
+    assert_in_function(string, "string_append_char: String passed is null\n");
     assert_in_function(source, "string_append_char: Source passed is null\n");
 
     u32 source_size = 1;
