@@ -3,6 +3,16 @@
 #include "../include/core_string.h"
 #include "../include/core_assert.h"
 
+/*===========================================================
+ * File: platform_services.cpp
+ * Date: May 11, 2024
+ * Creator: Jovanni Djonaj
+===========================================================*/
+
+//========================== Begin Structs ==========================
+//=========================== End Structs ===========================
+
+//************************* Begin Functions *************************
 // DEFAULT IMPLEMENTATION
 #ifndef CUSTOM_PLATFORM_IMPL
 	#ifdef PLATFORM_WINDOWS
@@ -139,3 +149,10 @@
 	#elif PLATFORM_MACOS
 	#endif
 #endif
+//************************** End Functions **************************
+
+//+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
+
+
+

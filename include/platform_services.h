@@ -23,15 +23,22 @@
 
 //************************* Begin Functions *************************
 // Supported Platform Operations
-void* platform_allocate(unsigned long long number_of_bytes);
-void* MACRO_platform_free(void* data);
-void platform_console_write(const char* message, unsigned char color);
-void platform_console_init();
-void platform_console_shutdown();
-// void _platform_open_window();
-// void _platform_open_file();
-// void _platform_close_file();
-// void _platform_sleep();
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+  void* platform_allocate(unsigned long long number_of_bytes);
+  void* MACRO_platform_free(void* data);
+  void platform_console_write(const char* message, unsigned char color);
+  void platform_console_init();
+  void platform_console_shutdown();
+  // void _platform_open_window();
+  // void _platform_open_file();
+  // void _platform_close_file();
+  // void _platform_sleep();
+#ifdef __cplusplus
+}
+#endif
 
 //************************** End Functions **************************
 

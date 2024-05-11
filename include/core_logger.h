@@ -24,13 +24,17 @@ typedef enum LogLevel {
     LOG_LEVEL_COUNT
 } LogLevel;
 
-Boolean logger_init();
+#ifdef __cplusplus
+extern "C" {
+#endif
+    Boolean logger_init();
+    void logger_shutdown();
+    void MACRO_log_output(LogLevel log_level, const char* message, ...);
+#ifdef __cplusplus
+}
+#endif
 
-void logger_shutdown();
-
-
-void _log_output(LogLevel log_level, const char* message, ...);
-#define log_output(log_level, message, ...) _log_output(log_level, message, ##__VA_ARGS__)
+#define log_output(log_level, message, ...) MACRO_log_output(log_level, message, ##__VA_ARGS__)
 
 #if (LOG_PRINT_ENABLED)
     #define LOG_PRINT(message, ...) log_output(LOG_LEVEL_PRINT, message, ##__VA_ARGS__)

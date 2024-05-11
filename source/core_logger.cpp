@@ -27,7 +27,7 @@ Boolean logger_init() {
  * @param message 
  * @param ... 
  */
-void _log_output(LogLevel log_level, const char* message, ...) {
+void MACRO_log_output(LogLevel log_level, const char* message, ...) {
     char log_level_strings[LOG_LEVEL_COUNT][LOG_LEVEL_CHARACTER_LIMIT] = {
         "[FATAL]: ",
         "[ERROR]: ",
