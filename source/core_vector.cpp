@@ -69,8 +69,6 @@ void* _vector_grow(void** vector) {
     return ret;
 }
 
-
-
 u64 vector_size(void* vector) {
 	assert_in_function(_vector_validate(vector), "The dynamic array size failed (freed before this call!)\n");
     VectorHeader header = _vector_extract_header(vector);
