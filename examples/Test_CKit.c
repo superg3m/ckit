@@ -3,7 +3,7 @@
 void test_vector_operations() {
   // Test types
   int intArray[] = {1, 2, 3, 4, 5};
-  bool boolArray[] = {true, false, true, true, false};
+  Boolean boolArray[] = {TRUE, FALSE, TRUE, TRUE, FALSE};
   char charArray[] = {'a', 'b', 'c', 'd', 'e'};
   char* stringArray[] = {"Hello", "World", "!", "OpenAI", "GPT-3"};
 
@@ -14,7 +14,7 @@ void test_vector_operations() {
   }
 
   // Create vector of bool
-  bool* boolVector = vector_reserve(5, bool);
+  Boolean* boolVector = vector_reserve(5, Boolean);
   for (int i = 0; i < 5; i++) {
     vector_push(boolVector, boolArray[i]);
   }
@@ -38,7 +38,7 @@ void test_vector_operations() {
   }
 
   for (int i = 0; i < vector_size(boolVector); i++) {
-    bool element = boolVector[i];
+    Boolean element = boolVector[i];
     assert_in_macro(element == boolArray[i], "Error: Incorrect element value");
   }
 
@@ -59,7 +59,8 @@ void test_vector_operations() {
 
   int before_popped_int = intVector[vector_size(intVector) - 1];
   int after_popped_int = vector_pop(intVector, int);
-  vector_push(intVector, 10);
+  int element_to_push_for_int = 10;
+  vector_push(intVector, element_to_push_for_int);
 
   for (int i = 0; i < vector_size(intVector); i++) {
     int element = intVector[i];
@@ -72,7 +73,8 @@ void test_vector_operations() {
   char* after_popped_string = vector_pop(stringVector, char*);
   // Date: May 10, 2024
   // NOTE(Jovanni): This might not work?
-  vector_push(stringVector, &"TRYING TO PUSH A LITERAL!\n");
+  char* string_to_push = "TRYING TO PUSH A LITERAL!\n";
+  vector_push(stringVector, string_to_push);
 
   assert_in_macro(string_compare(before_popped_string, after_popped_string), "Error: Incorrect popped element value");
   LOG_WARN("New PUSH: %s\n", stringVector[vector_size(intVector) - 1]);
