@@ -33,7 +33,7 @@ static u64 global_memory_tags[MEMORY_TAG_COUNT];
 
 
 typedef enum LogLevel LogLevel;
-void console_write_memory_tags(LogLevel log_level);
+void memory_write_memory_tags(LogLevel log_level);
 
 //************************* Begin Functions *************************
 void* memory_allocate(u64 number_of_bytes, MemoryTag memory_tag);

@@ -34,22 +34,22 @@ void test_vector_operations() {
   // Test get
   for (int i = 0; i < vector_size(intVector); i++) {
     int element = intVector[i];
-    assert_in_function(element == intArray[i], "Error: Incorrect element value\n");
+    assert_in_macro(element == intArray[i], "Error: Incorrect element value");
   }
 
   for (int i = 0; i < vector_size(boolVector); i++) {
     bool element = boolVector[i];
-    assert_in_function(element == boolArray[i], "Error: Incorrect element value\n");
+    assert_in_macro(element == boolArray[i], "Error: Incorrect element value");
   }
 
   for (int i = 0; i < vector_size(charVector); i++) {
     char element = charVector[i];
-    assert_in_function(element == charArray[i], "Error: Incorrect element value\n");
+    assert_in_macro(element == charArray[i], "Error: Incorrect element value");
   }
 
   for (int i = 0; i < vector_size(stringVector); i++) {
     char* element = stringVector[i];
-    assert_in_function(string_compare(element, stringArray[i]), "Error: Incorrect element value\n");
+    assert_in_macro(string_compare(element, stringArray[i]), "Error: Incorrect element value");
   }
 
   // Test pop
@@ -74,10 +74,10 @@ void test_vector_operations() {
   // NOTE(Jovanni): This might not work?
   vector_push(stringVector, &"TRYING TO PUSH A LITERAL!\n");
 
-  assert_in_function(string_compare(before_popped_string, after_popped_string), "Error: Incorrect popped element value\n");
+  assert_in_macro(string_compare(before_popped_string, after_popped_string), "Error: Incorrect popped element value");
   LOG_WARN("New PUSH: %s\n", stringVector[vector_size(intVector) - 1]);
 
-  console_write_memory_tags(LOG_LEVEL_ERROR);
+  memory_write_memory_tags(LOG_LEVEL_ERROR);
 
   // Test free
   vector_free(intVector);
@@ -85,13 +85,13 @@ void test_vector_operations() {
   vector_free(charVector);
   vector_free(stringVector);
 
-  console_write_memory_tags(LOG_LEVEL_WARN);
+  memory_write_memory_tags(LOG_LEVEL_WARN);
 
   // Assert that the data is NULL
-  assert_in_function(intVector == NULLPTR, "Error: Vector data is not NULL\n");
-  assert_in_function(boolVector == NULLPTR, "Error: Vector data is not NULL\n");
-  assert_in_function(charVector == NULLPTR, "Error: Vector data is not NULL\n");
-  assert_in_function(stringVector == NULLPTR, "Error: Vector data is not NULL\n");
+  assert_in_macro(intVector == NULLPTR, "Error: Vector data is not NULL");
+  assert_in_macro(boolVector == NULLPTR, "Error: Vector data is not NULL");
+  assert_in_macro(charVector == NULLPTR, "Error: Vector data is not NULL");
+  assert_in_macro(stringVector == NULLPTR, "Error: Vector data is not NULL");
 
   LOG_INFO("All vector tests passed!\n"); 
   return;
@@ -101,7 +101,7 @@ int main() {
     String str = string_create("aasfhsdfsdfjsdljflsdkf");
     LOG_PRINT("String: %s\n", str);
     LOG_PRINT("String Length: %d\n", string_length(str));
-	  console_write_memory_tags(LOG_LEVEL_INFO);
+	  memory_write_memory_tags(LOG_LEVEL_INFO);
     string_append_char(str, 'a');
     LOG_PRINT("String: %s\n", str);
 

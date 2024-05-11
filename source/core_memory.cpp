@@ -50,40 +50,14 @@ void* MACRO_memory_byte_retreat(const void* data, u32 size_in_bytes) {
  * @return internal 
  */
 void* MACRO_memory_insert_header(void* data, MemoryHeader header) {
-	memory_copy(&header, data, sizeof(header), sizeof(header));
+    ((MemoryHeader*)data)[0] = header;
 	memory_byte_advance(data, sizeof(header));
     return data;
 }
 #define _memory_insert_header(data, header) data = MACRO_memory_insert_header(data, header);
 
-/**
- * @brief just update don't advance
- * 
- * @param header 
- * @param data 
- * @return internal 
- */
-internal void _memory_update_header(void* data, MemoryHeader header) {
-    // Date: May 10, 2024
-    // TODO(Jovanni): Fix this because this is the correct way to do this
-    //MemoryHeader* new_header = (MemoryHeader*)memory_retreat_new_ptr(data, sizeof(header));
-    //*new_header = header;
-
-    memory_byte_retreat(data, sizeof(header));
-	memory_copy(&header, data, sizeof(header), sizeof(header));
-	memory_byte_advance(data, sizeof(header));
-}
-
-
-MemoryHeader _memory_extract_header(void* data) {
-    // Date: May 10, 2024
-    // TODO(Jovanni): You can totally get allocation size from the data to replace sizeof(header)
-	MemoryHeader header;
-	memory_zero(&header, sizeof(header));
-    memory_byte_retreat(data, sizeof(header));
-	memory_copy(data, &header, sizeof(header), sizeof(header));
-    memory_byte_advance(data, sizeof(header));
-	return header;
+MemoryHeader* _memory_extract_header(void* data) {
+	return &((MemoryHeader*)data)[-1];
 }
 
 void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
@@ -91,7 +65,7 @@ void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
     assert_in_function(memory_tag >= 0, "Invalid memory tag value! Below Zero\n");
     assert_in_function(memory_tag < MEMORY_TAG_COUNT, "Invalid memory tag value! Above max count of memory tags\n");
     if (memory_tag == MEMORY_TAG_UNKNOWN) {
-        LOG_WARN("Allocation | memory tag unknown");
+        LOG_WARN("Allocation | memory tag unknown\n");
     }
 	MemoryHeader header;
     memory_zero(&header, sizeof(header));
@@ -119,7 +93,7 @@ void* memory_reallocate(void* data, u64 new_byte_allocation_size) {
     LOG_DEBUG("Reallocation Triggered!\n");
     assert_in_function(data, "Data passed is null in reallocation\n");
 
-    MemoryHeader header = _memory_extract_header(data);
+    MemoryHeader header = *_memory_extract_header(data);
     u32 old_allocation_size = header.total_allocation_size;
     header.total_allocation_size = sizeof(header) + new_byte_allocation_size;
 	void* ret_data = memory_allocate(new_byte_allocation_size, header.memory_tag);
@@ -138,7 +112,8 @@ void* memory_reallocate(void* data, u64 new_byte_allocation_size) {
  */
 void* MACRO_memory_free(void* data) {
     assert_in_function(data, "Data passed is null in free\n");
-    MemoryHeader header = _memory_extract_header(data);
+    const MemoryHeader header = *_memory_extract_header(data);
+    assert_in_function(header.memory_tag >= 0 && header.memory_tag < MEMORY_TAG_COUNT, "Data passed is null in free\n");
     global_memory_tags[header.memory_tag] -= header.total_allocation_size;
     
     memory_byte_retreat(data, sizeof(header));
@@ -180,7 +155,7 @@ Boolean memory_byte_compare(const void* buffer_one, const void* buffer_two, u32 
     return TRUE;
 }
 
-void console_write_memory_tags(LogLevel log_level) {
+void memory_write_memory_tags(LogLevel log_level) {
     char out_message[PLATFORM_CHARACTER_LIMIT];
     char out_message2[PLATFORM_CHARACTER_LIMIT];
     char out_message3[PLATFORM_CHARACTER_LIMIT];

@@ -22,26 +22,18 @@ u32 c_string_length(const char* c_string) {
 }
 
 internal String MACRO_string_insert_header(String string, StringHeader header) {
-    memory_copy(&header, string, sizeof(header), sizeof(header));
+    ((StringHeader*)string)[0] = header;
     memory_byte_advance(string, sizeof(header));
     return string;
 }
 #define _string_insert_header(string, header) string = MACRO_string_insert_header(string, header);
 
-internal inline void _string_update_header(String string, StringHeader newHeader) {
-    // Date: May 10, 2024
-    // NOTE(Jovanni): This might not work idk if string - sizeof(newHeader) is allowed
-    memory_copy(&newHeader, string - sizeof(newHeader), sizeof(newHeader), sizeof(newHeader));
-}
-
-internal inline StringHeader _string_extract_header(String string) {
-    StringHeader header;
-    memory_copy((string - sizeof(header)), &header, sizeof(header), sizeof(header));
-    return header;
+internal StringHeader* _string_extract_header(String string) {
+    return &((StringHeader*)string)[-1];
 }
 
 internal inline String _string_grow(String string, u32 new_allocation_size) {
-    StringHeader header = _string_extract_header(string);
+    StringHeader header = *_string_extract_header(string);
     header.capacity = new_allocation_size;
     memory_byte_retreat(string, sizeof(header)); // Could be a problem
     String ret = (String)memory_reallocate(string, sizeof(header) + new_allocation_size);
@@ -68,8 +60,8 @@ String string_create(const char* c_string) {
 void string_copy(); // Careful about the header
 void string_concat();
 u32 string_length(String string) {
-    StringHeader header = _string_extract_header(string);
-    return header.length;
+    StringHeader* header = _string_extract_header(string);
+    return header->length;
 }
 
 /**
@@ -102,16 +94,16 @@ String MACRO_string_append(String string, const char* source) {
 
     u32 source_size = c_string_length(source) + 1; 
 
-    StringHeader header = _string_extract_header(string);
-    if (header.length + source_size >= header.capacity) {
-        string = _string_grow(string, (header.length + source_size) * 2);
+    StringHeader* header = _string_extract_header(string);
+    if (header->length + source_size >= header->capacity) {
+        string = _string_grow(string, (header->length + source_size) * 2);
         header = _string_extract_header(string);
     }
 
-    u8* dest_ptr = memory_advance_new_ptr(string, header.length);
-	header.length++;
+    u8* dest_ptr = memory_advance_new_ptr(string, header->length);
+	header->length++;
     memory_copy(source, dest_ptr, source_size, source_size);
-    _string_update_header(string, header);
+    
     return string;
 }
 
@@ -120,15 +112,14 @@ String MACRO_string_append_char(String string, const char source) {
     assert_in_function(source, "string_append_char: Source passed is null\n");
 
     u32 source_size = 1;
-    StringHeader header = _string_extract_header(string);
-    if (header.length + source_size >= header.capacity) {
-        string = _string_grow(string, (header.length + source_size) * 2);
+    StringHeader* header = _string_extract_header(string);
+    if (header->length + source_size >= header->capacity) {
+        string = _string_grow(string, (header->length + source_size) * 2);
         header = _string_extract_header(string);
     }
 
-    string[header.length] = source;
-	header.length++;
-    _string_update_header(string, header);
+    string[header->length] = source;
+	header->length++;
 
     return string;
 }
