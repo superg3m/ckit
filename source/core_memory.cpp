@@ -13,35 +13,33 @@ Be aware anything allocated from this has a header
 #include "../include/platform_services.h"
 #include "../include/core_assert.h"
 
-
-
 typedef struct MemoryHeader {
     u32 total_allocation_size;
     MemoryTag memory_tag;
 } MemoryHeader;
 
-u8* memory_advance_new_ptr(u32 size_in_bytes, const void* data) {
+u8* memory_advance_new_ptr(const void* data, u32 size_in_bytes) {
 	u8* base_address = (u8*)data;
 	base_address += size_in_bytes;
     return base_address;
 }
 
-u8* memory_retreat_new_ptr(u32 size_in_bytes, const void* data) {
+u8* memory_retreat_new_ptr(const void* data, u32 size_in_bytes) {
 	u8* base_address = (u8*)data;
 	base_address -= size_in_bytes;
     return base_address;
 }
 
-void memory_byte_advance(u32 size_in_bytes, void** data) {
-	u8* base_address = (u8*)*data;
+void* MACRO_memory_byte_advance(const void* data, u32 size_in_bytes) {
+	u8* base_address = (u8*)data;
 	base_address += size_in_bytes;
-    *data = base_address;
+    return base_address;
 }
 
-void memory_byte_retreat(u32 size_in_bytes, void** data) {
-	u8* base_address = (u8*)*data;
+void* MACRO_memory_byte_retreat(const void* data, u32 size_in_bytes) {
+	u8* base_address = (u8*)data;
 	base_address -= size_in_bytes;
-    *data = base_address;
+    return base_address;
 }
 
 /**
@@ -51,10 +49,12 @@ void memory_byte_retreat(u32 size_in_bytes, void** data) {
  * @param data 
  * @return internal 
  */
-internal void _memory_insert_header(MemoryHeader header, void** data) {
-	memory_copy(sizeof(header), &header, sizeof(header), *data);
-	memory_byte_advance(sizeof(header), data);
+void* MACRO_memory_insert_header(void* data, MemoryHeader header) {
+	memory_copy(&header, data, sizeof(header), sizeof(header));
+	memory_byte_advance(data, sizeof(header));
+    return data;
 }
+#define _memory_insert_header(data, header) data = MACRO_memory_insert_header(data, header);
 
 /**
  * @brief just update don't advance
@@ -63,18 +63,26 @@ internal void _memory_insert_header(MemoryHeader header, void** data) {
  * @param data 
  * @return internal 
  */
-internal void _memory_update_header(MemoryHeader header, void** data) {
-    memory_byte_retreat(sizeof(header), data);
-	memory_copy(sizeof(header), &header, sizeof(header), data);
-	memory_byte_advance(sizeof(header), data);
+internal void _memory_update_header(void* data, MemoryHeader header) {
+    // Date: May 10, 2024
+    // TODO(Jovanni): Fix this because this is the correct way to do this
+    //MemoryHeader* new_header = (MemoryHeader*)memory_retreat_new_ptr(data, sizeof(header));
+    //*new_header = header;
+
+    memory_byte_retreat(data, sizeof(header));
+	memory_copy(&header, data, sizeof(header), sizeof(header));
+	memory_byte_advance(data, sizeof(header));
 }
 
+
 MemoryHeader _memory_extract_header(void* data) {
+    // Date: May 10, 2024
+    // TODO(Jovanni): You can totally get allocation size from the data to replace sizeof(header)
 	MemoryHeader header;
-	memory_zero(sizeof(header), &header);
-    memory_byte_retreat(sizeof(header), MUTABLE_VOID_POINTER(data));
-	memory_copy(sizeof(header), data, sizeof(header), &header);
-    memory_byte_advance(sizeof(header), MUTABLE_VOID_POINTER(data));
+	memory_zero(&header, sizeof(header));
+    memory_byte_retreat(data, sizeof(header));
+	memory_copy(data, &header, sizeof(header), sizeof(header));
+    memory_byte_advance(data, sizeof(header));
 	return header;
 }
 
@@ -86,17 +94,17 @@ void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
         LOG_WARN("Allocation | memory tag unknown");
     }
 	MemoryHeader header;
-    memory_zero(sizeof(header), &header);
+    memory_zero(&header, sizeof(header));
 	header.total_allocation_size = sizeof(header) + byte_allocation_size; 
 
     header.memory_tag = memory_tag;
     global_memory_tags[memory_tag] += header.total_allocation_size;
 
-	void* data = _platform_allocate(header.total_allocation_size);
+	void* data = platform_allocate(header.total_allocation_size);
     // Date: May 09, 2024
     // TODO(Jovanni): Technically you are repeating work here
-	memory_zero(header.total_allocation_size, data);
-	_memory_insert_header(header, MUTABLE_VOID_POINTER(data));
+	memory_zero(data, header.total_allocation_size);
+	_memory_insert_header(data, header);
     return data;
 }
 
@@ -107,17 +115,17 @@ void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
  * @param data 
  * @return void* 
  */
-void* memory_reallocate(u64 new_byte_allocation_size, void** data) {
+void* memory_reallocate(void* data, u64 new_byte_allocation_size) {
     LOG_DEBUG("Reallocation Triggered!\n");
-    assert_in_function(data && *data, "Data passed is null in reallocation\n");
+    assert_in_function(data, "Data passed is null in reallocation\n");
 
-    MemoryHeader header = _memory_extract_header(*data);
+    MemoryHeader header = _memory_extract_header(data);
     u32 old_allocation_size = header.total_allocation_size;
     header.total_allocation_size = sizeof(header) + new_byte_allocation_size;
 	void* ret_data = memory_allocate(new_byte_allocation_size, header.memory_tag);
-    _memory_insert_header(header, MUTABLE_VOID_POINTER(ret_data));
+    _memory_insert_header(ret_data, header);
 
-    memory_copy(header.total_allocation_size - sizeof(header), *data, new_byte_allocation_size, ret_data);
+    memory_copy(data, ret_data, header.total_allocation_size - sizeof(header), new_byte_allocation_size);
 	memory_free(data);
 
     return ret_data;
@@ -126,23 +134,23 @@ void* memory_reallocate(u64 new_byte_allocation_size, void** data) {
 /**
  * @brief Ensure that if you 
  * 
- * @param data 
+ * @param data
  */
-void memory_free(void** data) {
-    assert_in_function(data && *data, "Data passed is null in free\n");
-    MemoryHeader header = _memory_extract_header(*data);
+void* MACRO_memory_free(void* data) {
+    assert_in_function(data, "Data passed is null in free\n");
+    MemoryHeader header = _memory_extract_header(data);
     global_memory_tags[header.memory_tag] -= header.total_allocation_size;
     
-    memory_byte_retreat(sizeof(header), data);
+    memory_byte_retreat(data, sizeof(header));
     // Date: May 09, 2024
     // NOTE(Jovanni): Should I actually do this? Should I zero out the memory I free?
-	memory_zero(header.total_allocation_size , *data);
-    
-    _platform_free(data);
-	*data = NULL;
+	memory_zero(data, header.total_allocation_size);
+    platform_free(data);
+	data = NULLPTR;
+    return data;
 }
 
-void memory_copy(u32 source_size, const void* source, u32 destination_size, void* destination) {
+void memory_copy(const void* source, void* destination, u32 source_size, u32 destination_size) {
     assert_in_function(source, "MEMORY COPY SOURCE IS NULL\n");
     assert_in_function(destination, "MEMORY COPY SOURCE IS NULL\n");
     assert_in_function((source_size <= destination_size), "MEMORY COPY SOURCE IS TOO BIG FOR DESTINATION\n");
@@ -151,13 +159,13 @@ void memory_copy(u32 source_size, const void* source, u32 destination_size, void
     }
 }
 
-void memory_zero(u32 data_size_in_bytes, void* data) {
+void memory_zero(void* data, u32 data_size_in_bytes) {
     for (int i = 0; i < data_size_in_bytes; i++) {
         ((u8*)data)[i] = 0;
     }
 }
 
-Boolean memory_byte_compare(u32 buffer_one_size, const void* buffer_one, u32 buffer_two_size, const void* buffer_two) {
+Boolean memory_byte_compare(const void* buffer_one, const void* buffer_two, u32 buffer_one_size, u32 buffer_two_size) {
     assert_in_function(buffer_one, "memory_byte_compare buffer_one IS NULL\n");
     assert_in_function(buffer_two_size, "memory_byte_compare buffer_two IS NULL\n");
     assert_in_function(buffer_one == buffer_two, "memory_byte_compare buffer sizes are not equal!\n");
@@ -179,9 +187,9 @@ void console_write_memory_tags(LogLevel log_level) {
     
     log_output(log_level, "========================\n");
     for (int level = 0; level < MEMORY_TAG_COUNT; level++) {
-        memory_zero(sizeof(out_message), out_message);
-        memory_zero(sizeof(out_message2), out_message2);
-        memory_zero(sizeof(out_message3), out_message3);
+        memory_zero(out_message, sizeof(out_message));
+        memory_zero(out_message2, sizeof(out_message2));
+        memory_zero(out_message3, sizeof(out_message3));
 
         sprintf(out_message, "%s", known_memory_tag_strings[level]);
         sprintf(out_message2, "%lld", global_memory_tags[level]);

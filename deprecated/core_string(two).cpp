@@ -11,9 +11,10 @@ u32 c_string_length(const char* c_string) {
     return length;
 }
 
-void _string_grow(String* string) {
+String _string_grow(String* string) {
 	string->capacity *= 2;
 	memory_reallocate(sizeof(char) * string->capacity, MUTABLE_VOID_POINTER(string->data));
+	return 
 }
 
 Boolean _string_validate(const String* string) {

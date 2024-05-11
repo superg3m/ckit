@@ -21,34 +21,34 @@ u32 c_string_length(const char* c_string) {
     return length;
 }
 
-#pragma region Private Functions
-internal inline void _string_insert_header(StringHeader header, String* string) {
-    memory_copy(sizeof(header), &header, sizeof(header), *string);
-    *string += sizeof(header);
+internal String MACRO_string_insert_header(String string, StringHeader header) {
+    memory_copy(&header, string, sizeof(header), sizeof(header));
+    memory_byte_advance(string, sizeof(header));
+    return string;
 }
+#define _string_insert_header(string, header) string = MACRO_string_insert_header(string, header);
 
-internal inline void _string_update_header(StringHeader newHeader, String* string) {
-    memory_copy(sizeof(newHeader), &newHeader, sizeof(newHeader), (*string) - sizeof(newHeader));
+internal inline void _string_update_header(String string, StringHeader newHeader) {
+    // Date: May 10, 2024
+    // NOTE(Jovanni): This might not work idk if string - sizeof(newHeader) is allowed
+    memory_copy(&newHeader, string - sizeof(newHeader), sizeof(newHeader), sizeof(newHeader));
 }
 
 internal inline StringHeader _string_extract_header(String string) {
     StringHeader header;
-    memory_copy(sizeof(header), (string - sizeof(header)), sizeof(header), &header);
+    memory_copy((string - sizeof(header)), &header, sizeof(header), sizeof(header));
     return header;
 }
 
-internal inline String _string_grow(u32 new_allocation_size, String* string) {
-    StringHeader header = _string_extract_header(*string);
+internal inline String _string_grow(String string, u32 new_allocation_size) {
+    StringHeader header = _string_extract_header(string);
     header.capacity = new_allocation_size;
-    memory_byte_retreat(sizeof(header), (void**)string);
-    String ret = (String)memory_reallocate(sizeof(header) + new_allocation_size, (void**)string);
-    _string_insert_header(header, &ret);
+    memory_byte_retreat(string, sizeof(header)); // Could be a problem
+    String ret = (String)memory_reallocate(string, sizeof(header) + new_allocation_size);
+    _string_insert_header(ret, header);
     
     return ret;
 }
-
-
-#pragma endregion
 
 String string_create(const char* c_string) {
     StringHeader header;
@@ -58,10 +58,10 @@ String string_create(const char* c_string) {
     size_t string_allocation_size = sizeof(header) + (sizeof(char) * (c_str_length + 1));
     String ret = (String)memory_allocate(string_allocation_size, MEMORY_TAG_STRING);
 
-    memory_zero(string_allocation_size,  ret);
-    _string_insert_header(header, &ret);
+    memory_zero(ret, string_allocation_size);
+    _string_insert_header(ret, header);
 
-    memory_copy(c_str_length, c_string, c_str_length, ret);
+    memory_copy(c_string, ret, c_str_length, c_str_length);
     return ret;
 }
 
@@ -86,46 +86,49 @@ Boolean string_compare(const char* s1, const char* s2) {
 	u32 s1_length = c_string_length(s1);
 	u32 s2_length = c_string_length(s2);
 
-	return memory_byte_compare(s1_length, s1, s2_length, s2);
+	return memory_byte_compare(s1, s2, s1_length, s2_length);
 }
 
-void string_free(String* string) {
-    memory_byte_retreat(sizeof(StringHeader), (void**)string);
-    memory_free((void**)string);
+String MACRO_string_free(String string) {
+    memory_byte_retreat(string, sizeof(StringHeader));
+    memory_free(string);
     string = NULL;
+    return string;
 }
 
-void string_append_char(String* string, const char source) {
-    assert_in_function(string && *string, "string_append_char: String passed is null\n");
-    assert_in_function(source, "string_append_char: Source passed is null\n");
-
-    u32 source_size = 1;
-    StringHeader header = _string_extract_header(*string);
-    if (header.length + source_size >= header.capacity) {
-        *string = _string_grow((header.length + source_size) * 2, string);
-        header = _string_extract_header(*string);
-    }
-
-    (*string)[header.length] = source;
-	header.length++;
-    _string_update_header(header, string);
-}
-
-void string_append(String* string, const char* source) {
+String MACRO_string_append(String string, const char* source) {
     assert_in_function(string && *string, "string_append: String passed is null\n");
     assert_in_function(source, "string_append: Source passed is null\n");
 
     u32 source_size = c_string_length(source) + 1; 
 
-    StringHeader header = _string_extract_header(*string);
+    StringHeader header = _string_extract_header(string);
     if (header.length + source_size >= header.capacity) {
-        *string = _string_grow((header.length + source_size) * 2, string);
-        header = _string_extract_header(*string);
+        string = _string_grow(string, (header.length + source_size) * 2);
+        header = _string_extract_header(string);
     }
 
-    u8* dest_ptr = memory_advance_new_ptr(header.length, *string);
+    u8* dest_ptr = memory_advance_new_ptr(string, header.length);
 	header.length++;
-    memory_copy(source_size, source, source_size, dest_ptr);
-    
-    _string_update_header(header, string);
+    memory_copy(source, dest_ptr, source_size, source_size);
+    _string_update_header(string, header);
+    return string;
+}
+
+String MACRO_string_append_char(String string, const char source) {
+    assert_in_function(string && *string, "string_append_char: String passed is null\n");
+    assert_in_function(source, "string_append_char: Source passed is null\n");
+
+    u32 source_size = 1;
+    StringHeader header = _string_extract_header(string);
+    if (header.length + source_size >= header.capacity) {
+        string = _string_grow(string, (header.length + source_size) * 2);
+        header = _string_extract_header(string);
+    }
+
+    string[header.length] = source;
+	header.length++;
+    _string_update_header(string, header);
+
+    return string;
 }

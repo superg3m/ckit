@@ -59,7 +59,7 @@ void test_vector_operations() {
 
   int before_popped_int = intVector[vector_size(intVector) - 1];
   int after_popped_int = vector_pop(intVector, int);
-  vector_push_literal(intVector, 10);
+  vector_push(intVector, 10);
 
   for (int i = 0; i < vector_size(intVector); i++) {
     int element = intVector[i];
@@ -70,7 +70,9 @@ void test_vector_operations() {
 
   char* before_popped_string = stringVector[vector_size(stringVector) - 1];
   char* after_popped_string = vector_pop(stringVector, char*);
-  vector_push_literal(stringVector, string_literal_ptr("TRYING TO PUSH A LITERAL!\n"));
+  // Date: May 10, 2024
+  // NOTE(Jovanni): This might not work?
+  vector_push(stringVector, &"TRYING TO PUSH A LITERAL!\n");
 
   assert_in_function(string_compare(before_popped_string, after_popped_string), "Error: Incorrect popped element value\n");
   LOG_WARN("New PUSH: %s\n", stringVector[vector_size(intVector) - 1]);
@@ -86,10 +88,10 @@ void test_vector_operations() {
   console_write_memory_tags(LOG_LEVEL_WARN);
 
   // Assert that the data is NULL
-  assert_in_function(intVector == NULL, "Error: Vector data is not NULL\n");
-  assert_in_function(boolVector == NULL, "Error: Vector data is not NULL\n");
-  assert_in_function(charVector == NULL, "Error: Vector data is not NULL\n");
-  assert_in_function(stringVector == NULL, "Error: Vector data is not NULL\n");
+  assert_in_function(intVector == NULLPTR, "Error: Vector data is not NULL\n");
+  assert_in_function(boolVector == NULLPTR, "Error: Vector data is not NULL\n");
+  assert_in_function(charVector == NULLPTR, "Error: Vector data is not NULL\n");
+  assert_in_function(stringVector == NULLPTR, "Error: Vector data is not NULL\n");
 
   LOG_INFO("All vector tests passed!\n"); 
   return;
@@ -100,17 +102,17 @@ int main() {
     LOG_PRINT("String: %s\n", str);
     LOG_PRINT("String Length: %d\n", string_length(str));
 	  console_write_memory_tags(LOG_LEVEL_INFO);
-    string_append_char(&str, 'a');
+    string_append_char(str, 'a');
     LOG_PRINT("String: %s\n", str);
 
-    string_append(&str, " | FEEL THE WORLD AROUND ME!");
+    string_append(str, " | FEEL THE WORLD AROUND ME!");
     LOG_PRINT("String: %s\n", str);
 
     test_vector_operations();
 
     return 0;
     
-    string_free(&str);
+    string_free(str);
 
     int* int_array = (int*)memory_allocate(sizeof(int) * 5, MEMORY_TAG_TEMPORARY);
     int* int_array2 = (int*)memory_allocate(sizeof(int) * 5, MEMORY_TAG_TEMPORARY);
@@ -119,7 +121,7 @@ int main() {
         int_array2[i] = 1432;
     }
 
-    memory_copy(sizeof(int) * 5, int_array2, sizeof(int) * 5, int_array);
+    memory_copy(int_array2, int_array, sizeof(int) * 5, sizeof(int) * 5);
     for (int i = 0; i < 5; i++) {
         assert_in_macro(int_array[i] == 1432, "Memory copy is fucked!\n");
         LOG_INFO("Element: %d\n", int_array[i]);

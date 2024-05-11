@@ -20,8 +20,10 @@ typedef uint64_t u64;
 
 typedef u8 Boolean;
 
+
 #define TRUE 1
 #define FALSE 0
+#define NULLPTR 0
 
 #define stringify(entry) #entry
 #define glue(a, b) a##b
@@ -48,10 +50,6 @@ typedef u8 Boolean;
 #define global_variable static
 #define local_persist static
 #define internal static
-
-// Date: May 01, 2024
-// TODO(Jovanni): This shouldn't be here it doesn't make sense 
-#define MUTABLE_VOID_POINTER(buffer) (void**)(&buffer)
 
 // Date: May 04, 2024
 // TODO(Jovanni): This is gonna be a problem no doubt

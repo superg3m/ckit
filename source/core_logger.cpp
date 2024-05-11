@@ -12,7 +12,7 @@ Boolean logger_init() {
 
     if (logging_is_initialized == FALSE) {
         logging_is_initialized = TRUE;
-        _platform_console_init();
+        platform_console_init();
         return TRUE;
     } else {
         LOG_FATAL("The logger system is already initalized!\n");
@@ -49,10 +49,10 @@ void _log_output(LogLevel log_level, const char* message, ...) {
     Boolean is_fatal = (log_level == 0);
 
     char out_message[PLATFORM_CHARACTER_LIMIT];
-    memory_zero(sizeof(out_message), out_message);
+    memory_zero(out_message, sizeof(out_message));
 
     char out_message2[PLATFORM_CHARACTER_LIMIT];
-    memory_zero(sizeof(out_message2), out_message2);  
+    memory_zero(out_message2, sizeof(out_message2));  
     
     va_list args_list;
     va_start(args_list, message);
@@ -60,5 +60,5 @@ void _log_output(LogLevel log_level, const char* message, ...) {
     va_end(args_list);
 
     sprintf(out_message2, "%s%s", log_level_strings[log_level], out_message);
-    _platform_console_write(PLATFORM_CHARACTER_LIMIT, out_message2, log_level_format[log_level]);
+    platform_console_write(out_message2, log_level_format[log_level]);
 }

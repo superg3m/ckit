@@ -1,22 +1,32 @@
 #include "../include/platform_services.h"
 #include "../include/core_types.h"
+#include "../include/core_string.h"
+#include "../include/core_assert.h"
 
 // DEFAULT IMPLEMENTATION
 #ifndef CUSTOM_PLATFORM_IMPL
 	#ifdef PLATFORM_WINDOWS
 		#include <windows.h>
-		void* _platform_allocate(unsigned long long  number_of_bytes) {
+		void* platform_allocate(unsigned long long  number_of_bytes) {
 			return VirtualAlloc(NULL, number_of_bytes, MEM_COMMIT, PAGE_READWRITE);
 		}
 
-		void _platform_free(void** data) {
-			VirtualFree(*data, 0, MEM_RELEASE); // This is really interesting 
+		/**
+		 * @brief Keep in mind that free only need a pointer that is pointign the the right data
+		 * to free so it doesn't matter if its a copy or not because the copy is pointing the he same data
+		 * 
+		 * @param data 
+		 */
+		void* MACRO_platform_free(void* data) {
+			VirtualFree(data, 0, MEM_RELEASE); // This is really interesting
+			data = NULLPTR;
+			return data;
 			// Date: May 08, 2024
 			// TODO(Jovanni): Look into VirtualProtect() this allows you to change memory access to NO_ACCESS
 			// can help find use after free bugs interesting concept
 		}
 
-		void _platform_console_init() {
+		void platform_console_init() {
 			AllocConsole();
 			freopen("CONIN$", "r", stdin); 
 			freopen("CONOUT$", "w", stdout); 
@@ -26,14 +36,16 @@
 			SetConsoleDisplayMode(console_handle, CONSOLE_FULLSCREEN_MODE, 0);
 		}
 
-		void _platform_console_shutdown() {
+		void platform_console_shutdown() {
 			FreeConsole();
 		}
 
-		void _platform_console_write(unsigned long long message_size_in_bytes, const char* message, unsigned char color) {
+		void platform_console_write(const char* message, unsigned char color) {
 			// Date: May 01, 2024
 			// TODO(Jovanni): This code is very flaky I would suggest fixing it
 			DWORD num_written_bytes = 0;
+			unsigned long long message_size_in_bytes = c_string_length(message);
+
 			HANDLE console_output_handle = GetStdHandle(STD_OUTPUT_HANDLE);
 			char out_message[PLATFORM_CHARACTER_LIMIT];
 			for (int i = 0; i < PLATFORM_CHARACTER_LIMIT; i++) { // Zeroing out the buffer
@@ -114,7 +126,7 @@
 			return malloc(number_of_bytes);
 		}
 
-		void _platform_free(size_t number_of_bytes, void** data) {
+		void MACRO_platform_free(size_t number_of_bytes, void** data) {
 			free(*data);
 		}
 		
