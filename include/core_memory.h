@@ -11,25 +11,21 @@ typedef enum LogLevel LogLevel;
 //========================== Begin Structs ==========================
 typedef enum MemoryTag {
     MEMORY_TAG_UNKNOWN,
+    MEMORY_TAG_TEMPORARY,
+    MEMORY_TAG_INTERNAL,
     MEMORY_TAG_STRING,
     MEMORY_TAG_VECTOR,
-    MEMORY_TAG_APPLICATION,
-    MEMORY_TAG_ENGINE,
-    MEMORY_TAG_TEMPORARY,
     MEMORY_TAG_ARENA,
-    MEMORY_TAG_INTERNAL,
     MEMORY_TAG_COUNT
 } MemoryTag;
 
 static char known_memory_tag_strings[MEMORY_TAG_COUNT][MEMORY_TAG_CHARACTER_LIMIT] = {
     "UNKNOWN      : ",
+    "TEMPORARY    : ",
+    "INTERNAL     : ",
     "STRING       : ",
     "VECTOR       : ",
-    "APPLICATION  : ",
-    "ENGINE       : ",
-    "TEMPORARY    : ",
     "ARENA        : ",
-    "INTERNAL     : ",
 };
 
 static u64 global_memory_tags[MEMORY_TAG_COUNT];
@@ -39,6 +35,9 @@ static u64 global_memory_tags[MEMORY_TAG_COUNT];
 #ifdef __cplusplus
 extern "C" {
 #endif
+  Boolean memory_tag_is_valid(MemoryTag memory_tag);
+  Boolean memory_tag_is_unknown(MemoryTag memory_tag);
+
   void memory_write_memory_tags(LogLevel log_level);
 
   void* memory_allocate(u64 number_of_bytes, MemoryTag memory_tag);

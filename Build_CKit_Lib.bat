@@ -2,8 +2,6 @@
 
 if not exist .\build (
     mkdir .\build
-) else (
-    call clean_CKit.bat
 )
 
 powershell -nologo -command "Write-Host 'running CKit build.bat...' -ForegroundColor Green"

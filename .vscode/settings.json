@@ -6,6 +6,7 @@
         "platform_services.h": "c",
         "core_assert.h": "c",
         "core_memory.h": "c",
-        "core_logger.h": "c"
+        "core_logger.h": "c",
+        "core_string.h": "c"
     }
 }

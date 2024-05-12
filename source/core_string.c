@@ -6,10 +6,12 @@
 #include "../include/core_string.h"
 #include "../include/core_memory.h"
 #include "../include/core_assert.h"
+#include "../include/core_arena.h"
 
 typedef struct StringHeader {
     u32 length;
     u32 capacity;
+    Arena* arena;
 } StringHeader;
 
 u32 c_string_length(const char* c_string) {
@@ -21,13 +23,6 @@ u32 c_string_length(const char* c_string) {
     return length;
 }
 
-internal String MACRO_string_insert_header(String string, StringHeader header) {
-    ((StringHeader*)string)[0] = header;
-    memory_byte_advance(string, sizeof(header));
-    return string;
-}
-#define _string_insert_header(string, header) string = MACRO_string_insert_header(string, header);
-
 internal StringHeader* _string_extract_header(String string) {
     return &((StringHeader*)string)[-1];
 }
@@ -35,23 +30,19 @@ internal StringHeader* _string_extract_header(String string) {
 internal inline String _string_grow(String string, u32 new_allocation_size) {
     StringHeader header = *_string_extract_header(string);
     header.capacity = new_allocation_size;
-    memory_byte_retreat(string, sizeof(header)); // Could be a problem
-    String ret = (String)memory_reallocate(string, sizeof(header) + new_allocation_size);
-    _string_insert_header(ret, header);
+    String ret = string_create_custom(header.arena, string, header.capacity);
     
     return ret;
 }
 
-String string_create(const char* c_string) {
-    StringHeader header;
+String string_create_custom(Arena* arena, const char* c_string, u32 capacity) {
     u32 c_str_length = c_string_length(c_string);
-    header.length = c_str_length;
-
-    size_t string_allocation_size = sizeof(header) + (sizeof(char) * (c_str_length + 1));
-    String ret = (String)memory_allocate(string_allocation_size, MEMORY_TAG_STRING);
-
-    memory_zero(ret, string_allocation_size);
-    _string_insert_header(ret, header);
+    StringHeader* header = arena_push(arena, StringHeader, MEMORY_TAG_STRING);
+    header->length = c_str_length;
+    header->arena = arena;
+    header->capacity = capacity != 0 ? capacity : sizeof(char) * (c_str_length + 1);
+    
+    String ret = arena_push_array(arena, u8, header->capacity, MEMORY_TAG_STRING);
 
     memory_copy(c_string, ret, c_str_length, c_str_length);
     return ret;
@@ -82,8 +73,6 @@ Boolean string_compare(const char* s1, const char* s2) {
 }
 
 String MACRO_string_free(String string) {
-    memory_byte_retreat(string, sizeof(StringHeader));
-    memory_free(string);
     string = NULL;
     return string;
 }

@@ -5,6 +5,7 @@
  * Creator: Jovanni Djonaj
 ===========================================================*/
 #include "core_types.h"
+#include "core_arena.h"
 
 typedef char* String;
 
@@ -19,7 +20,7 @@ extern "C" {
    * 
    * @param cString 
    */
-  String string_create(const char* c_string);
+  String string_create_custom(Arena* arena, const char* c_string, u32 capacity);
   String MACRO_string_free(String string);
   u32 string_length(String string);
 
@@ -42,6 +43,7 @@ extern "C" {
 //************************** End Functions **************************
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
+#define string_create(arena, string) string_create_custom(arena, string, 0)
 #define string_free(string) string = MACRO_string_free(string);
 #define string_append(string, source) string = MACRO_string_append(string, source);
 #define string_append_char(string, source) string = MACRO_string_append_char(string, source);

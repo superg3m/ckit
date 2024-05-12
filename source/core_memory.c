@@ -18,6 +18,14 @@ typedef struct MemoryHeader {
     MemoryTag memory_tag;
 } MemoryHeader;
 
+Boolean memory_tag_is_unknown(MemoryTag memory_tag) {
+    return (memory_tag == MEMORY_TAG_UNKNOWN);
+}
+
+Boolean memory_tag_is_valid(MemoryTag memory_tag) {
+    return (memory_tag >= 0 && memory_tag < MEMORY_TAG_COUNT);
+}
+
 u8* memory_advance_new_ptr(const void* data, u32 size_in_bytes) {
 	u8* base_address = (u8*)data;
 	base_address += size_in_bytes;
@@ -62,10 +70,9 @@ MemoryHeader* _memory_extract_header(void* data) {
 
 void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
     assert_in_function(byte_allocation_size > 0, "Invalid allocation size zero or below\n");
-    assert_in_function(memory_tag >= 0, "Invalid memory tag value! Below Zero\n");
-    assert_in_function(memory_tag < MEMORY_TAG_COUNT, "Invalid memory tag value! Above max count of memory tags\n");
-    if (memory_tag == MEMORY_TAG_UNKNOWN) {
-        LOG_WARN("Allocation | memory tag unknown\n");
+    assert_in_function(memory_tag_is_valid(memory_tag), "memory_allocate: Memory tag is invalid | value: (%d)\n", memory_tag);
+    if (memory_tag_is_unknown(memory_tag)) {
+        LOG_WARN("memory_allocate: memory tag unknown\n");
     }
 	MemoryHeader header;
     memory_zero(&header, sizeof(header));
@@ -94,7 +101,7 @@ void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
  */
 void* memory_reallocate(void* data, u64 new_byte_allocation_size) {
     LOG_DEBUG("Reallocation Triggered!\n");
-    assert_in_function(data, "Data passed is null in reallocation\n");
+    assert_in_function(data, "memory_reallocation: Data passed is null\n");
 
     MemoryHeader header = *_memory_extract_header(data);
     u32 old_allocation_size = header.total_allocation_size;
@@ -118,9 +125,9 @@ void* memory_reallocate(void* data, u64 new_byte_allocation_size) {
  * @param data
  */
 void* MACRO_memory_free(void* data) {
-    assert_in_function(data, "Data passed is null in free\n");
+    assert_in_function(data, "memory_free: Data passed is null in free\n");
     const MemoryHeader header = *_memory_extract_header(data);
-    assert_in_function(header.memory_tag >= 0 && header.memory_tag < MEMORY_TAG_COUNT, "Data passed is null in free\n");
+    assert_in_function(memory_tag_is_valid(header.memory_tag), "memory_free: memory_tag is not valid\n");
     global_memory_tags[MEMORY_TAG_INTERNAL] -= sizeof(header);
     global_memory_tags[header.memory_tag] -= (header.total_allocation_size - sizeof(header));
     

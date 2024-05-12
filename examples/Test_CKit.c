@@ -100,50 +100,48 @@ void test_vector_operations() {
 }
 
 int main() {
-    String str = string_create("aasfhsdfsdfjsdljflsdkf");
-    LOG_PRINT("String: %s\n", str);
-    LOG_PRINT("String Length: %d\n", string_length(str));
-	  memory_write_memory_tags(LOG_LEVEL_INFO);
-    string_append_char(str, 'a');
-    LOG_PRINT("String: %s\n", str);
+  Arena string_arena = arena_create(MegaBytes(1), "string_arena", MEMORY_TAG_STRING);
 
-    string_append(str, " | FEEL THE WORLD AROUND ME!");
-    LOG_PRINT("String: %s\n", str);
+  String str = string_create(&string_arena, "aasfhsdfsdfjsdljflsdkf");
+  LOG_PRINT("String: %s\n", str);
+  LOG_PRINT("String Length: %d\n", string_length(str));
+  memory_write_memory_tags(LOG_LEVEL_INFO);
+  string_append_char(str, 'a');
+  LOG_PRINT("String: %s\n", str);
 
-    test_vector_operations();
-    
-    string_free(str);
+  string_append(str, " | FEEL THE WORLD AROUND ME!");
+  LOG_PRINT("String: %s\n", str);
 
-    int* int_array = (int*)memory_allocate(sizeof(int) * 5, MEMORY_TAG_TEMPORARY);
-    int* int_array2 = (int*)memory_allocate(sizeof(int) * 5, MEMORY_TAG_TEMPORARY);
-    LOG_ERROR("Element: %d (SHOULD BE ZERO)\n\n", int_array[0]);
-    for (int i = 0; i < 5; i++) {
-        int_array2[i] = 1432;
-    }
+  test_vector_operations();
 
-    memory_copy(int_array2, int_array, sizeof(int) * 5, sizeof(int) * 5);
-    for (int i = 0; i < 5; i++) {
-        assert_in_macro(int_array[i] == 1432, "Memory copy is fucked!");
-        LOG_INFO("Element: %d\n", int_array[i]);
-    }
+  int* int_array = (int*)memory_allocate(sizeof(int) * 5, MEMORY_TAG_TEMPORARY);
+  int* int_array2 = (int*)memory_allocate(sizeof(int) * 5, MEMORY_TAG_TEMPORARY);
+  LOG_ERROR("Element: %d (SHOULD BE ZERO)\n\n", int_array[0]);
+  for (int i = 0; i < 5; i++) {
+      int_array2[i] = 1432;
+  }
 
-    LOG_DEBUG("Element: %d\n", int_array[0]);
+  memory_copy(int_array2, int_array, sizeof(int) * 5, sizeof(int) * 5);
+  for (int i = 0; i < 5; i++) {
+      assert_in_macro(int_array[i] == 1432, "Memory copy is fucked!");
+      LOG_INFO("Element: %d\n", int_array[i]);
+  }
 
-	  LOG_FATAL("TESTING\n");
-    LOG_ERROR("TESTING\n");
-    LOG_WARN("TESTING\n");
-    LOG_DEBUG("TESTING\n");
-    LOG_INFO("TESTING\n");
-    LOG_PRINT("TESTING %s\n\n", str);
+  LOG_DEBUG("Element: %d\n", int_array[0]);
 
-    memory_write_memory_tags(LOG_LEVEL_WARN);
+  LOG_FATAL("TESTING\n");
+  LOG_ERROR("TESTING\n");
+  LOG_WARN("TESTING\n");
+  LOG_DEBUG("TESTING\n");
+  LOG_INFO("TESTING\n");
+  LOG_PRINT("TESTING %s\n\n", str);
 
-    memory_free(int_array);
-    memory_free(int_array2);
-    
-    memory_write_memory_tags(LOG_LEVEL_ERROR);
+  memory_write_memory_tags(LOG_LEVEL_WARN);
 
-    
+  memory_free(int_array);
+  memory_free(int_array2);
+  
+  memory_write_memory_tags(LOG_LEVEL_ERROR);
 
-    return 0;
+  return 0;
 }

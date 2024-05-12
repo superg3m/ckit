@@ -33,3 +33,6 @@
 
 #Debug Info
 *.pdb
+
+examples/
+!examples/Test_CKit.c
