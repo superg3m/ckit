@@ -11,6 +11,7 @@ internal Boolean CKit_is_initalized = FALSE;
 //************************* Begin Functions *************************
 Boolean memory_init();
 Boolean arena_init();
+Boolean string_init();
 extern Arena** arena_vector;
 
 
