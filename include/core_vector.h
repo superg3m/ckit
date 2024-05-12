@@ -45,8 +45,8 @@ extern "C" {
       decltype(element) temp_element = element;                                         \
       vector = (decltype(vector))MACRO_vector_push(vector, (const void*)&temp_element); \
   }
-  #define vector_pop(vector, type) *((type*)MACRO_vector_pop(vector));
-  #define vector_free(vector) vector = (decltype(vector))MACRO_vector_free(vector);
+  #define vector_pop(vector, type) *((type*)MACRO_vector_pop(vector))
+  #define vector_free(vector) vector = (decltype(vector))MACRO_vector_free(vector)
 #else 
   #ifdef __GNUC__
     #define vector_push(vector, element)                                                \
@@ -54,17 +54,18 @@ extern "C" {
         typeof(element) temp_element = element;                                         \
         vector = MACRO_vector_push(vector, (const void*)&temp_element); \
     }
-    #define vector_pop(vector, type) *((type*)MACRO_vector_pop(vector));
-    #define vector_free(vector) vector = (typeof(vector))MACRO_vector_free(vector);
+    #define vector_pop(vector, type) *((type*)MACRO_vector_pop(vector))
+    #define vector_free(vector) vector = (typeof(vector))MACRO_vector_free(vector)
   #else 
     // Date: May 11, 2024
     // NOTE(Jovanni): Its painful but no literals allowed in c (MSVC)
-    #define vector_push(vector, element)                                \
-    {                                                                   \
+    #define vector_push(vector, element)                           \
+    {                                                              \
         vector = MACRO_vector_push(vector, (const void*)&element); \
     }
-    #define vector_pop(vector, type) *((type*)MACRO_vector_pop(vector));
-    #define vector_free(vector) vector = MACRO_vector_free(vector);
+
+    #define vector_pop(vector, type) *((type*)MACRO_vector_pop(vector))
+    #define vector_free(vector) vector = MACRO_vector_free(vector)
   #endif
 #endif
 
