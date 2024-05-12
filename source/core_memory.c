@@ -68,7 +68,17 @@ MemoryHeader* _memory_extract_header(void* data) {
 	return &((MemoryHeader*)data)[-1];
 }
 
+void memory_register_arena(Arena** arena) {
+    vector_push(arena_vector, *arena);
+}
+
+
 void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
+    // Date: May 11, 2024
+    // TODO(Jovanni): This feels like shit I would figure out a better spot for it
+    // Theoretically this isn't a problem but I don't like it
+    // arena_vector = vector_create(Arena*);
+
     assert_in_function(byte_allocation_size > 0, "Invalid allocation size zero or below\n");
     assert_in_function(memory_tag_is_valid(memory_tag), "memory_allocate: Memory tag is invalid | value: (%d)\n", memory_tag);
     if (memory_tag_is_unknown(memory_tag)) {

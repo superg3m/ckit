@@ -5,9 +5,13 @@
  * Creator: Jovanni Djonaj
 ===========================================================*/
 #include "core_types.h"
+#include "core_vector.h"
+
 
 #define MEMORY_TAG_CHARACTER_LIMIT 16
 typedef enum LogLevel LogLevel;
+typedef struct Arena Arena;
+
 //========================== Begin Structs ==========================
 typedef enum MemoryTag {
     MEMORY_TAG_UNKNOWN,
@@ -28,6 +32,8 @@ static char known_memory_tag_strings[MEMORY_TAG_COUNT][MEMORY_TAG_CHARACTER_LIMI
     "ARENA        : ",
 };
 
+global_variable Arena** arena_vector;
+
 static u64 global_memory_tags[MEMORY_TAG_COUNT];
 //=========================== End Structs ===========================
 
@@ -39,6 +45,8 @@ extern "C" {
   Boolean memory_tag_is_unknown(MemoryTag memory_tag);
 
   void memory_write_memory_tags(LogLevel log_level);
+
+  void memory_register_arena(Arena** arena);
 
   void* memory_allocate(u64 number_of_bytes, MemoryTag memory_tag);
   void* memory_reallocate(void* data, u64 new_number_of_bytes);

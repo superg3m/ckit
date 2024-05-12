@@ -100,9 +100,9 @@ void test_vector_operations() {
 }
 
 int main() {
-  Arena string_arena = arena_create(MegaBytes(1), "string_arena", MEMORY_TAG_STRING);
+  Arena* string_arena = arena_create(MegaBytes(1), "string_arena");
 
-  String str = string_create(&string_arena, "aasfhsdfsdfjsdljflsdkf");
+  String str = string_create(string_arena, "aasfhsdfsdfjsdljflsdkf");
   LOG_PRINT("String: %s\n", str);
   LOG_PRINT("String Length: %d\n", string_length(str));
   memory_write_memory_tags(LOG_LEVEL_INFO);
@@ -142,7 +142,7 @@ int main() {
 
   memory_free(int_array);
   memory_free(int_array2);
-  arena_free(&string_arena);
+  arena_free(string_arena);
   
   memory_write_memory_tags(LOG_LEVEL_ERROR);
 

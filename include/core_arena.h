@@ -28,8 +28,13 @@ typedef struct Arena {
 #ifdef __cplusplus
 extern "C" {
 #endif
-  Arena MACRO_arena_create(u32 allocation, const char* name, ArenaFlags flags);
+  Arena* MACRO_arena_create(u32 allocation, const char* name, ArenaFlags flags);
   void* MACRO_arena_push(Arena* arena, u32 element_size, MemoryTag memory_tag);
+  
+  // Date: May 11, 2024
+  // NOTE(Jovanni): I want better names for this action
+  void  arena_write_tags(Arena arena);
+
   void  arena_free(Arena* arena);
 #ifdef __cplusplus
 }
@@ -37,8 +42,8 @@ extern "C" {
 //************************** End Functions **************************
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
-#define arena_create(allocation_size, name, memory_tag) MACRO_arena_create(allocation_size, name, ARENA_DEFAULT)
-#define arena_create_custom(allocation_size, name, memory_tag, flags) MACRO_arena_create(allocation_size, name, flags)
+#define arena_create(allocation_size, name) MACRO_arena_create(allocation_size, name, ARENA_DEFAULT)
+#define arena_create_custom(allocation_size, name, flags) MACRO_arena_create(allocation_size, name, flags)
 
 #define arena_push(arena, type, memory_tag) ((type*)MACRO_arena_push(arena, sizeof(type), memory_tag))
 #define arena_push_array(arena, type, element_count, memory_tag) ((type*)MACRO_arena_push(arena, sizeof(type) * element_count, memory_tag))
