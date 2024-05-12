@@ -12,7 +12,7 @@ typedef struct Arena {
   u64 memory_tag_values[MEMORY_TAG_ARENA];
 } Arena;
 
-global_variable Boolean arena_is_initalized = FALSE;
+internal Boolean arena_is_initalized = FALSE;
 
 #define ARENA_DEFAULT_ALLOCATION_SIZE MegaBytes(1)
 

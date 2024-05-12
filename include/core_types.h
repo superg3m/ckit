@@ -50,7 +50,6 @@ typedef u8 Boolean;
 #define CORE_RELEASE TRUE
 #define CORE_DEBUG FALSE
 
-#define global_variable static
 #define local_persist static
 #define internal static
 

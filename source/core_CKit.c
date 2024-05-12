@@ -6,7 +6,7 @@
  * Creator: Jovanni Djonaj
 ===========================================================*/
 
-global_variable Boolean CKit_is_initalized = FALSE;
+internal Boolean CKit_is_initalized = FALSE;
 
 //************************* Begin Functions *************************
 Boolean memory_init();
