@@ -114,6 +114,8 @@ int main() {
 
   test_vector_operations();
 
+  string_free(str);
+
   int* int_array = (int*)memory_allocate(sizeof(int) * 5, MEMORY_TAG_TEMPORARY);
   int* int_array2 = (int*)memory_allocate(sizeof(int) * 5, MEMORY_TAG_TEMPORARY);
   LOG_ERROR("Element: %d (SHOULD BE ZERO)\n\n", int_array[0]);
@@ -140,6 +142,7 @@ int main() {
 
   memory_free(int_array);
   memory_free(int_array2);
+  arena_free(&string_arena);
   
   memory_write_memory_tags(LOG_LEVEL_ERROR);
 
