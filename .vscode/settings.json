@@ -10,6 +10,10 @@
         "core_string.h": "c",
         "core_arena.h": "c",
         "core_vector.h": "c",
-        "core_memory_tag.h": "c"
+        "core_memory_tag.h": "c",
+        "core_event_system.h": "c",
+        "stdint.h": "c",
+        "ckit.h": "c",
+        "core_global_vars.h": "c"
     }
 }

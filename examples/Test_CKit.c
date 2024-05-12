@@ -79,7 +79,7 @@ void test_vector_operations() {
   assert_in_macro(string_compare(before_popped_string, after_popped_string), "Error: Incorrect popped element value");
   LOG_WARN("New PUSH: %s\n", stringVector[vector_size(intVector) - 1]);
 
-  memory_write_memory_tags(LOG_LEVEL_ERROR);
+  memory_tag_output(LOG_LEVEL_ERROR);
 
   // Test free
   vector_free(intVector);
@@ -87,7 +87,7 @@ void test_vector_operations() {
   vector_free(charVector);
   vector_free(stringVector);
 
-  memory_write_memory_tags(LOG_LEVEL_WARN);
+  memory_tag_output(LOG_LEVEL_WARN);
 
   // Assert that the data is NULL
   assert_in_macro(intVector == NULLPTR, "Error: Vector data is not NULL");
@@ -100,12 +100,14 @@ void test_vector_operations() {
 }
 
 int main() {
+  CKit_init();
+
   Arena* string_arena = arena_create(MegaBytes(1), "string_arena");
 
   String str = string_create(string_arena, "aasfhsdfsdfjsdljflsdkf");
   LOG_PRINT("String: %s\n", str);
   LOG_PRINT("String Length: %d\n", string_length(str));
-  memory_write_memory_tags(LOG_LEVEL_INFO);
+  memory_tag_output(LOG_LEVEL_INFO);
   string_append_char(str, 'a');
   LOG_PRINT("String: %s\n", str);
 
@@ -138,13 +140,13 @@ int main() {
   LOG_INFO("TESTING\n");
   LOG_PRINT("TESTING %s\n\n", str);
 
-  memory_write_memory_tags(LOG_LEVEL_WARN);
+  memory_tag_output(LOG_LEVEL_WARN);
 
   memory_free(int_array);
   memory_free(int_array2);
   arena_free(string_arena);
   
-  memory_write_memory_tags(LOG_LEVEL_ERROR);
+  memory_tag_output(LOG_LEVEL_ERROR);
 
   return 0;
 }

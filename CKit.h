@@ -12,3 +12,11 @@
 #include "include/core_event_system.h"
 #include "include/core_vector.h"
 #include "include/core_string.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+  void CKit_init();
+#ifdef __cplusplus
+}
+#endif

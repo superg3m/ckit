@@ -7,7 +7,11 @@
 #include "core_types.h"
 #include "core_arena.h"
 
+
+//========================== Begin Types ==========================
 typedef char* String;
+//=========================== End Types ===========================
+
 
 //************************* Begin Functions *************************
 #ifdef __cplusplus

@@ -1,11 +1,11 @@
-#pragma once 
+#pragma once
 /*===========================================================
  * File: core_errors.h
  * Date: May 11, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
 
-//========================== Begin Structs ==========================
+//========================== Begin Types ==========================
 typedef enum ErrorCode {
     SUCCESS = 0x1,
     INVALID_ARGUMENT_VALUE = 0x2,
@@ -18,7 +18,7 @@ typedef enum ErrorCode {
     INVALID_ARGUMENT_VALUE = 0x100,
     INVALID_ARGUMENT_VALUE = 0x200,
 } ErrorCode;
-//=========================== End Structs ===========================
+//=========================== End Types ===========================
 
 //************************* Begin Functions *************************
 #ifdef __cplusplus

@@ -1,6 +1,5 @@
 #include "../include/core_arena.h"
 #include "../include/core_memory.h"
-#include "../include/core_memory_tag.h"
 
 // should register arena with memory
 
@@ -13,10 +12,17 @@ typedef struct Arena {
   u64 memory_tag_values[MEMORY_TAG_ARENA];
 } Arena;
 
+global_variable Boolean arena_is_initalized = FALSE;
+
 #define ARENA_DEFAULT_ALLOCATION_SIZE MegaBytes(1)
 
+Boolean arena_init() {
+    arena_is_initalized = TRUE;
+    return arena_is_initalized;
+}
+
 Arena* MACRO_arena_create(u32 allocation_size, const char* name, ArenaFlags flags) {
-    memory_bootstrap_arena_vector();
+    assert_in_function(arena_is_initalized, "arena_create: call CKit_init() first\n");
     Arena* arena = memory_allocate(sizeof(Arena), MEMORY_TAG_ARENA);
     arena->name = name;
     arena->flags = flags;
@@ -53,3 +59,4 @@ void* MACRO_arena_push(Arena* arena, u32 element_size, MemoryTag memory_tag) {
     
     return ret;
 }
+

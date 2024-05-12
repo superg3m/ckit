@@ -4,9 +4,9 @@
  * Date: May 11, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-
 #include "core_types.h"
 
+//========================== Begin Types ==========================
 #define LOGGING_ENABLED TRUE
 #define LOG_PRINT_ENABLED TRUE
 #define LOG_INFO_ENABLED TRUE
@@ -14,7 +14,7 @@
 #define LOG_WARN_ENABLED TRUE
 
 #define LOG_LEVEL_CHARACTER_LIMIT 11
-//========================== Begin Structs ==========================
+
 typedef enum LogLevel {
     LOG_LEVEL_FATAL,
     LOG_LEVEL_ERROR,
@@ -24,7 +24,7 @@ typedef enum LogLevel {
     LOG_LEVEL_PRINT,
     LOG_LEVEL_COUNT
 } LogLevel;
-//=========================== End Structs ===========================
+//=========================== End Types ===========================
 
 //************************* Begin Functions *************************
 #ifdef __cplusplus

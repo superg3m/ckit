@@ -8,13 +8,13 @@
 #include "../include/core_assert.h"
 
 #define VECTOR_DEFAULT_CAPACITY 1
-//========================== Begin Structs ==========================
+//========================== Begin Types ==========================
 typedef struct VectorHeader {
     u64 size;
     u64 capacity;
     u16 type_size_in_bytes;
 } VectorHeader;
-//=========================== End Structs ===========================
+//=========================== End Types ===========================
 
 //************************* Begin Functions *************************
 internal void* MACRO_vector_insert_header(void* vector, VectorHeader header) {

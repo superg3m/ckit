@@ -8,6 +8,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+//========================== Begin Types ==========================
 typedef int8_t  s8;
 typedef int16_t s16;
 typedef int32_t s32;
@@ -19,19 +20,8 @@ typedef uint32_t u32;
 typedef uint64_t u64;
 
 typedef u8 Boolean;
+//=========================== End Types ===========================
 
-//========================== Begin Structs ==========================
-//=========================== End Structs ===========================
-
-//************************* Begin Functions *************************
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#ifdef __cplusplus
-}
-#endif
-//************************** End Functions **************************
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
 #define TRUE 1

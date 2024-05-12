@@ -6,27 +6,24 @@
 ===========================================================*/
 #include "core_types.h"
 
+//========================== Begin Types ==========================
 typedef enum MemoryTag MemoryTag;
+typedef struct Arena Arena;
 
-//========================== Begin Structs ==========================
 typedef enum ArenaFlags {
   ARENA_FLAG_DEFAULT = 0x1,
   ARENA_FLAG_CIRCULAR = 0x2,
   ARENA_FLAG_VECTOR = 0x4,
   ARENA_FLAG_COUNT = 0x4,
 } ArenaFlags;
-
-typedef struct Arena Arena;
-//=========================== End Structs ===========================
+//=========================== End Types ===========================
 
 //************************* Begin Functions *************************
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-  void memory_bootstrap_arena_vector();
   void memory_register_arena(Arena** arena);
-  
+
   Arena* MACRO_arena_create(u32 allocation, const char* name, ArenaFlags flags);
   void* MACRO_arena_push(Arena* arena, u32 element_size, MemoryTag memory_tag);
   

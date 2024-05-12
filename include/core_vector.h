@@ -1,4 +1,4 @@
-#pragma once 
+#pragma once
 /*===========================================================
  * File: core_vector.h
  * Date: April 23, 2024
@@ -11,9 +11,8 @@
 
 #pragma once
 #include "./core_types.h"
-#include "./core_assert.h"
-#include "../include/core_memory_tag.h"
 
+#include "./core_assert.h"
 
 //************************* Begin Functions *************************
 #ifdef __cplusplus

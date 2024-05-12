@@ -7,13 +7,13 @@
 #include "core_logger.h"
 #include "core_memory.h"
 
+
+
+//========================== Begin Types ==========================
 #define CORE_ASSERT TRUE
 
 #define CRASH *((int *)0) = 0
-
-
-//========================== Begin Structs ==========================
-//=========================== End Structs ===========================
+//=========================== End Types ===========================
 
 //************************* Begin Functions *************************
 #ifdef __cplusplus

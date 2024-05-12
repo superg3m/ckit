@@ -7,7 +7,6 @@
 #include "../include/core_memory.h"
 #include "../include/core_assert.h"
 #include "../include/core_arena.h"
-#include "../include/core_memory_tag.h"
 
 typedef struct StringHeader {
     u32 length;
@@ -37,16 +36,16 @@ internal inline String _string_grow(String string, u32 new_allocation_size) {
 }
 
 String string_create_custom(Arena* arena, const char* c_string, u32 capacity) {
-    u32 c_str_length = c_string_length(c_string);
-    StringHeader* header = arena_push(arena, StringHeader, MEMORY_TAG_STRING);
-    header->length = c_str_length;
-    header->arena = arena;
-    header->capacity = capacity != 0 ? capacity : sizeof(char) * (c_str_length + 1);
-    
-    String ret = arena_push_array(arena, u8, header->capacity, MEMORY_TAG_STRING);
+  u32 c_str_length = c_string_length(c_string);
+  StringHeader* header = arena_push(arena, StringHeader, MEMORY_TAG_STRING);
+  header->length = c_str_length;
+  header->arena = arena;
+  header->capacity = capacity != 0 ? capacity : sizeof(char) * (c_str_length + 1);
 
-    memory_copy(c_string, ret, c_str_length, c_str_length);
-    return ret;
+  String ret = arena_push_array(arena, u8, header->capacity, MEMORY_TAG_STRING);
+
+  memory_copy(c_string, ret, c_str_length, c_str_length);
+  return ret;
 }
 
 void string_copy(); // Careful about the header

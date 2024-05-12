@@ -7,21 +7,27 @@
 #include "core_types.h"
 #include "core_vector.h"
 
-#define MEMORY_TAG_CHARACTER_LIMIT 16
+//========================== Begin Types ==========================
 typedef enum LogLevel LogLevel;
-typedef enum MemoryTag MemoryTag;
 typedef struct Arena Arena;
 
-//========================== Begin Structs ==========================
-
-
-//=========================== End Structs ===========================
+typedef enum MemoryTag {
+    MEMORY_TAG_UNKNOWN,
+    MEMORY_TAG_TEMPORARY,
+    MEMORY_TAG_INTERNAL,
+    MEMORY_TAG_STRING,
+    MEMORY_TAG_VECTOR,
+    MEMORY_TAG_ARENA,
+    MEMORY_TAG_COUNT
+} MemoryTag;
+//=========================== End Types ===========================
 
 //************************* Begin Functions *************************
 #ifdef __cplusplus
 extern "C" {
 #endif
-  Boolean memory_init();
+  Boolean memory_tag_is_valid(MemoryTag memory_tag);
+  Boolean memory_tag_is_unknown(MemoryTag memory_tag);
 
   void* memory_allocate(u64 number_of_bytes, MemoryTag memory_tag);
   void* memory_reallocate(void* data, u64 new_number_of_bytes);
@@ -35,6 +41,9 @@ extern "C" {
   u8* memory_retreat_new_ptr(const void* data, u32 size_in_bytes);
   void* MACRO_memory_byte_advance(const void* data, u32 size_in_bytes);
   void* MACRO_memory_byte_retreat(const void* data, u32 size_in_bytes);
+
+  void memory_tag_output(LogLevel log_level);
+  void memory_tag_output_arena(LogLevel log_level);
 #ifdef __cplusplus
 }
 #endif
