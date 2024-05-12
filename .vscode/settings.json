@@ -8,6 +8,7 @@
         "core_memory.h": "c",
         "core_logger.h": "c",
         "core_string.h": "c",
-        "core_arena.h": "c"
+        "core_arena.h": "c",
+        "core_vector.h": "c"
     }
 }

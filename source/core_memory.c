@@ -1,3 +1,4 @@
+#pragma once
 /*===========================================================
  * File: core_memory.cpp
  * Date: May 03, 2024
@@ -12,6 +13,19 @@ Be aware anything allocated from this has a header
 #include "../include/core_logger.h"
 #include "../include/platform_services.h"
 #include "../include/core_assert.h"
+
+global_variable char known_memory_tag_strings[MEMORY_TAG_COUNT][MEMORY_TAG_CHARACTER_LIMIT] = {
+    "UNKNOWN      : ",
+    "TEMPORARY    : ",
+    "INTERNAL     : ",
+    "STRING       : ",
+    "VECTOR       : ",
+    "ARENA        : ",
+};
+
+global_variable Arena** arena_vector;
+
+global_variable u64 global_memory_tags[MEMORY_TAG_COUNT];
 
 typedef struct MemoryHeader {
     u32 total_allocation_size;

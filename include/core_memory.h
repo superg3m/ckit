@@ -7,7 +7,6 @@
 #include "core_types.h"
 #include "core_vector.h"
 
-
 #define MEMORY_TAG_CHARACTER_LIMIT 16
 typedef enum LogLevel LogLevel;
 typedef struct Arena Arena;
@@ -23,18 +22,6 @@ typedef enum MemoryTag {
     MEMORY_TAG_COUNT
 } MemoryTag;
 
-static char known_memory_tag_strings[MEMORY_TAG_COUNT][MEMORY_TAG_CHARACTER_LIMIT] = {
-    "UNKNOWN      : ",
-    "TEMPORARY    : ",
-    "INTERNAL     : ",
-    "STRING       : ",
-    "VECTOR       : ",
-    "ARENA        : ",
-};
-
-global_variable Arena** arena_vector;
-
-static u64 global_memory_tags[MEMORY_TAG_COUNT];
 //=========================== End Structs ===========================
 
 //************************* Begin Functions *************************

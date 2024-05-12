@@ -1,7 +1,16 @@
 #include "../include/core_arena.h"
-#include "../include/core_assert.h"
+#include "../include/core_memory.h"
 
 // should register arena with memory
+
+typedef struct Arena {
+  const char* name;
+  u64 capacity;
+  u64 used;
+  u32 flags;
+  void* base_address;
+  u64 memory_tag_values[MEMORY_TAG_ARENA];
+} Arena;
 
 #define ARENA_DEFAULT_ALLOCATION_SIZE MegaBytes(1)
 
