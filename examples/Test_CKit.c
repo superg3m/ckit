@@ -102,9 +102,7 @@ void test_vector_operations() {
 int main() {
   CKit_init();
 
-  Arena* string_arena = arena_create(MegaBytes(1), "string_arena");
-
-  String str = string_create(string_arena, "aasfhsdfsdfjsdljflsdkf");
+  String str = string_create("aasfhsdfsdfjsdljflsdkf");
   LOG_PRINT("String: %s\n", str);
   LOG_PRINT("String Length: %d\n", string_length(str));
   memory_tag_output(LOG_LEVEL_INFO);
@@ -144,9 +142,11 @@ int main() {
 
   memory_free(int_array);
   memory_free(int_array2);
-  arena_free(string_arena);
-  
+  string_arena_free();
+  memory_arena_vector_free();
+
   memory_tag_output(LOG_LEVEL_ERROR);
+
 
   return 0;
 }

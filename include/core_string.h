@@ -24,9 +24,12 @@ extern "C" {
    * 
    * @param cString 
    */
-  String string_create_custom(Arena* arena, const char* c_string, u32 capacity);
+  String string_create_custom(const char* c_string, u32 capacity);
   String MACRO_string_free(String string);
   u32 string_length(String string);
+
+  void string_arena_free();
+  void string_arena_clear();
 
   Boolean string_compare(const char* s1, const char* s2);
 
@@ -47,7 +50,7 @@ extern "C" {
 //************************** End Functions **************************
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
-#define string_create(arena, string) string_create_custom(arena, string, 0)
+#define string_create(string) string_create_custom(string, 0)
 #define string_free(string) string = MACRO_string_free(string);
 #define string_append(string, source) string = MACRO_string_append(string, source);
 #define string_append_char(string, source) string = MACRO_string_append_char(string, source);

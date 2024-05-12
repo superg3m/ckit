@@ -23,8 +23,8 @@ extern "C" {
     assert_in_function(memory_init(), "memory_init: failed\n");
     assert_in_function(arena_init(), "arena_init: failed\n");
     arena_vector = vector_create(Arena*);
+    assert_in_function(string_init(), "string_init: failed\n");
     //assert_in_function(vector_init(), "vector_init: failed\n");
-    //assert_in_function(string_init(), "string_init: failed\n");
     //assert_in_function(event_init(), "event_init: failed\n");
     //assert_in_function(memory_init(), "memory_init: failed\n");
 

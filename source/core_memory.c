@@ -59,8 +59,26 @@ Boolean memory_tag_is_valid(MemoryTag memory_tag) {
   return (memory_tag >= 0 && memory_tag < MEMORY_TAG_COUNT);
 }
 
-void memory_register_arena(Arena** arena) {
+void memory_arena_register(Arena** arena) {
     vector_push(arena_vector, *arena);
+}
+
+void memory_arena_unregister(Arena** arena) {
+  for (int i = 0; i < vector_size(arena_vector); i++) {
+    if (arena_vector[i] == *arena) {
+      // Date: May 12, 2024
+      // TODO(Jovanni): THis is not right logic if you have more than one vector you need a remove at or
+      // something else that is index based removal.
+      LOG_INFO("Unregistered Arena\n");
+      vector_pop(arena_vector, Arena*);
+      
+      break;
+    }
+  }
+}
+
+void memory_arena_vector_free() {
+    vector_free(arena_vector);
 }
 
 void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {

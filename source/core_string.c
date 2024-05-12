@@ -11,7 +11,6 @@
 typedef struct StringHeader {
     u32 length;
     u32 capacity;
-    Arena* arena;
 } StringHeader;
 
 u32 c_string_length(const char* c_string) {
@@ -23,6 +22,20 @@ u32 c_string_length(const char* c_string) {
     return length;
 }
 
+Arena* string_arena = NULLPTR;
+
+void string_init() {
+    string_arena = arena_create(MegaBytes(1), "string_arena");
+}
+
+void string_arena_free() {
+    arena_free(string_arena);
+}
+
+void string_arena_clear() {
+    arena_clear(string_arena);
+}
+
 internal StringHeader* _string_extract_header(String string) {
     return &((StringHeader*)string)[-1];
 }
@@ -30,19 +43,18 @@ internal StringHeader* _string_extract_header(String string) {
 internal inline String _string_grow(String string, u32 new_allocation_size) {
     StringHeader header = *_string_extract_header(string);
     header.capacity = new_allocation_size;
-    String ret = string_create_custom(header.arena, string, header.capacity);
+    String ret = string_create_custom(string, header.capacity);
     
     return ret;
 }
 
-String string_create_custom(Arena* arena, const char* c_string, u32 capacity) {
+String string_create_custom(const char* c_string, u32 capacity) {
   u32 c_str_length = c_string_length(c_string);
-  StringHeader* header = arena_push(arena, StringHeader, MEMORY_TAG_STRING);
+  StringHeader* header = arena_push(string_arena, StringHeader, MEMORY_TAG_STRING);
   header->length = c_str_length;
-  header->arena = arena;
   header->capacity = capacity != 0 ? capacity : sizeof(char) * (c_str_length + 1);
 
-  String ret = arena_push_array(arena, u8, header->capacity, MEMORY_TAG_STRING);
+  String ret = arena_push_array(string_arena, u8, header->capacity, MEMORY_TAG_STRING);
 
   memory_copy(c_string, ret, c_str_length, c_str_length);
   return ret;
