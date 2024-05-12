@@ -13,6 +13,8 @@ Be aware anything allocated from this has a header
 #include "../include/core_logger.h"
 #include "../include/platform_services.h"
 #include "../include/core_assert.h"
+#include "../include/core_memory_tag.h"
+
 
 global_variable char known_memory_tag_strings[MEMORY_TAG_COUNT][MEMORY_TAG_CHARACTER_LIMIT] = {
     "UNKNOWN      : ",
@@ -23,7 +25,7 @@ global_variable char known_memory_tag_strings[MEMORY_TAG_COUNT][MEMORY_TAG_CHARA
     "ARENA        : ",
 };
 
-global_variable Arena** arena_vector;
+global_variable Arena** arena_vector = NULLPTR;
 
 global_variable u64 global_memory_tags[MEMORY_TAG_COUNT];
 
@@ -82,16 +84,20 @@ MemoryHeader* _memory_extract_header(void* data) {
 	return &((MemoryHeader*)data)[-1];
 }
 
+void memory_bootstrap_arena_vector() {
+    arena_vector = vector_create(Arena*);
+}
+
+
 void memory_register_arena(Arena** arena) {
     vector_push(arena_vector, *arena);
 }
-
 
 void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
     // Date: May 11, 2024
     // TODO(Jovanni): This feels like shit I would figure out a better spot for it
     // Theoretically this isn't a problem but I don't like it
-    // arena_vector = vector_create(Arena*);
+
 
     assert_in_function(byte_allocation_size > 0, "Invalid allocation size zero or below\n");
     assert_in_function(memory_tag_is_valid(memory_tag), "memory_allocate: Memory tag is invalid | value: (%d)\n", memory_tag);

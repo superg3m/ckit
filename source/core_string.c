@@ -7,6 +7,7 @@
 #include "../include/core_memory.h"
 #include "../include/core_assert.h"
 #include "../include/core_arena.h"
+#include "../include/core_memory_tag.h"
 
 typedef struct StringHeader {
     u32 length;

@@ -9,18 +9,11 @@
 
 #define MEMORY_TAG_CHARACTER_LIMIT 16
 typedef enum LogLevel LogLevel;
+typedef enum MemoryTag MemoryTag;
 typedef struct Arena Arena;
 
 //========================== Begin Structs ==========================
-typedef enum MemoryTag {
-    MEMORY_TAG_UNKNOWN,
-    MEMORY_TAG_TEMPORARY,
-    MEMORY_TAG_INTERNAL,
-    MEMORY_TAG_STRING,
-    MEMORY_TAG_VECTOR,
-    MEMORY_TAG_ARENA,
-    MEMORY_TAG_COUNT
-} MemoryTag;
+
 
 //=========================== End Structs ===========================
 
@@ -28,12 +21,7 @@ typedef enum MemoryTag {
 #ifdef __cplusplus
 extern "C" {
 #endif
-  Boolean memory_tag_is_valid(MemoryTag memory_tag);
-  Boolean memory_tag_is_unknown(MemoryTag memory_tag);
-
-  void memory_write_memory_tags(LogLevel log_level);
-
-  void memory_register_arena(Arena** arena);
+  Boolean memory_init();
 
   void* memory_allocate(u64 number_of_bytes, MemoryTag memory_tag);
   void* memory_reallocate(void* data, u64 new_number_of_bytes);

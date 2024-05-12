@@ -1,5 +1,6 @@
 #include "../include/core_arena.h"
 #include "../include/core_memory.h"
+#include "../include/core_memory_tag.h"
 
 // should register arena with memory
 
@@ -15,6 +16,7 @@ typedef struct Arena {
 #define ARENA_DEFAULT_ALLOCATION_SIZE MegaBytes(1)
 
 Arena* MACRO_arena_create(u32 allocation_size, const char* name, ArenaFlags flags) {
+    memory_bootstrap_arena_vector();
     Arena* arena = memory_allocate(sizeof(Arena), MEMORY_TAG_ARENA);
     arena->name = name;
     arena->flags = flags;
@@ -22,7 +24,7 @@ Arena* MACRO_arena_create(u32 allocation_size, const char* name, ArenaFlags flag
     arena->used = 0;
     memory_zero(arena->memory_tag_values, sizeof(u64) * MEMORY_TAG_ARENA);
     arena->base_address = memory_allocate(allocation_size != 0 ? allocation_size : ARENA_DEFAULT_ALLOCATION_SIZE, MEMORY_TAG_ARENA);
-    // memory_register_arena(&arena);
+    memory_register_arena(&arena);
     return arena;
 }
 

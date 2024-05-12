@@ -23,6 +23,10 @@ typedef struct Arena Arena;
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+  void memory_bootstrap_arena_vector();
+  void memory_register_arena(Arena** arena);
+  
   Arena* MACRO_arena_create(u32 allocation, const char* name, ArenaFlags flags);
   void* MACRO_arena_push(Arena* arena, u32 element_size, MemoryTag memory_tag);
   

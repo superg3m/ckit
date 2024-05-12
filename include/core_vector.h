@@ -12,6 +12,7 @@
 #pragma once
 #include "./core_types.h"
 #include "./core_assert.h"
+#include "../include/core_memory_tag.h"
 
 
 //************************* Begin Functions *************************
