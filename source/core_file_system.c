@@ -29,7 +29,7 @@ void file_close(FileSystem* fileFramework) {
     fclose(fileFramework->file); 
 }
 
-FileSystem createFileFramework(const char* fileName) {
+FileSystem file_system_create(const char* fileName) {
   FileSystem file_system;
   file_system.file = NULL;
   file_system.reachedEOF = FALSE;
