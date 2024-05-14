@@ -20,6 +20,13 @@ typedef uint32_t u32;
 typedef uint64_t u64;
 
 typedef u8 Boolean;
+
+#define MEMORY_TAG_CHARACTER_LIMIT 16
+
+typedef enum LogLevel LogLevel;
+typedef enum MemoryTag MemoryTag;
+typedef struct Arena Arena;
+typedef char* String;
 //=========================== End Types ===========================
 
 
