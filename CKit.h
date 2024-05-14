@@ -12,6 +12,7 @@
 #include "include/core_event_system.h"
 #include "include/core_vector.h"
 #include "include/core_string.h"
+#include "include/core_file_system.h"
 
 #ifdef __cplusplus
 extern "C" {
