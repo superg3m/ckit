@@ -66,26 +66,38 @@ void* MACRO_arena_push(Arena* arena, u32 element_size, MemoryTag memory_tag) {
     }
 
     u8* ret = memory_advance_new_ptr(arena->base_address, arena->used);
+
+    arena->memory_tag_values[memory_tag] += element_size;
     arena->used += element_size;
     
     return ret;
 }
 
-  void arena_output_allocations(Arena* arena, LogLevel log_level) {
+void arena_output_allocations(Arena* arena, LogLevel log_level) {
+    if (arena->used == 0) {
+        log_output(log_level, "No arena allocations!\n");
+        return;
+    }
+
     char out_message[PLATFORM_CHARACTER_LIMIT];
     char out_message2[PLATFORM_CHARACTER_LIMIT];
     char out_message3[PLATFORM_CHARACTER_LIMIT];
     
-    log_output(log_level, "========================\n");
-    for (int level = 0; level < MEMORY_TAG_COUNT; level++) {
+    log_output(log_level, "=========== %s: %lld ===========\n", arena->name, arena->capacity);
+    u32 sum = 0;
+    for (int level = 0; level < MEMORY_TAG_ARENA; level++) {
+        if (arena->memory_tag_values[level] == 0) {
+            continue;
+        } 
+
         memory_zero(out_message, sizeof(out_message));
         memory_zero(out_message2, sizeof(out_message2));
         memory_zero(out_message3, sizeof(out_message3));
 
         sprintf(out_message, "%s", known_memory_tag_strings[level]);
-        sprintf(out_message2, "[Allocation: %lld]", arena->memory_tag_values[level]);
+        sprintf(out_message2, "%lld", arena->memory_tag_values[level]);
         sprintf(out_message3, "%s%s", out_message, out_message2);
         log_output(log_level, "%s\n", out_message3);
     }
-    log_output(log_level, "========================\n");
-  }
+    log_output(log_level, "============== Total used: %lld ==============\n", arena->used);
+}

@@ -140,6 +140,9 @@ int main() {
 
   memory_output_allocations(LOG_LEVEL_WARN);
 
+  memory_output_arena_allocations(LOG_LEVEL_INFO);
+
+
   memory_free(int_array);
   memory_free(int_array2);
   string_arena_free();
