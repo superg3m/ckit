@@ -4,12 +4,12 @@
 // should register arena with memory
 
 typedef struct Arena {
-  const char* name;
-  u64 capacity;
-  u64 used;
-  u32 flags;
-  void* base_address;
-  u64 memory_tag_values[MEMORY_TAG_ARENA];
+	const char* name;
+	u64 capacity;
+	u64 used;
+	u32 flags;
+	void* base_address;
+	u64 memory_tag_values[MEMORY_TAG_ARENA];
 } Arena;
 
 internal Boolean arena_is_initalized = FALSE;

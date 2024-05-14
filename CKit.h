@@ -17,6 +17,7 @@
 extern "C" {
 #endif
   void CKit_init();
+  void CKit_cleanup();
 #ifdef __cplusplus
 }
 #endif
