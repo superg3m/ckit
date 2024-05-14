@@ -13,6 +13,14 @@ typedef enum LogLevel LogLevel;
 typedef struct Arena Arena;
 
 void arena_output_allocations(Arena* arena, LogLevel log_level);
+Arena** arena_vector = NULLPTR;
+internal u64 global_memory_tags[MEMORY_TAG_COUNT];
+internal Boolean memory_is_initalized = FALSE;
+
+typedef struct MemoryHeader {
+    u32 total_allocation_size;
+    MemoryTag memory_tag;
+} MemoryHeader;
 
 char known_memory_tag_strings[MEMORY_TAG_COUNT][MEMORY_TAG_CHARACTER_LIMIT] = {
     "UNKNOWN      : ",
@@ -22,16 +30,6 @@ char known_memory_tag_strings[MEMORY_TAG_COUNT][MEMORY_TAG_CHARACTER_LIMIT] = {
     "VECTOR       : ",
     "ARENA        : ",
 };
-
-Arena** arena_vector = NULLPTR;
-internal u64 global_memory_tags[MEMORY_TAG_COUNT];
-
-internal Boolean memory_is_initalized = FALSE;
-
-typedef struct MemoryHeader {
-    u32 total_allocation_size;
-    MemoryTag memory_tag;
-} MemoryHeader;
 //=========================== End Types ===========================
 
 //************************* Begin Functions *************************
@@ -147,7 +145,7 @@ void* MACRO_memory_free(void* data) {
 }
 
 
-void memory_tag_output(LogLevel log_level) {
+void memory_output_allocations(LogLevel log_level) {
     char out_message[PLATFORM_CHARACTER_LIMIT];
     char out_message2[PLATFORM_CHARACTER_LIMIT];
     char out_message3[PLATFORM_CHARACTER_LIMIT];

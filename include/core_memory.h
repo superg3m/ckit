@@ -50,8 +50,8 @@ extern "C" {
   void* MACRO_memory_byte_advance(const void* data, u32 size_in_bytes);
   void* MACRO_memory_byte_retreat(const void* data, u32 size_in_bytes);
 
-  void memory_tag_output(LogLevel log_level);
-  void memory_tag_output_arena(LogLevel log_level);
+  void memory_output_allocations(LogLevel log_level);
+  void memory_output_arena_allocations(LogLevel log_level);
 #ifdef __cplusplus
 }
 #endif
