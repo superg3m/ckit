@@ -8,6 +8,9 @@
 #include "core_vector.h"
 
 //========================== Begin Types ==========================
+
+#define MEMORY_TAG_CHARACTER_LIMIT 16
+
 typedef enum LogLevel LogLevel;
 typedef struct Arena Arena;
 

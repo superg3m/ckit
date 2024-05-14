@@ -1,3 +1,5 @@
+@echo off
+
 call build.bat
 
 if not exist .\examples\cl (
@@ -16,10 +18,11 @@ cl /Fe: ".\CKit_Test.exe" /Zi "..\*.c" "..\..\build_cl\CKit.lib"
 ".\CKit_Test.exe"
 popd
 
-echo "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
-echo =========================== GCC ==========================
-echo "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
-pushd .\examples\gcc
-gcc "..\*.c" -o "CKit_Test.exe" -g -L"../../build_gcc" -lCKit
-".\CKit_Test.exe"
-popd
+
+:: echo "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+:: echo =========================== GCC ==========================
+:: echo "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+:: pushd .\examples\gcc
+:: gcc "..\*.c" -o "CKit_Test.exe" -g -L"../../build_gcc" -lCKit
+:: ".\CKit_Test.exe"
+:: popd

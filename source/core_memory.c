@@ -9,11 +9,12 @@
 #include "../include/core_assert.h"
 
 //========================== Begin Types ==========================
-#define MEMORY_TAG_CHARACTER_LIMIT 16
 typedef enum LogLevel LogLevel;
 typedef struct Arena Arena;
 
-internal char known_memory_tag_strings[MEMORY_TAG_COUNT][MEMORY_TAG_CHARACTER_LIMIT] = {
+void arena_output_allocations(Arena* arena, LogLevel log_level);
+
+char known_memory_tag_strings[MEMORY_TAG_COUNT][MEMORY_TAG_CHARACTER_LIMIT] = {
     "UNKNOWN      : ",
     "TEMPORARY    : ",
     "INTERNAL     : ",
@@ -36,6 +37,7 @@ typedef struct MemoryHeader {
 //************************* Begin Functions *************************
 Boolean memory_init() {
   memory_is_initalized = TRUE;
+
   return memory_is_initalized;
 }
 
@@ -46,16 +48,16 @@ void* MACRO_memory_insert_header(void* data, MemoryHeader header) {
 }
 #define _memory_insert_header(data, header) data = MACRO_memory_insert_header(data, header);
 
-MemoryHeader* _memory_extract_header(void* data) {
-	return &((MemoryHeader*)data)[-1];
-}
-
 Boolean memory_tag_is_unknown(MemoryTag memory_tag) {
   return (memory_tag == MEMORY_TAG_UNKNOWN);
 }
 
 Boolean memory_tag_is_valid(MemoryTag memory_tag) {
   return (memory_tag >= 0 && memory_tag < MEMORY_TAG_COUNT);
+}
+
+MemoryHeader* _memory_extract_header(void* data) {
+	return &((MemoryHeader*)data)[-1];
 }
 
 void memory_arena_register(Arena** arena) {
@@ -88,6 +90,7 @@ void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
   if (memory_tag_is_unknown(memory_tag)) {
       LOG_WARN("memory_allocate: memory tag unknown\n");
   }
+
   MemoryHeader header;
   memory_zero(&header, sizeof(header));
   header.total_allocation_size = sizeof(header) + byte_allocation_size; 
@@ -103,6 +106,7 @@ void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
   // TODO(Jovanni): Technically you are repeating work here
   memory_zero(data, header.total_allocation_size);
   _memory_insert_header(data, header);
+
   return data;
 }
 
@@ -142,59 +146,6 @@ void* MACRO_memory_free(void* data) {
   return data;
 }
 
-Boolean memory_byte_compare(const void* buffer_one, const void* buffer_two, u32 buffer_one_size, u32 buffer_two_size) {
-  assert_in_function(buffer_one, "memory_byte_compare buffer_one IS NULL\n");
-  assert_in_function(buffer_two_size, "memory_byte_compare buffer_two IS NULL\n");
-  assert_in_function(buffer_one == buffer_two, "memory_byte_compare buffer sizes are not equal!\n");
-  u8* buffer_one_data = (u8*)buffer_one;
-  u8* buffer_two_data = (u8*)buffer_two;
-  for (int i = 0; i < buffer_one_size; i++) {
-      if (buffer_one_data[i] != buffer_two_data[i]) {
-          return FALSE;
-      }
-  }
-
-  return TRUE;
-}
-
-void memory_copy(const void* source, void* destination, u32 source_size, u32 destination_size) {
-  assert_in_function(source, "MEMORY COPY SOURCE IS NULL\n");
-  assert_in_function(destination, "MEMORY COPY SOURCE IS NULL\n");
-  assert_in_function((source_size <= destination_size), "MEMORY COPY SOURCE IS TOO BIG FOR DESTINATION\n");
-  for (int i = 0; i < source_size; i++) {
-      ((u8*)destination)[i] = ((u8*)source)[i];
-  }
-}
-
-void memory_zero(void* data, u32 data_size_in_bytes) {
-  for (int i = 0; i < data_size_in_bytes; i++) {
-      ((u8*)data)[i] = 0;
-  }
-}
-
-u8* memory_advance_new_ptr(const void* data, u32 size_in_bytes) {
-  u8* base_address = (u8*)data;
-  base_address += size_in_bytes;
-  return base_address;
-}
-
-u8* memory_retreat_new_ptr(const void* data, u32 size_in_bytes) {
-  u8* base_address = (u8*)data;
-  base_address -= size_in_bytes;
-  return base_address;
-}
-
-void* MACRO_memory_byte_advance(const void* data, u32 size_in_bytes) {
-  u8* base_address = (u8*)data;
-  base_address += size_in_bytes;
-  return base_address;
-}
-
-void* MACRO_memory_byte_retreat(const void* data, u32 size_in_bytes) {
-  u8* base_address = (u8*)data;
-  base_address -= size_in_bytes;
-  return base_address;
-}
 
 void memory_tag_output(LogLevel log_level) {
     char out_message[PLATFORM_CHARACTER_LIMIT];
@@ -215,9 +166,13 @@ void memory_tag_output(LogLevel log_level) {
     log_output(log_level, "========================\n");
 }
 
-void memory_tag_output_arena(LogLevel log_level) {
-
+void memory_output_arena_allocations(LogLevel log_level) {
+  for (int i = 0; i < vector_size(arena_vector); i++) {
+    arena_output_allocations(arena_vector[i], log_level);
+  }
 }
+
+
 //************************** End Functions **************************
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++

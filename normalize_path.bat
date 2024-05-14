@@ -23,5 +23,6 @@ for /f "tokens=*" %%f in (compilation_errors.txt) do (
 
 move /y %tempfile% compilation_errors.txt > nul
 type compilation_errors.txt
+del compilation_errors.txt
 
 endlocal

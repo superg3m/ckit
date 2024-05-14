@@ -13,6 +13,9 @@ typedef struct Arena {
 } Arena;
 
 internal Boolean arena_is_initalized = FALSE;
+
+extern char known_memory_tag_strings[MEMORY_TAG_COUNT][MEMORY_TAG_CHARACTER_LIMIT];
+
 #define ARENA_DEFAULT_ALLOCATION_SIZE MegaBytes(1)
 
 Boolean arena_init() {
@@ -68,3 +71,21 @@ void* MACRO_arena_push(Arena* arena, u32 element_size, MemoryTag memory_tag) {
     return ret;
 }
 
+  void arena_output_allocations(Arena* arena, LogLevel log_level) {
+    char out_message[PLATFORM_CHARACTER_LIMIT];
+    char out_message2[PLATFORM_CHARACTER_LIMIT];
+    char out_message3[PLATFORM_CHARACTER_LIMIT];
+    
+    log_output(log_level, "========================\n");
+    for (int level = 0; level < MEMORY_TAG_COUNT; level++) {
+        memory_zero(out_message, sizeof(out_message));
+        memory_zero(out_message2, sizeof(out_message2));
+        memory_zero(out_message3, sizeof(out_message3));
+
+        sprintf(out_message, "%s", known_memory_tag_strings[level]);
+        sprintf(out_message2, "[Allocation: %lld]", arena->memory_tag_values[level]);
+        sprintf(out_message3, "%s%s", out_message, out_message2);
+        log_output(log_level, "%s\n", out_message3);
+    }
+    log_output(log_level, "========================\n");
+  }
