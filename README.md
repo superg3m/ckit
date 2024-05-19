@@ -12,3 +12,5 @@ Thoughts:
 
 
 Next course of action is to remove all memory allocation tracking, the way I did it was really bad so its hard to actually keep working on anything.
+
+This is not done yet I need to fix the arena stuff also get rid of arenas all together for right now lmao
