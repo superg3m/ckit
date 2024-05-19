@@ -14,7 +14,7 @@ extern Arena** arena_vector;
 
 
 void CKit_init() {
-  	assert_in_function(!CKit_is_initalized, "Ckit_init: CKit is already initalized")
+  	assert_in_function(!CKit_is_initalized, "Ckit_init: CKit is already initalized");
 
   	assert_in_function(memory_init(), "memory_init: failed\n");
   	assert_in_function(arena_init(), "arena_init: failed\n");
@@ -28,7 +28,7 @@ void CKit_init() {
 }
 
 void CKit_cleanup() {
-  	assert_in_function(!CKit_is_initalized, "Ckit_init: CKit is already initalized")
+  	assert_in_function(!CKit_is_initalized, "Ckit_init: CKit is already initalized");
 
   	assert_in_function(memory_init(), "memory_init: failed\n");
   	assert_in_function(arena_init(), "arena_init: failed\n");
