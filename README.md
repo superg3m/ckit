@@ -10,3 +10,5 @@ Thoughts:
  - I need to rethink how arenas work
 
 
+
+Next course of action is to remove all memory allocation tracking, the way I did it was really bad so its hard to actually keep working on anything.
