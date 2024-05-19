@@ -1,6 +1,35 @@
 #include "../include/ckg.h"
 
 #pragma region MEMORY
+	void* ckg_memory_default_allocator(u32 allocation_size) {
+		void* ret = malloc(allocation_size);
+		memory_zero(ret, sizeof(allocation_size));
+		return ret;
+	}
+
+	void ckg_memory_default_free(void* data) {
+		free(data);
+	}
+
+	void* MACRO_ckg_memory_allocate(ckg_MemoryAllocator_func func_allocator, u32 allocation_size) {
+		if (!func_allocator) {
+			return ckg_memory_default_allocator(allocation_size);
+		} else {
+			return func_allocator(allocation_size);
+		}
+	}
+
+	void* MACRO_ckg_memory_free(void* data, ckg_MemoryFree_func func_free) {
+		if (!func_free) {
+			ckg_memory_default_free(data);
+			data = NULLPTR;
+			return data;
+		} else {
+			func_free(data);
+			return data;
+		}
+	}
+
 	Boolean memory_byte_compare(const void* buffer_one, const void* buffer_two, u32 buffer_one_size, u32 buffer_two_size) {
 		ckg_assert_in_function(buffer_one, "memory_byte_compare buffer_one IS NULL\n");
 		ckg_assert_in_function(buffer_two, "memory_byte_compare buffer_two IS NULL\n");
@@ -87,9 +116,6 @@
 #pragma endregion
 
 #pragma region STRING
-	//========================== Begin Types ==========================
-	//=========================== End Types ===========================
-
 	//************************* Begin Functions *************************
 	u32 ckg_cstring_length(const char* cstring) {
 		u32 length = 0;
@@ -161,14 +187,19 @@
 	}
 
 	void ckg_string_clear(char* string_buffer, u32 string_buffer_size) {
+		ckg_assert_in_function(string_buffer, "ckg_string_clear string_buffer is not valid | null\n");
+
 		memory_zero(string_buffer, string_buffer_size);
 	}
 
 	void ckg_string_copy(char* string_buffer, u32 string_buffer_size, const char* source) {
+		ckg_assert_in_function(string_buffer, "string_copy string_buffer is not valid | null\n");
+		ckg_assert_in_function(source, "string_copy source is not valid | null\n");
 		u32 source_length = ckg_cstring_length(source);
+		ckg_string_clear(string_buffer, string_buffer_size);
 
 		// Date: May 18, 2024
-		// NOTE(Jovanni): We want to use source_length + 1 because we need inclukde the null terminator
+		// NOTE(Jovanni): We want to use source_length + 1 because we want to include the null terminator
 		memory_copy(source, string_buffer, source_length + 1, string_buffer_size);
 	}
 	//************************** End Functions **************************
