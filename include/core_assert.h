@@ -24,29 +24,28 @@ extern "C" {
 //************************** End Functions **************************
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
-#if ASSERT_ENABLED == TRUE	
-	#define assert_in_macro(expression, message) 																	\
-		do { 																										\
-		 	if (!(expression))                                                       		                       	\
-			{                                                                        		                       	\
-				char message_buffer[PLATFORM_CHARACTER_LIMIT];                                                     	\
-				memory_zero(message_buffer, PLATFORM_CHARACTER_LIMIT);                                             	\
-				sprintf(message_buffer, "%s | file: %s:%d | Function: %s", message, __FILE__, __LINE__, __func__); 	\
-				LOG_FATAL("%s\n", message_buffer);                                                                 	\
-				CRASH;                                                                                             	\
-			}																									 	\
+#if ASSERT_ENABLED == TRUE
+
+	#define assert_in_macro(expression, message, ...)														\
+		do {																								\
+			if (!(expression))                                                       		               	\
+			{  																								\
+				char buffer[PLATFORM_CHARACTER_LIMIT];                                        		        \
+				memory_zero(buffer, PLATFORM_CHARACTER_LIMIT);                                             	\
+				sprintf(buffer, "file: %s:%d | Function: %s | %s", __FILE__, __LINE__, __func__, message); 	\
+				LOG_FATAL(buffer, ##__VA_ARGS__);                                             				\
+				CRASH;                                                                                     	\
+			}																								\
 		} while (FALSE)
 
-
-	#define assert_in_function(expression, message, ...) 	\
-		do { 												\
-			if (!(expression))                              \
-			{                                               \
-				LOG_FATAL(message, ##__VA_ARGS__);          \
-				CRASH;                                      \
-			}												\
+	#define assert_in_function(expression, message, ...) \
+		do { 											 \
+			if (!(expression))                           \
+			{                                            \
+				LOG_FATAL(message, ##__VA_ARGS__); 		 \
+				CRASH;                                   \
+			}											 \
 		} while (FALSE)
-
 
 #else
 		#define assert_in_function(expression, message)

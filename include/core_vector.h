@@ -9,9 +9,7 @@
 	Header Based
 */
 
-#pragma once
 #include "./core_types.h"
-
 #include "./core_assert.h"
 
 //************************* Begin Functions *************************

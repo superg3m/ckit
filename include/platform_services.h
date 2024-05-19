@@ -7,6 +7,18 @@
 
 
 //========================== Begin Types ==========================
+#define TEXT_CLEAR     0x0000 // text color default clear
+#define TEXT_BLUE      0x0001 // text color contains blue.
+#define TEXT_GREEN     0x0002 // text color contains green.
+#define TEXT_RED       0x0004 // text color contains red.
+#define TEXT_CYAN      TEXT_BLUE|TEXT_GREEN // text color contains cyan.
+#define TEXT_PURPLE    TEXT_RED|TEXT_BLUE // text color contains purple.
+#define TEXT_WHITE     TEXT_RED|TEXT_GREEN|TEXT_BLUE // text color contains white.
+
+#define BACK_BLUE      0x0010 // background color contains blue.
+#define BACK_GREEN     0x0020 // background color contains green.
+#define BACK_RED       0x0040 // background color contains red.
+
 // Supported Platforms
 #if (_WIN32)
   #define PLATFORM_WINDOWS

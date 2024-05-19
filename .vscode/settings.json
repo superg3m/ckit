@@ -16,6 +16,8 @@
 		"ckit.h": "c",
 		"core_global_vars.h": "c",
 		"core_memory_externs.h": "c",
-		"core_file_system.h": "c"
-	}
+		"core_file_system.h": "c",
+		"ckg.h": "c"
+	},
+	"editor.insertSpaces": false
 }

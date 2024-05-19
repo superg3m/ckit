@@ -6,6 +6,8 @@
 ===========================================================*/
 #include <stdio.h>
 #include "core_assert.h"
+#include "core_string.h"
+
 
 typedef struct FileSystem {
 	Boolean reachedEOF;
