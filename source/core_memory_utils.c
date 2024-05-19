@@ -3,7 +3,6 @@
 Boolean memory_byte_compare(const void* buffer_one, const void* buffer_two, u32 buffer_one_size, u32 buffer_two_size) {
   	assert_in_function(buffer_one, "memory_byte_compare buffer_one IS NULL\n");
   	assert_in_function(buffer_two_size, "memory_byte_compare buffer_two IS NULL\n");
-  	assert_in_function(buffer_one == buffer_two, "memory_byte_compare buffer sizes are not equal!\n");
 
 	if (buffer_one_size != buffer_two_size) {
 		return FALSE;
