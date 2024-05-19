@@ -2,10 +2,11 @@
 
 - Collection of tools, data structures, and algorithms that I find useful
 - If cl.exe is not defined in your terminal run vars.bat
-- Compile with CUSTOM_PLATFORM_IMPL if you want to change how platform specific functions work.
-
-- BINARY WITH DEFAULT PLATFORM IMPL (---)
-- BINARY WITH CUSTOM PLATFORM IMPL (---)
+- Compile with CUSTOM_PLATFORM_IMPL defined if you want to change how platform specific functions work.
 
 Thoughts:
-I think that vector is just not correct I think there has to be a better implementation with all of this.
+ - I need to rethink memory allocations
+ - so heres the think with arenas I won't have tons of syscalls for memory allocations so that way I can use a function pointer for the allocation function so default stub is malloc and free, you can define you own callback function
+ - I need to rethink how arenas work
+
+

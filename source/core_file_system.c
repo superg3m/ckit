@@ -3,7 +3,7 @@
 
 void file_open(FileSystem* fileFramework) {
   fileFramework->file = fopen(fileFramework->fileName, "r");
-  assert_in_function(fileFramework->file != NULL, "FILE IS NULL, CHECK INITIAL FILE NAME");
+  assert_in_function(fileFramework->file != NULL, "FILE IS NULL, CHECK INITIAL FILE NAME\n");
 }
 
 String file_get_next_line(FileSystem* fileFramework) {
