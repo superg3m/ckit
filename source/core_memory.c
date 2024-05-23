@@ -20,7 +20,6 @@ Arena** arena_vector = NULLPTR;
 
 internal u64 memory_used = 0; 
 internal u64 global_memory_tags[MEMORY_TAG_COUNT];
-internal Boolean memory_is_initalized = FALSE;
 
 typedef struct MemoryHeader {
 	u32 allocation_size_without_header;
@@ -38,11 +37,6 @@ char known_memory_tag_strings[MEMORY_TAG_COUNT][MEMORY_TAG_CHARACTER_LIMIT] = {
 //=========================== End Types ===========================
 
 //************************* Begin Functions *************************
-Boolean memory_init() {
-  memory_is_initalized = TRUE;
-
-  return memory_is_initalized;
-}
 
 void _memory_track_add(MemoryHeader header, MemoryTag memory_tag) {
   	global_memory_tags[MEMORY_TAG_INTERNAL] += sizeof(header);
@@ -98,8 +92,6 @@ void memory_arena_vector_free() {
 }
 
 void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
-  assert_in_function(memory_is_initalized, "memory_allocate: call CKit_init() first\n");
-
   assert_in_function(byte_allocation_size > 0, "Invalid allocation size zero or below\n");
   assert_in_function(memory_tag_is_valid(memory_tag), "memory_allocate: Memory tag is invalid | value: (%d)\n", memory_tag);
   if (memory_tag_is_unknown(memory_tag)) {

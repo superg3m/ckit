@@ -28,9 +28,6 @@ extern "C" {
   String MACRO_string_free(String string);
   u32 string_length(String string);
 
-  void string_arena_free();
-  void string_arena_clear();
-
   Boolean string_compare(const char* s1, const char* s2);
 
   String MACRO_string_append(String string, const char* source);

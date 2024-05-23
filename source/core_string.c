@@ -22,18 +22,9 @@ u32 c_string_length(const char* c_string) {
     return length;
 }
 
-Arena* string_arena = NULLPTR;
-
-void string_init() {
-    string_arena = arena_create(MegaBytes(1), "string_arena");
-}
-
-void string_arena_free() {
-    arena_free(string_arena);
-}
-
-void string_arena_clear() {
-    arena_clear(string_arena);
+internal void _string_insert_header(String* string, StringHeader header) {
+  	memory_copy(&header, *string,  sizeof(header),  sizeof(header) + header.capacity);
+    memory_byte_advance(*string, sizeof(header));
 }
 
 internal StringHeader* _string_extract_header(String string) {
@@ -44,17 +35,22 @@ internal inline String _string_grow(String string, u32 new_allocation_size) {
     StringHeader header = *_string_extract_header(string);
     header.capacity = new_allocation_size;
     String ret = string_create_custom(string, header.capacity);
+    string_free(string);
     
     return ret;
 }
 
+// Date: May 23, 2024
+// TODO(Jovanni): I need to eventually go back to using an arena I liked the idea
+// Of pushing the header then right after pushing the string data I think this worked really well.
 String string_create_custom(const char* c_string, u32 capacity) {
   	u32 c_str_length = c_string_length(c_string);
-  	StringHeader* header = arena_push(string_arena, StringHeader, MEMORY_TAG_STRING);
-  	header->length = c_str_length;
-  	header->capacity = capacity != 0 ? capacity : sizeof(char) * (c_str_length + 1);
+  	StringHeader header;
+  	header.length = c_str_length;
+  	header.capacity = capacity != 0 ? capacity : sizeof(char) * (c_str_length + 1);
 	
-  	String ret = arena_push_array(string_arena, u8, header->capacity, MEMORY_TAG_STRING);
+  	String ret = memory_allocate(sizeof(header) + header.capacity, MEMORY_TAG_STRING);
+    memory_byte_advance(ret, sizeof(header));
 	
   	memory_copy(c_string, ret, c_str_length, c_str_length);
   	return ret;
@@ -85,7 +81,8 @@ Boolean string_compare(const char* s1, const char* s2) {
 }
 
 String MACRO_string_free(String string) {
-    string = NULL;
+    memory_byte_retreat(string, sizeof(StringHeader));
+    memory_free(string);
     return string;
 }
 

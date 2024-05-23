@@ -32,7 +32,7 @@ Arena* MACRO_arena_create(u32 allocation_size, const char* name, ArenaFlags flag
     arena->used = 0;
     memory_zero(arena->memory_tag_values, sizeof(u64) * MEMORY_TAG_ARENA);
     arena->base_address = memory_allocate(allocation_size != 0 ? allocation_size : ARENA_DEFAULT_ALLOCATION_SIZE, MEMORY_TAG_ARENA);
-    memory_arena_register(&arena);
+    // memory_arena_register(&arena);
     return arena;
 }
 
@@ -40,7 +40,7 @@ void arena_free(Arena* arena) {
     assert_in_function(arena && arena->base_address, "arena_free: arena is null\n");
     // Date: May 12, 2024
     // TODO(Jovanni): Make memory_arena_unregister and memory_arena_register not accessable.
-    memory_arena_unregister(&arena);
+    // memory_arena_unregister(&arena);
     memory_free(arena->base_address);
     memory_free(arena);
 }

@@ -100,8 +100,7 @@ void test_vector_operations() {
 }
 
 int main() {
-  CKit_init();
-
+  
   String str = string_create("aasfhsdfsdfjsdljflsdkf");
   LOG_PRINT("String: %s\n", str);
   LOG_PRINT("String Length: %d\n", string_length(str));
@@ -140,16 +139,10 @@ int main() {
 
   memory_output_allocations(LOG_LEVEL_WARN);
 
-  memory_output_arena_allocations(LOG_LEVEL_INFO);
-
-
   memory_free(int_array);
   memory_free(int_array2);
-  string_arena_free();
-  memory_arena_vector_free();
 
   memory_output_allocations(LOG_LEVEL_ERROR);
-
 
   return 0;
 }
