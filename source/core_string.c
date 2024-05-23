@@ -35,6 +35,7 @@ internal inline String _string_grow(String string, u32 new_allocation_size) {
     StringHeader header = *_string_extract_header(string);
     header.capacity = new_allocation_size;
     String ret = string_create_custom(string, header.capacity);
+
     string_free(string);
     
     return ret;
@@ -50,6 +51,7 @@ String string_create_custom(const char* c_string, u32 capacity) {
   	header.capacity = capacity != 0 ? capacity : sizeof(char) * (c_str_length + 1);
 	
   	String ret = memory_allocate(sizeof(header) + header.capacity, MEMORY_TAG_STRING);
+    memory_copy(&header, ret, sizeof(header), header.capacity);
     memory_byte_advance(ret, sizeof(header));
 	
   	memory_copy(c_string, ret, c_str_length, c_str_length);
@@ -96,11 +98,14 @@ String MACRO_string_append(String string, const char* source) {
     if (header->length + source_size >= header->capacity) {
         string = _string_grow(string, (header->length + source_size) * 2);
         header = _string_extract_header(string);
+        LOG_DEBUG("Header cap: %d\n", header->capacity);
+        LOG_DEBUG("Header length: %d\n",header->length);
+
     }
 
     u8* dest_ptr = memory_advance_new_ptr(string, header->length);
 	header->length++;
-    memory_copy(source, dest_ptr, source_size, source_size);
+    memory_copy(source, dest_ptr, source_size, header->capacity);
     
     return string;
 }
