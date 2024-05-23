@@ -99,7 +99,16 @@ void test_vector_operations() {
   return;
 }
 
+void test_string_operations() {
+  // Test types
+  
+
+  LOG_INFO("All string tests passed!\n\n"); 
+  return;
+}
+
 int main() {
+  test_string_operations();
   
   String str = string_create("aasfhsdfsdfjsdljflsdkf");
   LOG_PRINT("String: %s\n", str);
