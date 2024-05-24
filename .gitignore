@@ -34,6 +34,5 @@
 #Debug Info
 *.pdb
 
-examples/
-!examples/Test_CKit.c
-!examples/Test_CKit.cpp
+examples/cl
+examples/gcc

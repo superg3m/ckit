@@ -17,7 +17,6 @@ typedef char* String;
 #ifdef __cplusplus
 extern "C" {
 #endif
-  u32 c_string_length(const char* c_string);
   /**
    * @brief string_create allocates memory
    * use string_destroy to free

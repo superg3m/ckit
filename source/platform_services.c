@@ -54,7 +54,7 @@
 			// Date: May 01, 2024
 			// TODO(Jovanni): This code is very flaky I would suggest fixing it
 			DWORD num_written_bytes = 0;
-			unsigned long long message_size_in_bytes = c_string_length(message);
+			unsigned long long message_size_in_bytes = ckg_cstring_length(message);
 
 			HANDLE console_output_handle = GetStdHandle(STD_OUTPUT_HANDLE);
 			char out_message[PLATFORM_CHARACTER_LIMIT];
