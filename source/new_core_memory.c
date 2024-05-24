@@ -9,23 +9,16 @@
 #include "../include/core_assert.h"
 
 //========================== Begin Types ==========================
-typedef enum LogLevel LogLevel;
-typedef struct Arena Arena;
-
-void arena_output_allocations(Arena* arena, LogLevel log_level);
-
-// Date: May 14, 2024
-// TODO(Jovanni): This should be a hashmap
-Arena** arena_vector = NULLPTR; 
-
-internal u64 memory_used = 0; 
-internal u64 global_memory_tags[MEMORY_TAG_COUNT];
-
 typedef struct MemoryHeader {
 	u32 allocation_size_without_header;
     MemoryTag memory_tag;
 } MemoryHeader;
 
+typedef enum LogLevel LogLevel;
+typedef struct Arena Arena;
+
+internal u64 memory_used = 0; 
+internal u64 global_memory_tags[MEMORY_TAG_COUNT];
 char known_memory_tag_strings[MEMORY_TAG_COUNT][MEMORY_TAG_CHARACTER_LIMIT] = {
     "UNKNOWN      : ",
     "TEMPORARY    : ",
@@ -37,37 +30,11 @@ char known_memory_tag_strings[MEMORY_TAG_COUNT][MEMORY_TAG_CHARACTER_LIMIT] = {
 //=========================== End Types ===========================
 
 //************************* Begin Functions *************************
+#include "core_memory_internal.txt"
 
-void _memory_track_add(MemoryHeader header, MemoryTag memory_tag) {
-  	global_memory_tags[MEMORY_TAG_INTERNAL] += sizeof(header);
-  	global_memory_tags[memory_tag] += (header.allocation_size_without_header);
-  	memory_used += sizeof(header) + header.allocation_size_without_header;
-}
-
-void _memory_track_remove(MemoryHeader header, MemoryTag memory_tag) {
-  	global_memory_tags[MEMORY_TAG_INTERNAL] -= sizeof(header);
-  	global_memory_tags[memory_tag] -= (header.allocation_size_without_header);
-  	memory_used -= sizeof(header) + header.allocation_size_without_header;
-}
-
-void* MACRO_memory_insert_header(void* data, MemoryHeader header) {
-  	((MemoryHeader*)data)[0] = header;
-  	memory_byte_advance(data, sizeof(header));
-  	return data;
-}
-
-#define _memory_insert_header(data, header) data = MACRO_memory_insert_header(data, header);
-
-Boolean memory_tag_is_unknown(MemoryTag memory_tag) {
-  	return (memory_tag == MEMORY_TAG_UNKNOWN);
-}
-
-Boolean memory_tag_is_valid(MemoryTag memory_tag) {
-  	return (memory_tag >= 0 && memory_tag < MEMORY_TAG_COUNT);
-}
-
-MemoryHeader* _memory_extract_header(void* data) {
-	return &((MemoryHeader*)data)[-1];
+void memory_init() {
+	ckg_memory_bind_allocator_callback(&platform_allocate);
+	ckg_memory_bind_free_callback(&MACRO_platform_free);
 }
 
 void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
@@ -85,13 +52,29 @@ void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
 
 	_memory_track_add(header, memory_tag);
 
-	void* data = platform_allocate(sizeof(header) + header.allocation_size_without_header);
+	void* data = ckg_memory_allocate(sizeof(header) + header.allocation_size_without_header);
 	// Date: May 09, 2024
 	// TODO(Jovanni): Technically you are repeating work here
 	memory_zero(data, sizeof(header) + header.allocation_size_without_header);
 	_memory_insert_header(data, header);
 
 	return data;
+}
+
+void* MACRO_memory_free(void* data) {
+  	assert_in_function(data, "memory_free: Data passed is null in free\n");
+  	const MemoryHeader header = *_memory_extract_header(data);
+  	assert_in_function(memory_tag_is_valid(header.memory_tag), "memory_free: memory_tag is not valid\n");
+
+  	_memory_track_remove(header, header.memory_tag);
+
+  	memory_byte_retreat(data, sizeof(header));
+  	// Date: May 09, 2024
+  	// NOTE(Jovanni): Should I actually do this? Should I zero out the memory I free?
+  	memory_zero(data, header.allocation_size_without_header);
+  	ckg_memory_free(data);
+  	data = NULLPTR;
+  	return data;
 }
 
 void* memory_reallocate(void* data, u64 new_byte_allocation_size) {
@@ -110,23 +93,6 @@ void* memory_reallocate(void* data, u64 new_byte_allocation_size) {
 
   	return ret_data;
 }
-
-void* MACRO_memory_free(void* data) {
-  	assert_in_function(data, "memory_free: Data passed is null in free\n");
-  	const MemoryHeader header = *_memory_extract_header(data);
-  	assert_in_function(memory_tag_is_valid(header.memory_tag), "memory_free: memory_tag is not valid\n");
-
-  	_memory_track_remove(header, header.memory_tag);
-
-  	memory_byte_retreat(data, sizeof(header));
-  	// Date: May 09, 2024
-  	// NOTE(Jovanni): Should I actually do this? Should I zero out the memory I free?
-  	memory_zero(data, header.allocation_size_without_header);
-  	platform_free(data);
-  	data = NULLPTR;
-  	return data;
-}
-
 
 void memory_output_allocations(LogLevel log_level) {
     if (memory_used == 0) {
@@ -153,12 +119,6 @@ void memory_output_allocations(LogLevel log_level) {
      	log_output(log_level, "%s\n", out_message3);
     }
     log_output(log_level, "========================\n");
-}
-
-void memory_output_arena_allocations(LogLevel log_level) {
-	for (int i = 0; i < vector_size(arena_vector); i++) {
-		arena_output_allocations(arena_vector[i], log_level);
-	}
 }
 //************************** End Functions **************************
 

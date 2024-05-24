@@ -25,7 +25,7 @@ typedef enum MemoryTag {
 #ifdef __cplusplus
 extern "C" {
 #endif
-    Boolean memory_init();
+    void memory_init();
 
     Boolean memory_tag_is_valid(MemoryTag memory_tag);
     Boolean memory_tag_is_unknown(MemoryTag memory_tag);

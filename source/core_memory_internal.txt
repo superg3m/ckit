@@ -1,0 +1,31 @@
+void _memory_track_add(MemoryHeader header, MemoryTag memory_tag) {
+  	global_memory_tags[MEMORY_TAG_INTERNAL] += sizeof(header);
+  	global_memory_tags[memory_tag] += (header.allocation_size_without_header);
+  	memory_used += sizeof(header) + header.allocation_size_without_header;
+}
+
+void _memory_track_remove(MemoryHeader header, MemoryTag memory_tag) {
+  	global_memory_tags[MEMORY_TAG_INTERNAL] -= sizeof(header);
+  	global_memory_tags[memory_tag] -= (header.allocation_size_without_header);
+  	memory_used -= sizeof(header) + header.allocation_size_without_header;
+}
+
+void* MACRO_memory_insert_header(void* data, MemoryHeader header) {
+  	((MemoryHeader*)data)[0] = header;
+  	memory_byte_advance(data, sizeof(header));
+  	return data;
+}
+
+#define _memory_insert_header(data, header) data = MACRO_memory_insert_header(data, header);
+
+Boolean memory_tag_is_unknown(MemoryTag memory_tag) {
+  	return (memory_tag == MEMORY_TAG_UNKNOWN);
+}
+
+Boolean memory_tag_is_valid(MemoryTag memory_tag) {
+  	return (memory_tag >= 0 && memory_tag < MEMORY_TAG_COUNT);
+}
+
+MemoryHeader* _memory_extract_header(void* data) {
+	return &((MemoryHeader*)data)[-1];
+}

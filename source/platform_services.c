@@ -132,12 +132,16 @@
 			}
 		}
 
+		// Date: May 24, 2024
+		// NOTE(Jovanni): This doesn't clear to zero so its gonna be a problem
 		void* _platform_allocate(size_t  number_of_bytes) {
 			return malloc(number_of_bytes);
 		}
 
-		void MACRO_platform_free(size_t number_of_bytes, void** data) {
-			free(*data);
+		void MACRO_platform_free(void* data) {
+			free(data);
+			data = NULLPTR;
+			return data;
 		}
 		
 		// Date: April 13, 2024
