@@ -71,8 +71,6 @@ void test_vector_operations() {
 
   char* before_popped_string = stringVector[vector_size(stringVector) - 1];
   char* after_popped_string = vector_pop(stringVector, char*);
-  // Date: May 10, 2024
-  // NOTE(Jovanni): This might not work?
   char* string_to_push = "TRYING TO PUSH A LITERAL!\n";
   vector_push(stringVector, string_to_push);
 

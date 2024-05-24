@@ -55,6 +55,7 @@ void* MACRO_memory_insert_header(void* data, MemoryHeader header) {
   	memory_byte_advance(data, sizeof(header));
   	return data;
 }
+
 #define _memory_insert_header(data, header) data = MACRO_memory_insert_header(data, header);
 
 Boolean memory_tag_is_unknown(MemoryTag memory_tag) {
@@ -69,28 +70,6 @@ MemoryHeader* _memory_extract_header(void* data) {
 	return &((MemoryHeader*)data)[-1];
 }
 
-void memory_arena_register(Arena** arena) {
-    vector_push(arena_vector, *arena);
-}
-
-void memory_arena_unregister(Arena** arena) {
-  	for (int i = 0; i < vector_size(arena_vector); i++) {
-  	  	if (arena_vector[i] == *arena) {
-  	    	// Date: May 12, 2024
-  	    	// TODO(Jovanni): THis is not right logic if you have more than one vector you need a remove at or
-  	    	// something else that is index based removal.
-  	    	LOG_INFO("Unregistered Arena\n");
-  	    	vector_pop(arena_vector, Arena*);
-
-  	    	break;
-  	  	}
-  	}
-}
-
-void memory_arena_vector_free() {
-	vector_free(arena_vector);
-}
-
 void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
 	assert_in_function(byte_allocation_size > 0, "Invalid allocation size zero or below\n");
 	assert_in_function(memory_tag_is_valid(memory_tag), "memory_allocate: Memory tag is invalid | value: (%d)\n", memory_tag);
@@ -102,8 +81,6 @@ void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
 	memory_zero(&header, sizeof(header));
 	header.allocation_size_without_header = byte_allocation_size; 
 
-	// Date: May 11, 2024
-	// TODO(Jovanni): Look at this because this is really odd having to subtract sizeof(header)
 	header.memory_tag = memory_tag;
 
 	_memory_track_add(header, memory_tag);
@@ -187,8 +164,6 @@ void memory_output_arena_allocations(LogLevel log_level) {
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
-
-
 
 
 

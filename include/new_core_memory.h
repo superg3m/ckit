@@ -27,8 +27,8 @@ extern "C" {
 #endif
     Boolean memory_init();
 
-    Boolean memory_tag_is_valid(MemoryTag memory_tag);
-    Boolean memory_tag_is_unknown(MemoryTag memory_tag);
+    // Boolean memory_tag_is_valid(MemoryTag memory_tag);
+    // Boolean memory_tag_is_unknown(MemoryTag memory_tag);
 
     // void memory_arena_register(Arena** arena);
     // void memory_arena_unregister(Arena** arena);
