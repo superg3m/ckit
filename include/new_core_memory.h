@@ -38,7 +38,7 @@ extern "C" {
     void* memory_reallocate(void* data, u64 new_number_of_bytes);
     void* MACRO_memory_free(void* data);
 
-    void memory_output_allocations(LogLevel log_level);
+    // void memory_output_allocations(LogLevel log_level);
     // void memory_output_arena_allocations(LogLevel log_level);
 #ifdef __cplusplus
 }
