@@ -92,29 +92,29 @@ void memory_arena_vector_free() {
 }
 
 void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
-  assert_in_function(byte_allocation_size > 0, "Invalid allocation size zero or below\n");
-  assert_in_function(memory_tag_is_valid(memory_tag), "memory_allocate: Memory tag is invalid | value: (%d)\n", memory_tag);
-  if (memory_tag_is_unknown(memory_tag)) {
-      LOG_WARN("memory_allocate: memory tag unknown\n");
-  }
+	assert_in_function(byte_allocation_size > 0, "Invalid allocation size zero or below\n");
+	assert_in_function(memory_tag_is_valid(memory_tag), "memory_allocate: Memory tag is invalid | value: (%d)\n", memory_tag);
+	if (memory_tag_is_unknown(memory_tag)) {
+		LOG_WARN("memory_allocate: memory tag unknown\n");
+	}
 
-  MemoryHeader header;
-  memory_zero(&header, sizeof(header));
-  header.allocation_size_without_header = byte_allocation_size; 
+	MemoryHeader header;
+	memory_zero(&header, sizeof(header));
+	header.allocation_size_without_header = byte_allocation_size; 
 
-  // Date: May 11, 2024
-  // TODO(Jovanni): Look at this because this is really odd having to subtract sizeof(header)
-  header.memory_tag = memory_tag;
+	// Date: May 11, 2024
+	// TODO(Jovanni): Look at this because this is really odd having to subtract sizeof(header)
+	header.memory_tag = memory_tag;
 
-  _memory_track_add(header, memory_tag);
+	_memory_track_add(header, memory_tag);
 
-  void* data = platform_allocate(sizeof(header) + header.allocation_size_without_header);
-  // Date: May 09, 2024
-  // TODO(Jovanni): Technically you are repeating work here
-  memory_zero(data, sizeof(header) + header.allocation_size_without_header);
-  _memory_insert_header(data, header);
+	void* data = platform_allocate(sizeof(header) + header.allocation_size_without_header);
+	// Date: May 09, 2024
+	// TODO(Jovanni): Technically you are repeating work here
+	memory_zero(data, sizeof(header) + header.allocation_size_without_header);
+	_memory_insert_header(data, header);
 
-  return data;
+	return data;
 }
 
 void* memory_reallocate(void* data, u64 new_byte_allocation_size) {
