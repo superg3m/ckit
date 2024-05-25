@@ -31,7 +31,7 @@ internal inline String _string_grow(String string, u32 new_allocation_size) {
 }
 
 String string_create_custom(const char* c_string, u32 capacity) {
-  	u32 c_str_length = ckg_cstring_length(c_string);
+  	u32 c_str_length = cstring_length(c_string);
   	StringHeader* header = arena_push(string_arena, StringHeader, MEMORY_TAG_STRING);
   	header->length = c_str_length;
   	header->capacity = capacity != 0 ? capacity : sizeof(char) * (c_str_length + 1);
@@ -62,7 +62,7 @@ internal inline String _string_grow(String string, u32 new_allocation_size) {
 // TODO(Jovanni): I need to eventually go back to using an arena I liked the idea
 // Of pushing the header then right after pushing the string data I think this worked really well.
 String string_create_custom(const char* c_string, u32 capacity) {
-  	u32 c_str_length = ckg_cstring_length(c_string);
+  	u32 c_str_length = cstring_length(c_string);
   	StringHeader header;
   	header.length = c_str_length;
   	header.capacity = capacity != 0 ? capacity : sizeof(char) * (c_str_length + 1);
@@ -81,23 +81,6 @@ u32 string_length(String string) {
     return header->length;
 }
 
-/**
- * @brief Returns TRUE(1) if strings are equal and returns FALSE(0) if they are not
- * 
- * @param s1 
- * @param s2 
- * @return Boolean 
- */
-Boolean string_compare(const char* s1, const char* s2) {
-    assert_in_function(s1, "string_compare first argument is not valid | null\n");
-    assert_in_function(s2, "string_compare second argument is not valid | null\n");
-
-	u32 s1_length = ckg_cstring_length(s1);
-	u32 s2_length = ckg_cstring_length(s2);
-
-	return memory_byte_compare(s1, s2, s1_length, s2_length);
-}
-
 String MACRO_string_free(String string) {
     memory_byte_retreat(string, sizeof(StringHeader));
     memory_free(string);
@@ -108,7 +91,7 @@ String MACRO_string_append(String string, const char* source) {
     assert_in_function(string, "string_append: String passed is null\n");
     assert_in_function(source, "string_append: Source passed is null\n");
 
-    u32 source_size = ckg_cstring_length(source) + 1; 
+    u32 source_size = cstring_length(source) + 1; 
 
     StringHeader* header = _string_extract_header(string);
     if (header->length + source_size >= header->capacity) {
@@ -119,7 +102,7 @@ String MACRO_string_append(String string, const char* source) {
 
     }
 
-	header->length += ckg_cstring_length(source);
+	header->length += cstring_length(source);
     ckg_string_append(string, header->capacity, source);
     
     return string;
