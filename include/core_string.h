@@ -36,10 +36,7 @@ extern "C" {
   void string_clear(String string);
 
   void string_copy(String* string, const char* source); // Careful about the header
-  //void string_copy(String* string, const char* source); // Careful about the header
-  //void string_copy(String* string, const char* source); // Careful about the header
-
-  void string_concat();
+  char* string_concat(const char* s1, const char* s2);
 #ifdef __cplusplus
 }
 #endif

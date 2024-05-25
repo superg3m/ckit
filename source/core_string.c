@@ -75,7 +75,7 @@ String string_create_custom(const char* c_string, u32 capacity) {
 }
 
 void string_copy(); // Careful about the header
-void string_concat();
+char* string_concat();
 u32 string_length(String string) {
     StringHeader* header = _string_extract_header(string);
     return header->length;
