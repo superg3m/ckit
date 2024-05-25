@@ -51,7 +51,6 @@
 		void platform_console_write(const char* message, unsigned char color) {
 			// Date: May 01, 2024
 			// TODO(Jovanni): This code is very flaky I would suggest fixing it
-			DWORD num_written_bytes = 0;
 			unsigned long long message_length = cstring_length(message);
 
 			if (message_length == 0) {
@@ -69,10 +68,10 @@
 			Boolean is_fatal = (color == BACK_RED);
 
 			SetConsoleTextAttribute(console_output_handle, color);
-			WriteConsoleA(console_output_handle, message, message_length - 1, &num_written_bytes, NULL);
+			WriteConsoleA(console_output_handle, message, message_length - 1, NULLPTR, NULLPTR);
 			SetConsoleTextAttribute(console_output_handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 			if (new_line_required == 1) {
-				WriteConsoleA(console_output_handle, "\n", 1, &num_written_bytes, NULL);
+				WriteConsoleA(console_output_handle, "\n", 1, NULLPTR, NULLPTR);
 			}
 		}
 	#elif PLATFORM_LINUX
