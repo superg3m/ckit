@@ -47,7 +47,6 @@ void* MACRO_memory_insert_header(void* data, MemoryHeader header) {
   	memory_byte_advance(data, sizeof(header));
   	return data;
 }
-
 #define _memory_insert_header(data, header) data = MACRO_memory_insert_header(data, header);
 
 Boolean memory_tag_is_valid(MemoryTag memory_tag) {
@@ -102,14 +101,15 @@ void* memory_reallocate(void* data, u64 new_byte_allocation_size) {
   	assert_in_function(data, "memory_reallocation: Data passed is null\n");
 
   	MemoryHeader header = *_memory_extract_header(data);
-  	u32 old_allocation_size = sizeof(header) + header.allocation_size_without_header;
-
+  	u32 old_total_allocation_size = sizeof(header) + header.allocation_size_without_header;
+  	u32 new_total_allocation_size = sizeof(header) + new_byte_allocation_size;
+	
   	header.allocation_size_without_header = new_byte_allocation_size;
 
   	void* ret_data = memory_allocate(new_byte_allocation_size, header.memory_tag);
   	_memory_insert_header(ret_data, header);
 
-  	memory_copy(data, ret_data, old_allocation_size, sizeof(header) + new_byte_allocation_size);
+  	memory_copy(data, ret_data, old_total_allocation_size, new_total_allocation_size);
   	memory_free(data);
 
   	return ret_data;
