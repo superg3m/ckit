@@ -97,9 +97,6 @@ String MACRO_string_append(String string, const char* source) {
     if (header->length + source_size >= header->capacity) {
         string = _string_grow(string, (header->length + source_size) * 2);
         header = _string_extract_header(string);
-        LOG_DEBUG("Header cap: %d\n", header->capacity);
-        LOG_DEBUG("Header length: %d\n",header->length);
-
     }
 
 	header->length += cstring_length(source);
