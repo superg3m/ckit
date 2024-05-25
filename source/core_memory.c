@@ -75,10 +75,12 @@ void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
 
 	_memory_track_add(header, memory_tag);
 
-	void* data = ckg_memory_allocate(sizeof(header) + header.allocation_size_without_header);
+	u32 total_allocation_size = sizeof(header) + header.allocation_size_without_header;
+
+	void* data = ckg_memory_allocate(total_allocation_size);
 	// Date: May 09, 2024
 	// NOTE(Jovanni): Technically you are repeating work here
-	memory_zero(data, sizeof(header) + header.allocation_size_without_header);
+	memory_zero(data, total_allocation_size);
 	_memory_insert_header(data, header);
 
 	return data;
@@ -101,15 +103,16 @@ void* memory_reallocate(void* data, u64 new_byte_allocation_size) {
   	assert_in_function(data, "memory_reallocation: Data passed is null\n");
 
   	MemoryHeader header = *_memory_extract_header(data);
-  	u32 old_total_allocation_size = sizeof(header) + header.allocation_size_without_header;
-  	u32 new_total_allocation_size = sizeof(header) + new_byte_allocation_size;
-	
-  	header.allocation_size_without_header = new_byte_allocation_size;
 
-  	void* ret_data = memory_allocate(new_byte_allocation_size, header.memory_tag);
+	u32 old_total_allocation_size = sizeof(header) + header.allocation_size_without_header;
+  	u32 new_total_allocation_size = sizeof(header) + new_byte_allocation_size;
+
+	header.allocation_size_without_header = new_byte_allocation_size;
+
+  	void* ret_data = memory_allocate(header.allocation_size_without_header, header.memory_tag);
   	_memory_insert_header(ret_data, header);
 
-  	memory_copy(data, ret_data, old_total_allocation_size, new_total_allocation_size);
+  	memory_copy(data, ret_data, old_total_allocation_size - sizeof(header), new_total_allocation_size - sizeof(header));
   	memory_free(data);
 
   	return ret_data;
