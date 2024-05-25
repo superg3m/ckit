@@ -50,10 +50,6 @@ void* MACRO_memory_insert_header(void* data, MemoryHeader header) {
 
 #define _memory_insert_header(data, header) data = MACRO_memory_insert_header(data, header);
 
-Boolean memory_tag_is_unknown(MemoryTag memory_tag) {
-  	return (memory_tag == MEMORY_TAG_UNKNOWN);
-}
-
 Boolean memory_tag_is_valid(MemoryTag memory_tag) {
   	return (memory_tag >= 0 && memory_tag < MEMORY_TAG_COUNT);
 }
@@ -70,14 +66,12 @@ void memory_init() {
 void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
 	assert_in_function(byte_allocation_size > 0, "Invalid allocation size zero or below\n");
 	assert_in_function(memory_tag_is_valid(memory_tag), "memory_allocate: Memory tag is invalid | value: (%d)\n", memory_tag);
-	if (memory_tag_is_unknown(memory_tag)) {
+	if (memory_tag == MEMORY_TAG_UNKNOWN) {
 		LOG_WARN("memory_allocate: memory tag unknown\n");
 	}
 
 	MemoryHeader header;
-	memory_zero(&header, sizeof(header));
 	header.allocation_size_without_header = byte_allocation_size;
-
 	header.memory_tag = memory_tag;
 
 	_memory_track_add(header, memory_tag);
@@ -111,6 +105,7 @@ void* memory_reallocate(void* data, u64 new_byte_allocation_size) {
   	u32 old_allocation_size = sizeof(header) + header.allocation_size_without_header;
 
   	header.allocation_size_without_header = new_byte_allocation_size;
+
   	void* ret_data = memory_allocate(new_byte_allocation_size, header.memory_tag);
   	_memory_insert_header(ret_data, header);
 
