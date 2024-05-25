@@ -27,10 +27,8 @@
 		 * 
 		 * @param data 
 		 */
-		void* MACRO_platform_free(void* data) {
+		void platform_free(void* data) {
 			VirtualFree(data, 0, MEM_RELEASE); // This is really interesting
-			data = NULLPTR;
-			return data;
 			// Date: May 08, 2024
 			// TODO(Jovanni): Look into VirtualProtect() this allows you to change memory access to NO_ACCESS
 			// can help find use after free bugs interesting concept
@@ -54,31 +52,27 @@
 			// Date: May 01, 2024
 			// TODO(Jovanni): This code is very flaky I would suggest fixing it
 			DWORD num_written_bytes = 0;
-			unsigned long long message_size_in_bytes = cstring_length(message);
+			unsigned long long message_length = cstring_length(message);
+
+			if (message_length == 0) {
+				return;
+			}
 
 			HANDLE console_output_handle = GetStdHandle(STD_OUTPUT_HANDLE);
-			char out_message[PLATFORM_CHARACTER_LIMIT];
-			for (int i = 0; i < PLATFORM_CHARACTER_LIMIT; i++) { // Zeroing out the buffer
-				out_message[i] = '\0';
+
+			int new_line_required = 0;
+
+			if(message[message_length - 1] == '\n') {
+				new_line_required = 1;
 			}
 
-			int count = 0;
-			int new_line_required = 0;
 			Boolean is_fatal = (color == BACK_RED);
-			while (count < message_size_in_bytes) {
-				char c = message[count];
-				if (c == '\n' && message[count + 1] == '\0') {
-					new_line_required = 1;
-					break;
-				}
-				out_message[count++] = c;
-			}
 
 			SetConsoleTextAttribute(console_output_handle, color);
-			WriteConsoleA(console_output_handle, out_message, message_size_in_bytes, &num_written_bytes, NULL);
+			WriteConsoleA(console_output_handle, message, message_length - 1, &num_written_bytes, NULL);
 			SetConsoleTextAttribute(console_output_handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 			if (new_line_required == 1) {
-				WriteConsoleA(console_output_handle, "\n", 2, &num_written_bytes, NULL);
+				WriteConsoleA(console_output_handle, "\n", 1, &num_written_bytes, NULL);
 			}
 		}
 	#elif PLATFORM_LINUX
@@ -134,19 +128,17 @@
 
 		// Date: May 24, 2024
 		// NOTE(Jovanni): This doesn't clear to zero so its gonna be a problem
-		void* _platform_allocate(size_t  number_of_bytes) {
+		void* platform_allocate(size_t  number_of_bytes) {
 			return malloc(number_of_bytes);
 		}
 
-		void MACRO_platform_free(void* data) {
+		void platform_free(void* data) {
 			free(data);
-			data = NULLPTR;
-			return data;
 		}
 		
 		// Date: April 13, 2024
 		// TODO(Jovanni): Fix this to use linux's platfomr specific std console out
-		void _platform_console_write(size_t message_size_in_bytes, const char* message, unsigned char color) {
+		void platform_console_write(size_t message_size_in_bytes, const char* message, unsigned char color) {
 			const char* color_strings[] = {COLOR_RESET, BLU, GRN, RED, MAG, WHT, BLKB, GRNB, REDB};
 			printf("\033[%sm%s\033[0m", color_strings[translate_color(color)], message);
 		}

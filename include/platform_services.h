@@ -40,7 +40,7 @@
 extern "C" {
 #endif
   void* platform_allocate(unsigned long long number_of_bytes);
-  void* MACRO_platform_free(void* data);
+  void platform_free(void* data);
   void platform_console_write(const char* message, unsigned char color);
   void platform_console_init();
   void platform_console_shutdown();
@@ -55,5 +55,4 @@ extern "C" {
 //************************** End Functions **************************
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
-#define platform_free(data) data = MACRO_platform_free(data);
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++

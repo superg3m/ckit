@@ -27,19 +27,9 @@ extern "C" {
 #endif
     void memory_init();
 
-    Boolean memory_tag_is_valid(MemoryTag memory_tag);
-    Boolean memory_tag_is_unknown(MemoryTag memory_tag);
-
-    // void memory_arena_register(Arena** arena);
-    // void memory_arena_unregister(Arena** arena);
-    // void memory_arena_vector_free();
-
     void* memory_allocate(u64 number_of_bytes, MemoryTag memory_tag);
-    void* memory_reallocate(void* data, u64 new_number_of_bytes);
     void* MACRO_memory_free(void* data);
-
-    void memory_output_allocations(LogLevel log_level);
-    // void memory_output_arena_allocations(LogLevel log_level);
+    void* memory_reallocate(void* data, u64 new_number_of_bytes);
 #ifdef __cplusplus
 }
 #endif

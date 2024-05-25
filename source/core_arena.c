@@ -56,7 +56,7 @@ void* MACRO_arena_push(Arena* arena, u32 element_size, MemoryTag memory_tag) {
     // TODO(Jovanni): For right now just assert if you don't have enough memory but later on make it grow.
     assert_in_function(arena && arena->base_address, "arena_push: arena is null\n");
     assert_in_function((arena->used + element_size < arena->capacity), "arena_push: can't push element ran out of memory\n");
-    if (memory_tag_is_unknown(memory_tag)) {
+    if (memory_tag == MEMORY_TAG_UNKNOWN) {
         LOG_WARN("arena_push: memory tag unknown\n");
     }
     if ((arena->used + element_size >= arena->capacity)) {

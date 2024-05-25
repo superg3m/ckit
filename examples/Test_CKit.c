@@ -106,6 +106,7 @@ void test_string_operations() {
 }
 
 int main() {
+	memory_init();
 	test_string_operations();
 
 	String str = string_create("SOLAR_FLARE");
