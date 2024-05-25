@@ -76,7 +76,7 @@ void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
 
 	MemoryHeader header;
 	memory_zero(&header, sizeof(header));
-	header.allocation_size_without_header = byte_allocation_size; 
+	header.allocation_size_without_header = byte_allocation_size;
 
 	header.memory_tag = memory_tag;
 
@@ -108,13 +108,13 @@ void* memory_reallocate(void* data, u64 new_byte_allocation_size) {
   	assert_in_function(data, "memory_reallocation: Data passed is null\n");
 
   	MemoryHeader header = *_memory_extract_header(data);
-  	u32 old_allocation_size = header.allocation_size_without_header;
+  	u32 old_allocation_size = sizeof(header) + header.allocation_size_without_header;
 
   	header.allocation_size_without_header = new_byte_allocation_size;
   	void* ret_data = memory_allocate(new_byte_allocation_size, header.memory_tag);
   	_memory_insert_header(ret_data, header);
 
-  	memory_copy(data, ret_data, old_allocation_size, new_byte_allocation_size);
+  	memory_copy(data, ret_data, old_allocation_size, sizeof(header) + new_byte_allocation_size);
   	memory_free(data);
 
   	return ret_data;
