@@ -99,9 +99,6 @@ void* MACRO_memory_free(void* data) {
   	_memory_track_remove(header, header.memory_tag);
 
   	memory_byte_retreat(data, sizeof(header));
-  	// Date: May 09, 2024
-  	// NOTE(Jovanni): Should I actually do this? Should I zero out the memory I free?
-  	memory_zero(data, header.allocation_size_without_header);
   	ckg_memory_free(data);
   	return data;
 }
