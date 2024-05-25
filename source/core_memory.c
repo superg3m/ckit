@@ -9,6 +9,10 @@
 #include "../include/core_assert.h"
 
 //========================== Begin Types ==========================
+
+// Date: May 25, 2024
+// TODO(Jovanni): Figure out a better way to do headers and pointer math
+
 typedef struct MemoryHeader {
 	u32 allocation_size_without_header;
     MemoryTag memory_tag;
