@@ -84,7 +84,7 @@ void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
 
 	void* data = ckg_memory_allocate(sizeof(header) + header.allocation_size_without_header);
 	// Date: May 09, 2024
-	// TODO(Jovanni): Technically you are repeating work here
+	// NOTE(Jovanni): Technically you are repeating work here
 	memory_zero(data, sizeof(header) + header.allocation_size_without_header);
 	_memory_insert_header(data, header);
 
