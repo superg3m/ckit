@@ -34,22 +34,22 @@ void test_vector_operations() {
 	// Test get
 	for (int i = 0; i < vector_size(intVector); i++) {
 		int element = intVector[i];
-		assert_in_macro(element == intArray[i], "Error: Incorrect element value");
+		assert_in_macro(element == intArray[i], "Error: Incorrect element value\n");
 	}
 
 	for (int i = 0; i < vector_size(boolVector); i++) {
 		Boolean element = boolVector[i];
-		assert_in_macro(element == boolArray[i], "Error: Incorrect element value");
+		assert_in_macro(element == boolArray[i], "Error: Incorrect element value\n");
 	}
 
 	for (int i = 0; i < vector_size(charVector); i++) {
 		char element = charVector[i];
-		assert_in_macro(element == charArray[i], "Error: Incorrect element value");
+		assert_in_macro(element == charArray[i], "Error: Incorrect element value\n");
 	}
 
 	for (int i = 0; i < vector_size(stringVector); i++) {
 		char* element = stringVector[i];
-		assert_in_macro(string_compare(element, stringArray[i]), "Error: Incorrect element value");
+		assert_in_macro(string_compare(element, stringArray[i]), "Error: Incorrect element value\n");
 	}
 
 	// Test pop
@@ -74,7 +74,7 @@ void test_vector_operations() {
 	char* string_to_push = "TRYING TO PUSH A LITERAL!\n";
 	vector_push(stringVector, string_to_push);
 
-	assert_in_macro(string_compare(before_popped_string, after_popped_string), "Error: Incorrect popped element value");
+	assert_in_macro(string_compare(before_popped_string, after_popped_string), "Error: Incorrect popped element value\n");
 	LOG_WARN("New PUSH: %s\n", stringVector[vector_size(intVector) - 1]);
 
 	memory_output_allocations(LOG_LEVEL_ERROR);
@@ -88,10 +88,10 @@ void test_vector_operations() {
 	memory_output_allocations(LOG_LEVEL_WARN);
 
 	// Assert that the data is NULL
-	assert_in_macro(intVector == NULLPTR, "Error: Vector data is not NULL");
-	assert_in_macro(boolVector == NULLPTR, "Error: Vector data is not NULL");
-	assert_in_macro(charVector == NULLPTR, "Error: Vector data is not NULL");
-	assert_in_macro(stringVector == NULLPTR, "Error: Vector data is not NULL");
+	assert_in_macro(intVector == NULLPTR, "Error: Vector data is not NULL\n");
+	assert_in_macro(boolVector == NULLPTR, "Error: Vector data is not NULL\n");
+	assert_in_macro(charVector == NULLPTR, "Error: Vector data is not NULL\n");
+	assert_in_macro(stringVector == NULLPTR, "Error: Vector data is not NULL\n");
 
 	LOG_INFO("All vector tests passed!\n\n"); 
 	return;

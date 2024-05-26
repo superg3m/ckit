@@ -48,11 +48,11 @@ internal u32 _vector_total_allocation_size(VectorHeader header) {
 internal void* _vector_grow(void* vector) {
     // Date: May 11, 2024
     // NOTE(Jovanni): Need to deference because the header memory location will be freed after reallocation
-	VectorHeader header = *_vector_extract_header(vector);
-    header.capacity *= 2;
-    memory_byte_retreat(vector, sizeof(header));
-    void* ret = MACRO_vector_create(header.capacity, header.type_size_in_bytes);
-    memory_free(vector);
+	VectorHeader* header = _vector_extract_header(vector);
+    header->capacity *= 2;
+    memory_byte_retreat(vector, sizeof(*header));
+    void* ret = memory_reallocate(vector, _vector_total_allocation_size(*header));
+    memory_byte_advance(ret, sizeof(*header));
 
     return ret;
 }
