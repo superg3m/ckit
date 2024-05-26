@@ -67,7 +67,6 @@ void test_vector_operations() {
 	}
 
 	assert_in_function(before_popped_int == after_popped_int, "Error: popped expected: %d | got %d\n", before_popped_int, after_popped_int);
-	LOG_WARN("New PUSH: %d\n", intVector[vector_size(intVector) - 1]);
 
 	char* before_popped_string = stringVector[vector_size(stringVector) - 1];
 	char* after_popped_string = vector_pop(stringVector, char*);
@@ -75,9 +74,6 @@ void test_vector_operations() {
 	vector_push(stringVector, string_to_push);
 
 	assert_in_macro(string_compare(before_popped_string, after_popped_string), "Error: Incorrect popped element value\n");
-	LOG_WARN("New PUSH: %s\n", stringVector[vector_size(intVector) - 1]);
-
-	memory_output_allocations(LOG_LEVEL_ERROR);
 
 	// Test free
 	vector_free(intVector);
@@ -85,15 +81,13 @@ void test_vector_operations() {
 	vector_free(charVector);
 	vector_free(stringVector);
 
-	memory_output_allocations(LOG_LEVEL_WARN);
-
 	// Assert that the data is NULL
 	assert_in_macro(intVector == NULLPTR, "Error: Vector data is not NULL\n");
 	assert_in_macro(boolVector == NULLPTR, "Error: Vector data is not NULL\n");
 	assert_in_macro(charVector == NULLPTR, "Error: Vector data is not NULL\n");
 	assert_in_macro(stringVector == NULLPTR, "Error: Vector data is not NULL\n");
 
-	LOG_INFO("All vector tests passed!\n\n"); 
+	LOG_INFO("All vector tests passed!\n"); 
 	return;
 }
 
@@ -101,29 +95,25 @@ void test_string_operations() {
 	// Test types
 
 
-	LOG_INFO("All string tests passed!\n\n"); 
+	LOG_INFO("All string tests passed!\n"); 
 	return;
 }
 
 int main() {
-	// memory_init();
+	memory_init();
 	test_string_operations();
+	test_vector_operations();
+	LOG_PRINT("\n");
 
 	String str = string_create("SOLAR_FLARE");
 	LOG_PRINT("String: %s\n", str);
 	LOG_PRINT("String Length: %d\n", string_length(str));
 
-	memory_output_allocations(LOG_LEVEL_INFO);
-
 	string_append_char(str, 'a');
 	LOG_PRINT("String: %s\n", str);
-
 	string_append(str, " | FEEL THE WORLD AROUND ME!");
-
 	LOG_PRINT("String: %s\n", str);
-
-	test_vector_operations();
-
+	LOG_PRINT("\n");
 	string_free(str);
 
 	int* int_array = (int*)memory_allocate(sizeof(int) * 5, MEMORY_TAG_TEMPORARY);
@@ -139,7 +129,7 @@ int main() {
 		LOG_INFO("Element: %d\n", int_array[i]);
 	}
 
-	LOG_DEBUG("Element: %d\n", int_array[0]);
+	LOG_DEBUG("Element: %d\n\n", int_array[0]);
 
 	LOG_FATAL("TESTING\n");
 	LOG_ERROR("TESTING\n");
@@ -148,12 +138,10 @@ int main() {
 	LOG_INFO("TESTING\n");
 	LOG_PRINT("TESTING %s\n\n", str);
 
-	memory_output_allocations(LOG_LEVEL_WARN);
-
 	memory_free(int_array);
 	memory_free(int_array2);
 
-	memory_output_allocations(LOG_LEVEL_ERROR);
+	memory_output_allocations(LOG_LEVEL_DEBUG);
 
 	return 0;
 }
