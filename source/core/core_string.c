@@ -3,10 +3,10 @@
  * Date: May 09, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-#include "../include/core_string.h"
-#include "../include/core_memory.h"
-#include "../include/core_assert.h"
-#include "../include/core_arena.h"
+#include <core_string.h>
+#include <core_memory.h>
+#include <core_assert.h>
+#include <core_arena.h>
 
 typedef struct StringHeader {
     u32 length;

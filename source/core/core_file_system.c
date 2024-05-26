@@ -1,5 +1,5 @@
-#include "../include/core_file_system.h"
-#include "../include/core_string.h"
+#include <core_file_system.h>
+#include <core_string.h>
 
 void file_open(FileSystem* fileFramework) {
 	fileFramework->file = fopen(fileFramework->fileName, "r");

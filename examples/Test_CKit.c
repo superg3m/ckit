@@ -100,7 +100,7 @@ void test_string_operations() {
 }
 
 int main() {
-	memory_init();
+	// memory_init();
 	test_string_operations();
 	test_vector_operations();
 	LOG_PRINT("\n");

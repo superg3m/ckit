@@ -1,5 +1,5 @@
-#include "../include/core_arena.h"
-#include "../include/core_memory.h"
+#include "core_arena.h"
+#include "core_memory.h"
 
 // should register arena with memory
 

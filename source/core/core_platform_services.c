@@ -1,7 +1,7 @@
-#include "../include/platform_services.h"
-#include "../include/core_types.h"
-#include "../include/core_string.h"
-#include "../include/core_assert.h"
+#include <core_platform_services.h>
+#include <core_types.h>
+#include <core_string.h>
+#include <core_assert.h>
 
 /*===========================================================
  * File: platform_services.cpp

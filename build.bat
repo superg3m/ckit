@@ -28,14 +28,14 @@ if exist compilation_errors.txt (
 pushd .\build_cl
 :: MAKE SURE YOU HAVE AN OPTION FOR DEBUG LIBS
 :: cl -DCUSTOM_PLATFORM_IMPL /std:c++20 /c "..\source\*.cpp"
-cl /Zi /std:c99 /FC /c "..\source\*.c" "..\ckg\source\*.c" >> "..\compilation_errors.txt" 2>nul
+cl /Zi /std:c99 /FC /c /I"..\include\core" /I"..\ckg\include" "..\source\core\*.c" "..\ckg\source\*.c" >> "..\compilation_errors.txt" 2>nul
 lib /OUT:".\CKit.lib" "User32.lib" ".\*.obj" > NUL
 popd
 
 pushd .\build_gcc
 
-gcc -c -std=c99 -g "..\source\*.c"
-ar rcs CKit.lib ".\*.o"
+:: gcc -c -std=c99 -g "../source/core/*.c"
+:: ar rcs CKit.lib ".\*.o"
 
 popd
 

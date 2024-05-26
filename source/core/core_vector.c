@@ -3,9 +3,9 @@
  * Date: April 23, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-#include "../include/core_vector.h"
-#include "../include/core_memory.h" // Actually think about this maybe don't expose this to the user?
-#include "../include/core_assert.h"
+#include <core_vector.h>
+#include <core_memory.h> // Actually think about this maybe don't expose this to the user?
+#include <core_assert.h>
 
 #define VECTOR_DEFAULT_CAPACITY 1
 //========================== Begin Types ==========================

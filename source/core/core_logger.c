@@ -1,7 +1,7 @@
-#include "../include/core_logger.h"
-#include "../include/core_memory.h"
-#include "../include/platform_services.h"
-#include "../include/core_assert.h"
+#include <core_logger.h>
+#include <core_memory.h>
+#include <core_platform_services.h>
+#include <core_assert.h>
 
 static Boolean logging_is_initialized = FALSE;
 Boolean logger_init() {
