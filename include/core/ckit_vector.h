@@ -1,6 +1,6 @@
 #pragma once
 /*===========================================================
- * File: core_vector.h
+ * File: ckit_vector.h
  * Date: April 23, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
@@ -9,8 +9,8 @@
 	Header Based
 */
 
-#include "./core_types.h"
-#include "./core_assert.h"
+#include "./ckit_types.h"
+#include "./ckit_assert.h"
 
 //************************* Begin Functions *************************
 #ifdef __cplusplus

@@ -1,12 +1,12 @@
 /*===========================================================
- * File: core_memory.c
+ * File: ckit_memory.c
  * Date: May 03, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-#include "../include/core_memory.h"
-#include "../include/core_logger.h"
+#include "../include/ckit_memory.h"
+#include "../include/ckit_logger.h"
 #include "../include/platform_services.h"
-#include "../include/core_assert.h"
+#include "../include/ckit_assert.h"
 
 //========================== Begin Types ==========================
 typedef enum LogLevel LogLevel;

@@ -1,12 +1,12 @@
 #pragma once
 /*===========================================================
- * File: core_file_system.h
+ * File: ckit_file_system.h
  * Date: May 14, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
 #include <stdio.h>
-#include "core_assert.h"
-#include "core_string.h"
+#include "ckit_assert.h"
+#include "ckit_string.h"
 
 
 typedef struct FileSystem {

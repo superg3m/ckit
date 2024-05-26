@@ -1,11 +1,11 @@
 #pragma once
 /*===========================================================
- * File: core_memory.h
+ * File: ckit_memory.h
  * Date: April 30, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-#include "core_types.h"
-#include "core_vector.h"
+#include "ckit_types.h"
+#include "ckit_vector.h"
 
 //========================== Begin Types ==========================
 typedef struct Arena Arena;

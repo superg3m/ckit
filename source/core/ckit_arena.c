@@ -1,5 +1,5 @@
-#include "core_arena.h"
-#include "core_memory.h"
+#include "ckit_arena.h"
+#include "ckit_memory.h"
 
 // should register arena with memory
 

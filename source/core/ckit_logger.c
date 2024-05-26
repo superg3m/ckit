@@ -1,7 +1,7 @@
-#include <core_logger.h>
-#include <core_memory.h>
-#include <core_platform_services.h>
-#include <core_assert.h>
+#include <ckit_logger.h>
+#include <ckit_memory.h>
+#include <ckit_platform_services.h>
+#include <ckit_assert.h>
 
 static Boolean logging_is_initialized = FALSE;
 Boolean logger_init() {

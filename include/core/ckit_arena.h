@@ -1,10 +1,10 @@
 #pragma once
 /*===========================================================
- * File: core_arena.h
+ * File: ckit_arena.h
  * Date: May 11, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-#include "core_types.h"
+#include "ckit_types.h"
 
 //========================== Begin Types ==========================
 typedef enum MemoryTag MemoryTag;

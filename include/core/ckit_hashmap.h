@@ -1,12 +1,12 @@
 
 
 /*===========================================================
- * File: core_hashmap.h
+ * File: ckit_hashmap.h
  * Date: May 14, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-#include "core_types.h"
-#include "core_string.h"
+#include "ckit_types.h"
+#include "ckit_string.h"
 
 
 

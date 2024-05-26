@@ -1,6 +1,6 @@
 #pragma once
 /*===========================================================
- * File: core_event_system.h
+ * File: ckit_event_system.h
  * Date: May 11, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/

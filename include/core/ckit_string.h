@@ -1,11 +1,11 @@
 #pragma once
 /*===========================================================
- * File: core_string.h
+ * File: ckit_string.h
  * Date: May 10, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-#include "core_types.h"
-#include "core_arena.h"
+#include "ckit_types.h"
+#include "ckit_arena.h"
 
 
 //========================== Begin Types ==========================
