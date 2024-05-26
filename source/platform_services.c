@@ -67,8 +67,10 @@
 
 			Boolean is_fatal = (color == BACK_RED);
 
+			u32 message_display_length = new_line_required ? message_length - 1 : message_length;
+
 			SetConsoleTextAttribute(console_output_handle, color);
-			WriteConsoleA(console_output_handle, message, message_length - 1, NULLPTR, NULLPTR);
+			WriteConsoleA(console_output_handle, message, message_display_length, NULLPTR, NULLPTR);
 			SetConsoleTextAttribute(console_output_handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 			if (new_line_required == 1) {
 				WriteConsoleA(console_output_handle, "\n", 1, NULLPTR, NULLPTR);

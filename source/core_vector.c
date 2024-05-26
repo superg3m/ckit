@@ -51,9 +51,9 @@ internal void* _vector_grow(void* vector) {
 	VectorHeader header = *_vector_extract_header(vector);
     header.capacity *= 2;
     memory_byte_retreat(vector, sizeof(header));
-    void* ret = memory_reallocate(vector, _vector_total_allocation_size(header));
-    _vector_insert_header(ret, header);
-    
+    void* ret = MACRO_vector_create(header.capacity, header.type_size_in_bytes);
+    memory_free(vector);
+
     return ret;
 }
 
