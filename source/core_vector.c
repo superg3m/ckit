@@ -28,9 +28,9 @@ internal inline VectorHeader* _vector_extract_header(const void* vector) {
     return &((VectorHeader*)vector)[-1];
 }
 
-void* MACRO_vector_create(u64 capacity, u32 type_size_in_bytes) {
+void* MACRO_vector_create(u32 size, u64 capacity, u32 type_size_in_bytes) {
 	VectorHeader header;
-    header.size = 0;
+    header.size = size;
     header.capacity = (capacity == 0) ? VECTOR_DEFAULT_CAPACITY : capacity;
     header.type_size_in_bytes = type_size_in_bytes;
 
@@ -48,11 +48,14 @@ internal u32 _vector_total_allocation_size(VectorHeader header) {
 internal void* _vector_grow(void* vector) {
     // Date: May 11, 2024
     // NOTE(Jovanni): Need to deference because the header memory location will be freed after reallocation
-	VectorHeader* header = _vector_extract_header(vector);
-    header->capacity *= 2;
-    memory_byte_retreat(vector, sizeof(*header));
-    void* ret = memory_reallocate(vector, _vector_total_allocation_size(*header));
-    memory_byte_advance(ret, sizeof(*header));
+	VectorHeader header = *_vector_extract_header(vector);
+    u32 old_allocation_size = header.capacity * header.type_size_in_bytes;
+    header.capacity *= 2;
+    u32 new_allocation_size = header.capacity * header.type_size_in_bytes;
+
+    void* ret = MACRO_vector_create(header.size, header.capacity, header.type_size_in_bytes);
+    memory_copy(vector, ret, old_allocation_size, new_allocation_size);
+    vector_free(vector);
 
     return ret;
 }
