@@ -3,10 +3,10 @@
  * Date: May 09, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-#include <ckit_string.h>
-#include <ckit_memory.h>
-#include <ckit_assert.h>
-#include <ckit_arena.h>
+#include "../../include/core/ckit_string.h"
+#include "../../include/core/ckit_memory.h"
+#include "../../include/core/ckit_assert.h"
+#include "../../include/core/ckit_arena.h"
 
 typedef struct StringHeader {
     u32 length;

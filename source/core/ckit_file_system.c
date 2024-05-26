@@ -1,5 +1,5 @@
-#include <ckit_file_system.h>
-#include <ckit_string.h>
+#include "../../include/core/ckit_file_system.h"
+#include "../../include/core/ckit_string.h"
 
 void file_open(FileSystem* fileFramework) {
 	fileFramework->file = fopen(fileFramework->fileName, "r");

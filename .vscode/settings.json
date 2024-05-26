@@ -17,7 +17,8 @@
 		"ckit_global_vars.h": "c",
 		"ckit_memory_externs.h": "c",
 		"ckit_file_system.h": "c",
-		"ckg.h": "c"
+		"ckg.h": "c",
+		"ckit_platform_services.h": "c"
 	},
 	"editor.insertSpaces": false
 }

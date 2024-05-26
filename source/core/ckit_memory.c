@@ -3,10 +3,10 @@
  * Date: May 03, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-#include <ckit_memory.h>
-#include <ckit_logger.h>
-#include <ckit_platform_services.h>
-#include <ckit_assert.h>
+#include "../../include/core/ckit_memory.h"
+#include "../../include/core/ckit_logger.h"
+#include "../../include/core/ckit_platform_services.h"
+#include "../../include/core/ckit_assert.h"
 
 //========================== Begin Types ==========================
 

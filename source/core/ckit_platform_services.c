@@ -1,7 +1,7 @@
-#include <ckit_platform_services.h>
-#include <ckit_types.h>
-#include <ckit_string.h>
-#include <ckit_assert.h>
+#include "../../include/core/ckit_platform_services.h"
+#include "../../include/core/ckit_types.h"
+#include "../../include/core/ckit_string.h"
+#include "../../include/core/ckit_assert.h"
 
 /*===========================================================
  * File: platform_services.cpp

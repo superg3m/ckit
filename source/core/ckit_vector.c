@@ -3,9 +3,9 @@
  * Date: April 23, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-#include <ckit_vector.h>
-#include <ckit_memory.h> // Actually think about this maybe don't expose this to the user?
-#include <ckit_assert.h>
+#include "../../include/core/ckit_vector.h"
+#include "../../include/core/ckit_memory.h" // Actually think about this maybe don't expose this to the user?
+#include "../../include/core/ckit_assert.h"
 
 #define VECTOR_DEFAULT_CAPACITY 1
 //========================== Begin Types ==========================
