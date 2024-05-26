@@ -113,8 +113,7 @@ void* memory_reallocate(void* data, u64 new_byte_allocation_size) {
 
 	header.allocation_size_without_header = new_byte_allocation_size;
 
-  	void* ret_data = memory_allocate(header.allocation_size_without_header, header.memory_tag);
-  	_memory_insert_header(ret_data, header);
+  	void* ret_data = memory_allocate(new_total_allocation_size, header.memory_tag);
 
   	memory_copy(data, ret_data, old_total_allocation_size - sizeof(header), new_total_allocation_size - sizeof(header));
   	memory_free(data);
