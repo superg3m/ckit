@@ -18,7 +18,8 @@
 		"ckit_memory_externs.h": "c",
 		"ckit_file_system.h": "c",
 		"ckg.h": "c",
-		"ckit_platform_services.h": "c"
+		"ckit_platform_services.h": "c",
+		"ckit_math.h": "c"
 	},
 	"editor.insertSpaces": false
 }
