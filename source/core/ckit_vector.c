@@ -13,6 +13,7 @@ typedef struct VectorHeader {
     u64 size;
     u64 capacity;
     u16 type_size_in_bytes;
+    Boolean is_vector_container;
 } VectorHeader;
 //=========================== End Types ===========================
 
@@ -28,11 +29,12 @@ internal inline VectorHeader* _vector_extract_header(const void* vector) {
     return &((VectorHeader*)vector)[-1];
 }
 
-void* MACRO_vector_create(u32 size, u64 capacity, u32 type_size_in_bytes) {
+void* MACRO_vector_create(u32 size, u64 capacity, u32 type_size_in_bytes, Boolean is_vector_container) {
 	VectorHeader header;
     header.size = size;
     header.capacity = (capacity == 0) ? VECTOR_DEFAULT_CAPACITY : capacity;
-    header.type_size_in_bytes = type_size_in_bytes;
+    header.type_size_in_bytes = is_vector_container ? sizeof(VectorHeader) + type_size_in_bytes : type_size_in_bytes;
+    header.is_vector_container = is_vector_container;
 
     u32 vector_allocation_size = sizeof(header) + (header.type_size_in_bytes * header.capacity);
     void* ret = memory_allocate(vector_allocation_size, MEMORY_TAG_VECTOR);
@@ -53,7 +55,7 @@ internal void* _vector_grow(void* vector) {
     header.capacity *= 2;
     u32 new_allocation_size = header.capacity * header.type_size_in_bytes;
 
-    void* ret = MACRO_vector_create(header.size, header.capacity, header.type_size_in_bytes);
+    void* ret = MACRO_vector_create(header.size, header.capacity, header.type_size_in_bytes, header.is_vector_container);
     memory_copy(vector, ret, old_allocation_size, new_allocation_size);
     vector_free(vector);
 
