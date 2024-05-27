@@ -16,7 +16,7 @@
 #include "include/core/ckit_vector.h"
 #include "include/core/ckit_string.h"
 #include "include/core/ckit_file_system.h"
-#include "../include/core/ckit_math.h"
+#include "include/core/ckit_math.h"
 
 // ASSET LOADINGs
 

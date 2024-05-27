@@ -1,5 +1,5 @@
-#include "../core/ckit_types.h"
-#include "../core/ckit_vector.h"
+#include "./ckit_types.h"
+#include "./ckit_vector.h"
 
 typedef struct Vec2 {
 	float x;
