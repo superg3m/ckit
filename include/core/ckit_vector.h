@@ -57,12 +57,6 @@ extern "C" {
 		vector = MACRO_vector_push(vector, (const void*)&element); \
 	}
 
-	#define vector_push_ptr(vector, element)             \
-	{                                                    \
-		vector = MACRO_vector_push_ptr(vector, element); \
-		vector[vector_size(vector) - 1] = element;       \
-	}
-
 	#define vector_pop(vector, type) *((type*)MACRO_vector_pop(vector))
 	#define vector_free(vector) vector = MACRO_vector_free(vector)
 #endif

@@ -57,7 +57,7 @@ Vec2 vec2_spline_point(Vec2* spline_points, u32 spline_points_size, float t) {
 		LOG_DEBUG("(%f, %f) - (%f)(%f, %f) = (%f, %f)\n", spline_points[i + 1].x, spline_points[i + 1].y, t, spline_points[i].x, spline_points[i].y, lerp_point.x, lerp_point.y);
 		vector_push(lerp_points, lerp_point);
 	}
-	vector_push_ptr(lerp_points_vector, lerp_points);
+	vector_push(lerp_points_vector, lerp_points);
 	LOG_PRINT("size vectors: %d\n", vector_size(lerp_points_vector));
 	LOG_PRINT("size points: %d\n", vector_size(lerp_points));
 
