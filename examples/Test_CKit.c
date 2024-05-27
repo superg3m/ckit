@@ -149,7 +149,7 @@ int main() {
 	points[2] = (Vec2){3, 0};
 	points[3] = (Vec2){4, 2};
 
-	Vec2 ret = vec2_spline_point(points, 4, 0.5);
+	Vec2 ret = vec2_spline_point(points, 4, 0.5f);
 	LOG_ERROR("FINAL POINT: (%f, %f)\n", ret.x, ret.y);
 	return 0;
 }

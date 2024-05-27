@@ -14,3 +14,10 @@ Thoughts:
 Next course of action is to remove all memory allocation tracking, the way I did it was really bad so its hard to actually keep working on anything.
 
 need to think about refactoring the header system and maybe change the way I do pointer math
+
+
+if I want to keep using header I need to make available the header size with a function so I can then say you must specify the size not just the type
+
+vector_push_ptr()
+
+

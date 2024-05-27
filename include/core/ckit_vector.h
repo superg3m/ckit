@@ -18,8 +18,9 @@ typedef struct VectorHeader VectorHeader;
 #ifdef __cplusplus
 extern "C" {
 #endif
-	void* MACRO_vector_create(u32 size, u64 capacity, u32 type_size_in_bytes, Boolean is_vector_container);
+	void* MACRO_vector_create(u32 size, u64 capacity, u32 type_size_in_bytes);
 	void* MACRO_vector_push(void* vector, const void* element);
+	void* MACRO_vector_push_ptr(void* vector, const void* element);
 	void* MACRO_vector_pop(void* vector);
 	void* MACRO_vector_free(void* vector);
 	u64 vector_size(void* vector);
@@ -29,10 +30,9 @@ extern "C" {
 //************************** End Functions **************************
 
 //++++++++++++++++++++++++++ Begin Macros +++++++++++++++++++++++++++
-#define vector_create(type) (type*)MACRO_vector_create(0, 0, sizeof(type), 0)
-#define vector_create_vector_container(type) (type*)MACRO_vector_create(0, 0, sizeof(type), 1)
+#define vector_create(type) (type*)MACRO_vector_create(0, 0, sizeof(type))
 
-#define vector_reserve(capacity, type) (type*)MACRO_vector_create(0, capacity, sizeof(type), 0)
+#define vector_reserve(capacity, type) (type*)MACRO_vector_create(0, capacity, sizeof(type))
 
 #ifdef __cplusplus
 	#define _vector_validate_push_type(vector, element)                                               \
@@ -55,6 +55,12 @@ extern "C" {
 	#define vector_push(vector, element)                           		  \
 	{                                                              		  \
 		vector = MACRO_vector_push(vector, (const void*)&element); \
+	}
+
+	#define vector_push_ptr(vector, element)             \
+	{                                                    \
+		vector = MACRO_vector_push_ptr(vector, element); \
+		vector[vector_size(vector) - 1] = element;       \
 	}
 
 	#define vector_pop(vector, type) *((type*)MACRO_vector_pop(vector))

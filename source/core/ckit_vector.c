@@ -13,7 +13,6 @@ typedef struct VectorHeader {
     u64 size;
     u64 capacity;
     u16 type_size_in_bytes;
-    Boolean is_vector_container;
 } VectorHeader;
 //=========================== End Types ===========================
 
@@ -29,12 +28,11 @@ internal inline VectorHeader* _vector_extract_header(const void* vector) {
     return &((VectorHeader*)vector)[-1];
 }
 
-void* MACRO_vector_create(u32 size, u64 capacity, u32 type_size_in_bytes, Boolean is_vector_container) {
+void* MACRO_vector_create(u32 size, u64 capacity, u32 type_size_in_bytes) {
 	VectorHeader header;
     header.size = size;
     header.capacity = (capacity == 0) ? VECTOR_DEFAULT_CAPACITY : capacity;
-    header.type_size_in_bytes = is_vector_container ? sizeof(VectorHeader) + type_size_in_bytes : type_size_in_bytes;
-    header.is_vector_container = is_vector_container;
+    header.type_size_in_bytes = type_size_in_bytes;
 
     u32 vector_allocation_size = sizeof(header) + (header.type_size_in_bytes * header.capacity);
     void* ret = memory_allocate(vector_allocation_size, MEMORY_TAG_VECTOR);
@@ -55,7 +53,7 @@ internal void* _vector_grow(void* vector) {
     header.capacity *= 2;
     u32 new_allocation_size = header.capacity * header.type_size_in_bytes;
 
-    void* ret = MACRO_vector_create(header.size, header.capacity, header.type_size_in_bytes, header.is_vector_container);
+    void* ret = MACRO_vector_create(header.size, header.capacity, header.type_size_in_bytes);
     memory_copy(vector, ret, old_allocation_size, new_allocation_size);
     vector_free(vector);
 
@@ -79,6 +77,19 @@ void* MACRO_vector_push(void* vector, const void* element) {
     u8* dest_ptr = memory_advance_new_ptr(vector, header->size * header->type_size_in_bytes);
 	header->size++;
     memory_copy(element, dest_ptr, header->type_size_in_bytes, header->type_size_in_bytes);
+    
+    return vector;
+}
+
+void* MACRO_vector_push_ptr(void* vector, const void* element) {
+	assert_in_function(vector, "The vector push failed (freed before this call!)");
+    VectorHeader* header = _vector_extract_header(vector);
+    if (header->size >= header->capacity) {
+        vector = _vector_grow(vector);
+        header = _vector_extract_header(vector);
+    }
+	
+	header->size++;
     
     return vector;
 }

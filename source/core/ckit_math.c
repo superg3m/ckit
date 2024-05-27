@@ -46,40 +46,36 @@ Vec2 vec2_spline_point(Vec2* spline_points, u32 spline_points_size, float t) {
 		assert_in_function(spline_points_size > 1, "Not enough spline points\n");
 	}
 
-	Vec2** lerp_points_vector = vector_create_vector_container(Vec2*);	
+	Vec2** lerp_points_vector = vector_reserve(4, Vec2*);
 
 	u32 counter = spline_points_size;
 
+	// I can't push back lerp_points right away because it grows thats insane lmao
 	Vec2* lerp_points = vector_create(Vec2);
-	vector_push(lerp_points_vector, lerp_points);
 	for (int i = 0; i < counter - 1; i++) {
 		Vec2 lerp_point = vec2_lerp(spline_points[i+1], spline_points[i], t);
 		LOG_DEBUG("(%f, %f) - (%f)(%f, %f) = (%f, %f)\n", spline_points[i + 1].x, spline_points[i + 1].y, t, spline_points[i].x, spline_points[i].y, lerp_point.x, lerp_point.y);
 		vector_push(lerp_points, lerp_point);
 	}
+	vector_push_ptr(lerp_points_vector, lerp_points);
 	LOG_PRINT("size vectors: %d\n", vector_size(lerp_points_vector));
 	LOG_PRINT("size points: %d\n", vector_size(lerp_points));
 
 	counter--;
 
-
 	while (counter != 1) {
 		lerp_points = vector_create(Vec2);
-		LOG_PRINT("size vectors: %d\n", vector_size(lerp_points_vector));
-		Vec2* current_vector = lerp_points_vector[0];
-		LOG_PRINT("size vectors: %d\n", vector_size(lerp_points_vector));
-		LOG_WARN("(%f, %f)\n", current_vector[0].x, current_vector[0].y);
-		LOG_PRINT("size points: %d\n", vector_size(current_vector));
-		for (int i = 0; i < vector_size(current_vector) - 1; i++) {
-			LOG_WARN("(%f, %f) - (%f)(%f, %f)\n", current_vector[i + 1].x, current_vector[i + 1].y, t, current_vector[i].x, current_vector[i].y);
-		}
-		return vec_ret;
-		vector_push(lerp_points_vector, lerp_points);
+		Vec2* current_vector = vector_pop(lerp_points_vector, Vec2*);
+
+		LOG_INFO("==============\n");
 		for (int i = 0; i < counter - 1; i++) {
 			Vec2 lerp_point = vec2_lerp(current_vector[i+1], current_vector[i], t);
 			LOG_DEBUG("(%f, %f) - (%f)(%f, %f) = (%f, %f)\n", current_vector[i + 1].x, current_vector[i + 1].y, t, current_vector[i].x, current_vector[i].y, lerp_point.x, lerp_point.y);
 			vector_push(lerp_points, lerp_point);
 		}
+		LOG_INFO("==============\n");
+
+		vector_push(lerp_points_vector, lerp_points);
 		counter--;
 	}
 
