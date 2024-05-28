@@ -98,6 +98,7 @@ void* MACRO_memory_free(void* data) {
   	_memory_track_remove(header, header.memory_tag);
 
   	memory_byte_retreat(data, sizeof(header));
+	memory_zero(data, sizeof(header) + header.allocation_size_without_header);
   	ckg_memory_free(data);
   	return data;
 }
