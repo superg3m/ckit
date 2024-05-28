@@ -8,17 +8,20 @@
 #include "ckit_types.h"
 #include "ckit_string.h"
 
-
+typedef u32(HashFunction)(void* key);
+typedef u32(CompareFunction)(void* element);
 
 //========================== Begin Types ==========================
 
 typedef struct HashMapEntry {
-  String key;
+  void* key;
   void* element;
 } HashMapEntry;
 
 typedef struct HashMap {
-  
+  HashFunction* hash_func;
+  CompareFunction* compare_func;
+  HashMapEntry* data;
 } HashMap;
 //=========================== End Types ===========================
 
@@ -27,8 +30,8 @@ typedef struct HashMap {
 extern "C" {
 #endif
 
-void hashmap_create();
-void* hashmap_insert(String key, void* element);
+void hashmap_create(HashFunction* hash_func, CompareFunction* compare_func);
+void* hashmap_insert(HashMap hash_map, void* key, void* element);
 
 #ifdef __cplusplus
 }
