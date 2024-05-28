@@ -29,6 +29,8 @@ typedef struct BmpColorTable {
 	u8 green;
 	u8 alpha;
 } BmpColorTable;
+
+
 /*
 Header 	14 bytes 	  	Windows Structure: BITMAPFILEHEADER
   	Signature 	2 bytes 	0000h 	'BM'
