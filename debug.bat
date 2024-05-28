@@ -1,11 +1,11 @@
 @echo off
 
-if not exist .\examples\cl\CKit_Test.sln (
-    if not exist .\examples\cl\CKit_Test.exe (
-        powershell -nologo -command "Write-Host 'ERROR: check if exe exists and re-build' -ForegroundColor Red"
-    ) else (
-        devenv .\examples\cl\CKit_Test.exe
-    )
+set "executable_file_path=.\examples\cl\CKit_Test.exe"
+
+if not exist "%executable_file_path%" (
+    powershell -nologo -command "Write-Host 'ERROR: Can''t find exe, building...' -ForegroundColor Red"
+    call build_example.bat
+    raddbg "%executable_file_path%"
 ) else (
-    devenv .\examples\cl\CKit_Test.sln
+    raddbg "%executable_file_path%"
 )
