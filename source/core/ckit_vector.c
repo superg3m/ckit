@@ -45,7 +45,7 @@ internal u32 _vector_total_allocation_size(VectorHeader header) {
     return (sizeof(header) + (header.type_size_in_bytes * header.capacity));
 }
 
-internal void* _vector_grow(void* vector) {
+void* vector_grow(void* vector) {
     // Date: May 11, 2024
     // NOTE(Jovanni): Need to deference because the header memory location will be freed after reallocation
 	VectorHeader header = *_vector_extract_header(vector);
@@ -66,30 +66,23 @@ u64 vector_size(void* vector) {
     return header->size;
 }
 
+u64 vector_capacity(void* vector) {
+	assert_in_function(vector, "The dynamic array size failed (freed before this call!)\n");
+    VectorHeader* header = _vector_extract_header(vector);
+    return header->capacity;
+}
+
 void* MACRO_vector_push(void* vector, const void* element) {
 	assert_in_function(vector, "The vector push failed (freed before this call!)");
     VectorHeader* header = _vector_extract_header(vector);
     if (header->size >= header->capacity) {
-        vector = _vector_grow(vector);
+        vector = vector_grow(vector);
         header = _vector_extract_header(vector);
     }
 	
     u8* dest_ptr = memory_advance_new_ptr(vector, header->size * header->type_size_in_bytes);
 	header->size++;
     memory_copy(element, dest_ptr, header->type_size_in_bytes, header->type_size_in_bytes);
-    
-    return vector;
-}
-
-void* MACRO_vector_push_ptr(void* vector, const void* element) {
-	assert_in_function(vector, "The vector push failed (freed before this call!)");
-    VectorHeader* header = _vector_extract_header(vector);
-    if (header->size >= header->capacity) {
-        vector = _vector_grow(vector);
-        header = _vector_extract_header(vector);
-    }
-	
-	header->size++;
     
     return vector;
 }

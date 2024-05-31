@@ -3,6 +3,9 @@
 
 void file_open(FileSystem* fileFramework) {
 	fileFramework->file = fopen(fileFramework->fileName, "r");
+	fseek(fileFramework->file, 0L, SEEK_END);
+	fileFramework->file_size = ftell(fileFramework->file);
+	rewind(fileFramework->file);
 	assert_in_function(fileFramework->file != NULL, "FILE IS NULL, CHECK INITIAL FILE NAME\n");
 }
 

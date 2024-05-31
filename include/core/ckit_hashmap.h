@@ -14,15 +14,18 @@ typedef u32(CompareFunction)(void* element);
 //========================== Begin Types ==========================
 
 typedef struct HashMapEntry {
-  String key;
-  void* element;
-  size_t element_size;
+  	String key;
+	void* element;
+	size_t element_size;
 } HashMapEntry;
 
 typedef struct HashMap {
-  HashFunction* hash_func;
-  CompareFunction* compare_func;
-  HashMapEntry* data;
+
+	HashFunction* hash_func;
+	CompareFunction* compare_func;
+	HashMapEntry* data;
+	float loadfactor;
+	u32 capacity;
 } HashMap;
 //=========================== End Types ===========================
 
@@ -30,7 +33,7 @@ typedef struct HashMap {
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+u32 hash_value(unsigned char *str);
 void hashmap_create(HashFunction* hash_func, CompareFunction* compare_func);
 void* hashmap_insert(HashMap hash_map, void* key, void* element);
 

@@ -20,10 +20,12 @@ extern "C" {
 #endif
 	void* MACRO_vector_create(u32 size, u64 capacity, size_t type_size_in_bytes);
 	void* MACRO_vector_push(void* vector, const void* element);
-	void* MACRO_vector_push_ptr(void* vector, const void* element);
+	void* MACRO_vector_insert(void* vector, u32 index, const void* element);
 	void* MACRO_vector_pop(void* vector);
 	void* MACRO_vector_free(void* vector);
 	u64 vector_size(void* vector);
+	u64 vector_capacity(void* vector);
+	void* vector_grow(void* vector);
 #ifdef __cplusplus
 }
 #endif

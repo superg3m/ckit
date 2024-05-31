@@ -10,9 +10,10 @@
 
 
 typedef struct FileSystem {
-	Boolean reachedEOF;
+	size_t file_size;
 	const char* fileName;
 	FILE* file;
+	Boolean reachedEOF;
 } FileSystem;
 
 //************************* Begin Functions *************************
@@ -22,6 +23,7 @@ extern "C" {
 	FileSystem file_system_create(const char* fileName);
 	void file_open(FileSystem* file_system);
 	void file_close(FileSystem* file_system);
+	size_t file_size(FileSystem* file_system);
 	String file_get_next_line(FileSystem* file_system);
 	char file_get_next_char(FileSystem* file_system);
 #ifdef __cplusplus
