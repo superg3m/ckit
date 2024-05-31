@@ -27,9 +27,9 @@ extern "C" {
 #endif
     void memory_init();
 
-    void* memory_allocate(u64 number_of_bytes, MemoryTag memory_tag);
+    void* memory_allocate(size_t number_of_bytes, MemoryTag memory_tag);
     void* MACRO_memory_free(void* data);
-    void* memory_reallocate(void* data, u64 new_number_of_bytes);
+    void* memory_reallocate(void* data, size_t new_number_of_bytes);
 #ifdef __cplusplus
 }
 #endif

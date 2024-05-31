@@ -20,7 +20,8 @@
 		"ckg.h": "c",
 		"ckit_platform_services.h": "c",
 		"ckit_math.h": "c",
-		"ckit_hashmap.h": "c"
+		"ckit_hashmap.h": "c",
+		"ckit_linked_list.h": "c"
 	},
 	"editor.insertSpaces": false
 }

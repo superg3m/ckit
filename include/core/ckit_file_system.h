@@ -10,9 +10,10 @@
 
 
 typedef struct FileSystem {
+	String file_name;
+	FILE* handle;
+	u8* data;
 	size_t file_size;
-	const char* fileName;
-	FILE* file;
 	Boolean reachedEOF;
 } FileSystem;
 
@@ -20,7 +21,7 @@ typedef struct FileSystem {
 #ifdef __cplusplus
 extern "C" {
 #endif
-	FileSystem file_system_create(const char* fileName);
+	FileSystem file_system_create(String file_name);
 	void file_open(FileSystem* file_system);
 	void file_close(FileSystem* file_system);
 	size_t file_size(FileSystem* file_system);

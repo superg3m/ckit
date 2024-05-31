@@ -151,5 +151,10 @@ int main() {
 
 	Vec2 ret = vec2_spline_point(points, 4, 0.5f);
 	LOG_ERROR("FINAL POINT: (%f, %f)\n", ret.x, ret.y);
+
+
+	FileSystem file_system = file_system_create("../../assets/Learn_About_BMP.bmp");
+	file_open(&file_system);
+
 	return 0;
 }

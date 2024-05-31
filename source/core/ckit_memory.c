@@ -66,7 +66,7 @@ void memory_init() {
 	ckg_memory_bind_free_callback(&platform_free);
 }
 
-void* memory_allocate(u64 byte_allocation_size, MemoryTag memory_tag) {
+void* memory_allocate(size_t byte_allocation_size, MemoryTag memory_tag) {
 	assert_in_function(byte_allocation_size > 0, "Invalid allocation size zero or below\n");
 	assert_in_function(memory_tag_is_valid(memory_tag), "memory_allocate: Memory tag is invalid | value: (%d)\n", memory_tag);
 	if (memory_tag == MEMORY_TAG_UNKNOWN) {
