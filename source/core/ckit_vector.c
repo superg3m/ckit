@@ -12,7 +12,7 @@
 typedef struct VectorHeader {
     u64 size;
     u64 capacity;
-    u16 type_size_in_bytes;
+    size_t type_size_in_bytes;
 } VectorHeader;
 //=========================== End Types ===========================
 
@@ -28,7 +28,7 @@ internal inline VectorHeader* _vector_extract_header(const void* vector) {
     return &((VectorHeader*)vector)[-1];
 }
 
-void* MACRO_vector_create(u32 size, u64 capacity, u32 type_size_in_bytes) {
+void* MACRO_vector_create(u32 size, u64 capacity, size_t type_size_in_bytes) {
 	VectorHeader header;
     header.size = size;
     header.capacity = (capacity == 0) ? VECTOR_DEFAULT_CAPACITY : capacity;

@@ -23,7 +23,7 @@ Boolean arena_init() {
     return arena_is_initalized;
 }
 
-Arena* MACRO_arena_create(u32 allocation_size, const char* name, ArenaFlags flags) {
+Arena* MACRO_arena_create(size_t allocation_size, const char* name, ArenaFlags flags) {
     assert_in_function(arena_is_initalized, "arena_create: call CKit_init() first\n");
     Arena* arena = memory_allocate(sizeof(Arena), MEMORY_TAG_ARENA);
     arena->name = name;
@@ -51,7 +51,7 @@ void arena_clear(Arena* arena) {
     arena->used = 0;
 }
 
-void* MACRO_arena_push(Arena* arena, u32 element_size, MemoryTag memory_tag) {
+void* MACRO_arena_push(Arena* arena, size_t element_size, MemoryTag memory_tag) {
     // Date: May 11, 2024
     // TODO(Jovanni): For right now just assert if you don't have enough memory but later on make it grow.
     assert_in_function(arena && arena->base_address, "arena_push: arena is null\n");

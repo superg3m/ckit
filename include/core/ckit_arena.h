@@ -23,8 +23,8 @@ typedef enum ArenaFlags {
 #ifdef __cplusplus
 extern "C" {
 #endif
-	Arena* MACRO_arena_create(u32 allocation, const char* name, ArenaFlags flags);
-	void* MACRO_arena_push(Arena* arena, u32 element_size, MemoryTag memory_tag);	
+	Arena* MACRO_arena_create(size_t allocation, const char* name, ArenaFlags flags);
+	void* MACRO_arena_push(Arena* arena, size_t element_size, MemoryTag memory_tag);	
 	void arena_output_allocations(Arena* arena, LogLevel log_level);
 	
 	// Date: May 11, 2024

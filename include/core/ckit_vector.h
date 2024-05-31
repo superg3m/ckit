@@ -18,7 +18,7 @@ typedef struct VectorHeader VectorHeader;
 #ifdef __cplusplus
 extern "C" {
 #endif
-	void* MACRO_vector_create(u32 size, u64 capacity, u32 type_size_in_bytes);
+	void* MACRO_vector_create(u32 size, u64 capacity, size_t type_size_in_bytes);
 	void* MACRO_vector_push(void* vector, const void* element);
 	void* MACRO_vector_push_ptr(void* vector, const void* element);
 	void* MACRO_vector_pop(void* vector);

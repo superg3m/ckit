@@ -14,8 +14,9 @@ typedef u32(CompareFunction)(void* element);
 //========================== Begin Types ==========================
 
 typedef struct HashMapEntry {
-  void* key;
+  String key;
   void* element;
+  size_t element_size;
 } HashMapEntry;
 
 typedef struct HashMap {
