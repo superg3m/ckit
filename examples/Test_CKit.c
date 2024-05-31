@@ -1,5 +1,7 @@
 #include "../CKit.h"
 
+#include "../include/asset_loading/2d/bmp_parser.h"
+
 void test_vector_operations() {
 	// Test types
 	int intArray[] = {1, 2, 3, 4, 5};
@@ -155,6 +157,21 @@ int main() {
 
 	FileSystem file_system = file_system_create("../../assets/Learn_About_BMP.bmp");
 	file_open(&file_system);
+
+	u32 offset = 0; 
+
+	BmpHeader bmp_header;
+	memory_copy(file_system.data + offset, &bmp_header, sizeof(bmp_header), file_system.file_size - offset);
+
+	offset += sizeof(bmp_header); 
+
+	BmpInfoHeader bmp_info_header;
+	memory_copy(file_system.data + offset, &bmp_info_header, sizeof(bmp_info_header), file_system.file_size - offset);
+
+	offset += sizeof(bmp_info_header); 
+
+	BmpColorTable bmp_color_table;
+	memory_copy(file_system.data + offset, &bmp_color_table, sizeof(bmp_color_table), file_system.file_size - offset);
 
 	return 0;
 }

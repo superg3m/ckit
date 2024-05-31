@@ -1,16 +1,16 @@
 #include "../../core/ckit_types.h"
 
 #pragma pack(push, 1)
-typedef struct BmpHeader {
-	char signature[2];
-	u32 file_size;
-	u32 reserved;
-	u32 data_offset;
+typedef struct BmpHeader { // total 14 bytes
+	char signature[2]; 	// 2 bytes
+	u32 file_size; 		// 4 bytes
+	u32 reserved;  		// 4 bytes
+	u32 data_offset; 	// 4 bytes
 } BmpHeader;
 #pragma pack(pop)
 
 typedef struct BmpInfoHeader {
-	u32 size;
+	u32 size; // Data Size?
 	u32 width;
 	u32 height;
 	u16 planes;
