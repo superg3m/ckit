@@ -13,7 +13,7 @@ typedef struct StringHeader {
     u32 capacity;
 } StringHeader;
 
-internal void _string_insert_header(String* string, StringHeader header) {
+internal void _string_insert_header(char** string, StringHeader header) {
   	memory_copy(&header, *string,  sizeof(header),  sizeof(header) + header.capacity);
     memory_byte_advance(*string, sizeof(header));
 }

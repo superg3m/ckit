@@ -2,7 +2,7 @@
 #include "../../include/core/ckit_string.h"
 
 u8* file_data(FILE* handle, size_t file_size) {
-	u8* buffer = memory_allocate(file_size, MEMORY_TAG_TEMPORARY);
+	u8* buffer = (u8*)memory_allocate(file_size, MEMORY_TAG_TEMPORARY);
 	assert_in_function(fread(buffer, file_size, 1 , handle) != file_size, "Error reading file");
 	return buffer;
 }

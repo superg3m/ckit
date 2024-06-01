@@ -24,8 +24,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-  void CKit_init();
-  void CKit_cleanup();
+  void ckit_init();
+  void ckit_cleanup();
 #ifdef __cplusplus
 }
 #endif

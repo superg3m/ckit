@@ -1,9 +1,4 @@
 @echo off
-$timer = [Diagnostics.Stopwatch]::new() # Create a timer
-$timerAndStart = [Diagnostics.Stopwatch]::StartNew() # Create a timer and start it
-$timer.Start() # Start the timer
-$timer.Stop() # Stop the timer
-$timer.Elapsed # Get time elapsed
 
 call build.bat
 

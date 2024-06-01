@@ -1,6 +1,6 @@
 ./vars.ps1
 
-$extension = ".cpp"
+$extension = ".c"
 
 if(!(Test-Path -Path ".\ckg")) {
     Write-Host "missing ckg"
@@ -27,6 +27,9 @@ if(Test-Path -Path ".\compilation_errors.txt") {
 
 Write-Host "running CKit build.ps1..." -ForegroundColor Green
 
+$timer = [Diagnostics.Stopwatch]::new() # Create a timer
+$timer.Start() # Start the timer
+
 Set-Location ".\build_cl"
 # MAKE SURE YOU HAVE AN OPTION FOR DEBUG LIBS
 # cl -DCUSTOM_PLATFORM_IMPL /std:c++20 /c "..\source\*.cpp"
@@ -34,9 +37,23 @@ cl /std:c++17 /Zi /FC /c "..\source\core\*$extension" "..\ckg\source\*$extension
 lib /OUT:".\CKit.lib" "User32.lib" ".\*.obj" | Out-Null
 Set-Location ..
 
+$timer.Stop()
+Write-Host "========================================================"
+Write-Host "MSVC Elapsed time: $($timer.Elapsed.TotalSeconds)s" -ForegroundColor Blue
+
+#########################################################################
+
+$timer = [Diagnostics.Stopwatch]::new() # Create a timer
+$timer.Start() # Start the timer
+
 Set-Location ".\build_gcc"
 # g++ -c -std=c++17 -g "../source/core/*.c"
 # ar rcs CKit.lib ".\*.o"
 Set-Location ..
+$timer.Stop()
+Write-Host "G++ Elapsed time: $($timer.Elapsed.TotalSeconds)s" -ForegroundColor Blue
+Write-Host "========================================================"
+Write-Host ""
 
 ./normalize_path.ps1
+

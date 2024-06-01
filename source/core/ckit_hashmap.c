@@ -1,7 +1,7 @@
 #include "../../include/core/ckit_hashmap.h"
 #include "../../include/core/ckit_vector.h"
 
-u32 hash_value(unsigned char *str) {
+u32 hash_value(char *str) {
 	unsigned long hash = 5381;
 	int c;
 
@@ -23,6 +23,6 @@ void hash_map_insert(HashMap* hash_map, String key, void* value) {
 	// set
 
 	u32 index =  hash_value(key) % vector_capacity(hash_map->data);
-	vector_insert(hash_map->data, index, value);
+	// vector_insert(hash_map->data, index, value);
 }
 

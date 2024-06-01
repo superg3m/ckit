@@ -1,7 +1,7 @@
 # CKit
 
 - Collection of tools, data structures, and algorithms that I find useful
-- If cl.exe is not defined in your terminal run vars.bat
+- If cl.exe is not defined in your terminal run vars.ps1
 - Compile with CUSTOM_PLATFORM_IMPL defined if you want to change how platform specific functions work.
 
 Thoughts:
@@ -9,15 +9,10 @@ Thoughts:
  - so heres the think with arenas I won't have tons of syscalls for memory allocations so that way I can use a function pointer for the allocation function so default stub is malloc and free, you can define you own callback function
  - I need to rethink how arenas work
 
-
-
 Next course of action is to remove all memory allocation tracking, the way I did it was really bad so its hard to actually keep working on anything.
-
-need to think about refactoring the header system and maybe change the way I do pointer math
 
 
 if I want to keep using header I need to make available the header size with a function so I can then say you must specify the size not just the type
 
-vector_push_ptr()
 
-
+it kind of is the case that you want to init some type of memory arena and just push stuff because of the type system and maybe that is better overall?

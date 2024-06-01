@@ -25,7 +25,7 @@ Boolean arena_init() {
 
 Arena* MACRO_arena_create(size_t allocation_size, const char* name, ArenaFlags flags) {
     assert_in_function(arena_is_initalized, "arena_create: call CKit_init() first\n");
-    Arena* arena = memory_allocate(sizeof(Arena), MEMORY_TAG_ARENA);
+    Arena* arena = (Arena*)memory_allocate(sizeof(Arena), MEMORY_TAG_ARENA);
     arena->name = name;
     arena->flags = flags;
     arena->capacity = allocation_size;

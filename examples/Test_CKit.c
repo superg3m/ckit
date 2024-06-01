@@ -1,4 +1,4 @@
-#include "../CKit.h"
+#include "../ckit.h"
 
 #include "../include/asset_loading/2d/bmp_parser.h"
 
@@ -102,6 +102,7 @@ void test_string_operations() {
 }
 
 int main() {
+	ckit_init();
 	// memory_init();
 	test_string_operations();
 	test_vector_operations();
@@ -161,17 +162,7 @@ int main() {
 	u32 offset = 0; 
 
 	BmpHeader bmp_header;
-	memory_copy(file_system.data + offset, &bmp_header, sizeof(bmp_header), file_system.file_size - offset);
-
-	offset += sizeof(bmp_header); 
-
-	BmpInfoHeader bmp_info_header;
-	memory_copy(file_system.data + offset, &bmp_info_header, sizeof(bmp_info_header), file_system.file_size - offset);
-
-	offset += sizeof(bmp_info_header); 
-
-	BmpColorTable bmp_color_table;
-	memory_copy(file_system.data + offset, &bmp_color_table, sizeof(bmp_color_table), file_system.file_size - offset);
+	memory_copy(file_system.data, &bmp_header, sizeof(bmp_header), file_system.file_size);
 
 	return 0;
 }
