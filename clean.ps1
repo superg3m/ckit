@@ -1,7 +1,3 @@
-@echo off
-powershell -nologo -command "Write-Host 'running CKit clean.bat...' -ForegroundColor Green"
-del .\build_cl /q
-del .\build_gcc /q
+Write-Host "running CKit clean.bat..." -ForegroundColor Green
 
-del .\examples\cl /q
-del .\examples\gcc /q
+Remove-Item -Path ".\build_cl", ".\build_gcc", ".\examples\cl", ".\examples\gcc" -Force -ErrorAction SilentlyContinue -Confirm:$false -Recurse
