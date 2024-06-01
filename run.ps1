@@ -1,28 +1,11 @@
-@echo off
+./build.ps1
 
-call build.bat
+Push-Location ".\examples\cl"
+cl /Fe: ".\ckit_Test.exe" /Zi "..\*.c" "..\..\build_cl\ckit.lib"
+& "./ckit_Test.exe"
+Pop-Location
 
-if not exist .\examples\cl (
-    mkdir .\examples\cl
-)
-
-if not exist .\examples\gcc (
-    mkdir .\examples\gcc
-)
-
-echo "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
-echo =========================== CL ===========================
-echo "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
-pushd .\examples\cl
-cl /Fe: ".\CKit_Test.exe" /Zi "..\*.c" "..\..\build_cl\CKit.lib"
-".\CKit_Test.exe"
-popd
-
-
-:: echo "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
-:: echo =========================== GCC ==========================
-:: echo "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
-:: pushd .\examples\gcc
-:: gcc "..\*.c" -o "CKit_Test.exe" -g -L"../../build_gcc" -lCKit
-:: ".\CKit_Test.exe"
-:: popd
+# Push-Location .\examples\gcc
+# gcc "..\*.c" -o "CKit_Test.exe" -g -L"../../build_gcc" -lCKit
+# ".\CKit_Test.exe"
+# Pop-Location
