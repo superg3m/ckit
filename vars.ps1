@@ -5,7 +5,9 @@ if (!$clAvailable) {
 	$vcvarsallPath = "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat"
 
 	# Run the batch file and capture the environment variables it sets
-	$envVars = & cmd /c "call `"$vcvarsallPath`" x64 >`$null && set"
+	$envVars = & cmd /c "call `"$vcvarsallPath`" x64 > throw_null.dev && set"
+
+	Remove-Item -Path ./"throw_null.dev"
 	
 	# Import the environment variables into PowerShell
 	$envVars -split "`r`n" | ForEach-Object {

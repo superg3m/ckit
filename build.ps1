@@ -33,7 +33,7 @@ $timer.Start() # Start the timer
 Set-Location ".\build_cl"
 # MAKE SURE YOU HAVE AN OPTION FOR DEBUG LIBS
 # cl -DCUSTOM_PLATFORM_IMPL /std:c++20 /c "..\source\*.cpp"
-cl /std:c++17 /Zi /FC /c "..\source\core\*$extension" "..\ckg\source\*$extension"  | Out-File -FilePath "..\compilation_errors.txt" -Append
+cl /std:c11 /Zi /FC /c "..\source\core\*$extension" "..\ckg\source\*$extension"  | Out-File -FilePath "..\compilation_errors.txt" -Append
 lib /OUT:".\ckit.lib" "User32.lib" ".\*.obj" | Out-Null
 Set-Location ..
 
