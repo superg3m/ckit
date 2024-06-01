@@ -1,27 +1,22 @@
-@echo off
 
-call build.bat
+Write-Host $clAvailable
 
-if not exist .\examples\cl (
-    mkdir .\examples\cl
-)
+& build.bat
 
-if not exist .\examples\gcc (
-    mkdir .\examples\gcc
-)
+if(!(Test-Path -Path ".\examples\cl")) {
+    mkdir ".\examples\cl"
+}
 
-echo "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
-echo =========================== CL ===========================
-echo "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
-pushd .\examples\cl
-cl /Fe: ".\CKit_Test.exe" /Zi "..\*.c" "..\..\build_cl\CKit.lib"
-popd
+if(!(Test-Path -Path ".\examples\gcc")) {
+    mkdir ".\examples\gcc"
+}
+
+Push-Location -Path ".\examples\cl"
+& cl /Fe: ".\CKit_Test.exe" /Zi "..\*.c" "..\..\build_cl\CKit.lib"
+Pop-Location
 
 
-:: echo "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
-:: echo =========================== GCC ==========================
-:: echo "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
-:: pushd .\examples\gcc
-:: gcc "..\*.c" -o "CKit_Test.exe" -g -L"../../build_gcc" -lCKit
-:: ".\CKit_Test.exe"
-:: popd
+# pushd .\examples\gcc
+# gcc "..\*.c" -o "CKit_Test.exe" -g -L"../../build_gcc" -lCKit
+# ".\CKit_Test.exe"
+# popd

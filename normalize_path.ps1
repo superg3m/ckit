@@ -1,28 +1,27 @@
-@echo off
+Write-Host "running normalize_path.ps1..." -ForegroundColor Green
 
-powershell -nologo -command "Write-Host 'running normalize_path.bat...' -ForegroundColor Green"
+$rootpath = (Get-Location).Path
+$tempfile = "compilation_errors_temp.txt"
 
-setlocal enabledelayedexpansion
+# Create a new, empty temporary file
+New-Item -ItemType File -Path $tempfile -Force | Out-Null
 
-set "rootpath=%~dp0"
-set "tempfile=compilation_errors_temp.txt"
+# Read each line from compilation_errors.txt
+Get-Content -Path "compilation_errors.txt" | ForEach-Object {
+    $line = $_
 
-rem Create a new, empty temporary file
-type nul > %tempfile%
+    # Replace rootpath with nothing in the line
+    $line = $line -Replace [Regex]::Escape($rootpath), ""
 
-rem Read each line from compilation_errors.txt
-for /f "tokens=*" %%f in (compilation_errors.txt) do (
-    set "line=%%f"
-    
-    rem Replace rootpath with nothing in the line
-    set "line=!line:%rootpath%=!"
+    # Write the modified line to the temporary file
+    Add-Content -Path $tempfile -Value $line
+}
 
-    rem Write the modified line to the temporary file
-    echo !line! >> !tempfile!
-)
+# Move the temporary file to compilation_errors.txt
+Move-Item -Path $tempfile -Destination "compilation_errors.txt" -Force
 
-move /y %tempfile% compilation_errors.txt > nul
-type compilation_errors.txt
-del compilation_errors.txt
+# Display the contents of compilation_errors.txt
+Get-Content -Path "compilation_errors.txt"
 
-endlocal
+# Delete compilation_errors.txt
+Remove-Item -Path "compilation_errors.txt"
