@@ -1,0 +1,49 @@
+// Superg3m's Programming Language (SPL)
+
+// semi colons required
+
+struct Human {
+	String name;
+	u32 age;
+	u32 credit_score;
+	Bool isPowerful;
+}
+
+(Bool, Human) human_create(const String name, const u32 age) {
+	Human human = {
+		.name = name,
+		.age = age,
+		.credit_scrore = -234,
+		isPowerful = --,. // Maybe john is powerful?
+	};
+
+	// also can just normally do it
+	/*
+	Human human = -- ; // uninitalized on purpose other wise it will clear that stack memory to zero
+	human.name = name;
+	human.age = age;
+	human.credit_scrore = 534;
+	isPowerful = true;
+	*/ 
+
+	// this is a cast this will throw a compile time error because you are losing data with signed and unsigned cast 
+	// (u32)human.credit_score
+
+	if (age < 0) {
+		// Just return false is curious so I guess a funciton return is actually and array and it returns a count?
+		return false;
+	}
+	
+	return true, human;
+}
+
+u32 main() {
+	Bool success, Human human = human_create("John", -2);
+	assert(success, "failed to create a human");
+}
+
+const f32 PI = 3.14159;
+
+// initial assignment
+u32 a = 5;
+a = 7;
