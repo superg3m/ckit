@@ -7,6 +7,17 @@
 #include "../../include/core/ckit_memory.h" // Actually think about this maybe don't expose this to the user?
 #include "../../include/core/ckit_assert.h"
 
+// Look up stetch buffers because it seems like I did a lot more work than I should have
+/* 
+typedef struct VectorHeader { // This  is all I should need somehow?
+    u64 size;
+    u64 capacity;
+    u8 buffer[0]; // Apparently this is possible and is good?
+} VectorHeader;
+*/
+
+
+
 #define VECTOR_DEFAULT_CAPACITY 1
 //========================== Begin Types ==========================
 typedef struct VectorHeader {
