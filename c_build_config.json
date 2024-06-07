@@ -17,13 +17,13 @@
         "$std_version" : "c11",
         "$build_lib" : true,
 
-        "$additional_libs" : "./ckg/build_cl/ckg.lib"
+        "$additional_libs" : "../ckg/build_cl/ckg.lib"
     },
 
     "./example/cl" : {
         "$should_run" : true,
 
-        "$build_name" : "",
+        "$build_name" : "test ckit",
         "$projects_to_build" : [""],
 
         "$output_name" : "test_ckit.exe",
@@ -32,8 +32,8 @@
         "$source_paths" : "../*.c",
 
         "$std_version" : "c11",
-        "$build_lib" : true,
+        "$build_lib" : false,
 
-        "$additional_libs" : "../../build_cl/ckit"
+        "$additional_libs" : "../../build_cl/ckit.lib"
     }
 }
