@@ -1,0 +1,39 @@
+{
+    "$project_name" : "ckit",
+
+    "$debug_with_visual_studio" : false,
+
+    "./build_cl" : {
+        "$should_run" : true,
+
+        "$build_name" : "build ckit",
+        "$projects_to_build" : ["ckg"],
+
+        "$output_name" : "ckit.lib",
+        "$compile_time_defines" : "",
+        "$include_paths" : "",
+        "$source_paths" : "../source/*.c",
+
+        "$std_version" : "c11",
+        "$build_lib" : true,
+
+        "$additional_libs" : "./ckg/build_cl/ckg.lib"
+    },
+
+    "./example/cl" : {
+        "$should_run" : true,
+
+        "$build_name" : "",
+        "$projects_to_build" : ["test ckit"],
+
+        "$output_name" : "test_ckit.exe",
+        "$compile_time_defines" : "",
+        "$include_paths" : "",
+        "$source_paths" : "../*.c",
+
+        "$std_version" : "c11",
+        "$build_lib" : true,
+
+        "$additional_libs" : "../../build_cl/ckit"
+    }
+}
