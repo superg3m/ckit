@@ -24,7 +24,7 @@
         "$should_run" : true,
 
         "$build_name" : "",
-        "$projects_to_build" : ["test ckit"],
+        "$projects_to_build" : [""],
 
         "$output_name" : "test_ckit.exe",
         "$compile_time_defines" : "",
