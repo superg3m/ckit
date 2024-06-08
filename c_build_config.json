@@ -5,13 +5,13 @@
 
     "./build_cl" : {
         "$should_build_procedure" : true,
-        "$should_project_rebuild" : true,
+        "$should_procedure_rebuild" : false,
         "$should_fully_rebuild_project_depedencies" : false,
 
         "$should_build_lib" : true,
         "$should_execute" : false,
 
-        "$build_procedure_name" : "build ckit",
+        "$build_procedure_name" : "building ckit.lib",
         "$projects_dependencies_to_build" : ["ckg"],
 
         "$output_name" : "ckit.lib",
@@ -28,13 +28,13 @@
     "./example/cl" : {
 
         "$should_build_procedure" : true,
-        "$should_project_rebuild" : true,
+        "$should_procedure_rebuild" : false,
         "$should_fully_rebuild_project_depedencies" : false,
 
         "$should_build_lib" : false,
         "$should_execute" : true,
 
-        "$build_procedure_name" : "test ckit",
+        "$build_procedure_name" : "building test_ckit.exe",
         "$projects_dependencies_to_build" : [""],
 
         "$output_name" : "test_ckit.exe",
