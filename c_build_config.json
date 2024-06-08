@@ -4,10 +4,15 @@
     "$debug_with_visual_studio" : false,
 
     "./build_cl" : {
-        "$should_run" : true,
+        "$should_build_procedure" : true,
+        "$should_project_rebuild" : true,
+        "$should_fully_rebuild_project_depedencies" : false,
 
-        "$build_name" : "build ckit",
-        "$projects_to_build" : ["ckg"],
+        "$should_build_lib" : true,
+        "$should_execute" : false,
+
+        "$build_procedure_name" : "build ckit",
+        "$projects_dependencies_to_build" : ["ckg"],
 
         "$output_name" : "ckit.lib",
         "$compile_time_defines" : "",
@@ -21,10 +26,16 @@
     },
 
     "./example/cl" : {
-        "$should_run" : true,
 
-        "$build_name" : "test ckit",
-        "$projects_to_build" : [""],
+        "$should_build_procedure" : true,
+        "$should_project_rebuild" : true,
+        "$should_fully_rebuild_project_depedencies" : false,
+
+        "$should_build_lib" : false,
+        "$should_execute" : true,
+
+        "$build_procedure_name" : "test ckit",
+        "$projects_dependencies_to_build" : [""],
 
         "$output_name" : "test_ckit.exe",
         "$compile_time_defines" : "",
