@@ -17,6 +17,7 @@
 #include "include/core/ckit_string.h"
 #include "include/core/ckit_file_system.h"
 #include "include/core/ckit_math.h"
+#include "include/core/ckit_hashing.h"
 
 // ASSET LOADINGs
 

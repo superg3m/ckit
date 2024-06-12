@@ -164,5 +164,12 @@ int main() {
 	BmpHeader bmp_header;
 	memory_copy(file_system.data, &bmp_header, sizeof(bmp_header), file_system.file_size);
 
+
+	LOG_DEBUG("%lld", hash("asdfsaga2") % 128);
+	LOG_DEBUG("%lld", hash("ad41g3") % 128);
+	LOG_DEBUG("%lld", hash("2342") % 128);
+	LOG_DEBUG("%lld", hash("212312342") % 128);
+	LOG_DEBUG("%lld", hash("2312312342") % 128);
+
 	return 0;
 }
