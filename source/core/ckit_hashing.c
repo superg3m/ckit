@@ -1,5 +1,9 @@
 #include "../../include/core/ckit_hashing.h"
 #include "../../include/core/ckit_memory.h"
+#include <stdlib.h>
+#include <time.h>
+
+
 
 #define NUM_TESTS 100
 #define STRING_LENGTH 14
@@ -20,6 +24,7 @@ u64 hash(const char* cstring_to_hash) {
 }
 
 internal void rand_str(char *dest, size_t length) {
+    srand(time(NULL));
     char charset[] = "0123456789"
                      "abcdefghijklmnopqrstuvwxyz"
                      "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -31,13 +36,10 @@ internal void rand_str(char *dest, size_t length) {
     *dest = '\0';
 }
 
-void test_hash_collisions() {
+void test_collisions() {
     LOG_PRINT("TETING HASH COLLISIONS\n");
     
     return;
-
-
-
 
     u8* hash_map = memory_allocate(NUM_TESTS * sizeof(u8), MEMORY_TAG_TEMPORARY);
 
