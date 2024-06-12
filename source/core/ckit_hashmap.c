@@ -26,3 +26,5 @@ void hash_map_insert(HashMap* hash_map, String key, void* value) {
 	// vector_insert(hash_map->data, index, value);
 }
 
+// open addressing
+// probing (linear or with double hashing)

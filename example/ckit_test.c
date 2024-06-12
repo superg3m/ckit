@@ -164,12 +164,7 @@ int main() {
 	BmpHeader bmp_header;
 	memory_copy(file_system.data, &bmp_header, sizeof(bmp_header), file_system.file_size);
 
-	LOG_PRINT("TETING HASH COLLISIONS\n");
-
 	test_collisions();
-
-	LOG_PRINT("AFTER HASH COLLISIONS\n");
-
-
+	
 	return 0;
 }
