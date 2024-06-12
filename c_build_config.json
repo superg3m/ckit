@@ -5,7 +5,7 @@
 
     "./build_cl" : {
         "$should_build_procedure" : true,
-        "$should_fully_rebuild_project_depedencies" : true,
+        "$should_fully_rebuild_project_depedencies" : false,
 
         "$should_build_lib" : true,
         "$should_execute" : false,

@@ -164,12 +164,12 @@ int main() {
 	BmpHeader bmp_header;
 	memory_copy(file_system.data, &bmp_header, sizeof(bmp_header), file_system.file_size);
 
+	LOG_PRINT("TETING HASH COLLISIONS\n");
 
-	LOG_DEBUG("%lld", hash("asdfsaga2") % 128);
-	LOG_DEBUG("%lld", hash("ad41g3") % 128);
-	LOG_DEBUG("%lld", hash("2342") % 128);
-	LOG_DEBUG("%lld", hash("212312342") % 128);
-	LOG_DEBUG("%lld", hash("2312312342") % 128);
+	test_hash_collisions();
+
+	LOG_PRINT("AFTER HASH COLLISIONS\n");
+
 
 	return 0;
 }

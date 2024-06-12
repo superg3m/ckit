@@ -6,3 +6,5 @@ internal const u32 prime_numbers[NUM_PRIMES] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 
 u32 get_prime_by_index(u32 index);
 
 u64 hash(const char* cstring_to_hash);
+
+void test_hash_collisions();
