@@ -22,7 +22,8 @@
 		"ckit_math.h": "c",
 		"ckit_hashmap.h": "c",
 		"ckit_linked_list.h": "c",
-		"ckit_hashing.h": "c"
+		"ckit_hashing.h": "c",
+		"bmp_parser.h": "c"
 	},
 	"editor.insertSpaces": false
 }

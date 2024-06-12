@@ -3,8 +3,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-
-
 #define NUM_TESTS 100
 #define STRING_LENGTH 14
 
@@ -37,17 +35,13 @@ internal void rand_str(char *dest, size_t length) {
 }
 
 void test_collisions() {
-    LOG_PRINT("TETING HASH COLLISIONS\n");
-    
-    return;
-
     u8* hash_map = memory_allocate(NUM_TESTS * sizeof(u8), MEMORY_TAG_TEMPORARY);
 
     char test_string[STRING_LENGTH + 1];
 
-    size_t collisions = 0;
+    s32 collisions = 0;
 
-    for (size_t i = 0; i < NUM_TESTS; i++) {
+    for (s32 i = 0; i < NUM_TESTS; i++) {
         rand_str(test_string, STRING_LENGTH);
         u64 h = hash(test_string);
 
@@ -60,6 +54,6 @@ void test_collisions() {
 
     memory_free(hash_map);
 
-    LOG_PRINT("Number of collisions: %zu\n", collisions);
-    LOG_PRINT("Collision rate: %f%%\n", (double)collisions / NUM_TESTS * 100);
+    LOG_PRINT("Number of collisions: %d\n", collisions);
+    LOG_PRINT("Collision rate: %f\%\n", ((double)collisions / (double)NUM_TESTS) * 100);
 }

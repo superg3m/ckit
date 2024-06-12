@@ -166,7 +166,7 @@ int main() {
 
 	LOG_PRINT("TETING HASH COLLISIONS\n");
 
-	// test_hash_collisions();
+	test_collisions();
 
 	LOG_PRINT("AFTER HASH COLLISIONS\n");
 

@@ -7,4 +7,4 @@ u32 get_prime_by_index(u32 index);
 
 u64 hash(const char* cstring_to_hash);
 
-void test_hash_collisions();
+void test_collisions();
