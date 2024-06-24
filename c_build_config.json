@@ -1,47 +1,31 @@
 {
+    "c_build_version" : "0.8",
+
     "$project_name" : "ckit",
 
     "$debug_with_visual_studio" : false,
+    "should_rebuild_project_dependencies" : false,
+
+    "std_version" : "c11",
+    "project_dependencies" : ["ckg"],
 
     "./build_cl" : {
-        "$should_build_procedure" : true,
-        "$should_fully_rebuild_project_depedencies" : false,
-
-        "$should_build_lib" : true,
-        "$should_execute" : false,
-
-        "$build_procedure_name" : "building ckit.lib",
-        "$projects_dependencies_to_build" : ["ckg"],
-
         "$output_name" : "ckit.lib",
         "$compile_time_defines" : "",
         "$include_paths" : "",
         "$source_paths" : "../source/core/*.c ../source/asset_loading/2d/*.c ../source/asset_loading/3d/*.c",
 
-        "$std_version" : "c11",
-        "$build_lib" : true,
-
         "$additional_libs" : "../ckg/build_cl/ckg.lib"
     },
 
     "./example/cl" : {
-        "$should_build_procedure" : true,
-        "$should_fully_rebuild_project_depedencies" : false,
-
-        "$should_build_lib" : false,
-        "$should_execute" : true,
-
-        "$build_procedure_name" : "building test_ckit.exe",
-        "$projects_dependencies_to_build" : [""],
-
         "$output_name" : "test_ckit.exe",
         "$compile_time_defines" : "",
         "$include_paths" : "",
         "$source_paths" : "../*.c",
 
-        "$std_version" : "c11",
-        "$build_lib" : false,
-
         "$additional_libs" : "../../build_cl/ckit.lib"
-    }
+    },
+
+    "execute" : "test_ckit.exe"
 }
