@@ -4,7 +4,7 @@
     "$project_name" : "ckit",
 
     "$debug_with_visual_studio" : false,
-    "should_rebuild_project_dependencies" : false,
+    "should_rebuild_project_dependencies" : true,
 
     "std_version" : "c11",
     "project_dependencies" : ["ckg"],
