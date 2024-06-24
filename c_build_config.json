@@ -1,30 +1,30 @@
 {
     "c_build_version" : "0.8",
 
-    "$project_name" : "ckit",
+    "project_name" : "ckit",
 
-    "$debug_with_visual_studio" : false,
-    "should_rebuild_project_dependencies" : true,
+    "debug_with_visual_studio" : false,
+    "should_rebuild_project_dependencies" : false,
 
     "std_version" : "c11",
     "project_dependencies" : ["ckg"],
 
     "./build_cl" : {
-        "$output_name" : "ckit.lib",
-        "$compile_time_defines" : "",
-        "$include_paths" : "",
-        "$source_paths" : "../source/core/*.c ../source/asset_loading/2d/*.c ../source/asset_loading/3d/*.c",
+        "output_name" : "ckit.lib",
+        "compile_time_defines" : "",
+        "include_paths" : "",
+        "source_paths" : "../source/core/*.c ../source/asset_loading/2d/*.c ../source/asset_loading/3d/*.c",
 
-        "$additional_libs" : "../ckg/build_cl/ckg.lib"
+        "additional_libs" : "../ckg/build_cl/ckg.lib"
     },
 
     "./example/cl" : {
-        "$output_name" : "test_ckit.exe",
-        "$compile_time_defines" : "",
-        "$include_paths" : "",
-        "$source_paths" : "../*.c",
+        "output_name" : "test_ckit.exe",
+        "compile_time_defines" : "",
+        "include_paths" : "",
+        "source_paths" : "../*.c",
 
-        "$additional_libs" : "../../build_cl/ckit.lib"
+        "additional_libs" : "../../build_cl/ckit.lib"
     },
 
     "execute" : "test_ckit.exe"
