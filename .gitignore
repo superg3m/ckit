@@ -31,11 +31,11 @@
 *.out
 *.app
 
-#Debug Info
+# Debug Info
 *.pdb
 *.rdi
 
-#c-build
+# c-build
 example/cl
 ckg/
 c-build/
