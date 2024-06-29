@@ -35,6 +35,7 @@
 *.pdb
 *.rdi
 
+#c-build
 example/cl
 ckg/
 c-build/
