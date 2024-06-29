@@ -35,8 +35,7 @@
 *.pdb
 *.rdi
 
-examples/cl
-examples/gcc
+example/cl
 ckg/
 c-build/
 *.ps1
