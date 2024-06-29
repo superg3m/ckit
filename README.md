@@ -16,3 +16,56 @@ if I want to keep using header I need to make available the header size with a f
 
 
 it kind of is the case that you want to init some type of memory arena and just push stuff because of the type system and maybe that is better overall?
+
+
+- ckg
+	- string.c
+		- StringView
+		- StringBuilder
+
+	- file_io.c
+		- open_file()
+		- read_entire_file()
+		- close_file()
+	- assert.c
+	- logger.c
+	- event_system.c
+
+	- input.c
+
+	- platform_services.c
+
+	- networking.c
+		- udp/tcp
+		- udp hole punching
+		- host and client structs 
+		- NAT
+
+	- types.c
+		- base types
+
+	- threading.c
+		- semaphores
+		- job_system
+	- simd.c
+		- intrinsics
+	- math.c
+		- Vector2, Vector3
+		- simd calculations
+		- roundf, sin, cos, tan (use intrinsics)
+		-
+
+	asset.c
+		- 2D
+			- bitmap_loader
+			- png_loader
+		- 3D
+			- obj_loader
+
+
+	- DSA.c
+		- Data Structures
+			- vector (Make sure this isn't used everywhere in ckg)
+			- hashing
+			- hashmap (uses hashing)
+			- linked_list
