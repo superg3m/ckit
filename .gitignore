@@ -39,3 +39,4 @@ examples/gcc
 ckg/
 c-build/
 *.ps1
+!bootstrap.ps1
