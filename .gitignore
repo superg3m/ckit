@@ -33,6 +33,7 @@
 
 #Debug Info
 *.pdb
+*.rdi
 
 examples/cl
 examples/gcc
