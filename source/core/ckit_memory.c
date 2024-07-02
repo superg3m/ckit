@@ -48,7 +48,7 @@ void _memory_track_remove(MemoryHeader header, MemoryTag memory_tag) {
 
 void* MACRO_memory_insert_header(void* data, MemoryHeader header) {
   	((MemoryHeader*)data)[0] = header;
-  	memory_byte_advance(data, sizeof(header));
+  	ckg_memory_advance(data, sizeof(header));
   	return data;
 }
 #define _memory_insert_header(data, header) data = MACRO_memory_insert_header(data, header);
@@ -84,7 +84,7 @@ void* memory_allocate(size_t byte_allocation_size, MemoryTag memory_tag) {
 	void* data = ckg_memory_allocate(total_allocation_size);
 	// Date: May 09, 2024
 	// NOTE(Jovanni): Technically you are repeating work here
-	memory_zero(data, total_allocation_size);
+	ckg_memory_zero(data, total_allocation_size);
 	_memory_insert_header(data, header);
 
 	return data;
@@ -97,8 +97,8 @@ void* MACRO_memory_free(void* data) {
 
   	_memory_track_remove(header, header.memory_tag);
 
-  	memory_byte_retreat(data, sizeof(header));
-	memory_zero(data, sizeof(header) + header.allocation_size_without_header);
+  	ckg_memory_retreat(data, sizeof(header));
+	ckg_memory_zero(data, sizeof(header) + header.allocation_size_without_header);
   	ckg_memory_free(data);
   	return data;
 }
@@ -116,7 +116,7 @@ void* memory_reallocate(void* data, u64 new_byte_allocation_size) {
 
   	void* ret_data = memory_allocate(new_total_allocation_size, header.memory_tag);
 
-  	memory_copy(data, ret_data, old_total_allocation_size - sizeof(header), new_total_allocation_size - sizeof(header));
+  	ckg_memory_copy(data, ret_data, old_total_allocation_size - sizeof(header), new_total_allocation_size - sizeof(header));
   	memory_free(data);
 
   	return ret_data;
@@ -137,9 +137,9 @@ void memory_output_allocations(LogLevel log_level) {
     		continue;
      	} 
 
-     	memory_zero(out_message, sizeof(out_message));
-     	memory_zero(out_message2, sizeof(out_message2));
-     	memory_zero(out_message3, sizeof(out_message3));
+     	ckg_memory_zero(out_message, sizeof(out_message));
+     	ckg_memory_zero(out_message2, sizeof(out_message2));
+     	ckg_memory_zero(out_message3, sizeof(out_message3));
 
      	sprintf(out_message, "%s", known_memory_tag_strings[level]);
      	sprintf(out_message2, "%lld", global_memory_tags[level]);

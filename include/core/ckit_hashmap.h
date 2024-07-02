@@ -34,7 +34,7 @@ typedef struct HashMap {
 extern "C" {
 #endif
 u32 hash_value(char *str);
-void hashmap_create(HashFunction* hash_func, CompareFunction* compare_func);
+// void hashmap_create(HashFunction* hash_func, CompareFunction* compare_func);
 void* hashmap_insert(HashMap hash_map, void* key, void* element);
 
 #ifdef __cplusplus

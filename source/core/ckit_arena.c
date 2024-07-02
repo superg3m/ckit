@@ -30,7 +30,7 @@ Arena* MACRO_arena_create(size_t allocation_size, const char* name, ArenaFlags f
     arena->flags = flags;
     arena->capacity = allocation_size;
     arena->used = 0;
-    memory_zero(arena->memory_tag_values, sizeof(u64) * MEMORY_TAG_ARENA);
+    ckg_memory_zero(arena->memory_tag_values, sizeof(u64) * MEMORY_TAG_ARENA);
     arena->base_address = memory_allocate(allocation_size != 0 ? allocation_size : ARENA_DEFAULT_ALLOCATION_SIZE, MEMORY_TAG_ARENA);
     // memory_arena_register(&arena);
     return arena;
@@ -47,7 +47,7 @@ void arena_free(Arena* arena) {
 
 void arena_clear(Arena* arena) {
     assert_in_function(arena && arena->base_address, "arena_free: arena is null\n");
-    memory_zero(arena->base_address, arena->used);
+    ckg_memory_zero(arena->base_address, arena->used);
     arena->used = 0;
 }
 
@@ -65,7 +65,7 @@ void* MACRO_arena_push(Arena* arena, size_t element_size, MemoryTag memory_tag) 
         arena->base_address = memory_reallocate(arena->base_address, arena->capacity);
     }
 
-    u8* ret = memory_advance_new_ptr(arena->base_address, arena->used);
+    u8* ret = ckg_memory_advance_new_ptr(arena->base_address, arena->used);
 
     arena->memory_tag_values[memory_tag] += element_size;
     arena->used += element_size;
@@ -90,9 +90,9 @@ void arena_output_allocations(Arena* arena, LogLevel log_level) {
             continue;
         } 
 
-        memory_zero(out_message, sizeof(out_message));
-        memory_zero(out_message2, sizeof(out_message2));
-        memory_zero(out_message3, sizeof(out_message3));
+        ckg_memory_zero(out_message, sizeof(out_message));
+        ckg_memory_zero(out_message2, sizeof(out_message2));
+        ckg_memory_zero(out_message3, sizeof(out_message3));
 
         sprintf(out_message, "%s", known_memory_tag_strings[level]);
         sprintf(out_message2, "%lld", arena->memory_tag_values[level]);

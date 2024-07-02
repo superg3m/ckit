@@ -14,8 +14,8 @@ typedef struct StringHeader {
 } StringHeader;
 
 internal void _string_insert_header(char** string, StringHeader header) {
-  	memory_copy(&header, *string,  sizeof(header),  sizeof(header) + header.capacity);
-    memory_byte_advance(*string, sizeof(header));
+  	ckg_memory_copy(&header, *string,  sizeof(header),  sizeof(header) + header.capacity);
+    ckg_memory_advance(*string, sizeof(header));
 }
 
 internal StringHeader* _string_extract_header(String string) {
@@ -38,7 +38,7 @@ String string_create_custom(const char* c_string, u32 capacity) {
 	
   	String ret = arena_push_array(string_arena, u8, header->capacity, MEMORY_TAG_STRING);
 	
-  	memory_copy(c_string, ret, c_str_length, c_str_length);
+  	ckg_memory_copy(c_string, ret, c_str_length, c_str_length);
   	return ret;
 }
 
@@ -82,7 +82,7 @@ u32 string_length(String string) {
 }
 
 String MACRO_string_free(String string) {
-    memory_byte_retreat(string, sizeof(StringHeader));
+    ckg_memory_retreat(string, sizeof(StringHeader));
     memory_free(string);
     return string;
 }

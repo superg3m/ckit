@@ -51,7 +51,7 @@ void test_vector_operations() {
 
 	for (int i = 0; i < vector_size(stringVector); i++) {
 		char* element = stringVector[i];
-		assert_in_macro(string_compare(element, stringArray[i]), "Error: Incorrect element value\n");
+		assert_in_macro(string_equal(element, stringArray[i]), "Error: Incorrect element value\n");
 	}
 
 	// Test pop
@@ -75,7 +75,7 @@ void test_vector_operations() {
 	char* string_to_push = "TRYING TO PUSH A LITERAL!\n";
 	vector_push(stringVector, string_to_push);
 
-	assert_in_macro(string_compare(before_popped_string, after_popped_string), "Error: Incorrect popped element value\n");
+	assert_in_macro(string_equal(before_popped_string, after_popped_string), "Error: Incorrect popped element value\n");
 
 	// Test free
 	vector_free(intVector);
@@ -126,7 +126,7 @@ int main() {
 		int_array2[i] = 1432;
 	}
 
-	memory_copy(int_array2, int_array, sizeof(int) * 5, sizeof(int) * 5);
+	ckg_memory_copy(int_array2, int_array, sizeof(int) * 5, sizeof(int) * 5);
 	for (int i = 0; i < 5; i++) {
 		assert_in_macro(int_array[i] == 1432, "Memory copy is fucked!");
 		LOG_INFO("Element: %d\n", int_array[i]);
@@ -162,7 +162,7 @@ int main() {
 	u32 offset = 0; 
 
 	BmpHeader bmp_header;
-	memory_copy(file_system.data, &bmp_header, sizeof(bmp_header), file_system.file_size);
+	ckg_memory_copy(file_system.data, &bmp_header, sizeof(bmp_header), file_system.file_size);
 
 	test_collisions();
 	

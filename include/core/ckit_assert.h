@@ -31,7 +31,7 @@ extern "C" {
 			if (!(expression))                                                       		               	\
 			{  																								\
 				char buffer[PLATFORM_CHARACTER_LIMIT];                                        		        \
-				memory_zero(buffer, PLATFORM_CHARACTER_LIMIT);                                             	\
+				ckg_memory_zero(buffer, PLATFORM_CHARACTER_LIMIT);                                             	\
 				sprintf(buffer, "file: %s:%d | Function: %s | %s", __FILE__, __LINE__, __func__, message); 	\
 				LOG_FATAL(buffer, ##__VA_ARGS__);                                             				\
 				CRASH;                                                                                     	\

@@ -4,7 +4,7 @@
  * Date: April 23, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-#include "../../ckg/include/ckg.h"
+#include "../../ckg/ckg.h"
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
 #define MEMORY_TAG_CHARACTER_LIMIT 16

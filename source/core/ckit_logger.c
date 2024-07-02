@@ -49,10 +49,10 @@ void MACRO_log_output(LogLevel log_level, const char* message, ...) {
     Boolean is_fatal = (log_level == 0);
 
     char out_message[PLATFORM_CHARACTER_LIMIT];
-    memory_zero(out_message, sizeof(out_message));
+    ckg_memory_zero(out_message, sizeof(out_message));
 
     char out_message2[PLATFORM_CHARACTER_LIMIT];
-    memory_zero(out_message2, sizeof(out_message2));  
+    ckg_memory_zero(out_message2, sizeof(out_message2));  
     
     va_list args_list;
     va_start(args_list, message);
