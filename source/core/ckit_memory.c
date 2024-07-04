@@ -62,8 +62,8 @@ MemoryHeader* _memory_extract_header(void* data) {
 }
 
 void memory_init() {
-	ckg_memory_bind_allocator_callback(&platform_allocate);
-	ckg_memory_bind_free_callback(&platform_free);
+	ckg_bind_allocator_callback(&platform_allocate);
+	ckg_bind_free_callback(&platform_free);
 }
 
 void* memory_allocate(size_t byte_allocation_size, MemoryTag memory_tag) {
@@ -81,7 +81,7 @@ void* memory_allocate(size_t byte_allocation_size, MemoryTag memory_tag) {
 
 	u32 total_allocation_size = sizeof(header) + header.allocation_size_without_header;
 
-	void* data = ckg_memory_allocate(total_allocation_size);
+	void* data = ckg_allocate(total_allocation_size);
 	// Date: May 09, 2024
 	// NOTE(Jovanni): Technically you are repeating work here
 	ckg_memory_zero(data, total_allocation_size);
@@ -99,7 +99,7 @@ void* MACRO_memory_free(void* data) {
 
   	ckg_memory_retreat(data, sizeof(header));
 	ckg_memory_zero(data, sizeof(header) + header.allocation_size_without_header);
-  	ckg_memory_free(data);
+  	ckg_free(data);
   	return data;
 }
 

@@ -51,7 +51,7 @@ void test_vector_operations() {
 
 	for (int i = 0; i < vector_size(stringVector); i++) {
 		char* element = stringVector[i];
-		assert_in_macro(string_equal(element, stringArray[i]), "Error: Incorrect element value\n");
+		assert_in_macro(ckg_string_equal(element, stringArray[i]), "Error: Incorrect element value\n");
 	}
 
 	// Test pop
@@ -75,7 +75,7 @@ void test_vector_operations() {
 	char* string_to_push = "TRYING TO PUSH A LITERAL!\n";
 	vector_push(stringVector, string_to_push);
 
-	assert_in_macro(string_equal(before_popped_string, after_popped_string), "Error: Incorrect popped element value\n");
+	assert_in_macro(ckg_string_equal(before_popped_string, after_popped_string), "Error: Incorrect popped element value\n");
 
 	// Test free
 	vector_free(intVector);
