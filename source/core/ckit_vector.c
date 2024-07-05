@@ -30,7 +30,7 @@ typedef struct VectorHeader {
 //************************* Begin Functions *************************
 internal void* MACRO_vector_insert_header(void* vector, VectorHeader header) {
     ((VectorHeader*)vector)[0] = header;
-    ckg_memory_advance(vector, sizeof(header));
+    vector = (u8*)vector + sizeof(header);
     return vector;
 }
 #define _vector_insert_header(vector, header) vector = MACRO_vector_insert_header(vector, header);
@@ -91,7 +91,7 @@ void* MACRO_vector_push(void* vector, const void* element) {
         header = _vector_extract_header(vector);
     }
 	
-    u8* dest_ptr = ckg_memory_advance_new_ptr(vector, header->size * header->type_size_in_bytes);
+    u8* dest_ptr = (u8*)vector + (header->size * header->type_size_in_bytes);
 	header->size++;
     ckg_memory_copy(element, dest_ptr, header->type_size_in_bytes, header->type_size_in_bytes);
     
@@ -103,14 +103,14 @@ void* MACRO_vector_pop(void* vector) {
     VectorHeader* header = _vector_extract_header(vector);
 	assert_in_function(header->size > 0, "The vector pop failed (no elements to pop!)\n");
 	header->size--;
-	return ckg_memory_advance_new_ptr(vector, header->size * header->type_size_in_bytes);
+	return (u8*)vector + (header->size * header->type_size_in_bytes);
 }
 
 void* MACRO_vector_free(void* vector) {
 	assert_in_macro(vector, "The vector free failed (freed before this call!)\n");
 	VectorHeader header = *_vector_extract_header(vector);
 	u32 vector_allocation_size = sizeof(header) + (header.type_size_in_bytes * header.capacity);
-    ckg_memory_retreat(vector, sizeof(header));
+    vector = (u8*)vector - sizeof(header);
 	memory_free(vector);
 
     return vector;

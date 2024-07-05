@@ -48,7 +48,7 @@ void _memory_track_remove(MemoryHeader header, MemoryTag memory_tag) {
 
 void* MACRO_memory_insert_header(void* data, MemoryHeader header) {
   	((MemoryHeader*)data)[0] = header;
-  	ckg_memory_advance(data, sizeof(header));
+  	data = (u8*)data + sizeof(header);
   	return data;
 }
 #define _memory_insert_header(data, header) data = MACRO_memory_insert_header(data, header);
@@ -62,7 +62,7 @@ MemoryHeader* _memory_extract_header(void* data) {
 }
 
 void memory_init() {
-	ckg_bind_allocator_callback(&platform_allocate);
+	ckg_bind_alloc_callback(&platform_allocate);
 	ckg_bind_free_callback(&platform_free);
 }
 
@@ -81,7 +81,7 @@ void* memory_allocate(size_t byte_allocation_size, MemoryTag memory_tag) {
 
 	u32 total_allocation_size = sizeof(header) + header.allocation_size_without_header;
 
-	void* data = ckg_allocate(total_allocation_size);
+	void* data = ckg_alloc(total_allocation_size);
 	// Date: May 09, 2024
 	// NOTE(Jovanni): Technically you are repeating work here
 	ckg_memory_zero(data, total_allocation_size);
@@ -97,7 +97,7 @@ void* MACRO_memory_free(void* data) {
 
   	_memory_track_remove(header, header.memory_tag);
 
-  	ckg_memory_retreat(data, sizeof(header));
+  	data = (u8*)data - sizeof(header);
 	ckg_memory_zero(data, sizeof(header) + header.allocation_size_without_header);
   	ckg_free(data);
   	return data;

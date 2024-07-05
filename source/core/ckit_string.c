@@ -15,7 +15,7 @@ typedef struct StringHeader {
 
 internal void _string_insert_header(char** string, StringHeader header) {
   	ckg_memory_copy(&header, *string,  sizeof(header),  sizeof(header) + header.capacity);
-    ckg_memory_advance(*string, sizeof(header));
+    *string = ((u8*)*string) + sizeof(header);
 }
 
 internal StringHeader* _string_extract_header(String string) {
@@ -31,7 +31,7 @@ internal inline String _string_grow(String string, u32 new_allocation_size) {
 }
 
 String string_create_custom(const char* c_string, u32 capacity) {
-  	u32 c_str_length = cstring_length(c_string);
+  	u32 c_str_length = ckg_cstr_length(c_string);
   	StringHeader* header = arena_push(string_arena, StringHeader, MEMORY_TAG_STRING);
   	header->length = c_str_length;
   	header->capacity = capacity != 0 ? capacity : sizeof(char) * (c_str_length + 1);
@@ -62,7 +62,7 @@ internal inline String _string_grow(String string, u32 new_allocation_size) {
 // TODO(Jovanni): I need to eventually go back to using an arena I liked the idea
 // Of pushing the header then right after pushing the string data I think this worked really well.
 String string_create_custom(const char* c_string, u32 capacity) {
-  	u32 c_str_length = cstring_length(c_string);
+  	u32 c_str_length = ckg_cstr_length(c_string);
   	StringHeader header;
   	header.length = c_str_length;
   	header.capacity = capacity != 0 ? capacity : sizeof(char) * (c_str_length + 1);
@@ -70,7 +70,7 @@ String string_create_custom(const char* c_string, u32 capacity) {
   	String ret = memory_allocate(sizeof(header) + header.capacity, MEMORY_TAG_STRING);
     _string_insert_header(&ret, header);
 	
-  	ckg_string_copy(ret, header.capacity, c_string);
+  	ckg_str_copy(ret, header.capacity, c_string);
   	return ret;
 }
 
@@ -82,7 +82,7 @@ u32 string_length(String string) {
 }
 
 String MACRO_string_free(String string) {
-    ckg_memory_retreat(string, sizeof(StringHeader));
+    string = string - sizeof(StringHeader);
     memory_free(string);
     return string;
 }
@@ -91,7 +91,7 @@ String MACRO_string_append(String string, const char* source) {
     assert_in_function(string, "string_append: String passed is null\n");
     assert_in_function(source, "string_append: Source passed is null\n");
 
-    u32 source_size = cstring_length(source) + 1; 
+    u32 source_size = ckg_cstr_length(source) + 1; 
 
     StringHeader* header = _string_extract_header(string);
     if (header->length + source_size >= header->capacity) {
@@ -99,8 +99,8 @@ String MACRO_string_append(String string, const char* source) {
         header = _string_extract_header(string);
     }
 
-	header->length += cstring_length(source);
-    ckg_string_append(string, header->capacity, source);
+	header->length += ckg_cstr_length(source);
+    ckg_str_append(string, header->capacity, source);
     
     return string;
 }

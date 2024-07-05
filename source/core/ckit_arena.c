@@ -65,7 +65,7 @@ void* MACRO_arena_push(Arena* arena, size_t element_size, MemoryTag memory_tag) 
         arena->base_address = memory_reallocate(arena->base_address, arena->capacity);
     }
 
-    u8* ret = ckg_memory_advance_new_ptr(arena->base_address, arena->used);
+    u8* ret = (u8*)arena->base_address + arena->used;
 
     arena->memory_tag_values[memory_tag] += element_size;
     arena->used += element_size;

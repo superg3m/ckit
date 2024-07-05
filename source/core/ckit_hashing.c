@@ -14,7 +14,7 @@ u64 hash(unsigned char *str) {
     u64 hash = 5381;
     int c;
 
-    u32 str_length = cstring_length(str);
+    u32 str_length = ckg_cstr_length(str);
 
     while (c = *str++) {
         hash = (((hash << 5) + hash) + c) + str_length;

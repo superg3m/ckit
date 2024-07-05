@@ -51,7 +51,7 @@
 		void platform_console_write(const char* message, unsigned char color) {
 			// Date: May 01, 2024
 			// TODO(Jovanni): This code is very flaky I would suggest fixing it
-			unsigned long long message_length = cstring_length(message);
+			unsigned long long message_length = ckg_cstr_length(message);
 
 			if (message_length == 0) {
 				return;
