@@ -16,8 +16,6 @@ typedef struct VectorHeader { // This  is all I should need somehow?
 } VectorHeader;
 */
 
-
-
 #define VECTOR_DEFAULT_CAPACITY 1
 //========================== Begin Types ==========================
 typedef struct VectorHeader {

@@ -142,7 +142,7 @@ int main() {
 	memory_free(int_array);
 	memory_free(int_array2);
 
-	memory_output_allocations(CKG_LOG_LEVEL_DEBUG);
+	memory_output_allocations(CKG_LOG_LEVEL_ERROR);
 
 	Vec2 points[4];
 	points[0] = (Vec2){0, 0};

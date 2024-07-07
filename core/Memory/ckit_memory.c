@@ -34,19 +34,19 @@ char known_memory_tag_strings[MEMORY_TAG_COUNT][MEMORY_TAG_CHARACTER_LIMIT] = {
 //=========================== End Types ===========================
 
 //************************* Begin Functions *************************
-void _memory_track_add(MemoryHeader header, MemoryTag memory_tag) {
+internal void _memory_track_add(MemoryHeader header, MemoryTag memory_tag) {
   	global_memory_tags[MEMORY_TAG_INTERNAL] += sizeof(header);
   	global_memory_tags[memory_tag] += (header.allocation_size_without_header);
   	memory_used += sizeof(header) + header.allocation_size_without_header;
 }
 
-void _memory_track_remove(MemoryHeader header, MemoryTag memory_tag) {
+internal void _memory_track_remove(MemoryHeader header, MemoryTag memory_tag) {
   	global_memory_tags[MEMORY_TAG_INTERNAL] -= sizeof(header);
   	global_memory_tags[memory_tag] -= (header.allocation_size_without_header);
   	memory_used -= sizeof(header) + header.allocation_size_without_header;
 }
 
-void* MACRO_memory_insert_header(void* data, MemoryHeader header) {
+internal void* MACRO_memory_insert_header(void* data, MemoryHeader header) {
   	((MemoryHeader*)data)[0] = header;
   	data = (u8*)data + sizeof(header);
   	return data;
@@ -57,7 +57,7 @@ Boolean memory_tag_is_valid(MemoryTag memory_tag) {
   	return (memory_tag >= 0 && memory_tag < MEMORY_TAG_COUNT);
 }
 
-MemoryHeader* _memory_extract_header(void* data) {
+internal MemoryHeader* _memory_extract_header(void* data) {
 	return &((MemoryHeader*)data)[-1];
 }
 
