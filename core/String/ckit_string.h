@@ -15,26 +15,26 @@ extern "C" {
    * 
    * @param cString 
    */
-  String ckit_str_create_custom(const char* c_string, u32 capacity);
-  String MACRO_ckit_str_free(String string);
+  String ckit_str_create_custom(const char* c_str, u32 capacity);
+  String MACRO_ckit_str_free(String str);
   u32 ckit_str_length(const String str);
 
-  String MACRO_ckit_str_append(String string, const char* source);
-  String MACRO_ckit_str_append_char(String string, const char source);
+  String MACRO_ckit_str_append(String str, const char* source);
+  String MACRO_ckit_str_append_char(String str, const char source);
 
-  void ckit_str_insert(String string, const u32 index);
-  void ckit_str_insert_char(String string, const u32 index);
-  void ckit_str_clear(String string);
+  void ckit_str_insert(String str, const u32 index);
+  void ckit_str_insert_char(String str, const u32 index);
+  void ckit_str_clear(String str);
 
-  void ckit_str_copy(String* string, const char* source); // Careful about the header
+  void ckit_str_copy(String* str, const char* source); // Careful about the header
 #ifdef __cplusplus
 }
 #endif
 //************************** End Functions **************************
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
-#define ckit_str_create(string) ckit_str_create_custom(string, 0)
-#define ckit_str_free(string) string = MACRO_ckit_str_free(string);
-#define ckit_str_append(string, source) string = MACRO_ckit_str_append(string, source);
-#define ckit_str_append_char(string, source) string = MACRO_ckit_str_append_char(string, source);
+#define ckit_str_create(str) ckit_str_create_custom(str, 0)
+#define ckit_str_free(str) str = MACRO_ckit_str_free(str);
+#define ckit_str_append(str, source) str = MACRO_ckit_str_append(str, source);
+#define ckit_str_append_char(str, source) str = MACRO_ckit_str_append_char(str, source);
 //++++++++++++++++++++++++++++ End Macros ++++++++++++++++++++++++++
