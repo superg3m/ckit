@@ -1,6 +1,5 @@
-#include "../../include/core/ckit_hashmap.h"
-#include "../../include/core/ckit_vector.h"
-
+#include "./ckit_hashmap.h"
+#include "../Vector/ckit_vector.h"
 u32 hash_value(char *str) {
 	unsigned long hash = 5381;
 	int c;

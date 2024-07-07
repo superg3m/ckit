@@ -27,6 +27,7 @@ Boolean logger_init() {
  * @param message 
  * @param ... 
  */
+/*
 void MACRO_log_output(LogLevel log_level, const char* message, ...) {
     char log_level_strings[LOG_LEVEL_COUNT][LOG_LEVEL_CHARACTER_LIMIT] = {
         "[FATAL]: ",
@@ -62,3 +63,4 @@ void MACRO_log_output(LogLevel log_level, const char* message, ...) {
     sprintf(out_message2, "%s%s", log_level_strings[log_level], out_message);
     platform_console_write(out_message2, log_level_format[log_level]);
 }
+*/

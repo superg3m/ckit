@@ -50,6 +50,8 @@
 			FreeConsole();
 		}
 
+
+		/*
 		void platform_console_write(const char* message, unsigned char color) {
 			// Date: May 01, 2024
 			// TODO(Jovanni): This code is very flaky I would suggest fixing it
@@ -78,6 +80,7 @@
 				WriteConsoleA(console_output_handle, "\n", 1, NULLPTR, NULLPTR);
 			}
 		}
+		*/
 	#elif PLATFORM_LINUX
 		#define COLOR_RESET "\033[0"
 		#define BLU "\033[34"

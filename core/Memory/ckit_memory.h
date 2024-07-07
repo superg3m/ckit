@@ -29,7 +29,7 @@ extern "C" {
     void* memory_allocate(size_t number_of_bytes, MemoryTag memory_tag);
     void* MACRO_memory_free(void* data);
     void* memory_reallocate(void* data, size_t new_number_of_bytes);
-    void memory_output_allocations(LogLevel log_level);
+    void memory_output_allocations(CKG_LogLevel log_level);
 #ifdef __cplusplus
 }
 #endif

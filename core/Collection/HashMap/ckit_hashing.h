@@ -1,10 +1,21 @@
+#pragma once
+
 #include "../../String/ckit_string.h"
+//========================== Begin Types ==========================
+//=========================== End Types ===========================
 
-#define NUM_PRIMES 25
-internal const u32 prime_numbers[NUM_PRIMES] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97};
+//************************* Begin Functions *************************
+#ifdef __cplusplus
+extern "C" {
+#endif
+	u32 get_prime_by_index(u32 index);
+	u64 hash(unsigned char *str);
+	void test_hash_collisions();
+#ifdef __cplusplus
+}
+#endif
+//************************** End Functions **************************
 
-u32 get_prime_by_index(u32 index);
+//+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 
-u64 hash(unsigned char *str);
-
-void test_collisions();

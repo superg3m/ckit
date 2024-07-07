@@ -49,7 +49,7 @@ void test_vector_operations() {
 
 	for (int i = 0; i < vector_size(stringVector); i++) {
 		char* element = stringVector[i];
-		ckit_assert_msg(ckg_str_equal(element, stringArray[i]), "Error: Incorrect element value\n");
+		ckit_assert_msg(ckg_cstr_equal(element, stringArray[i]), "Error: Incorrect element value\n");
 	}
 
 	// Test pop
@@ -73,7 +73,7 @@ void test_vector_operations() {
 	char* string_to_push = "TRYING TO PUSH A LITERAL!\n";
 	vector_push(stringVector, string_to_push);
 
-	ckit_assert_msg(ckg_str_equal(before_popped_string, after_popped_string), "Error: Incorrect popped element value\n");
+	ckit_assert_msg(ckg_cstr_equal(before_popped_string, after_popped_string), "Error: Incorrect popped element value\n");
 
 	// Test free
 	vector_free(intVector);
@@ -142,7 +142,7 @@ int main() {
 	memory_free(int_array);
 	memory_free(int_array2);
 
-	memory_output_allocations(LOG_LEVEL_DEBUG);
+	memory_output_allocations(CKG_LOG_LEVEL_DEBUG);
 
 	Vec2 points[4];
 	points[0] = (Vec2){0, 0};
@@ -162,7 +162,7 @@ int main() {
 	BmpHeader bmp_header;
 	ckg_memory_copy(file_system.data, &bmp_header, sizeof(bmp_header), file_system.file_size);
 
-	test_collisions();
+	test_hash_collisions();
 	
 	return 0;
 }

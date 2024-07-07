@@ -18,6 +18,7 @@
         "source_paths" : [
             "../core/Assert/*.c", 
             "../core/Collection/Vector/*.c", 
+            "../core/Collection/HashMap/*.c", 
             "../core/String/*.c", 
             "../core/Memory/*.c", 
             "../core/Platform/*.c", 

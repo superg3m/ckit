@@ -8,6 +8,9 @@
 #define NUM_TESTS 500
 #define STRING_LENGTH 14
 
+#define NUM_PRIMES 25
+internal const u32 prime_numbers[NUM_PRIMES] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97};
+
 u32 get_prime_by_index(u32 index) {
 	return prime_numbers[index % NUM_PRIMES];
 }
@@ -37,7 +40,7 @@ internal void rand_str(char *dest, size_t length) {
     *dest = '\0';
 }
 
-void test_collisions() {
+void test_hash_collisions() {
     srand(time(NULL));
 
     char test_strings[STRING_LENGTH + 1];

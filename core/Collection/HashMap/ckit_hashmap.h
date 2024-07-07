@@ -5,8 +5,8 @@
  * Date: May 14, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-#include "ckit_types.h"
-#include "ckit_string.h"
+#include "../../ckit_types.h"
+#include "../../String/ckit_string.h"
 
 typedef u32(HashFunction)(void* key);
 typedef u32(CompareFunction)(void* element);

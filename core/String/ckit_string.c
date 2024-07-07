@@ -72,7 +72,7 @@ String ckit_str_create_custom(const char* c_string, u32 capacity) {
   	String ret = memory_allocate(sizeof(header) + header.capacity, MEMORY_TAG_STRING);
     ckit_str_insert_header(&ret, header);
 	
-  	ckg_str_copy(ret, header.capacity, c_string);
+  	ckg_cstr_copy(ret, header.capacity, c_string);
   	return ret;
 }
 
@@ -96,7 +96,7 @@ String MACRO_ckit_str_append(String string, const char* source) {
     }
 
 	header->length += ckg_cstr_length(source);
-    ckg_str_append(string, header->capacity, source);
+    ckg_cstr_append(string, header->capacity, source);
     
     return string;
 }
