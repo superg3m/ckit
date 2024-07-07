@@ -18,6 +18,7 @@ extern "C" {
   String ckit_str_create_custom(const char* c_str, u32 capacity);
   String MACRO_ckit_str_free(String str);
   u32 ckit_str_length(const String str);
+  Boolean ckit_str_equal(const String str1, const String str2);
 
   String MACRO_ckit_str_append(String str, const char* source);
   String MACRO_ckit_str_append_char(String str, const char source);
