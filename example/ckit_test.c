@@ -100,7 +100,7 @@ void test_string_operations() {
 }
 
 int main() {
-	ckit_init();
+	// ckit_init();
 	// memory_init();
 	test_string_operations();
 	test_vector_operations();
@@ -108,7 +108,7 @@ int main() {
 
 	String str = ckit_str_create("SOLAR_FLARE");
 	LOG_PRINT("String: %s\n", str);
-	LOG_PRINT("String Length: %d\n", string_length(str));
+	LOG_PRINT("String Length: %d\n", ckit_str_length(str));
 
 	ckit_str_append_char(str, 'a');
 	LOG_PRINT("String: %s\n", str);

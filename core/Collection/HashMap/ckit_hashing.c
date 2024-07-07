@@ -1,6 +1,7 @@
-#include "../../include/core/ckit_hashing.h"
-#include "../../include/core/ckit_memory.h"
-#include "../../include/core/ckit_string.h"
+#include "./ckit_hashing.h"
+
+#include "../../Memory/ckit_memory.h"
+#include "../../String/ckit_string.h"
 #include <stdlib.h>
 #include <time.h>
 
@@ -15,7 +16,7 @@ u64 hash(unsigned char *str) {
     u64 hash = 5381;
     int c;
 
-    u32 str_length = ckg_cstr_length(str);
+    u32 str_length = ckit_str_length(str);
 
     while (c = *str++) {
         hash = (((hash << 5) + hash) + c) + str_length;

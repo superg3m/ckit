@@ -3,6 +3,7 @@
 #include "../Assert/ckit_assert.h"
 #include "../Memory/ckit_memory.h"
 
+#include "../../ckg/core/String/ckg_cstring.h"
 typedef struct StringHeader {
     u32 length;
     u32 capacity;
@@ -69,7 +70,7 @@ String ckit_str_create_custom(const char* c_string, u32 capacity) {
   	header.capacity = capacity != 0 ? capacity : sizeof(char) * (c_str_length + 1);
 	
   	String ret = memory_allocate(sizeof(header) + header.capacity, MEMORY_TAG_STRING);
-    _ckit_str_insert_header(&ret, header);
+    ckit_str_insert_header(&ret, header);
 	
   	ckg_str_copy(ret, header.capacity, c_string);
   	return ret;
@@ -77,8 +78,8 @@ String ckit_str_create_custom(const char* c_string, u32 capacity) {
 
 void ckit_str_copy(); // Careful about the header
 char* ckit_str_concat();
-u32 ckit_str_length(String string) {
-    StringHeader* header = ckit_str_extract_header(string);
+u32 ckit_str_length(const String str) {
+    StringHeader* header = ckit_str_extract_header(str);
     return header->length;
 }
 

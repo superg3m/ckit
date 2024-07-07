@@ -1,5 +1,6 @@
 #include "./ckit_math.h"
 #include "../Collection/Vector/ckit_vector.h"
+#include "../Logger/ckit_logger.h"
 
 int int_abs(int a) {
 	return a < 0 ? (a * -1) : a;

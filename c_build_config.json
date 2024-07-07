@@ -23,6 +23,7 @@
             "../core/Platform/*.c", 
             "../core/Math/*.c", 
             "../core/FileIO/*.c",
+            "../core/Logger/*.c",
 
             "../modules/parser/asset/bmp/*.c"
         ],
