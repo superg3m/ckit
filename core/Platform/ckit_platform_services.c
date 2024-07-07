@@ -50,7 +50,6 @@
 			FreeConsole();
 		}
 
-
 		/*
 		void platform_console_write(const char* message, unsigned char color) {
 			// Date: May 01, 2024
