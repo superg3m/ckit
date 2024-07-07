@@ -52,12 +52,14 @@ internal void ckit_str_insert_header(char** str, CKIT_StringHeader header) {
 }
 
 String MACRO_ckit_str_free(String str) {
+    ckit_str_check_magic(str);
     str = str - sizeof(CKIT_StringHeader);
     memory_free(str);
     return str;
 }
 
 internal inline String ckit_str_grow(String str, u32 new_allocation_size) {
+    ckit_str_check_magic(str);
     CKIT_StringHeader header = *ckit_str_header(str);
     header.capacity = new_allocation_size;
     String ret = ckit_str_create_custom(str, header.capacity);
@@ -90,8 +92,7 @@ Boolean ckit_str_equal(const String str1, const String str2) {
 
 void ckit_str_copy(); // Careful about the header
 u32 ckit_str_length(const String str) {
-    CKIT_StringHeader* header = ckit_str_header(str);
-    return header->length;
+    return ckg_cstr_length(str);
 }
 
 String MACRO_ckit_str_append(String str, const char* source) {
@@ -116,6 +117,7 @@ String MACRO_ckit_str_append(String str, const char* source) {
 }
 
 String MACRO_ckit_str_append_char(String str, const char source) {
+    ckit_str_check_magic(str);
     ckit_assert_msg(str, "ckit_str_append_char: String passed is null\n");
     ckit_assert_msg(source, "ckit_str_append_char: Source passed is null\n");
 
