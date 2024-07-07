@@ -7,19 +7,20 @@
 
 
 // CORE CKIT
-#include "include/core/ckit_types.h"
-#include "include/core/ckit_logger.h"
-#include "include/core/ckit_memory.h"
-#include "include/core/ckit_arena.h"
-#include "include/core/ckit_assert.h"
-#include "include/core/ckit_event_system.h"
-#include "include/core/ckit_vector.h"
-#include "include/core/ckit_string.h"
-#include "include/core/ckit_file_system.h"
-#include "include/core/ckit_math.h"
-#include "include/core/ckit_hashing.h"
+#include "./core/ckit_types.h"
+#include "./core/Logger/ckit_logger.h"
+#include "./core/Memory/ckit_memory.h"
+#include "./core/Memory/ckit_arena.h"
+#include "./core/Assert/ckit_assert.h"
+#include "./core/EventSystem/ckit_event_system.h"
+#include "./core/String/ckit_string.h"
+#include "./core/FileIO/ckit_file_system.h"
+#include "./core/Math/ckit_math.h"
+#include "./core/Collection/Vector/ckit_vector.h"
+#include "./core/Collection/HashMap/ckit_hashing.h"
 
-// ASSET LOADINGs
+// Modules
+#include "./modules/Parser/Asset/BMP/bmp_parser.h"
 
 
 #ifdef __cplusplus

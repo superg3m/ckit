@@ -69,3 +69,7 @@ it kind of is the case that you want to init some type of memory arena and just 
 			- hashing
 			- hashmap (uses hashing)
 			- linked_list
+
+
+
+FIX FILE STRUCTURES FIRST

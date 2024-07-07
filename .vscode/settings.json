@@ -23,7 +23,12 @@
 		"ckit_hashmap.h": "c",
 		"ckit_linked_list.h": "c",
 		"ckit_hashing.h": "c",
-		"bmp_parser.h": "c"
+		"bmp_parser.h": "c",
+		"ckg_assert.h": "c",
+		"ckg_types.h": "c",
+		"ckg_cstring.h": "c",
+		"ckg_arena.h": "c",
+		"ckg_memory.h": "c"
 	},
 	"editor.insertSpaces": false
 }

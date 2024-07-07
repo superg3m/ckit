@@ -1,7 +1,5 @@
 #include "../ckit.h"
 
-#include "../include/asset_loading/2d/bmp_parser.h"
-
 void test_vector_operations() {
 	// Test types
 	int intArray[] = {1, 2, 3, 4, 5};
@@ -36,22 +34,22 @@ void test_vector_operations() {
 	// Test get
 	for (int i = 0; i < vector_size(intVector); i++) {
 		int element = intVector[i];
-		assert_in_macro(element == intArray[i], "Error: Incorrect element value\n");
+		ckit_assert_msg(element == intArray[i], "Error: Incorrect element value\n");
 	}
 
 	for (int i = 0; i < vector_size(boolVector); i++) {
 		Boolean element = boolVector[i];
-		assert_in_macro(element == boolArray[i], "Error: Incorrect element value\n");
+		ckit_assert_msg(element == boolArray[i], "Error: Incorrect element value\n");
 	}
 
 	for (int i = 0; i < vector_size(charVector); i++) {
 		char element = charVector[i];
-		assert_in_macro(element == charArray[i], "Error: Incorrect element value\n");
+		ckit_assert_msg(element == charArray[i], "Error: Incorrect element value\n");
 	}
 
 	for (int i = 0; i < vector_size(stringVector); i++) {
 		char* element = stringVector[i];
-		assert_in_macro(ckg_str_equal(element, stringArray[i]), "Error: Incorrect element value\n");
+		ckit_assert_msg(ckg_str_equal(element, stringArray[i]), "Error: Incorrect element value\n");
 	}
 
 	// Test pop
@@ -68,14 +66,14 @@ void test_vector_operations() {
 		int element = intVector[i];
 	}
 
-	assert_in_function(before_popped_int == after_popped_int, "Error: popped expected: %d | got %d\n", before_popped_int, after_popped_int);
+	ckit_assert_msg(before_popped_int == after_popped_int, "Error: popped expected: %d | got %d\n", before_popped_int, after_popped_int);
 
 	char* before_popped_string = stringVector[vector_size(stringVector) - 1];
 	char* after_popped_string = vector_pop(stringVector, char*);
 	char* string_to_push = "TRYING TO PUSH A LITERAL!\n";
 	vector_push(stringVector, string_to_push);
 
-	assert_in_macro(ckg_str_equal(before_popped_string, after_popped_string), "Error: Incorrect popped element value\n");
+	ckit_assert_msg(ckg_str_equal(before_popped_string, after_popped_string), "Error: Incorrect popped element value\n");
 
 	// Test free
 	vector_free(intVector);
@@ -84,10 +82,10 @@ void test_vector_operations() {
 	vector_free(stringVector);
 
 	// Assert that the data is NULL
-	assert_in_macro(intVector == NULLPTR, "Error: Vector data is not NULL\n");
-	assert_in_macro(boolVector == NULLPTR, "Error: Vector data is not NULL\n");
-	assert_in_macro(charVector == NULLPTR, "Error: Vector data is not NULL\n");
-	assert_in_macro(stringVector == NULLPTR, "Error: Vector data is not NULL\n");
+	ckit_assert_msg(intVector == NULLPTR, "Error: Vector data is not NULL\n");
+	ckit_assert_msg(boolVector == NULLPTR, "Error: Vector data is not NULL\n");
+	ckit_assert_msg(charVector == NULLPTR, "Error: Vector data is not NULL\n");
+	ckit_assert_msg(stringVector == NULLPTR, "Error: Vector data is not NULL\n");
 
 	LOG_INFO("All vector tests passed!\n"); 
 	return;
@@ -108,16 +106,16 @@ int main() {
 	test_vector_operations();
 	LOG_PRINT("\n");
 
-	String str = string_create("SOLAR_FLARE");
+	String str = ckit_str_create("SOLAR_FLARE");
 	LOG_PRINT("String: %s\n", str);
 	LOG_PRINT("String Length: %d\n", string_length(str));
 
-	string_append_char(str, 'a');
+	ckit_str_append_char(str, 'a');
 	LOG_PRINT("String: %s\n", str);
-	string_append(str, " | FEEL THE WORLD AROUND ME!");
+	ckit_str_append(str, " | FEEL THE WORLD AROUND ME!");
 	LOG_PRINT("String: %s\n", str);
 	LOG_PRINT("\n");
-	string_free(str);
+	ckit_str_free(str);
 
 	int* int_array = (int*)memory_allocate(sizeof(int) * 5, MEMORY_TAG_TEMPORARY);
 	int* int_array2 = (int*)memory_allocate(sizeof(int) * 5, MEMORY_TAG_TEMPORARY);
@@ -128,7 +126,7 @@ int main() {
 
 	ckg_memory_copy(int_array2, int_array, sizeof(int) * 5, sizeof(int) * 5);
 	for (int i = 0; i < 5; i++) {
-		assert_in_macro(int_array[i] == 1432, "Memory copy is fucked!");
+		ckit_assert_msg(int_array[i] == 1432, "Memory copy is fucked!");
 		LOG_INFO("Element: %d\n", int_array[i]);
 	}
 

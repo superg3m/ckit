@@ -16,9 +16,15 @@
         "compile_time_defines" : "",
         "include_paths" : "",
         "source_paths" : [
-            "../source/core/*.c", 
-            "../source/asset_loading/2d/*.c", 
-            "../source/asset_loading/3d/*.c"
+            "../core/Assert/*.c", 
+            "../core/Collection/Vector/*.c", 
+            "../core/String/*.c", 
+            "../core/Memory/*.c", 
+            "../core/Platform/*.c", 
+            "../core/Math/*.c", 
+            "../core/FileIO/*.c",
+
+            "../modules/parser/asset/bmp/*.c"
         ],
 
         "additional_libs" : ["../ckg/build_cl/ckg.lib"]
