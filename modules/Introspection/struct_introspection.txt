@@ -56,10 +56,10 @@ Introspect_Update_Member(StructInfo struct_info, char* memeber_name, void* value
 
 int main() {
 	// Basically some hashmap that checks if this struct has been registered yet;
-	CKIT_Introspection_Register_Struct("CKIT_Example", "ark");
-	CKIT_Introspection_Register_Struct("CKIT_Example", "name");
-	CKIT_Introspection_Register_Struct("CKIT_Example", "boom");
-	CKIT_Introspection_Register_Struct("CKIT_Example", "monster");
+	CKIT_Introspection_Register_Struct(CKIT_Example, ark);
+	CKIT_Introspection_Register_Struct(CKIT_Example, name);
+	CKIT_Introspection_Register_Struct(CKIT_Example, boom);
+	CKIT_Introspection_Register_Struct(CKIT_Example, monster);
 
 	CKIT_Example example_instance_1;
 
