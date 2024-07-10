@@ -88,8 +88,13 @@ it kind of is the case that you want to init some type of memory arena and just 
 	- [ ] ckit_file_get_next_line(file_system)
 	- [ ] ckit_file_get_next_char(file_system)
 
+## MODULES
+- [ ] file_watcher.h
+- [ ] struct_introspection.h
+
 ## Tests
 - [ ] test_memory_functions()
 - [ ] test_arena_functions()
 - [ ] test_vector_functions()
 - [ ] test_string_functions()
+

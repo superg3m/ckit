@@ -29,7 +29,13 @@
 		"ckg_cstring.h": "c",
 		"ckg_arena.h": "c",
 		"ckg_memory.h": "c",
-		"stdlib.h": "c"
+		"stdlib.h": "c",
+		"compare": "c",
+		"memory": "c",
+		"tuple": "c",
+		"utility": "c",
+		"xmemory": "c",
+		"xutility": "c"
 	},
 	"editor.insertSpaces": false
 }
