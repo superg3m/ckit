@@ -1,4 +1,4 @@
-# CKG
+# CKIT
 The point of ckit is the provide a nice library for me to build projects in c.
 
 # How to build
