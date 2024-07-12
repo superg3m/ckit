@@ -3,8 +3,9 @@
  * Date: May 03, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-#include "./ckit_memory.h"
+#include "../../ckg/Core/Memory/ckg_memory.h"
 
+#include "./ckit_memory.h"
 #include "../Assert/ckit_assert.h"
 #include "../Logger/ckit_logger.h"
 #include "../Platform/ckit_platform_services.h"
