@@ -79,7 +79,6 @@ void* memory_allocate(size_t byte_allocation_size, MemoryTag memory_tag) {
 	header.memory_tag = memory_tag;
 
 	_memory_track_add(header, memory_tag);
-
 	u32 total_allocation_size = sizeof(header) + header.allocation_size_without_header;
 
 	void* data = ckg_alloc(total_allocation_size);
@@ -149,6 +148,8 @@ void memory_output_allocations(LogLevel log_level) {
     }
     log_output(log_level, "========================\n");
 }
+
+
 //************************** End Functions **************************
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
