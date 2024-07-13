@@ -8,78 +8,78 @@ void test_vector_operations() {
 	char* stringArray[] = {"Hello", "World", "!", "OpenAI", "GPT-3"};
 
 	// Create vector of int
-	int* intVector = vector_reserve(5, int);
+	int* intVector = ckit_vector_reserve(5, int);
 	for (int i = 0; i < 5; i++) {
-		vector_push(intVector, intArray[i]);
+		ckit_vector_push(intVector, intArray[i]);
 	}
 
 	// Create vector of bool
-	Boolean* boolVector = vector_reserve(5, Boolean);
+	Boolean* boolVector = ckit_vector_reserve(5, Boolean);
 	for (int i = 0; i < 5; i++) {
-		vector_push(boolVector, boolArray[i]);
+		ckit_vector_push(boolVector, boolArray[i]);
 	}
 
 	// Create vector of char
-	char* charVector = vector_reserve(5, char);
+	char* charVector = ckit_vector_reserve(5, char);
 	for (int i = 0; i < 5; i++) {
-		vector_push(charVector, charArray[i]);
+		ckit_vector_push(charVector, charArray[i]);
 	}
 
 	// Create vector of strings
-	char** stringVector = vector_create(char*);
+	char** stringVector = NULLPTR;
 	for (int i = 0; i < 5; i++) {
-		vector_push(stringVector, stringArray[i]);
+		ckit_vector_push(stringVector, stringArray[i]);
 	}
 
 	// Test get
-	for (int i = 0; i < vector_size(intVector); i++) {
+	for (int i = 0; i < ckit_vector_count(intVector); i++) {
 		int element = intVector[i];
 		ckit_assert_msg(element == intArray[i], "Error: Incorrect element value\n");
 	}
 
-	for (int i = 0; i < vector_size(boolVector); i++) {
+	for (int i = 0; i < ckit_vector_count(boolVector); i++) {
 		Boolean element = boolVector[i];
 		ckit_assert_msg(element == boolArray[i], "Error: Incorrect element value\n");
 	}
 
-	for (int i = 0; i < vector_size(charVector); i++) {
+	for (int i = 0; i < ckit_vector_count(charVector); i++) {
 		char element = charVector[i];
 		ckit_assert_msg(element == charArray[i], "Error: Incorrect element value\n");
 	}
 
-	for (int i = 0; i < vector_size(stringVector); i++) {
+	for (int i = 0; i < ckit_vector_count(stringVector); i++) {
 		char* element = stringVector[i];
 		ckit_assert_msg(ckg_cstr_equal(element, stringArray[i]), "Error: Incorrect element value\n");
 	}
 
 	// Test pop
-	for (int i = 0; i < vector_size(intVector); i++) {
+	for (int i = 0; i < ckit_vector_count(intVector); i++) {
 		int element = intVector[i];
 	}
 
-	int before_popped_int = intVector[vector_size(intVector) - 1];
-	int after_popped_int = vector_pop(intVector, int);
+	int before_popped_int = intVector[ckit_vector_count(intVector) - 1];
+	int after_popped_int = ckit_vector_pop(intVector);
 	int element_to_push_for_int = 10;
-	vector_push(intVector, element_to_push_for_int);
+	ckit_vector_push(intVector, element_to_push_for_int);
 
-	for (int i = 0; i < vector_size(intVector); i++) {
+	for (int i = 0; i < ckit_vector_count(intVector); i++) {
 		int element = intVector[i];
 	}
 
 	ckit_assert_msg(before_popped_int == after_popped_int, "Error: popped expected: %d | got %d\n", before_popped_int, after_popped_int);
 
-	char* before_popped_string = stringVector[vector_size(stringVector) - 1];
-	char* after_popped_string = vector_pop(stringVector, char*);
+	char* before_popped_string = stringVector[ckit_vector_count(stringVector) - 1];
+	char* after_popped_string = ckit_vector_pop(stringVector);
 	char* string_to_push = "TRYING TO PUSH A LITERAL!\n";
-	vector_push(stringVector, string_to_push);
+	ckit_vector_push(stringVector, string_to_push);
 
 	ckit_assert_msg(ckg_cstr_equal(before_popped_string, after_popped_string), "Error: Incorrect popped element value\n");
 
 	// Test free
-	vector_free(intVector);
-	vector_free(boolVector);
-	vector_free(charVector);
-	vector_free(stringVector);
+	ckit_vector_free(intVector);
+	ckit_vector_free(boolVector);
+	ckit_vector_free(charVector);
+	ckit_vector_free(stringVector);
 
 	// Assert that the data is NULL
 	ckit_assert_msg(intVector == NULLPTR, "Error: Vector data is not NULL\n");
@@ -117,8 +117,8 @@ int main() {
 	LOG_PRINT("\n");
 	ckit_str_free(str);
 
-	int* int_array = (int*)memory_allocate(sizeof(int) * 5, MEMORY_TAG_TEMPORARY);
-	int* int_array2 = (int*)memory_allocate(sizeof(int) * 5, MEMORY_TAG_TEMPORARY);
+	int* int_array = (int*)ckit_alloc(sizeof(int) * 5, MEMORY_TAG_TEMPORARY);
+	int* int_array2 = (int*)ckit_alloc(sizeof(int) * 5, MEMORY_TAG_TEMPORARY);
 	LOG_ERROR("Element: %d (SHOULD BE ZERO)\n\n", int_array[0]);
 	for (int i = 0; i < 5; i++) {
 		int_array2[i] = 1432;
@@ -139,8 +139,8 @@ int main() {
 	LOG_INFO("TESTING\n");
 	LOG_PRINT("TESTING %s\n\n", str);
 
-	memory_free(int_array);
-	memory_free(int_array2);
+	ckit_free(int_array);
+	ckit_free(int_array2);
 
 	memory_output_allocations(CKG_LOG_LEVEL_ERROR);
 
