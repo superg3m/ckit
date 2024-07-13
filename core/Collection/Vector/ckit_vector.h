@@ -1,69 +1,34 @@
 #pragma once
-/*===========================================================
- * File: ckit_vector.h
- * Date: April 23, 2024
- * Creator: Jovanni Djonaj
-===========================================================*/
-
-/*
-	Header Based
-*/
 
 #include "../../ckit_types.h"
 #include "../../Assert/ckit_assert.h"
-
-typedef struct VectorHeader VectorHeader;
+//========================== Begin Types ==========================
+typedef struct CKIT_VectorHeader {
+	u32 length;
+	u32 capacity;
+} CKIT_VectorHeader;
+//=========================== End Types ===========================
 
 //************************* Begin Functions *************************
 #ifdef __cplusplus
 extern "C" {
 #endif
-	void* MACRO_vector_create(u32 size, u64 capacity, size_t type_size_in_bytes);
-	void* MACRO_vector_push(void* vector, const void* element);
-	void* MACRO_vector_insert(void* vector, u32 index, const void* element);
-	void* MACRO_vector_pop(void* vector);
-	void* MACRO_vector_free(void* vector);
-	u64 vector_size(void* vector);
-	u64 vector_capacity(void* vector);
-	void* vector_grow(void* vector);
+    void* ckit_vector_grow(void* vector, size_t element_size);
 #ifdef __cplusplus
 }
 #endif
 //************************** End Functions **************************
 
-//++++++++++++++++++++++++++ Begin Macros +++++++++++++++++++++++++++
-#define vector_create(type) (type*)MACRO_vector_create(0, 0, sizeof(type))
+//+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
+	#define VECTOR_DEFAULT_CAPACITY 1
 
-#define vector_reserve(capacity, type) (type*)MACRO_vector_create(0, capacity, sizeof(type))
-
-#ifdef __cplusplus
-	#define _vector_validate_push_type(vector, element)                                               \
-	{                                                                                                 \
-		Boolean expression = sizeof(decltype(element)) == sizeof(decltype(vector[0]));                  \
-		ckit_assert_msg(expression, "Type of element being inserted into dynamic array doesn't match"); \
-	}
-
-	#define vector_push(vector, element)                                                  \
-	{                                                                                     \
-		_vector_validate_push_type(vector, element);                                      \
-		decltype(element) temp_element = element;                                         \
-		vector = (decltype(vector))MACRO_vector_push(vector, (const void*)&temp_element); \
-	}
-	#define vector_pop(vector, type) *((type*)MACRO_vector_pop(vector))
-	#define vector_free(vector) vector = (decltype(vector))MACRO_vector_free(vector)
-#else 
-	// Date: May 11, 2024
-	// NOTE(Jovanni): Its painful but no literals allowed in c (MSVC)
-	#define vector_push(vector, element)                           		  \
-	{                                                              		  \
-		vector = MACRO_vector_push(vector, (const void*)&element); \
-	}
-
-	#define vector_pop(vector, type) *((type*)MACRO_vector_pop(vector))
-	#define vector_free(vector) vector = MACRO_vector_free(vector)
-#endif
+	#define ckit_vector_header_base(vector) ((CKIT_VectorHeader*)(((u8*)vector) - sizeof(CKIT_VectorHeader)))
+	#define ckit_vector_length(vector) *(ckg_vector_header_base(vector)).length
+	#define ckit_vector_capacity(vector) *(ckg_vector_header_base(vector)).capacity
+	#define ckit_vector_push(vector, element) vector = ckg_vector_grow(vector, sizeof(element)); vector[ckit_vector_header_base(vector)->length++] = element
+	#define ckit_vector_pop(vector) vector[ckit_vector_header_base(vector)->length--]
+	#define ckit_vector_free(vector) ckit_assert(vector); ckit_free(ckit_vector_header_base(vector))
+//++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 
 
 
-
-//+++++++++++++++++++++++++++ End Macros ++++++++++++++++++++++++++++

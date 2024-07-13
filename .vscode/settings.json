@@ -35,7 +35,8 @@
 		"tuple": "c",
 		"utility": "c",
 		"xmemory": "c",
-		"xutility": "c"
+		"xutility": "c",
+		"vector": "c"
 	},
 	"editor.insertSpaces": false
 }
