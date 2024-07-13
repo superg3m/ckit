@@ -27,6 +27,9 @@ extern "C" {
   void ckit_str_insert_char(String str, const u32 index);
   void ckit_str_clear(String str);
 
+  // ckit_substring()
+  // skit_str_split()
+
   void ckit_str_copy(String str, const char* source); // Careful about the header
 #ifdef __cplusplus
 }
