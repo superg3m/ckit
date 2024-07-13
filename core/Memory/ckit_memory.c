@@ -10,10 +10,6 @@
 #include "../Logger/ckit_logger.h"
 #include "../Platform/ckit_platform_services.h"
 //========================== Begin Types ==========================
-
-// Date: May 25, 2024
-// TODO(Jovanni): Figure out a better way to do headers and pointer math
-
 typedef struct MemoryHeader {
 	u32 allocation_size_without_header;
     MemoryTag memory_tag;
@@ -133,7 +129,20 @@ void memory_output_allocations(LogLevel log_level) {
     log_output(log_level, "========================\n");
 }
 
+Boolean ckit_memory_compare(const void* buffer_one, const void* buffer_two, u32 b1_allocation_size, u32 b2_allocation_size) {
+	return ckg_memory_compare(buffer_one, buffer_two, b1_allocation_size, b2_allocation_size);
+}
+void ckit_memory_copy(const void* source, void* destination, size_t source_size_in_bytes, size_t destination_size_in_bytes) {
+	ckg_memory_copy(source, destination, source_size_in_bytes, destination_size_in_bytes);
+}
 
+void ckit_memory_zero(void* data, size_t data_size_in_bytes) {
+	ckg_memory_zero(data, data_size_in_bytes);
+}
+
+void MACRO_ckit_memory_delete_index(void* data, u32 data_capacity, size_t element_size_in_bytes, u32 index) {
+	MACRO_ckg_memory_delete_index(data, data_capacity, element_size_in_bytes, index);
+}
 //************************** End Functions **************************
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
