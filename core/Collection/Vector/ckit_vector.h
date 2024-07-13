@@ -6,7 +6,9 @@
 typedef struct CKIT_VectorHeader {
 	u32 count;
 	u32 capacity;
+	char* magic;
 } CKIT_VectorHeader;
+
 //=========================== End Types ===========================
 
 //************************* Begin Functions *************************

@@ -7,8 +7,6 @@
 #include "../Assert/ckit_assert.h"
 #include "../Memory/ckit_memory.h"
 #include "../../ckg/core/String/ckg_cstring.h"
-
-
 typedef struct CKIT_StringHeader {
     u32 length;
     u32 capacity;
@@ -16,7 +14,7 @@ typedef struct CKIT_StringHeader {
 } CKIT_StringHeader;
 
 #define ckit_str_header(string) ((CKIT_StringHeader*)(string - sizeof(CKIT_StringHeader)))
-#define CKIT_STR_MAGIC "CKIT_MAGIC_APPLE"
+#define CKIT_STR_MAGIC "CKIT_MAGIC_STRING"
 
 jmp_buf env;
 
@@ -43,11 +41,11 @@ internal void ckit_str_check_magic(String str) {
     if (is_string_literal(ckit_str_header(str)->magic)) {
         ckit_assert_msg(FALSE, "String: %s contains the wrong magic: (%s) Likely not a CKIT_String\n", str, CKIT_STR_MAGIC);
     }
-    ckit_assert_msg(ckit_str_equal(ckit_str_header(str)->magic, CKIT_STR_MAGIC), "String: %s is null can't check magic: (%s) Likely not a CKIT_String\n", str, CKIT_STR_MAGIC);
+    ckit_assert_msg(ckit_str_equal(ckit_str_header(str)->magic, CKIT_STR_MAGIC), "String: %s has the wrong magic: {%s} got: {%s} \n", str, CKIT_STR_MAGIC, ckit_str_header(str)->magic);
 }
 
 internal void ckit_str_insert_header(char** str, CKIT_StringHeader header) {
-  	ckg_memory_copy(&header, *str,  sizeof(header),  sizeof(header) + header.capacity);
+  	ckit_memory_copy(&header, *str,  sizeof(header),  sizeof(header) + header.capacity);
     *str = ((u8*)*str) + sizeof(header);
 }
 
