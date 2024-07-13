@@ -59,8 +59,6 @@ Boolean memory_tag_is_valid(MemoryTag memory_tag) {
   	return (memory_tag >= 0 && memory_tag < MEMORY_TAG_COUNT);
 }
 
-
-
 void memory_init() {
 	ckg_bind_alloc_callback(&platform_allocate);
 	ckg_bind_free_callback(&platform_free);
@@ -78,12 +76,7 @@ void* ckit_alloc(size_t byte_allocation_size, MemoryTag memory_tag) {
 	header.memory_tag = memory_tag;
 
 	memory_track_add(header, memory_tag);
-	u32 total_allocation_size = sizeof(header) + header.allocation_size_without_header;
-
-	void* data = ckg_alloc(total_allocation_size);
-	// Date: May 09, 2024
-	// NOTE(Jovanni): Technically you are repeating work here
-	ckg_memory_zero(data, total_allocation_size);
+	void* data = ckg_alloc(sizeof(header) + header.allocation_size_without_header);
 	data = memory_insert_header(data, header);
 
 	return data;
@@ -96,26 +89,18 @@ void* MACRO_ckit_free(void* data) {
 
   	memory_track_remove(header, header.memory_tag);
 
-  	data = (u8*)data - sizeof(header);
+  	data = ckit_memory_base(data);
 	ckg_memory_zero(data, sizeof(header) + header.allocation_size_without_header);
   	ckg_free(data);
   	return data;
 }
 
-void* ckit_realloc(void* data, u64 new_byte_allocation_size) {
-  	LOG_DEBUG("Reallocation Triggered!\n");
+void* ckit_realloc(void* data, u64 new_allocation_size) {
   	ckit_assert_msg(data, "ckit_reallocation: Data passed is null\n");
-
   	MemoryHeader header = *ckit_memory_base(data);
 
-	u32 old_total_allocation_size = sizeof(header) + header.allocation_size_without_header;
-  	u32 new_total_allocation_size = sizeof(header) + new_byte_allocation_size;
-
-	header.allocation_size_without_header = new_byte_allocation_size;
-
-  	void* ret_data = ckit_alloc(new_total_allocation_size, header.memory_tag);
-
-  	ckg_memory_copy(data, ret_data, old_total_allocation_size - sizeof(header), new_total_allocation_size - sizeof(header));
+  	void* ret_data = ckit_alloc(sizeof(header) + new_allocation_size, header.memory_tag);
+  	ckg_memory_copy(data, ret_data, header.allocation_size_without_header, new_allocation_size);
   	ckit_free(data);
 
   	return ret_data;

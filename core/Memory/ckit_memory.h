@@ -29,6 +29,13 @@ extern "C" {
     void* MACRO_ckit_free(void* data);
     void* ckit_realloc(void* data, size_t new_number_of_bytes);
     void memory_output_allocations(CKG_LogLevel log_level);
+
+    Boolean ckit_memory_compare(const void* buffer_one, const void* buffer_two, u32 b1_allocation_size, u32 b2_allocation_size);
+    void ckit_memory_copy(const void* source, void* destination, size_t source_size, size_t destination_capacity);
+    void ckit_memory_move(const void* source, void* destination, size_t source_payload_size);
+    void ckit_memory_zero(void* data, size_t data_size_in_bytes);
+
+    void MACRO_ckit_memory_delete_index(void* data, u32 data_capacity, size_t element_size_in_bytes, u32 index);
 #ifdef __cplusplus
 }
 #endif
@@ -37,7 +44,9 @@ extern "C" {
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
 #ifdef __cplusplus
 	#define ckit_free(data) data = (decltype(data))MACRO_ckit_free(data);
+    #define ckit_memory_delete_index(data, data_capacity, index) MACRO_ckit_memory_delete_index(data, data_capacity, sizeof(data[0]), index)
 #else 
     #define ckit_free(data) data = MACRO_ckit_free(data);
+    #define ckit_memory_delete_index(data, data_capacity, index) MACRO_ckit_memory_delete_index(data, data_capacity, sizeof(data[0]), index)
 #endif
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
