@@ -35,32 +35,31 @@ char known_memory_tag_strings[MEMORY_TAG_COUNT][MEMORY_TAG_CHARACTER_LIMIT] = {
 //=========================== End Types ===========================
 
 //************************* Begin Functions *************************
-internal void _memory_track_add(MemoryHeader header, MemoryTag memory_tag) {
+internal void memory_track_add(MemoryHeader header, MemoryTag memory_tag) {
   	global_memory_tags[MEMORY_TAG_INTERNAL] += sizeof(header);
   	global_memory_tags[memory_tag] += (header.allocation_size_without_header);
   	memory_used += sizeof(header) + header.allocation_size_without_header;
 }
 
-internal void _memory_track_remove(MemoryHeader header, MemoryTag memory_tag) {
+internal void memory_track_remove(MemoryHeader header, MemoryTag memory_tag) {
   	global_memory_tags[MEMORY_TAG_INTERNAL] -= sizeof(header);
   	global_memory_tags[memory_tag] -= (header.allocation_size_without_header);
   	memory_used -= sizeof(header) + header.allocation_size_without_header;
 }
 
-internal void* MACRO_memory_insert_header(void* data, MemoryHeader header) {
+internal void* memory_insert_header(void* data, MemoryHeader header) {
   	((MemoryHeader*)data)[0] = header;
   	data = (u8*)data + sizeof(header);
   	return data;
 }
-#define _memory_insert_header(data, header) data = MACRO_memory_insert_header(data, header);
+
+#define ckit_memory_base(data) (MemoryHeader*)((u8*)data - sizeof(MemoryHeader))
 
 Boolean memory_tag_is_valid(MemoryTag memory_tag) {
   	return (memory_tag >= 0 && memory_tag < MEMORY_TAG_COUNT);
 }
 
-internal MemoryHeader* _memory_extract_header(void* data) {
-	return &((MemoryHeader*)data)[-1];
-}
+
 
 void memory_init() {
 	ckg_bind_alloc_callback(&platform_allocate);
@@ -78,24 +77,24 @@ void* ckit_alloc(size_t byte_allocation_size, MemoryTag memory_tag) {
 	header.allocation_size_without_header = byte_allocation_size;
 	header.memory_tag = memory_tag;
 
-	_memory_track_add(header, memory_tag);
+	memory_track_add(header, memory_tag);
 	u32 total_allocation_size = sizeof(header) + header.allocation_size_without_header;
 
 	void* data = ckg_alloc(total_allocation_size);
 	// Date: May 09, 2024
 	// NOTE(Jovanni): Technically you are repeating work here
 	ckg_memory_zero(data, total_allocation_size);
-	_memory_insert_header(data, header);
+	data = memory_insert_header(data, header);
 
 	return data;
 }
 
 void* MACRO_ckit_free(void* data) {
   	ckit_assert_msg(data, "ckit_free: Data passed is null in free\n");
-  	const MemoryHeader header = *_memory_extract_header(data);
+  	const MemoryHeader header = *ckit_memory_base(data);
   	ckit_assert_msg(memory_tag_is_valid(header.memory_tag), "ckit_free: memory_tag is not valid\n");
 
-  	_memory_track_remove(header, header.memory_tag);
+  	memory_track_remove(header, header.memory_tag);
 
   	data = (u8*)data - sizeof(header);
 	ckg_memory_zero(data, sizeof(header) + header.allocation_size_without_header);
@@ -107,7 +106,7 @@ void* ckit_realloc(void* data, u64 new_byte_allocation_size) {
   	LOG_DEBUG("Reallocation Triggered!\n");
   	ckit_assert_msg(data, "ckit_reallocation: Data passed is null\n");
 
-  	MemoryHeader header = *_memory_extract_header(data);
+  	MemoryHeader header = *ckit_memory_base(data);
 
 	u32 old_total_allocation_size = sizeof(header) + header.allocation_size_without_header;
   	u32 new_total_allocation_size = sizeof(header) + new_byte_allocation_size;
