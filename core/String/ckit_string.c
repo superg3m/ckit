@@ -88,7 +88,15 @@ Boolean ckit_str_equal(const String str1, const String str2) {
     return ckg_cstr_equal(str1, str2);
 }
 
-void ckit_str_copy(); // Careful about the header
+void ckit_str_clear(const String str1) {
+    ckg_cstr_clear(str1);
+}
+
+void ckit_str_copy(String str1, const char* source) {
+    ckit_str_clear(str1);
+    ckit_str_append(str1, source);
+}
+
 u32 ckit_str_length(const String str) {
     return ckg_cstr_length(str);
 }
@@ -97,8 +105,6 @@ String MACRO_ckit_str_append(String str, const char* source) {
     ckit_str_check_magic(str);
     ckit_assert_msg(str, "ckit_str_append: String passed is null\n");
     ckit_assert_msg(source, "ckit_str_append: Source passed is null\n");
-
-
 
     u32 source_size = ckg_cstr_length(source) + 1; 
 
