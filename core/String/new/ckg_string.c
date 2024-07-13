@@ -78,7 +78,7 @@ void ckg_str_copy(CKG_String string, const char* to_copy) {
 
 CKG_String MACRO_ckg_str_free(CKG_String string) {
     string = string - sizeof(CKG_StringHeader);
-    memory_free(string);
+    ckit_free(string);
     return string;
 }
 

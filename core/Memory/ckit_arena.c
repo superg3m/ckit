@@ -25,13 +25,13 @@ Boolean arena_init() {
 
 Arena* MACRO_arena_create(size_t allocation_size, const char* name, ArenaFlags flags) {
     ckit_assert_msg(arena_is_initalized, "arena_create: call CKit_init() first\n");
-    Arena* arena = (Arena*)memory_allocate(sizeof(Arena), MEMORY_TAG_ARENA);
+    Arena* arena = (Arena*)ckit_alloc(sizeof(Arena), MEMORY_TAG_ARENA);
     arena->name = name;
     arena->flags = flags;
     arena->capacity = allocation_size;
     arena->used = 0;
     ckg_memory_zero(arena->memory_tag_values, sizeof(u64) * MEMORY_TAG_ARENA);
-    arena->base_address = memory_allocate(allocation_size != 0 ? allocation_size : ARENA_DEFAULT_ALLOCATION_SIZE, MEMORY_TAG_ARENA);
+    arena->base_address = ckit_alloc(allocation_size != 0 ? allocation_size : ARENA_DEFAULT_ALLOCATION_SIZE, MEMORY_TAG_ARENA);
     // memory_arena_register(&arena);
     return arena;
 }
@@ -41,8 +41,8 @@ void arena_free(Arena* arena) {
     // Date: May 12, 2024
     // TODO(Jovanni): Make memory_arena_unregister and memory_arena_register not accessable.
     // memory_arena_unregister(&arena);
-    memory_free(arena->base_address);
-    memory_free(arena);
+    ckit_free(arena->base_address);
+    ckit_free(arena);
 }
 
 void arena_clear(Arena* arena) {
@@ -62,7 +62,7 @@ void* MACRO_arena_push(Arena* arena, size_t element_size, MemoryTag memory_tag) 
     if ((arena->used + element_size >= arena->capacity)) {
         arena->capacity += element_size;
         arena->capacity *= 2;
-        arena->base_address = memory_reallocate(arena->base_address, arena->capacity);
+        arena->base_address = ckit_realloc(arena->base_address, arena->capacity);
     }
 
     u8* ret = (u8*)arena->base_address + arena->used;

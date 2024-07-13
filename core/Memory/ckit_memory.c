@@ -67,11 +67,11 @@ void memory_init() {
 	ckg_bind_free_callback(&platform_free);
 }
 
-void* memory_allocate(size_t byte_allocation_size, MemoryTag memory_tag) {
+void* ckit_alloc(size_t byte_allocation_size, MemoryTag memory_tag) {
 	ckit_assert_msg(byte_allocation_size > 0, "Invalid allocation size zero or below\n");
-	ckit_assert_msg(memory_tag_is_valid(memory_tag), "memory_allocate: Memory tag is invalid | value: (%d)\n", memory_tag);
+	ckit_assert_msg(memory_tag_is_valid(memory_tag), "ckit_alloc: Memory tag is invalid | value: (%d)\n", memory_tag);
 	if (memory_tag == MEMORY_TAG_UNKNOWN) {
-		LOG_WARN("memory_allocate: memory tag unknown\n");
+		LOG_WARN("ckit_alloc: memory tag unknown\n");
 	}
 
 	MemoryHeader header;
@@ -90,10 +90,10 @@ void* memory_allocate(size_t byte_allocation_size, MemoryTag memory_tag) {
 	return data;
 }
 
-void* MACRO_memory_free(void* data) {
-  	ckit_assert_msg(data, "memory_free: Data passed is null in free\n");
+void* MACRO_ckit_free(void* data) {
+  	ckit_assert_msg(data, "ckit_free: Data passed is null in free\n");
   	const MemoryHeader header = *_memory_extract_header(data);
-  	ckit_assert_msg(memory_tag_is_valid(header.memory_tag), "memory_free: memory_tag is not valid\n");
+  	ckit_assert_msg(memory_tag_is_valid(header.memory_tag), "ckit_free: memory_tag is not valid\n");
 
   	_memory_track_remove(header, header.memory_tag);
 
@@ -103,9 +103,9 @@ void* MACRO_memory_free(void* data) {
   	return data;
 }
 
-void* memory_reallocate(void* data, u64 new_byte_allocation_size) {
+void* ckit_realloc(void* data, u64 new_byte_allocation_size) {
   	LOG_DEBUG("Reallocation Triggered!\n");
-  	ckit_assert_msg(data, "memory_reallocation: Data passed is null\n");
+  	ckit_assert_msg(data, "ckit_reallocation: Data passed is null\n");
 
   	MemoryHeader header = *_memory_extract_header(data);
 
@@ -114,10 +114,10 @@ void* memory_reallocate(void* data, u64 new_byte_allocation_size) {
 
 	header.allocation_size_without_header = new_byte_allocation_size;
 
-  	void* ret_data = memory_allocate(new_total_allocation_size, header.memory_tag);
+  	void* ret_data = ckit_alloc(new_total_allocation_size, header.memory_tag);
 
   	ckg_memory_copy(data, ret_data, old_total_allocation_size - sizeof(header), new_total_allocation_size - sizeof(header));
-  	memory_free(data);
+  	ckit_free(data);
 
   	return ret_data;
 }

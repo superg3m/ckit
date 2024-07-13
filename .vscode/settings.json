@@ -36,7 +36,8 @@
 		"utility": "c",
 		"xmemory": "c",
 		"xutility": "c",
-		"vector": "c"
+		"vector": "c",
+		"ckg_logger.h": "c"
 	},
 	"editor.insertSpaces": false
 }

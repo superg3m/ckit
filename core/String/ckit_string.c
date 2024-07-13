@@ -54,7 +54,7 @@ internal void ckit_str_insert_header(char** str, CKIT_StringHeader header) {
 String MACRO_ckit_str_free(String str) {
     ckit_str_check_magic(str);
     str = str - sizeof(CKIT_StringHeader);
-    memory_free(str);
+    ckit_free(str);
     return str;
 }
 
@@ -79,7 +79,7 @@ String ckit_str_create_custom(const char* c_string, u32 capacity) {
   	header.capacity = capacity != 0 ? capacity : sizeof(char) * (c_str_length + 1);
     header.magic = CKIT_STR_MAGIC;
 	
-  	String ret = memory_allocate(sizeof(header) + header.capacity, MEMORY_TAG_STRING);
+  	String ret = ckit_alloc(sizeof(header) + header.capacity, MEMORY_TAG_STRING);
     ckit_str_insert_header(&ret, header);
 	
   	ckg_cstr_copy(ret, header.capacity, c_string);

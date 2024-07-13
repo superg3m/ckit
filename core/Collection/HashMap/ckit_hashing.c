@@ -45,7 +45,7 @@ void test_hash_collisions() {
 
     char test_strings[STRING_LENGTH + 1];
 
-    u8* hash_map = memory_allocate(NUM_TESTS * sizeof(u8), MEMORY_TAG_TEMPORARY);
+    u8* hash_map = ckit_alloc(NUM_TESTS * sizeof(u8), MEMORY_TAG_TEMPORARY);
 
     char test_string[STRING_LENGTH + 1];
 
@@ -64,7 +64,7 @@ void test_hash_collisions() {
         hash_map[h % NUM_TESTS]++;
     }
 
-    memory_free(hash_map);
+    ckit_free(hash_map);
 
     LOG_PRINT("Number of collisions: %d / %d\n", collisions, NUM_TESTS);
     LOG_PRINT("Collision rate: %f%%\n", ((double)collisions / (double)NUM_TESTS) * 100);

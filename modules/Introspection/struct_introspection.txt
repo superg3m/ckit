@@ -39,7 +39,7 @@ StructInfo MACRO_Introspection_Create_Struct_Info(void* base_address, char* stru
 #define Introspection_Create_Struct_Info(type, instance) MACRO_Introspection_Create_Struct_Info(&instance, stringify(type), stringify(instance))
 
 Introspect_Update_Member(StructInfo struct_info, char* memeber_name, void* value) {
-	for (int i = 0; i < vector_size(struct_info.members_info); i++) {
+	for (int i = 0; i < ckit_vector_count(struct_info.members_info); i++) {
 		StructMemberInfo current_member = struct_info.members_info[i];
 		if (ckit_str_equal(current_member.name, memeber_name)) {
 			void* base_address_ptr = struct_info.base_address;

@@ -7,7 +7,6 @@
 #include "../ckit_types.h"
 #include "../Logger/ckit_logger.h"
 //========================== Begin Types ==========================
-typedef struct Arena Arena;
 
 typedef enum MemoryTag {
     MEMORY_TAG_UNKNOWN,
@@ -26,9 +25,9 @@ extern "C" {
 #endif
     void memory_init();
 
-    void* memory_allocate(size_t number_of_bytes, MemoryTag memory_tag);
-    void* MACRO_memory_free(void* data);
-    void* memory_reallocate(void* data, size_t new_number_of_bytes);
+    void* ckit_alloc(size_t number_of_bytes, MemoryTag memory_tag);
+    void* MACRO_ckit_free(void* data);
+    void* ckit_realloc(void* data, size_t new_number_of_bytes);
     void memory_output_allocations(CKG_LogLevel log_level);
 #ifdef __cplusplus
 }
@@ -37,8 +36,8 @@ extern "C" {
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
 #ifdef __cplusplus
-	#define memory_free(data) data = (decltype(data))MACRO_memory_free(data);
+	#define ckit_free(data) data = (decltype(data))MACRO_ckit_free(data);
 #else 
-    #define memory_free(data) data = MACRO_memory_free(data);
+    #define ckit_free(data) data = MACRO_ckit_free(data);
 #endif
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
