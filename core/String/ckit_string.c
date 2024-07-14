@@ -8,7 +8,7 @@
 #include "../Collection/Vector/ckit_vector.h"
 #include "../../ckg/core/String/ckg_cstring.h"
 typedef struct CKIT_StringHeader {
-    u32 length;
+    u32 length; 
     u32 capacity;
     char* magic; 
 } CKIT_StringHeader;
@@ -101,8 +101,13 @@ void ckit_str_copy(String str1, const char* source) {
     ckit_str_append(str1, source);
 }
 
-u32 ckit_str_length(const String str) {
+u32 ckit_cstr_length(const char* str) {
     return ckg_cstr_length(str);
+}
+
+u32 ckit_str_length(const String str) {
+    ckit_str_check_magic(str);
+    return ckit_str_header(str)->length;
 }
 
 String MACRO_ckit_str_append(String str, const char* source) {
@@ -110,17 +115,15 @@ String MACRO_ckit_str_append(String str, const char* source) {
     ckit_assert_msg(str, "ckit_str_append: String passed is null\n");
     ckit_assert_msg(source, "ckit_str_append: Source passed is null\n");
 
-    u32 source_size = ckg_cstr_length(source) + 1; 
-
+    u32 source_capacity = ckit_cstr_length(source) + 1; 
     CKIT_StringHeader* header = ckit_str_header(str);
-    if (header->length + source_size >= header->capacity) {
-        str = ckit_str_grow(str, (header->length + source_size) * 2);
+    if (header->length + source_capacity >= header->capacity) {
+        str = ckit_str_grow(str, (header->length + source_capacity) * 2);
         header = ckit_str_header(str);
     }
 
-	header->length += ckg_cstr_length(source);
     ckg_cstr_append(str, header->capacity, source);
-    
+    header->length += source_capacity - 1;
     return str;
 }
 
@@ -137,7 +140,7 @@ String MACRO_ckit_str_append_char(String str, const char source) {
     }
 
     str[header->length] = source;
-	header->length++;
+    header->length++;
 
     return str;
 }
@@ -188,26 +191,35 @@ String* ckit_str_split(const String string_buffer, const char* delimitor) {
 	return ret_string_array;
 }
 
-Boolean ckit_cstr_contains(const String string_buffer, const char* contains) {
+Boolean kit_cstr_contains(const String string_buffer, const char* contains) {
+    ckit_str_check_magic(string_buffer);
     return ckg_cstr_contains(string_buffer, contains);
 }
 
-u32 ckit_cstr_index_of(const String string_buffer, const char* sub_string) {
+u32 ckit_str_index_of(const String string_buffer, const char* sub_string) {
+    ckit_str_check_magic(string_buffer);
     return ckg_cstr_index_of(string_buffer, sub_string);
 }
 
-u32 ckit_cstr_last_index_of(const String string_buffer, const char* sub_string) {
+u32 ckit_str_last_index_of(const String string_buffer, const char* sub_string) {
+    ckit_str_check_magic(string_buffer);
     return ckg_cstr_last_index_of(string_buffer, sub_string);
 }
 
-Boolean ckit_cstr_starts_with(const String string_buffer, const char* starts_with) {
+Boolean ckit_str_starts_with(const String string_buffer, const char* starts_with) {
+    ckit_str_check_magic(string_buffer);
     return ckg_cstr_starts_with(string_buffer, starts_with);
 }
 
-Boolean ckit_cstr_ends_with(const String string_buffer, const char* ends_with) {
+Boolean ckit_str_ends_with(const String string_buffer, const char* ends_with) {
+    ckit_str_check_magic(string_buffer);
     return ckg_cstr_ends_with(string_buffer, ends_with);
 }
 
-String ckit_cstr_reverse(const String string_buffer) {
-    return ckg_cstr_reverse(string_buffer);
+String ckit_str_reverse(const String string_buffer) {
+    ckit_str_check_magic(string_buffer);
+    size_t reversed_string_buffer_capacity = ckit_str_length(string_buffer) + 1;
+    String reversed_string_buffer = ckit_str_create_custom("", ckit_str_length(string_buffer) + 1);
+    ckg_cstr_reverse(string_buffer, reversed_string_buffer, reversed_string_buffer_capacity);
+    return reversed_string_buffer;
 }

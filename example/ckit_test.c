@@ -113,7 +113,7 @@ int main() {
 	ckit_str_append_char(str, 'a');
 	LOG_PRINT("String: %s\n", str);
 	ckit_str_append(str, " | FEEL THE WORLD AROUND ME!");
-	LOG_PRINT("String: %s\n", str);
+	LOG_PRINT("String: %s | length: %d | cstrlen: %d\n", str, ckit_str_length(str), ckit_cstr_length(str));
 	LOG_PRINT("\n");
 	ckit_str_free(str);
 

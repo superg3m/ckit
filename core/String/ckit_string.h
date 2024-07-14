@@ -22,7 +22,8 @@ typedef char* String;
 extern "C" {
 #endif
   String ckit_str_create_custom(const char* c_str, u32 capacity);
-  String MACRO_ckit_str_free(String str); // This is problimatic because if you free a ckit_cstr_alloc like this you are fucked
+  String MACRO_ckit_str_free(String str);
+  u32 ckit_cstr_length(const char* str);
   u32 ckit_str_length(const String str);
   Boolean ckit_str_equal(const String str1, const String str2);
   void ckit_str_copy(String str, const char* source);
