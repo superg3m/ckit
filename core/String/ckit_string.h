@@ -36,7 +36,7 @@ extern "C" {
   void ckit_str_clear(String str);
 
   // If you are copying data to the string and need to update the header state specifically for length
-  void ckit_str_recanonicalize_header_state(String str);
+  void ckit_str_recanonicalize_header_length(String str);
 
   /**
    * @brief Must be freed with ckit_free

@@ -92,8 +92,8 @@ void ckit_str_clear(const String str1) {
     ckg_cstr_clear(str1);
 }
 
-void ckit_str_recanonicalize_header_state(String str) {
-    ckit_str_header(str)->length = ckit_str_length(str);
+void ckit_str_recanonicalize_header_length(String str) {
+    ckit_str_header(str)->length = ckit_cstr_length(str);
 }
 
 void ckit_str_copy(String str1, const char* source) {
@@ -149,7 +149,7 @@ String MACRO_ckit_str_append_char(String str, const char source) {
 String ckit_substring(const String string_buffer, u32 start_range, u32 end_range) {
     String ret_string = ckit_str_create_custom("", end_range - start_range + 1);
     ckg_substring(string_buffer, ret_string, start_range, end_range);
-    ckit_str_recanonicalize_header_state(ret_string);
+    ckit_str_recanonicalize_header_length(ret_string);
 
     return ret_string;
 }
