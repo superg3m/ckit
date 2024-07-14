@@ -100,7 +100,7 @@ void test_string_operations() {
 }
 
 int main() {
-	// ckit_init();
+	ckit_init();
 	// memory_init();
 	test_string_operations();
 	test_vector_operations();
@@ -150,7 +150,7 @@ int main() {
 	points[2] = (Vec2){3, 0};
 	points[3] = (Vec2){4, 2};
 
-	Vec2 ret = vec2_spline_point(points, 4, 0.5f);
+	Vec2 ret = vec2_spline_point(points, 4, 0.5f); // has memory leak with vector
 	LOG_ERROR("FINAL POINT: (%f, %f)\n", ret.x, ret.y);
 
 
@@ -160,9 +160,15 @@ int main() {
 	u32 offset = 0; 
 
 	BmpHeader bmp_header;
-	ckg_memory_copy(file_system.data, &bmp_header, sizeof(bmp_header), file_system.file_size);
+	ckit_memory_copy(file_system.data, &bmp_header, sizeof(bmp_header), file_system.file_size);
+
+	file_close(&file_system);
 
 	test_hash_collisions();
-	
+
+	CKIT_Arena* frame_boundary_arena = arena_create(500, "Frame Boundary");
+	arena_free(frame_boundary_arena);
+
+	ckit_cleanup();
 	return 0;
 }
