@@ -38,7 +38,8 @@ char file_get_next_char(FileSystem* file_system) {
 }
 
 void file_close(FileSystem* file_system) { 
-    fclose(file_system->handle); 
+	ckit_free(file_system->data);
+    fclose(file_system->handle);
 }
 
 FileSystem file_system_create(String file_name) {
