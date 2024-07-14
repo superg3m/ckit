@@ -11,13 +11,12 @@
 2. ./run.ps1
 
 Thoughts:
- - I need to rethink memory allocations
- - so heres the think with arenas I won't have tons of syscalls for memory allocations so that way I can use a function pointer for the allocation function so default stub is malloc and free, you can define you own callback function
- - I need to rethink how arenas work
-
-Next course of action is to remove all memory allocation tracking, the way I did it was really bad so its hard to actually keep working on anything.
-if I want to keep using header I need to make available the header size with a function so I can then say you must specify the size not just the type
-it kind of is the case that you want to init some type of memory arena and just push stuff because of the type system and maybe that is better overall?
+	Vectors right now in their conception have a really big problem ckit's dyanmic arrays (vectors) rely on a header component before the actual 
+	data. This is a problem because taking a trivial example like a 2d dynamic array, if you push an array into a 2d array there is a high probability that the pointer to the array will get invalidated because when the dynamic array grows it changes address meaning I would somehow have to track references and update those. Updating refrences is a fools errand so what choices do we have?
+	OPTIONS
+		#1. Mandate that the code be written in a specific way that avoid this problem.
+			- very error prone (I litterally made this error myself when writing spline points)
+		#2 
 
 # Goals
 ### key
@@ -41,6 +40,19 @@ it kind of is the case that you want to init some type of memory arena and just 
 	- [x] ckit_LOG_DEBUG(msg, ...)
 	- [x] ckit_LOG_SUCCESS(msg, ...)
 	- [x] ckit_LOG_PRINT(msg, ...)
+
+### Collection
+- [ ] ckit_hashmap.h
+- [ ] ckit_linked_list.h
+- [ ] ckit_stack.h
+- [ ] ckit_queue.h
+- [ ] ckit_binary_tree.h
+
+- [x] ckit_vector.h
+	- [x] ckg_vector_length(vector)
+	- [x] ckg_vector_capacity(vector)
+	- [x] ckg_vector_push(vector, element)
+	- [x] ckg_vector_free(vector)
 
 ### String
 - [x] ckit_string.h
@@ -77,9 +89,9 @@ it kind of is the case that you want to init some type of memory arena and just 
     - [x] ckit_memory_zero(data, data_size_in_bytes)
     - [x] ckit_memory_delete_index(data, data_capacity, element_size_in_bytes, index)
 
-- [/] ckit_arena.h
+- [/] ckit_arena.h (handling dangling pointers is gonna be pretty tough here)
 	- [/] ckit_arena_create(allocation, name, flag)
-	- [/] ckit_arena_push(arena, type)	
+	- [/] ckit_arena_push(arena, type, byte_alignment = 4)
 	- [/] ckit_arena_free(arena)
 	- [/] ckit_arena_clear(arena)
 
