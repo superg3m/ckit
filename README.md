@@ -19,7 +19,7 @@ if I want to keep using header I need to make available the header size with a f
 it kind of is the case that you want to init some type of memory arena and just push stuff because of the type system and maybe that is better overall?
 
 # Goals
-### key
+#### key
 - '[x]': Finished
 - '[/]': Started working on it
 - '[ ]': Haven't started working on it
