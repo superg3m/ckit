@@ -40,7 +40,9 @@ Vec4 vec4_lerp(Vec4 a, Vec4 b, float t) {
 	return vec_ret;
 }
 
-Vec2 vec2_spline_point(Vec2* spline_points, u32 spline_points_size, float t) {
+// Date: July 14, 2024
+// TODO(Jovanni): Rewrite this because this is trash
+Vec2 vec2_spline_point(Vec2* spline_points, u32 spline_points_size, float t) { 
 	Vec2 vec_ret;
 	if (spline_points_size <= 1) {
 		// Date: May 26, 2024
@@ -78,10 +80,18 @@ Vec2 vec2_spline_point(Vec2* spline_points, u32 spline_points_size, float t) {
 		LOG_INFO("==============\n");
 
 		ckit_vector_push(lerp_points_vector, lerp_points);
+		ckit_vector_free(current_vector);
 		counter--;
 	}
 
-	vec_ret = ckit_vector_pop(lerp_points_vector)[0];
+	Vec2* last_point_vector = ckit_vector_pop(lerp_points_vector);
+	vec_ret = last_point_vector[0];
+	ckit_vector_free(last_point_vector);
+
+	for (int i = 0; i < ckit_vector_count(lerp_points_vector); i++) {
+		ckit_vector_free(lerp_points_vector[i]);
+	}
+	ckit_vector_free(lerp_points_vector);
 
 	return vec_ret;
 }
