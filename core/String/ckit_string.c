@@ -3,9 +3,9 @@
 #include <signal.h>
 
 #include "./ckit_string.h"
-
 #include "../Assert/ckit_assert.h"
 #include "../Memory/ckit_memory.h"
+#include "../Collection/Vector/ckit_vector.h"
 #include "../../ckg/core/String/ckg_cstring.h"
 typedef struct CKIT_StringHeader {
     u32 length;
@@ -92,6 +92,10 @@ void ckit_str_clear(const String str1) {
     ckg_cstr_clear(str1);
 }
 
+void ckit_str_recanonicalize_header_state(String str) {
+    ckit_str_header(str)->length = ckit_str_length(str);
+}
+
 void ckit_str_copy(String str1, const char* source) {
     ckit_str_clear(str1);
     ckit_str_append(str1, source);
@@ -138,3 +142,55 @@ String MACRO_ckit_str_append_char(String str, const char source) {
     return str;
 }
 
+
+String ckit_substring(const String string_buffer, u32 start_range, u32 end_range) {
+    String ret_string = ckit_str_create_custom("", end_range - start_range + 1);
+    ckg_substring(string_buffer, ret_string, start_range, end_range);
+    ckit_str_recanonicalize_header_state(ret_string);
+
+    return ret_string;
+}
+
+String* ckit_str_split(const String string_buffer, const char* delimitor) {
+    ckit_assert_msg(FALSE, "NOT IMPLMENTED YET");
+    ckit_str_check_magic(string_buffer);
+
+	ckit_assert(string_buffer);
+	ckit_assert(delimitor);
+
+	size_t str_length = ckg_cstr_length(string_buffer); 
+	size_t delmitor_length = ckg_cstr_length(delimitor); 
+
+	if (delmitor_length <= 0) {
+		return NULLPTR;
+	}
+
+	String* ret_string_array = NULLPTR;
+	String temp_buffer = ckit_str_create("");
+	String perma_buffer = ckit_str_create("");
+	for (int i = 0; i < str_length; i++) {
+		ckit_str_append_char(temp_buffer, string_buffer[i]);
+		String temp_substring = ckit_substring(string_buffer, i, delmitor_length - 1);
+		
+		if (temp_substring[i] != delimitor[0]) {
+			continue;
+		}
+
+		if (ckg_cstr_equal(temp_substring, delimitor)) {
+            ckit_str_copy(perma_buffer, temp_buffer);
+            ckit_vector_push(ret_string_array, perma_buffer);
+			ckit_str_clear(temp_buffer);
+		}
+		ckit_str_free(temp_substring);
+	}
+	ckit_str_free(temp_buffer);
+
+	return ret_string_array;
+}
+
+Boolean ckit_cstr_contains(const String string_buffer, const char* contains);
+u32 ckit_cstr_index_of(const String string_buffer, const char* sub_string);
+u32 ckit_cstr_last_index_of(const String string_buffer, const char* sub_string);
+Boolean ckit_cstr_starts_with(const String string_buffer, const char* starts_with);
+Boolean ckit_cstr_ends_with(const String string_buffer, const char* ends_with);
+String ckit_cstr_reverse(const String string_buffer);
