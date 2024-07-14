@@ -120,12 +120,6 @@ it kind of is the case that you want to init some type of memory arena and just 
 	- sin
 	- cos
 	- tan
-	
-### Threading
-- [ ] ckit_locks.h
-	- [ ] ckit_threading_interlock_exchange()
-- [ ] ckit_semaphores.h
-- [ ] ckit_
 
 ### SIMD
 make vector operations easier
@@ -137,8 +131,6 @@ make vector operations easier
 	- [ ] OBJ
 	- [ ] PDF
 - JSON
-
-### SIMD
 
 ## Tests
 - [ ] test_memory_functions()
