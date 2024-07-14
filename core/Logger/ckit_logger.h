@@ -32,7 +32,7 @@ typedef enum LogLevel {
 #ifdef __cplusplus
 extern "C" {
 #endif
-    // Boolean logger_init();
+    Boolean logger_init();
     // void logger_shutdown();
     // void MACRO_log_output(LogLevel log_level, const char* message, ...);
 #ifdef __cplusplus
