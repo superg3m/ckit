@@ -1,13 +1,14 @@
-# CKIT
-The point of ckit is the provide a nice library for me to build projects in c.
+# Ckits's Core Thesis
+- The point of the ckit is to provide a nice library to build c projects with.
+- Ckit is built with the granular api ckit granular [CKG](https://github.com/superg3m/ckit)
+- This library will be completly cross-platform
+- Collection of tools, data structures, and algorithms that I find useful
 
 # How to build
 1. ./bootstrap.ps1
 2. ./build.ps1 or ./build.ps1 -debug
 2. ./debug.ps1
 2. ./run.ps1
-
-- Collection of tools, data structures, and algorithms that I find useful
 
 Thoughts:
  - I need to rethink memory allocations
