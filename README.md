@@ -93,50 +93,50 @@ it kind of is the case that you want to init some type of memory arena and just 
 	- [x] ckit_file_get_next_char(file_system)
 
 ### Threading
-	- [ ] ckit_locks.h
-		- [ ] ckit_threading_interlock_exchange()
-	- [ ] ckit_job_system.h
-	- [ ] ckit_semaphores.h
-	- [ ] ckit_sleep.h
+- [ ] ckit_locks.h
+	- [ ] ckit_threading_interlock_exchange()
+- [ ] ckit_job_system.h
+- [ ] ckit_semaphores.h
+- [ ] ckit_sleep.h
 
 
 ## MODULES
 
 ### Hot_Reloader
-	- [ ] ckit_file_watcher.h
-	- [ ] ckit_dynamic_libary_loader.h
+- [ ] ckit_file_watcher.h
+- [ ] ckit_dynamic_libary_loader.h
 
 ### Introspection
-	- [ ] ckit_struct_introspection.h
+- [ ] ckit_struct_introspection.h
 
 ### Networking
-	- [ ] ckit_client.h
-	- [ ] ckit_server.h
+- [ ] ckit_client.h
+- [ ] ckit_server.h
 
 ### Intrinsics (PROB CORE)
-	- [ ] compiler_memory_fences
-	- [ ] interlock_exchange
-	- [ ] math_functions
-		- sin
-		- cos
-		- tan
+- [ ] compiler_memory_fences
+- [ ] interlock_exchange
+- [ ] math_functions
+	- sin
+	- cos
+	- tan
 	
 ### Threading
-	- [ ] ckit_locks.h
-		- [ ] ckit_threading_interlock_exchange()
-	- [ ] ckit_semaphores.h
-	- [ ] ckit_
+- [ ] ckit_locks.h
+	- [ ] ckit_threading_interlock_exchange()
+- [ ] ckit_semaphores.h
+- [ ] ckit_
 
 ### SIMD
-	make vector operations easier
+make vector operations easier
 
 ### Parser
-	- Asset
-		- [x] BMP
-		- [ ] PNG
-		- [ ] OBJ
-		- [ ] PDF
-	- JSON
+- Asset
+	- [x] BMP
+	- [ ] PNG
+	- [ ] OBJ
+	- [ ] PDF
+- JSON
 
 ### SIMD
 
