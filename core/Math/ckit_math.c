@@ -67,7 +67,7 @@ Vec2 vec2_spline_point(Vec2* spline_points, u32 spline_points_size, float t) {
 
 	while (counter != 1) {
 		lerp_points = NULLPTR;
-		Vec2* current_vector = ckit_vector_pop(lerp_points_vector);
+		Vec2* current_vector = ckit_vector_pop(lerp_points_vector); // when you pop you need to free here basically
 
 		LOG_INFO("==============\n");
 		for (int i = 0; i < counter - 1; i++) {
