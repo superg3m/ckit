@@ -27,7 +27,7 @@ it kind of is the case that you want to init some type of memory arena and just 
 ## CORE
 - [x] ckit_types.c
 
-### Assert (Not Cross-Platform) (Fully inherits CKG impl)
+### Assert (Cross-Platform) (Fully inherits CKG impl)
 - [x] ckit_assert.h
 	- [x] ckit_assert_msg(expression, msg, ...)
 	- [x] ckit_assert(expression)
@@ -42,7 +42,7 @@ it kind of is the case that you want to init some type of memory arena and just 
 	- [x] ckit_LOG_PRINT(msg, ...)
 
 ### String
-- [ ] ckit_cstring.h
+- [x] ckit_string.h
 	- [x] ckit_str_create(str)
 	- [x] ckit_str_append(str, string_buffer_capacity, to_append)
 	- [x] ckit_str_append_char(str, string_buffer_capacity, char to_append)
@@ -51,7 +51,8 @@ it kind of is the case that you want to init some type of memory arena and just 
 	- [x] ckit_str_copy(str, string_buffer_capacity, to_copy)
 	- [x] ckit_str_random(dest, length)
 	- [x] ckit_str_equal(s1, s2)
-	- [x] ckit_str_length(c_string)
+	- [x] ckit_cstr_length(c_string or ckit_string)
+	- [x] ckit_str_length(ckit_string only)
 	- [x] ckit_str_clear(str)
 	- [x] ckit_substring(str, start_range, end_range)
 	- [x] ckit_str_contains(str, contains)
