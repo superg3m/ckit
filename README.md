@@ -77,11 +77,11 @@ it kind of is the case that you want to init some type of memory arena and just 
     - [x] ckit_memory_zero(data, data_size_in_bytes)
     - [x] ckit_memory_delete_index(data, data_capacity, element_size_in_bytes, index)
 
-- [ ] ckit_arena.h
-	- [ ] ckit_arena_create(allocation, name, flag)
-	- [ ] ckit_arena_push(arena, type)	
-	- [ ] ckit_arena_free(arena)
-	- [ ] ckit_arena_clear(arena)
+- [/] ckit_arena.h
+	- [/] ckit_arena_create(allocation, name, flag)
+	- [/] ckit_arena_push(arena, type)	
+	- [/] ckit_arena_free(arena)
+	- [/] ckit_arena_clear(arena)
 
 ### FileIO (Finished, but I dont like it gonna rewrite it)
 - [ ] ckit_file_io.h

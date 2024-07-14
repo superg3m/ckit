@@ -6,20 +6,24 @@
 #include "../../ckg/Core/Memory/ckg_memory.h"
 
 #include "./ckit_memory.h"
+#include "./ckit_arena.h"
 #include "../Assert/ckit_assert.h"
 #include "../Logger/ckit_logger.h"
+#include "../Collection/Vector/ckit_vector.h"
 #include "../Platform/ckit_platform_services.h"
 //========================== Begin Types ==========================
+typedef enum CKG_LogLevel CKG_LogLevel;
+typedef struct CKIT_Arena CKIT_Arena;
+
 typedef struct MemoryHeader {
 	u32 allocation_size_without_header;
     MemoryTag memory_tag;
 } MemoryHeader;
 
-typedef enum LogLevel LogLevel;
-typedef struct Arena Arena;
 
 internal u64 memory_used = 0; 
 internal u64 global_memory_tags[MEMORY_TAG_COUNT];
+internal CKIT_Arena** registered_arenas = NULLPTR;
 char known_memory_tag_strings[MEMORY_TAG_COUNT][MEMORY_TAG_CHARACTER_LIMIT] = {
     "UNKNOWN      : ",
     "TEMPORARY    : ",
@@ -102,7 +106,37 @@ void* ckit_realloc(void* data, u64 new_allocation_size) {
   	return ret_data;
 }
 
-void memory_output_allocations(LogLevel log_level) {
+Boolean ckit_memory_compare(const void* buffer_one, const void* buffer_two, u32 b1_allocation_size, u32 b2_allocation_size) {
+	return ckg_memory_compare(buffer_one, buffer_two, b1_allocation_size, b2_allocation_size);
+}
+void ckit_memory_copy(const void* source, void* destination, size_t source_size_in_bytes, size_t destination_size_in_bytes) {
+	ckg_memory_copy(source, destination, source_size_in_bytes, destination_size_in_bytes);
+}
+
+void ckit_memory_zero(void* data, size_t data_size_in_bytes) {
+	ckg_memory_zero(data, data_size_in_bytes);
+}
+
+void MACRO_ckit_memory_delete_index(void* data, u32 data_capacity, size_t element_size_in_bytes, u32 index) {
+	MACRO_ckg_memory_delete_index(data, data_capacity, element_size_in_bytes, index);
+}
+
+void ckit_memory_arena_register(CKIT_Arena* arena) {
+	ckit_vector_push(registered_arenas, arena);
+}
+
+void ckit_memory_arena_unregister(CKIT_Arena* arena) {
+	
+	for (int i = 0; i < ckit_vector_count(registered_arenas); i++) {
+		if (arena == registered_arenas[i]) {
+			ckit_memory_delete_index(registered_arenas, ckit_vector_capacity(registered_arenas), i);
+			break;
+		}
+	}
+	
+}
+
+void memory_output_allocations(CKG_LogLevel log_level) {
     if (memory_used == 0) {
         log_output(log_level, "No memory allocations!\n");
         return;
@@ -125,23 +159,13 @@ void memory_output_allocations(LogLevel log_level) {
      	sprintf(out_message2, "%lld", global_memory_tags[level]);
      	sprintf(out_message3, "%s%s", out_message, out_message2);
      	log_output(log_level, "%s\n", out_message3);
+		if (level == MEMORY_TAG_ARENA) {
+			for (int i = 0; i < ckit_vector_count(registered_arenas); i++) {
+				arena_output_allocations(registered_arenas[i], log_level);
+			}
+		}
     }
     log_output(log_level, "========================\n");
-}
-
-Boolean ckit_memory_compare(const void* buffer_one, const void* buffer_two, u32 b1_allocation_size, u32 b2_allocation_size) {
-	return ckg_memory_compare(buffer_one, buffer_two, b1_allocation_size, b2_allocation_size);
-}
-void ckit_memory_copy(const void* source, void* destination, size_t source_size_in_bytes, size_t destination_size_in_bytes) {
-	ckg_memory_copy(source, destination, source_size_in_bytes, destination_size_in_bytes);
-}
-
-void ckit_memory_zero(void* data, size_t data_size_in_bytes) {
-	ckg_memory_zero(data, data_size_in_bytes);
-}
-
-void MACRO_ckit_memory_delete_index(void* data, u32 data_capacity, size_t element_size_in_bytes, u32 index) {
-	MACRO_ckg_memory_delete_index(data, data_capacity, element_size_in_bytes, index);
 }
 //************************** End Functions **************************
 

@@ -16,6 +16,7 @@
         "compile_time_defines" : "",
         "include_paths" : "",
         "source_paths" : [
+            "../ckit.c",
             "../core/Assert/*.c", 
             "../core/Collection/Vector/*.c", 
             "../core/Collection/HashMap/*.c", 
@@ -25,7 +26,6 @@
             "../core/Math/*.c", 
             "../core/FileIO/*.c",
             "../core/Logger/*.c",
-
             "../modules/parser/asset/bmp/*.c"
         ],
 

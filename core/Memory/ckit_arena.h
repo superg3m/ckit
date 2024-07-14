@@ -5,11 +5,10 @@
  * Creator: Jovanni Djonaj
 ===========================================================*/
 #include "../ckit_types.h"
-
+#include "./ckit_memory.h"
 //========================== Begin Types ==========================
 typedef enum MemoryTag MemoryTag;
-typedef struct Arena Arena;
-typedef enum LogLevel LogLevel;
+typedef enum CKG_LogLevel CKG_LogLevel;
 
 typedef enum ArenaFlags {
   ARENA_FLAG_DEFAULT = 0x1,
@@ -17,21 +16,31 @@ typedef enum ArenaFlags {
   ARENA_FLAG_VECTOR = 0x4,
   ARENA_FLAG_COUNT = 0x4,
 } ArenaFlags;
+
+typedef struct CKIT_Arena {
+	const char* name;
+	u64 capacity;
+	u64 used;
+	u32 flags;
+	void* base_address;
+	u64 memory_tag_values[MEMORY_TAG_COUNT];
+} CKIT_Arena;
+
 //=========================== End Types ===========================
 
 //************************* Begin Functions *************************
 #ifdef __cplusplus
 extern "C" {
 #endif
-	Arena* MACRO_arena_create(size_t allocation, const char* name, ArenaFlags flags);
-	void* MACRO_arena_push(Arena* arena, size_t element_size, MemoryTag memory_tag);	
-	void arena_output_allocations(Arena* arena, LogLevel log_level);
+	CKIT_Arena* MACRO_arena_create(size_t allocation, const char* name, ArenaFlags flags);
+	void* MACRO_arena_push(CKIT_Arena* arena, size_t element_size, MemoryTag memory_tag);
+	void arena_output_allocations(CKIT_Arena* arena, CKG_LogLevel log_level);
 	
 	// Date: May 11, 2024
 	// NOTE(Jovanni): I want better names for this action
-	void arena_write_tags(Arena arena);	
-	void arena_free(Arena* arena);
-	void arena_clear(Arena* arena);
+	void arena_write_tags(CKIT_Arena arena);	
+	void arena_free(CKIT_Arena* arena);
+	void arena_clear(CKIT_Arena* arena);
 #ifdef __cplusplus
 }
 #endif
