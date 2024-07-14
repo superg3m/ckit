@@ -54,13 +54,13 @@ it kind of is the case that you want to init some type of memory arena and just 
 	- [x] ckit_str_length(c_string)
 	- [x] ckit_str_clear(str)
 	- [x] ckit_substring(str, start_range, end_range)
-	- [ ] ckit_str_contains(str, contains)
-	- [ ] ckit_str_index_of(str, sub_string)
-	- [ ] ckit_str_last_index_of(str, sub_string)
+	- [/] ckit_str_contains(str, contains)
+	- [/] ckit_str_index_of(str, sub_string)
+	- [/] ckit_str_last_index_of(str, sub_string)
 	- [x] ckit_str_split(str, delimitor)
-	- [ ] ckit_str_starts_with(str, starts_with)
-	- [ ] ckit_str_ends_with(str, ends_with)
-	- [ ] ckit_str_reverse(str)
+	- [/] ckit_str_starts_with(str, starts_with)
+	- [/] ckit_str_ends_with(str, ends_with)
+	- [/] ckit_str_reverse(str)
 
 ### Memory
 - [x] ckit_memory.h
@@ -82,7 +82,7 @@ it kind of is the case that you want to init some type of memory arena and just 
 	- [ ] ckit_arena_clear(arena)
 
 ### FileIO (Finished, but I dont like it gonna rewrite it)
-- [/] ckit_file_io.h
+- [ ] ckit_file_io.h
 	- [x] ckit_file_system_create(file_name)
 	- [x] ckit_file_open(file_system)
 	- [x] ckit_file_close(file_system)
@@ -90,9 +90,17 @@ it kind of is the case that you want to init some type of memory arena and just 
 	- [x] ckit_file_get_next_line(file_system)
 	- [x] ckit_file_get_next_char(file_system)
 
+### Threading
+	- [ ] ckit_locks.h
+		- [ ] ckit_threading_interlock_exchange()
+	- [ ] ckit_job_system.h
+	- [ ] ckit_semaphores.h
+	- [ ] ckit_sleep.h
+
+
 ## MODULES
 
-### Hot Reloader
+### Hot_Reloader
 	- [ ] ckit_file_watcher.h
 	- [ ] ckit_dynamic_libary_loader.h
 
