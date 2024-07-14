@@ -188,9 +188,26 @@ String* ckit_str_split(const String string_buffer, const char* delimitor) {
 	return ret_string_array;
 }
 
-Boolean ckit_cstr_contains(const String string_buffer, const char* contains);
-u32 ckit_cstr_index_of(const String string_buffer, const char* sub_string);
-u32 ckit_cstr_last_index_of(const String string_buffer, const char* sub_string);
-Boolean ckit_cstr_starts_with(const String string_buffer, const char* starts_with);
-Boolean ckit_cstr_ends_with(const String string_buffer, const char* ends_with);
-String ckit_cstr_reverse(const String string_buffer);
+Boolean ckit_cstr_contains(const String string_buffer, const char* contains) {
+    return ckg_cstr_contains(string_buffer, contains);
+}
+
+u32 ckit_cstr_index_of(const String string_buffer, const char* sub_string) {
+    return ckg_cstr_index_of(string_buffer, sub_string);
+}
+
+u32 ckit_cstr_last_index_of(const String string_buffer, const char* sub_string) {
+    return ckg_cstr_last_index_of(string_buffer, sub_string);
+}
+
+Boolean ckit_cstr_starts_with(const String string_buffer, const char* starts_with) {
+    return ckg_cstr_starts_with(string_buffer, starts_with);
+}
+
+Boolean ckit_cstr_ends_with(const String string_buffer, const char* ends_with) {
+    return ckg_cstr_ends_with(string_buffer, ends_with);
+}
+
+String ckit_cstr_reverse(const String string_buffer) {
+    return ckg_cstr_reverse(string_buffer);
+}

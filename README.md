@@ -54,13 +54,13 @@ it kind of is the case that you want to init some type of memory arena and just 
 	- [x] ckit_str_length(c_string)
 	- [x] ckit_str_clear(str)
 	- [x] ckit_substring(str, start_range, end_range)
-	- [/] ckit_str_contains(str, contains)
-	- [/] ckit_str_index_of(str, sub_string)
-	- [/] ckit_str_last_index_of(str, sub_string)
+	- [x] ckit_str_contains(str, contains)
+	- [x] ckit_str_index_of(str, sub_string)
+	- [x] ckit_str_last_index_of(str, sub_string)
 	- [x] ckit_str_split(str, delimitor)
-	- [/] ckit_str_starts_with(str, starts_with)
-	- [/] ckit_str_ends_with(str, ends_with)
-	- [/] ckit_str_reverse(str)
+	- [x] ckit_str_starts_with(str, starts_with)
+	- [x] ckit_str_ends_with(str, ends_with)
+	- [x] ckit_str_reverse(str)
 
 ### Memory
 - [x] ckit_memory.h
