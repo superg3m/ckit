@@ -9,6 +9,8 @@ internal void ckit_vector_check_magic(void* vector) {
     ckit_assert_msg(ckit_str_equal(ckit_vector_base(vector)->magic, CKIT_VECTOR_MAGIC), "Vector has wrong magic: {%s} got: {%s} \n", CKIT_VECTOR_MAGIC, ckit_vector_base(vector)->magic);
 }
 
+// Date: July 14, 2024
+// TODO(Jovanni): HEY I THINK THIS SHOULD BE AN ARRENA ACTUALLY AND ITS LOCALLY SCOPED IN SOME WAY
 void* ckit_vector_grow(void* vector, size_t element_size) {
     if (vector == NULLPTR) {
         vector = ckit_alloc(sizeof(CKIT_VectorHeader) + (VECTOR_DEFAULT_CAPACITY * element_size), MEMORY_TAG_VECTOR);

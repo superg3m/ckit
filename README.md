@@ -7,8 +7,10 @@
 # How to build
 1. ./bootstrap.ps1
 2. ./build.ps1 or ./build.ps1 -debug
-2. ./debug.ps1
-2. ./run.ps1
+3. ./debug.ps1
+4. ./run.ps1
+
+
 
 Thoughts:
 	Vectors right now in their conception have a really big problem ckit's dyanmic arrays (vectors) rely on a header component before the actual 
@@ -17,6 +19,10 @@ Thoughts:
 		#1. Mandate that the code be written in a specific way that avoid this problem.
 			- very error prone (I litterally made this error myself when writing spline points)
 		#2 
+
+	Rethink dynamic allocations I think I need to get rid of the vector completely
+	There is a different line of thinking that doesn't use dynamic allocations
+	I don't necessarily have to push spline points I can just calculate how much something is needed before hand.
 
 # Goals
 ### key
