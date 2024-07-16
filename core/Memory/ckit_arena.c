@@ -8,14 +8,14 @@ extern char known_memory_tag_strings[MEMORY_TAG_COUNT][MEMORY_TAG_CHARACTER_LIMI
 
 void ckit_memory_arena_register(CKIT_Arena* arena);
 void ckit_memory_arena_unregister(CKIT_Arena* arena);
-void ckit_memory_arena_unregister_all();
+// void ckit_memory_arena_unregister_all();
 
 
 void arena_init() {
 
 }
 
-CKIT_Arena* MACRO_arena_create(size_t allocation_size, const char* name, ArenaFlags flags) {
+CKIT_Arena* MACRO_ckit_arena_create(size_t allocation_size, const char* name, ArenaFlags flags) {
     CKIT_Arena* arena = ckit_alloc(sizeof(CKIT_Arena), MEMORY_TAG_ARENA);
     arena->name = name;
     arena->flags = flags;
@@ -27,20 +27,20 @@ CKIT_Arena* MACRO_arena_create(size_t allocation_size, const char* name, ArenaFl
     return arena;
 }
 
-void arena_free(CKIT_Arena* arena) {
+void ckit_arena_free(CKIT_Arena* arena) {
     ckit_assert(arena && arena->base_address);
     ckit_memory_arena_unregister(arena);
     ckit_free(arena->base_address);
     ckit_free(arena);
 }
 
-void arena_clear(CKIT_Arena* arena) {
+void ckit_arena_clear(CKIT_Arena* arena) {
     ckit_assert(arena && arena->base_address);
     ckit_memory_zero(arena->base_address, arena->used);
     arena->used = 0;
 }
 
-void* MACRO_arena_push(CKIT_Arena* arena, size_t element_size, MemoryTag memory_tag) {
+void* MACRO_ckit_arena_push(CKIT_Arena* arena, size_t element_size, MemoryTag memory_tag) {
     // Date: May 11, 2024
     // TODO(Jovanni): For right now just assert if you don't have enough memory but later on make it grow.
     ckit_assert_msg(arena && arena->base_address, "arena_push: arena is null\n");
@@ -62,7 +62,7 @@ void* MACRO_arena_push(CKIT_Arena* arena, size_t element_size, MemoryTag memory_
     return ret;
 }
 
-void arena_output_allocations(CKIT_Arena* arena, CKG_LogLevel log_level) {
+void ckit_arena_output_allocations(CKIT_Arena* arena, CKG_LogLevel log_level) {
     if (arena->used == 0) {
         log_output(log_level, " - %s not used! | struct_size: %d | allocation size: %d => total_allocation_size: %d \n", arena->name, sizeof(CKIT_Arena), arena->capacity, sizeof(CKIT_Arena) + arena->capacity);
         return;

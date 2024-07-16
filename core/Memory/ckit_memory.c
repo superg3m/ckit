@@ -85,6 +85,30 @@ void* ckit_alloc(size_t byte_allocation_size, MemoryTag memory_tag) {
 	return data;
 }
 
+void* MACRO_ckit_free_tag_check(void* data) {
+	ckit_assert_msg(data, "ckit_free: Data passed is null in free\n");
+  	const MemoryHeader header = *ckit_memory_base(data);
+	switch (header.memory_tag) {
+		case MEMORY_TAG_STRING: {
+			#include "../String/ckit_string.h"
+			ckit_str_free(data);
+		} break;
+
+		case MEMORY_TAG_VECTOR: {
+			#include "../Collection/Vector/ckit_vector.h"
+
+			ckit_vector_free(data);
+		} break;
+
+		case MEMORY_TAG_ARENA: {
+			#include "./ckit_arena.h"
+			ckit_arena_free(data);
+		} break;
+	}
+
+	return data;
+}
+
 void* MACRO_ckit_free(void* data) {
   	ckit_assert_msg(data, "ckit_free: Data passed is null in free\n");
   	const MemoryHeader header = *ckit_memory_base(data);
@@ -139,7 +163,7 @@ void ckit_memory_arena_unregister(CKIT_Arena* arena) {
 
 void ckit_memory_arena_unregister_all() {
 	for (int i = ckit_vector_count(registered_arenas) - 1; i >= 0; i--) {
-		arena_free(registered_arenas[i]);
+		ckit_arena_free(registered_arenas[i]);
 	}
 
 	ckit_vector_free(registered_arenas);
@@ -170,7 +194,7 @@ void memory_output_allocations(CKG_LogLevel log_level) {
      	log_output(log_level, "%s\n", out_message3);
 		if (level == MEMORY_TAG_ARENA) {
 			for (int i = 0; i < ckit_vector_count(registered_arenas); i++) {
-				arena_output_allocations(registered_arenas[i], log_level);
+				ckit_arena_output_allocations(registered_arenas[i], log_level);
 			}
 		}
     }

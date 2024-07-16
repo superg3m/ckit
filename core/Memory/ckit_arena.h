@@ -32,26 +32,26 @@ typedef struct CKIT_Arena {
 #ifdef __cplusplus
 extern "C" {
 #endif
-	CKIT_Arena* MACRO_arena_create(size_t allocation, const char* name, ArenaFlags flags);
-	void* MACRO_arena_push(CKIT_Arena* arena, size_t element_size, MemoryTag memory_tag);
-	void arena_output_allocations(CKIT_Arena* arena, CKG_LogLevel log_level);
+	CKIT_Arena* MACRO_ckit_arena_create(size_t allocation, const char* name, ArenaFlags flags);
+	void* MACRO_ckit_arena_push(CKIT_Arena* arena, size_t element_size, MemoryTag memory_tag);
+	void ckit_arena_output_allocations(CKIT_Arena* arena, CKG_LogLevel log_level);
 	
 	// Date: May 11, 2024
 	// NOTE(Jovanni): I want better names for this action
-	void arena_write_tags(CKIT_Arena arena);	
-	void arena_free(CKIT_Arena* arena);
-	void arena_clear(CKIT_Arena* arena);
+	void ckit_arena_write_tags(CKIT_Arena arena);	
+	void ckit_arena_free(CKIT_Arena* arena);
+	void ckit_arena_clear(CKIT_Arena* arena);
 #ifdef __cplusplus
 }
 #endif
 //************************** End Functions **************************
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
-#define arena_create(allocation_size, name) MACRO_arena_create(allocation_size, name, ARENA_FLAG_DEFAULT)
-#define arena_create_custom(allocation_size, name, flags) MACRO_arena_create(allocation_size, name, flags)
+#define arena_create(allocation_size, name) MACRO_ckit_arena_create(allocation_size, name, ARENA_FLAG_DEFAULT)
+#define arena_create_custom(allocation_size, name, flags) MACRO_ckit_arena_create(allocation_size, name, flags)
 
-#define arena_push(arena, type, memory_tag) ((type*)MACRO_arena_push(arena, sizeof(type), memory_tag))
-#define arena_push_array(arena, type, element_count, memory_tag) ((type*)MACRO_arena_push(arena, sizeof(type) * element_count, memory_tag))
+#define arena_push(arena, type, memory_tag) ((type*)MACRO_ckit_arena_push(arena, sizeof(type), memory_tag))
+#define arena_push_array(arena, type, element_count, memory_tag) ((type*)MACRO_ckit_arena_push(arena, sizeof(type) * element_count, memory_tag))
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 
 
