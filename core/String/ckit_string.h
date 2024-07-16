@@ -39,14 +39,14 @@ extern "C" {
   void ckit_str_recanonicalize_header_length(String str);
 
   /**
-   * @brief Must be freed with ckit_free
+   * @brief Must be freed with ckit_str_free
    * 
    * @param string_buffer 
    * @param start_range 
    * @param end_range 
    * @return String
    */
-  String ckit_substring(const String string_buffer, u32 start_range, u32 end_range);
+  String ckit_substring(const char* string_buffer, u32 start_range, u32 end_range);
 
   // Little bit tricky. This method eturns a vector of strings so 
   // ckit_vector_count: to get the number of string it returned 
@@ -56,13 +56,13 @@ extern "C" {
   //     ckit_str_free(string_vector[i]);
   //  }
   //  ckit_vector_free(string_vector);
-  String* ckit_str_split(const String string_buffer, const char* delimitor);
-  Boolean ckit_cstr_contains(const String string_buffer, const char* contains);
-	u32 ckit_cstr_index_of(const String string_buffer, const char* sub_string);
-	u32 ckit_cstr_last_index_of(const String string_buffer, const char* sub_string);
-	Boolean ckit_cstr_starts_with(const String string_buffer, const char* starts_with);
-	Boolean ckit_cstr_ends_with(const String string_buffer, const char* ends_with);
-	String ckit_cstr_reverse(const String string_buffer);
+  String* ckit_str_split(const char* string_buffer, const char* delimitor);
+  Boolean ckit_str_contains(const char* string_buffer, const char* contains);
+	s32 ckit_str_index_of(const char* string_buffer, const char* sub_string);
+	s32 ckit_str_last_index_of(const char* string_buffer, const char* sub_string);
+	Boolean ckit_str_starts_with(const char* string_buffer, const char* starts_with);
+	Boolean ckit_str_ends_with(const char* string_buffer, const char* ends_with);
+	String ckit_str_reverse(const char* string_buffer);
 #ifdef __cplusplus
 }
 #endif

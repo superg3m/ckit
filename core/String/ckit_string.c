@@ -146,7 +146,7 @@ String MACRO_ckit_str_append_char(String str, const char source) {
 }
 
 
-String ckit_substring(const String string_buffer, u32 start_range, u32 end_range) {
+String ckit_substring(const char* string_buffer, u32 start_range, u32 end_range) {
     String ret_string = ckit_str_create_custom("", end_range - start_range + 1);
     ckg_substring(string_buffer, ret_string, start_range, end_range);
     ckit_str_recanonicalize_header_length(ret_string);
@@ -154,72 +154,56 @@ String ckit_substring(const String string_buffer, u32 start_range, u32 end_range
     return ret_string;
 }
 
-String* ckit_str_split(const String string_buffer, const char* delimitor) {
-    ckit_assert_msg(FALSE, "NOT IMPLMENTED YET");
-    ckit_str_check_magic(string_buffer);
-
-	ckit_assert(string_buffer);
-	ckit_assert(delimitor);
-
-	size_t str_length = ckg_cstr_length(string_buffer); 
-	size_t delmitor_length = ckg_cstr_length(delimitor); 
-
-	if (delmitor_length <= 0) {
-		return NULLPTR;
-	}
-
-	String* ret_string_array = NULLPTR;
-	String temp_buffer = ckit_str_create("");
-	String perma_buffer = ckit_str_create("");
-	for (int i = 0; i < str_length; i++) {
-		ckit_str_append_char(temp_buffer, string_buffer[i]);
-		String temp_substring = ckit_substring(string_buffer, i, delmitor_length - 1);
-		
-		if (temp_substring[i] != delimitor[0]) {
-			continue;
-		}
-
-		if (ckg_cstr_equal(temp_substring, delimitor)) {
-            ckit_str_copy(perma_buffer, temp_buffer);
-            ckit_vector_push(ret_string_array, perma_buffer);
-			ckit_str_clear(temp_buffer);
-		}
-		ckit_str_free(temp_substring);
-	}
-	ckit_str_free(temp_buffer);
-
-	return ret_string_array;
+internal String* ckit_str_split_helper(String* ret_buffer, const char* string_buffer, u32 offset_into_buffer, const char* delimitor) {
+    s32 found_index = ckit_str_index_of(string_buffer + offset_into_buffer, delimitor);
+    u32 offset_to_space = found_index + offset_into_buffer;
+    if (found_index == -1) {
+        ckit_vector_push(ret_buffer, ckit_substring(string_buffer, offset_into_buffer, ckit_cstr_length(string_buffer) - 1));
+        return ret_buffer;
+    }
+    
+    ckit_vector_push(ret_buffer, ckit_substring(string_buffer, offset_into_buffer, offset_to_space - 1));
+    return ckit_str_split_helper(ret_buffer, string_buffer, offset_to_space + 1, delimitor);
 }
 
-Boolean kit_cstr_contains(const String string_buffer, const char* contains) {
-    ckit_str_check_magic(string_buffer);
+String* ckit_str_split(const char* string_buffer, const char* delimitor) {
+    //ckit_str_check_magic(string_buffer);
+    ckit_assert(string_buffer);
+    ckit_assert(delimitor);
+
+    String* string_vector = NULLPTR;
+    return ckit_str_split_helper(string_vector, string_buffer, 0, delimitor);
+}
+
+Boolean kit_cstr_contains(const char* string_buffer, const char* contains) {
+    //ckit_str_check_magic(string_buffer);
     return ckg_cstr_contains(string_buffer, contains);
 }
 
-u32 ckit_str_index_of(const String string_buffer, const char* sub_string) {
-    ckit_str_check_magic(string_buffer);
+s32 ckit_str_index_of(const char* string_buffer, const char* sub_string) {
+    //ckit_str_check_magic(string_buffer);
     return ckg_cstr_index_of(string_buffer, sub_string);
 }
 
-u32 ckit_str_last_index_of(const String string_buffer, const char* sub_string) {
-    ckit_str_check_magic(string_buffer);
+s32 ckit_str_last_index_of(const char* string_buffer, const char* sub_string) {
+    //ckit_str_check_magic(string_buffer);
     return ckg_cstr_last_index_of(string_buffer, sub_string);
 }
 
-Boolean ckit_str_starts_with(const String string_buffer, const char* starts_with) {
-    ckit_str_check_magic(string_buffer);
+Boolean ckit_str_starts_with(const char* string_buffer, const char* starts_with) {
+    //ckit_str_check_magic(string_buffer);
     return ckg_cstr_starts_with(string_buffer, starts_with);
 }
 
-Boolean ckit_str_ends_with(const String string_buffer, const char* ends_with) {
-    ckit_str_check_magic(string_buffer);
+Boolean ckit_str_ends_with(const char* string_buffer, const char* ends_with) {
+    //ckit_str_check_magic(string_buffer);
     return ckg_cstr_ends_with(string_buffer, ends_with);
 }
 
-String ckit_str_reverse(const String string_buffer) {
-    ckit_str_check_magic(string_buffer);
-    size_t reversed_string_buffer_capacity = ckit_str_length(string_buffer) + 1;
-    String reversed_string_buffer = ckit_str_create_custom("", ckit_str_length(string_buffer) + 1);
+String ckit_str_reverse(const char* string_buffer) {
+    // ckit_str_check_magic(string_buffer);
+    size_t reversed_string_buffer_capacity = ckit_cstr_length(string_buffer) + 1;
+    String reversed_string_buffer = ckit_str_create_custom("", reversed_string_buffer_capacity);
     ckg_cstr_reverse(string_buffer, reversed_string_buffer, reversed_string_buffer_capacity);
     return reversed_string_buffer;
 }

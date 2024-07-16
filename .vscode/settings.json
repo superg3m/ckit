@@ -38,7 +38,9 @@
 		"xutility": "c",
 		"vector": "c",
 		"ckg_logger.h": "c",
-		"typeindex": "c"
+		"typeindex": "c",
+		"signal.h": "c",
+		"setjmp.h": "c"
 	},
 	"editor.insertSpaces": false
 }
