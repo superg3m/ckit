@@ -154,7 +154,7 @@ void memory_output_allocations(CKG_LogLevel log_level) {
     char out_message2[PLATFORM_CHARACTER_LIMIT];
     char out_message3[PLATFORM_CHARACTER_LIMIT];
     
-    log_output(log_level, "========================\n");
+    log_output(log_level, "============ MEMORY LEAK PRESENT ============\n");
     for (int level = 0; level < MEMORY_TAG_COUNT; level++) {
      	if (global_memory_tags[level] == 0) {
     		continue;
@@ -165,7 +165,7 @@ void memory_output_allocations(CKG_LogLevel log_level) {
      	ckg_memory_zero(out_message3, sizeof(out_message3));
 
      	sprintf(out_message, "%s", known_memory_tag_strings[level]);
-     	sprintf(out_message2, "%lld", global_memory_tags[level]);
+     	sprintf(out_message2, "%lld bytes", global_memory_tags[level]);
      	sprintf(out_message3, "%s%s", out_message, out_message2);
      	log_output(log_level, "%s\n", out_message3);
 		if (level == MEMORY_TAG_ARENA) {
@@ -174,7 +174,7 @@ void memory_output_allocations(CKG_LogLevel log_level) {
 			}
 		}
     }
-    log_output(log_level, "========================\n");
+    log_output(log_level, "=============================================\n");
 }
 //************************** End Functions **************************
 
