@@ -174,7 +174,9 @@ int main() {
 	String* split_strings = ckit_str_split("They said it couldn't be done. They tried to recite the dark magics to me! THEY DON'T KNOW I WAS THERE WHEN THEY WERE WRITTEN!", " ");
 	for (int i = 0; i < ckit_vector_count(split_strings); i++) {
 		LOG_INFO("str #%d | %s\n", i, split_strings[i]);
+		ckit_str_free(split_strings[i]);
 	}
+	ckit_vector_free(split_strings);
 
 	ckit_cleanup();
 	return 0;
