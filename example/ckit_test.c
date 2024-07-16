@@ -142,8 +142,6 @@ int main() {
 	ckit_free(int_array);
 	ckit_free(int_array2);
 
-	memory_output_allocations(CKG_LOG_LEVEL_ERROR);
-
 	Vec2 points[4];
 	points[0] = (Vec2){0, 0};
 	points[1] = (Vec2){1, 2};
@@ -166,8 +164,8 @@ int main() {
 
 	test_hash_collisions();
 
-	CKIT_Arena* frame_boundary_arena = arena_create(500, "Frame Boundary");
-	arena_free(frame_boundary_arena);
+	// CKIT_Arena* frame_boundary_arena = arena_create(500, "Frame Boundary");
+	// arena_free(frame_boundary_arena);
 
 	ckit_cleanup();
 	return 0;

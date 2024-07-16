@@ -126,14 +126,12 @@ void ckit_memory_arena_register(CKIT_Arena* arena) {
 }
 
 void ckit_memory_arena_unregister(CKIT_Arena* arena) {
-	
 	for (int i = 0; i < ckit_vector_count(registered_arenas); i++) {
 		if (arena == registered_arenas[i]) {
 			ckit_memory_delete_index(registered_arenas, ckit_vector_capacity(registered_arenas), i);
 			break;
 		}
 	}
-	
 }
 
 void memory_output_allocations(CKG_LogLevel log_level) {
