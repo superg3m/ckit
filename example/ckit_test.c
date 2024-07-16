@@ -164,8 +164,8 @@ int main() {
 
 	test_hash_collisions();
 
-	// CKIT_Arena* frame_boundary_arena = arena_create(500, "Frame Boundary");
-	// arena_free(frame_boundary_arena);
+	CKIT_Arena* frame_boundary_arena = arena_create(500, "Frame Boundary");
+	arena_free(frame_boundary_arena);
 
 	ckit_cleanup();
 	return 0;

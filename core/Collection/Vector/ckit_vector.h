@@ -2,6 +2,7 @@
 
 #include "../../ckit_types.h"
 #include "../../Assert/ckit_assert.h"
+#include "../../Memory/ckit_memory.h"
 //========================== Begin Types ==========================
 typedef struct CKIT_VectorHeader {
 	u32 count;
@@ -33,5 +34,6 @@ extern "C" {
 #define ckit_vector_push(vector, element) vector = ckit_vector_grow(vector, sizeof(element)); vector[ckit_vector_base(vector)->count++] = element
 #define ckit_vector_reserve(capactiy, type) MACRO_ckit_vector_reserve(sizeof(type), capactiy)
 #define ckit_vector_pop(vector) vector[--ckit_vector_base(vector)->count]
+#define ckit_vector_remove_at(vector, index) ckit_vector_base(vector)->count--; ckit_memory_delete_index(vector, ckit_vector_capacity(vector), index)
 #define ckit_vector_free(vector) vector = MACRO_ckit_vector_free(vector)
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++

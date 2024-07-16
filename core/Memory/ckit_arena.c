@@ -8,6 +8,7 @@ extern char known_memory_tag_strings[MEMORY_TAG_COUNT][MEMORY_TAG_CHARACTER_LIMI
 
 void ckit_memory_arena_register(CKIT_Arena* arena);
 void ckit_memory_arena_unregister(CKIT_Arena* arena);
+void ckit_memory_arena_unregister_all();
 
 
 void arena_init() {
