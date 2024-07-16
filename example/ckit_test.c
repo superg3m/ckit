@@ -159,6 +159,9 @@ int main() {
 
 	BmpHeader bmp_header;
 	ckit_memory_copy(file_system.data, &bmp_header, sizeof(bmp_header), file_system.file_size);
+	const u32 bytes_per_pixel = 4;
+	size_t bitmap_size = (bmp_header.width * bmp_header.height) * bytes_per_pixel;
+	u8* bitmap_data = file_system.data + bmp_header.data_offset;
 
 	file_close(&file_system);
 
