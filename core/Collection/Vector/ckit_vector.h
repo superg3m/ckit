@@ -6,6 +6,8 @@
 typedef struct CKIT_VectorHeader {
 	u32 count;
 	u32 capacity;
+	// u32 max_count; This is used because you can say ckit_vector_max_count(vector) and then you can free all of these this allows you to 
+	// use the standard double loop to free and not have to worry about popping anything and keeping track of it.
 	char* magic;
 } CKIT_VectorHeader;
 
