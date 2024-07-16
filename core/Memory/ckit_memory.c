@@ -77,6 +77,9 @@ void* ckit_alloc(size_t byte_allocation_size, MemoryTag memory_tag) {
 
 	memory_track_add(header, memory_tag);
 	void* data = ckg_alloc(sizeof(header) + header.allocation_size_without_header);
+	ckit_memory_zero(data, sizeof(header) + header.allocation_size_without_header);
+	// Date: July 16, 2024
+	// NOTE(Jovanni): Somehow the memory we get from this isn't zeroed lmao?
 	data = memory_insert_header(data, header);
 
 	return data;

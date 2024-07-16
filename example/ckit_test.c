@@ -170,8 +170,8 @@ int main() {
 	CKIT_Arena* frame_boundary_arena = arena_create(500, "Frame Boundary");
 	arena_free(frame_boundary_arena);
 
-	String str_to_be_split = ckit_str_create("They said it couldn't be done. They tried to recite the dark magics to me! THEY DON'T KNOW I WAS THERE WHEN THEY WERE WRITTEN!");
-	String* split_strings = ckit_str_split(str_to_be_split, " ");
+	// String str_to_be_split = ckit_str_create("They said it couldn't be done. They tried to recite the dark magics to me! THEY DON'T KNOW I WAS THERE WHEN THEY WERE WRITTEN!");
+	String* split_strings = ckit_str_split("They said it couldn't be done. They tried to recite the dark magics to me! THEY DON'T KNOW I WAS THERE WHEN THEY WERE WRITTEN!", " ");
 	for (int i = 0; i < ckit_vector_count(split_strings); i++) {
 		LOG_INFO("str #%d | %s\n", i, split_strings[i]);
 	}
