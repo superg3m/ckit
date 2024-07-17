@@ -25,7 +25,7 @@ extern "C" {
   String MACRO_ckit_str_free(String str);
   u32 ckit_cstr_length(const char* str);
   u32 ckit_str_length(const String str);
-  Boolean ckit_str_equal(const String str1, const String str2);
+  Boolean ckit_str_equal(const char* str1, const char* str2);
   void ckit_str_copy(String str, const char* source);
 
   String MACRO_ckit_str_append(String str, const char* source);

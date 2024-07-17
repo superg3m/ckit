@@ -84,7 +84,7 @@ String ckit_str_create_custom(const char* c_string, u32 capacity) {
   	return ret;
 }
 
-Boolean ckit_str_equal(const String str1, const String str2) {
+Boolean ckit_str_equal(const char* str1, const char* str2) {
     return ckg_cstr_equal(str1, str2);
 }
 
