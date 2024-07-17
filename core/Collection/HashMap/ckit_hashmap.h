@@ -15,13 +15,13 @@ typedef u32(CKIT_CompareFunction)(void* element);
 
 typedef struct CKIT_HashMapEntry {
   	String key;
-	void* element;
+	void* value;
 } CKIT_HashMapEntry;
 
 typedef struct CKIT_HashMap {
 	CKIT_HashFunction* hash_func;
 	CKIT_CompareFunction* compare_func;
-	CKIT_HashMapEntry* data;
+	CKIT_HashMapEntry* entries;
 	float loadfactor;
 	u32 capacity;
 	size_t element_size;
