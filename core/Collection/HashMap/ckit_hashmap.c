@@ -7,7 +7,6 @@ u32 ckit_hash_value(char *str) {
 	while (c = *str++) {
 		hash = ((hash << 5) + hash) + c;
 	}
-		
 
 	return hash;
 }
@@ -35,19 +34,11 @@ void* MACRO_ckit_hashmap_put(CKIT_HashMap* hashmap, char* key, void* value) {
 }
 
 void* MACRO_ckit_hashmap_get(CKIT_HashMap* hashmap, char* key) {
-	if (hashmap->loadfactor >= 0.75) {
-		ckit_vector_grow(hashmap->data, hashmap->element_size, TRUE);
-	}
-
 	u32 index =  ckit_hash_value(key) % vector_capacity(hashmap->data);
-	// vector_insert(hash_map->data, index, value);
+	return NULLPTR;
 }
 
 Boolean MACRO_ckit_hashmap_has(CKIT_HashMap* hashmap, char* key) {
-	if (hashmap->loadfactor >= 0.75) {
-		ckit_vector_grow(hashmap->data, hashmap->element_size, TRUE);
-	}
-
 	u32 index =  ckit_hash_value(key) % vector_capacity(hashmap->data);
 	return (hashmap->data + index) == NULLPTR;
 }
