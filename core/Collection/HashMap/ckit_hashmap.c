@@ -14,7 +14,7 @@ u32 ckit_hash_value(char *str) {
 
 void ckit_hashmap_insert(HashMap* hashmap, String key, void* value) {
 	if (hashmap->loadfactor >= 0.75) {
-		ckit_vector_grow(hashmap->data, hashmap->);
+		ckit_vector_grow(hashmap->data, hashmap->element_size, TRUE);
 	}
 
 	// update
