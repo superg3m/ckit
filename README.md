@@ -89,11 +89,6 @@ Thoughts:
     - [x] ckit_alloc(allocation_size)
     - [x] ckit_realloc(data, old_allocation_size, new_allocation_size)
     - [x] ckit_free(data)
-		- [/] Moving towards a generic free
-			// NOTE: I should be able to handle these on a case by case basis
-			- [ ] remove ckit_str_free()
-			- [ ] remove ckit_vector_free()
-			- [ ] remove ckit_arena_free()
     - [x] ckit_memory_compare(buffer_one, buffer_two, b1_allocation_size, b2_allocation_size)
     - [x] ckit_memory_copy(source, destination, source_size, destination_capacity)
     - [x] ckit_memory_move(source, destination, source_payload_size)
@@ -103,8 +98,8 @@ Thoughts:
 - [/] ckit_arena.h (handling dangling pointers is gonna be pretty tough here)
 	- [/] ckit_arena_create(allocation, name, flag)
 	- [/] ckit_arena_push(arena, type, byte_alignment = 4)
-	- [/] ckit_arena_free(arena)
-	- [/] ckit_arena_clear(arena)
+	- [x] ckit_arena_free(arena)
+	- [x] ckit_arena_clear(arena)
 
 ### FileIO (Finished, but I dont like it gonna rewrite it)
 - [ ] ckit_file_io.h
