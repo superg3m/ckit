@@ -42,7 +42,8 @@
 		"signal.h": "c",
 		"setjmp.h": "c",
 		"array": "c",
-		"xstring": "c"
+		"xstring": "c",
+		"functional": "c"
 	},
 	"editor.insertSpaces": false
 }

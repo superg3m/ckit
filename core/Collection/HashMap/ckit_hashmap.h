@@ -16,16 +16,16 @@ typedef u32(CKIT_CompareFunction)(void* element);
 typedef struct CKIT_HashMapEntry {
   	String key;
 	void* element;
-} HashMapEntry;
+} CKIT_HashMapEntry;
 
 typedef struct CKIT_HashMap {
 	CKIT_HashFunction* hash_func;
 	CKIT_CompareFunction* compare_func;
-	HashMapEntry* data;
+	CKIT_HashMapEntry* data;
 	float loadfactor;
 	u32 capacity;
 	size_t element_size;
-} HashMap;
+} CKIT_HashMap;
 //=========================== End Types ===========================
 
 u32 compare_integer(void* known_integer_one, void* known_integer_two) {
@@ -45,9 +45,14 @@ u32 compare_string(void* known_string_one, void* known_string_two) {
 extern "C" {
 #endif
 u32 ckit_hash_value(char *str);
-void MACRO_ckit_hashmap_create(CKIT_CompareFunction* compare_func, size_t element_size);
+CKIT_HashMap MACRO_ckit_hashmap_create(CKIT_CompareFunction* compare_func, size_t element_size);
 void MACRO_ckit_hashmap_create_custom(CKIT_HashFunction* hash_func, CKIT_CompareFunction* compare_func);
-void ckit_hashmap_insert(HashMap* hash_map, void* key, void* element);
+void* MACRO_ckit_hashmap_free(CKIT_HashMap* hashmap);
+
+// Returns previous value
+void* ckit_hashmap_put(CKIT_HashMap* hashmap, char* key, void* element);
+void* ckit_hashmap_get(CKIT_HashMap* hashmap, char* key);
+Boolean ckit_hashmap_has(CKIT_HashMap* hashmap, char* key);
 
 #ifdef __cplusplus
 }
@@ -55,5 +60,8 @@ void ckit_hashmap_insert(HashMap* hash_map, void* key, void* element);
 //************************** End Functions **************************
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
-#define MACRO_ckit_hashmap_create(compare_func, type) MACRO_ckit_hashmap_create(0, sizeof(type))
+#define ckit_hashmap_create(compare_func, type) MACRO_ckit_hashmap_create(compare_func, sizeof(type))
+#define ckit_hashmap_put(hashmap, key, element) ckit_hashmap_put(hash_map, key, element)
+#define ckit_hashmap_put(hashmap, key, element) ckit_hashmap_put(hash_map, key, element)
+#define ckit_hashmap_free(hashmap) hashmap = MACRO_ckit_hashmap_free(hash_map)
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++

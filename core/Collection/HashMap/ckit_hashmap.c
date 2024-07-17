@@ -12,7 +12,16 @@ u32 ckit_hash_value(char *str) {
 	return hash;
 }
 
-void ckit_hashmap_insert(HashMap* hashmap, String key, void* value) {
+CKIT_HashMap MACRO_ckit_hashmap_create(CKIT_CompareFunction* compare_func, size_t element_size) {
+	CKIT_HashMap ret;
+	ret.capacity = 1;
+	ret.compare_func = compare_func;
+	ret.data = NULLPTR;
+	ret.element_size = element_size;
+	ret.loadfactor = 0.0;
+}
+
+void* MACRO_ckit_hashmap_put(CKIT_HashMap* hashmap, char* key, void* value) {
 	if (hashmap->loadfactor >= 0.75) {
 		ckit_vector_grow(hashmap->data, hashmap->element_size, TRUE);
 	}
@@ -23,6 +32,24 @@ void ckit_hashmap_insert(HashMap* hashmap, String key, void* value) {
 
 	u32 index =  ckit_hash_value(key) % vector_capacity(hashmap->data);
 	// vector_insert(hash_map->data, index, value);
+}
+
+void* MACRO_ckit_hashmap_get(CKIT_HashMap* hashmap, char* key) {
+	if (hashmap->loadfactor >= 0.75) {
+		ckit_vector_grow(hashmap->data, hashmap->element_size, TRUE);
+	}
+
+	u32 index =  ckit_hash_value(key) % vector_capacity(hashmap->data);
+	// vector_insert(hash_map->data, index, value);
+}
+
+Boolean MACRO_ckit_hashmap_has(CKIT_HashMap* hashmap, char* key) {
+	if (hashmap->loadfactor >= 0.75) {
+		ckit_vector_grow(hashmap->data, hashmap->element_size, TRUE);
+	}
+
+	u32 index =  ckit_hash_value(key) % vector_capacity(hashmap->data);
+	return (hashmap->data + index) == NULLPTR;
 }
 
 // open addressing
