@@ -41,7 +41,7 @@ void ckit_arena_clear(CKIT_Arena* arena) {
     arena->used = 0;
 }
 
-void* MACRO_ckit_arena_push(CKIT_Arena* arena, size_t element_size, MemoryTag memory_tag) {
+void* MACRO_ckit_arena_push(CKIT_Arena* arena, size_t element_size, CKIT_MemoryTag memory_tag) {
     // Date: May 11, 2024
     // TODO(Jovanni): For right now just assert if you don't have enough memory but later on make it grow.
     ckit_assert_msg(arena && arena->base_address, "arena_push: arena is null\n");

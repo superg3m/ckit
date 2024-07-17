@@ -7,7 +7,7 @@
 #include "../ckit_types.h"
 #include "./ckit_memory.h"
 //========================== Begin Types ==========================
-typedef enum MemoryTag MemoryTag;
+typedef enum CKIT_MemoryTag CKIT_MemoryTag;
 typedef enum CKG_LogLevel CKG_LogLevel;
 
 typedef enum ArenaFlags {
@@ -33,7 +33,7 @@ typedef struct CKIT_Arena {
 extern "C" {
 #endif
 	CKIT_Arena* MACRO_ckit_arena_create(size_t allocation, const char* name, ArenaFlags flags);
-	void* MACRO_ckit_arena_push(CKIT_Arena* arena, size_t element_size, MemoryTag memory_tag);
+	void* MACRO_ckit_arena_push(CKIT_Arena* arena, size_t element_size, CKIT_MemoryTag memory_tag);
 	void ckit_arena_output_allocations(CKIT_Arena* arena, CKG_LogLevel log_level);
 	
 	// Date: May 11, 2024

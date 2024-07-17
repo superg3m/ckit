@@ -15,10 +15,10 @@
 typedef enum CKG_LogLevel CKG_LogLevel;
 typedef struct CKIT_Arena CKIT_Arena;
 
-typedef struct MemoryHeader {
+typedef struct CKIT_MemoryHeader {
 	u32 allocation_size_without_header;
-    MemoryTag memory_tag;
-} MemoryHeader;
+    CKIT_MemoryTag memory_tag;
+} CKIT_MemoryHeader;
 
 
 internal u64 memory_used = 0; 
@@ -35,27 +35,27 @@ char known_memory_tag_strings[MEMORY_TAG_COUNT][MEMORY_TAG_CHARACTER_LIMIT] = {
 //=========================== End Types ===========================
 
 //************************* Begin Functions *************************
-internal void memory_track_add(MemoryHeader header, MemoryTag memory_tag) {
+internal void memory_track_add(CKIT_MemoryHeader header, CKIT_MemoryTag memory_tag) {
   	global_memory_tags[MEMORY_TAG_INTERNAL] += sizeof(header);
   	global_memory_tags[memory_tag] += (header.allocation_size_without_header);
   	memory_used += sizeof(header) + header.allocation_size_without_header;
 }
 
-internal void memory_track_remove(MemoryHeader header, MemoryTag memory_tag) {
+internal void memory_track_remove(CKIT_MemoryHeader header, CKIT_MemoryTag memory_tag) {
   	global_memory_tags[MEMORY_TAG_INTERNAL] -= sizeof(header);
   	global_memory_tags[memory_tag] -= (header.allocation_size_without_header);
   	memory_used -= sizeof(header) + header.allocation_size_without_header;
 }
 
-internal void* memory_insert_header(void* data, MemoryHeader header) {
-  	((MemoryHeader*)data)[0] = header;
+internal void* memory_insert_header(void* data, CKIT_MemoryHeader header) {
+  	((CKIT_MemoryHeader*)data)[0] = header;
   	data = (u8*)data + sizeof(header);
   	return data;
 }
 
-#define ckit_memory_base(data) (MemoryHeader*)((u8*)data - sizeof(MemoryHeader))
+#define ckit_memory_base(data) (CKIT_MemoryHeader*)((u8*)data - sizeof(CKIT_MemoryHeader))
 
-Boolean memory_tag_is_valid(MemoryTag memory_tag) {
+Boolean memory_tag_is_valid(CKIT_MemoryTag memory_tag) {
   	return (memory_tag >= 0 && memory_tag < MEMORY_TAG_COUNT);
 }
 
@@ -64,14 +64,14 @@ void memory_init() {
 	ckg_bind_free_callback(&platform_free);
 }
 
-void* ckit_alloc(size_t byte_allocation_size, MemoryTag memory_tag) {
+void* ckit_alloc(size_t byte_allocation_size, CKIT_MemoryTag memory_tag) {
 	ckit_assert_msg(byte_allocation_size > 0, "Invalid allocation size zero or below\n");
 	ckit_assert_msg(memory_tag_is_valid(memory_tag), "ckit_alloc: Memory tag is invalid | value: (%d)\n", memory_tag);
 	if (memory_tag == MEMORY_TAG_UNKNOWN) {
 		LOG_WARN("ckit_alloc: memory tag unknown\n");
 	}
 
-	MemoryHeader header;
+	CKIT_MemoryHeader header;
 	header.allocation_size_without_header = byte_allocation_size;
 	header.memory_tag = memory_tag;
 
@@ -85,39 +85,9 @@ void* ckit_alloc(size_t byte_allocation_size, MemoryTag memory_tag) {
 	return data;
 }
 
-// Date: July 16, 2024
-// TODO(Jovanni): This can be so much more powerful because I can use the tag system to see if a tag is registered and used that free method that is provided
-// this is really awesome because this means you have generic frees for everything.
-void* MACRO_ckit_generic_free(void* data) { 
-	ckit_assert_msg(data, "ckit_free: Data passed is null in free\n");
-  	const MemoryHeader header = *ckit_memory_base(data);
-	switch (header.memory_tag) {
-		case MEMORY_TAG_STRING: {
-			#include "../String/ckit_string.h"
-			// ckit_str_free(data);
-		} break;
-
-		case MEMORY_TAG_VECTOR: {
-			#include "../Collection/Vector/ckit_vector.h"
-			// ckit_vector_free(data);
-		} break;
-
-		case MEMORY_TAG_ARENA: {
-			#include "./ckit_arena.h"
-			data = ckit_arena_free(data);
-		} break;
-
-		default : {
-			ckit_free(data);
-		} break;
-	}
-
-	return data;
-}
-
 void* MACRO_ckit_free(void* data) {
   	ckit_assert_msg(data, "ckit_free: Data passed is null in free\n");
-  	const MemoryHeader header = *ckit_memory_base(data);
+  	const CKIT_MemoryHeader header = *ckit_memory_base(data);
   	ckit_assert_msg(memory_tag_is_valid(header.memory_tag), "ckit_free: memory_tag is not valid\n");
 
   	memory_track_remove(header, header.memory_tag);
@@ -130,7 +100,7 @@ void* MACRO_ckit_free(void* data) {
 
 void* ckit_realloc(void* data, u64 new_allocation_size) {
   	ckit_assert_msg(data, "ckit_reallocation: Data passed is null\n");
-  	MemoryHeader header = *ckit_memory_base(data);
+  	CKIT_MemoryHeader header = *ckit_memory_base(data);
 
   	void* ret_data = ckit_alloc(sizeof(header) + new_allocation_size, header.memory_tag);
   	ckg_memory_copy(data, ret_data, header.allocation_size_without_header, new_allocation_size);

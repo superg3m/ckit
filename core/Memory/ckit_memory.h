@@ -8,7 +8,7 @@
 #include "../Logger/ckit_logger.h"
 //========================== Begin Types ==========================
 
-typedef enum MemoryTag {
+typedef enum CKIT_MemoryTag {
     MEMORY_TAG_UNKNOWN,
     MEMORY_TAG_TEMPORARY,
     MEMORY_TAG_INTERNAL,
@@ -16,7 +16,7 @@ typedef enum MemoryTag {
     MEMORY_TAG_VECTOR,
     MEMORY_TAG_ARENA,
     MEMORY_TAG_COUNT
-} MemoryTag;
+} CKIT_MemoryTag;
 //=========================== End Types ===========================
 
 //************************* Begin Functions *************************
@@ -25,9 +25,8 @@ extern "C" {
 #endif
     void memory_init();
 
-    void* ckit_alloc(size_t number_of_bytes, MemoryTag memory_tag);
+    void* ckit_alloc(size_t number_of_bytes, CKIT_MemoryTag memory_tag);
     void* MACRO_ckit_free(void* data);
-    void* MACRO_ckit_generic_free(void* data);
     void* ckit_realloc(void* data, size_t new_number_of_bytes);
     void memory_output_allocations(CKG_LogLevel log_level);
 
@@ -50,7 +49,6 @@ extern "C" {
     #define ckit_memory_insert_index(data, data_capacity, element, index) MACRO_ckit_memory_delete_index(data, data_capacity, sizeof(data[0]), index); data[index] = element;
 #else 
     #define ckit_free(data) data = MACRO_ckit_free(data);
-    #define ckit_generic_free(data) data = MACRO_ckit_generic_free(data);
     #define ckit_memory_delete_index(data, data_capacity, index) MACRO_ckit_memory_delete_index(data, data_capacity, sizeof(data[0]), index)
     #define ckit_memory_insert_index(data, data_capacity, element, index) MACRO_ckit_memory_delete_index(data, data_capacity, sizeof(data[0]), index); data[index] = element;
 #endif
