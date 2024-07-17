@@ -15,7 +15,7 @@ void arena_init() {
 
 }
 
-CKIT_Arena* MACRO_ckit_arena_create(size_t allocation_size, const char* name, ArenaFlags flags) {
+CKIT_Arena* MACRO_ckit_arena_create(size_t allocation_size, const char* name, CKIT_ArenaFlags flags) {
     CKIT_Arena* arena = ckit_alloc(sizeof(CKIT_Arena), MEMORY_TAG_ARENA);
     arena->name = name;
     arena->flags = flags;
@@ -42,21 +42,32 @@ void ckit_arena_clear(CKIT_Arena* arena) {
 }
 
 void* MACRO_ckit_arena_push(CKIT_Arena* arena, size_t element_size, CKIT_MemoryTag memory_tag) {
-    // Date: May 11, 2024
-    // TODO(Jovanni): For right now just assert if you don't have enough memory but later on make it grow.
     ckit_assert_msg(arena && arena->base_address, "arena_push: arena is null\n");
     ckit_assert_msg((arena->used + element_size < arena->capacity), "arena_push: can't push element ran out of memory\n");
+
     if (memory_tag == MEMORY_TAG_UNKNOWN) {
         LOG_WARN("arena_push: memory tag unknown\n");
     }
-    if ((arena->used + element_size >= arena->capacity)) {
-        arena->capacity += element_size;
-        arena->capacity *= 2;
-        arena->base_address = ckit_realloc(arena->base_address, arena->capacity);
+
+    if (arena->flags == CKIT_ARENA_FLAG_DEFAULT) {
+        ckg_assert((arena->used + element_size <= arena->capacity));
+    } else if (arena->flags == CKIT_ARENA_FLAG_CIRCULAR) {
+		if ((arena->used + element_size > arena->capacity)) {
+			arena->used = 0;
+			ckit_assert((arena->used + element_size <= arena->capacity));
+        }
+    } else if (arena->flags == CKIT_ARENA_FLAG_VECTOR) {
+        if ((arena->used + element_size > arena->capacity)) {
+            arena->capacity += element_size;
+            arena->capacity *= 2;
+            arena->base_address = ckit_realloc(arena->base_address, arena->capacity * 2);
+        	ckit_assert(arena->base_address);
+        }
+    } else {
+        ckit_assert(FALSE);
     }
 
     u8* ret = (u8*)arena->base_address + arena->used;
-
     arena->memory_tag_values[memory_tag] += element_size;
     arena->used += element_size;
     

@@ -49,16 +49,24 @@ Thoughts:
 
 ### Collection
 - [ ] ckit_hashmap.h
+	- [x] ckit_hashmap_create(type)
+	- [x] ckit_hashmap_put(hashmap, key, element)
+	- [x] ckit_hashmap_has(hashmap, key)
+	- [x] ckit_hashmap_get(hashmap, key, returned_element)
+	- [x] ckit_hashmap_free(hashmap)
+
 - [ ] ckit_linked_list.h
 - [ ] ckit_stack.h
 - [ ] ckit_queue.h
 - [ ] ckit_binary_tree.h
 
 - [x] ckit_vector.h
-	- [x] ckg_vector_length(vector)
-	- [x] ckg_vector_capacity(vector)
-	- [x] ckg_vector_push(vector, element)
-	- [x] ckg_vector_free(vector)
+	- [x] ckit_vector_length(vector)
+	- [x] ckit_vector_capacity(vector)
+	- [x] ckit_vector_push(vector, element)
+	- [x] ckit_vector_remove_at(vector, element, index)
+	- [x] ckit_vector_insert_at(vector, element, index)
+	- [x] ckit_vector_free(vector)
 
 ### String
 - [x] ckit_string.h
@@ -96,14 +104,15 @@ Thoughts:
     - [x] ckit_memory_delete_index(data, data_capacity, index)
     - [x] ckit_memory_insert_index(data, data_capacity, element, index)
 
-- [/] ckit_arena.h (handling dangling pointers is gonna be pretty tough here)
-	- [/] ckit_arena_create(allocation, name, flag)
-	- [/] ckit_arena_push(arena, type, byte_alignment = 4)
+- [x] ckit_arena.h (NOT TESTED)
+	- [x] ckit_arena_create(allocation, name)
+	- [x] ckit_arena_create_custom(allocation, name, flag)
+	- [x] ckit_arena_push(arena, type, byte_alignment = 4)
 	- [x] ckit_arena_free(arena)
 	- [x] ckit_arena_clear(arena)
 
 ### FileIO (Finished, but I dont like it gonna rewrite it)
-- [ ] ckit_file_io.h
+- [x] ckit_file_io.h
 	- [x] ckit_file_system_create(file_name)
 	- [x] ckit_file_open(file_system)
 	- [x] ckit_file_close(file_system)
