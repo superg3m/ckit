@@ -93,7 +93,8 @@ Thoughts:
     - [x] ckit_memory_copy(source, destination, source_size, destination_capacity)
     - [x] ckit_memory_move(source, destination, source_payload_size)
     - [x] ckit_memory_zero(data, data_size_in_bytes)
-    - [x] ckit_memory_delete_index(data, data_capacity, element_size_in_bytes, index)
+    - [x] ckit_memory_delete_index(data, data_capacity, index)
+    - [x] ckit_memory_insert_index(data, data_capacity, element, index)
 
 - [/] ckit_arena.h (handling dangling pointers is gonna be pretty tough here)
 	- [/] ckit_arena_create(allocation, name, flag)
