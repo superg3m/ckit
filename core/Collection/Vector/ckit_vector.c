@@ -11,7 +11,7 @@ internal void ckit_vector_check_magic(void* vector) {
 
 // Date: July 14, 2024
 // TODO(Jovanni): HEY I THINK THIS SHOULD BE AN ARRENA ACTUALLY AND ITS LOCALLY SCOPED IN SOME WAY
-void* ckit_vector_grow(void* vector, size_t element_size) {
+void* ckit_vector_grow(void* vector, size_t element_size, Boolean force_grow) {
     if (vector == NULLPTR) {
         vector = ckit_alloc(sizeof(CKIT_VectorHeader) + (VECTOR_DEFAULT_CAPACITY * element_size), MEMORY_TAG_VECTOR);
         vector = (u8*)vector + sizeof(CKIT_VectorHeader);
@@ -24,7 +24,7 @@ void* ckit_vector_grow(void* vector, size_t element_size) {
     u32 count = ckit_vector_count(vector);
     u32 capactiy = ckit_vector_capacity(vector);
 
-    if (capactiy < count + 1) {
+    if (force_grow || capactiy < count + 1) {
         size_t old_allocation_size = sizeof(CKIT_VectorHeader) + (capactiy * element_size);
         u32 new_capactiy = capactiy * 2;
         size_t new_allocation_size = sizeof(CKIT_VectorHeader) + (new_capactiy * element_size);
