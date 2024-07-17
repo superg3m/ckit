@@ -48,12 +48,12 @@ Thoughts:
 	- [x] ckit_LOG_PRINT(msg, ...)
 
 ### Collection
-- [ ] ckit_hashmap.h
-	- [x] ckit_hashmap_create(type)
-	- [x] ckit_hashmap_put(hashmap, key, element)
-	- [x] ckit_hashmap_has(hashmap, key)
-	- [x] ckit_hashmap_get(hashmap, key, returned_element)
-	- [x] ckit_hashmap_free(hashmap)
+- [/] ckit_hashmap.h
+	- [/] ckit_hashmap_create(type)
+	- [/] ckit_hashmap_put(hashmap, key, element)
+	- [/] ckit_hashmap_has(hashmap, key)
+	- [/] ckit_hashmap_get(hashmap, key, returned_element)
+	- [/] ckit_hashmap_free(hashmap)
 
 - [ ] ckit_linked_list.h
 - [ ] ckit_stack.h
