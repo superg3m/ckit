@@ -27,6 +27,7 @@ extern "C" {
 
     void* ckit_alloc(size_t number_of_bytes, MemoryTag memory_tag);
     void* MACRO_ckit_free(void* data);
+    void* MACRO_ckit_generic_free(void* data);
     void* ckit_realloc(void* data, size_t new_number_of_bytes);
     void memory_output_allocations(CKG_LogLevel log_level);
 
@@ -49,6 +50,7 @@ extern "C" {
     #define ckit_memory_insert_index(data, data_capacity, element, index) MACRO_ckit_memory_delete_index(data, data_capacity, sizeof(data[0]), index); data[index] = element;
 #else 
     #define ckit_free(data) data = MACRO_ckit_free(data);
+    #define ckit_generic_free(data) data = MACRO_ckit_generic_free(data);
     #define ckit_memory_delete_index(data, data_capacity, index) MACRO_ckit_memory_delete_index(data, data_capacity, sizeof(data[0]), index)
     #define ckit_memory_insert_index(data, data_capacity, element, index) MACRO_ckit_memory_delete_index(data, data_capacity, sizeof(data[0]), index); data[index] = element;
 #endif

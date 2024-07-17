@@ -40,7 +40,9 @@
 		"ckg_logger.h": "c",
 		"typeindex": "c",
 		"signal.h": "c",
-		"setjmp.h": "c"
+		"setjmp.h": "c",
+		"array": "c",
+		"xstring": "c"
 	},
 	"editor.insertSpaces": false
 }
