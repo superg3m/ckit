@@ -27,11 +27,12 @@ CKIT_Arena* MACRO_ckit_arena_create(size_t allocation_size, const char* name, Ar
     return arena;
 }
 
-void ckit_arena_free(CKIT_Arena* arena) {
+void* ckit_arena_free(CKIT_Arena* arena) {
     ckit_assert(arena && arena->base_address);
     ckit_memory_arena_unregister(arena);
     ckit_free(arena->base_address);
     ckit_free(arena);
+    return arena;
 }
 
 void ckit_arena_clear(CKIT_Arena* arena) {

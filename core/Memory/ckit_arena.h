@@ -39,7 +39,7 @@ extern "C" {
 	// Date: May 11, 2024
 	// NOTE(Jovanni): I want better names for this action
 	void ckit_arena_write_tags(CKIT_Arena arena);	
-	void ckit_arena_free(CKIT_Arena* arena);
+	void* ckit_arena_free(CKIT_Arena* arena);
 	void ckit_arena_clear(CKIT_Arena* arena);
 #ifdef __cplusplus
 }
