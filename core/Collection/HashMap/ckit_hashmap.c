@@ -1,6 +1,6 @@
 #include "./ckit_hashmap.h"
 #include "../Vector/ckit_vector.h"
-u32 hash_value(char *str) {
+u32 ckit_hash_value(char *str) {
 	unsigned long hash = 5381;
 	int c;
 
@@ -12,16 +12,16 @@ u32 hash_value(char *str) {
 	return hash;
 }
 
-void hash_map_insert(HashMap* hash_map, String key, void* value) {
-	if (hash_map->loadfactor >= 0.75) {
-		vector_grow(hash_map->data);
+void ckit_hashmap_insert(HashMap* hashmap, String key, void* value) {
+	if (hashmap->loadfactor >= 0.75) {
+		ckit_vector_grow(hashmap->data, hashmap->);
 	}
 
 	// update
 
 	// set
 
-	u32 index =  hash_value(key) % vector_capacity(hash_map->data);
+	u32 index =  ckit_hash_value(key) % vector_capacity(hashmap->data);
 	// vector_insert(hash_map->data, index, value);
 }
 
