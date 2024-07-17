@@ -36,6 +36,7 @@ extern "C" {
     void ckit_memory_zero(void* data, size_t data_size_in_bytes);
 
     void MACRO_ckit_memory_delete_index(void* data, u32 data_capacity, size_t element_size_in_bytes, u32 index);
+    void MACRO_ckit_memory_insert_index(void* data, u32 data_capacity, size_t element_size_in_bytes, u32 index);
 #ifdef __cplusplus
 }
 #endif
@@ -45,8 +46,10 @@ extern "C" {
 #ifdef __cplusplus
 	#define ckit_free(data) data = (decltype(data))MACRO_ckit_free(data);
     #define ckit_memory_delete_index(data, data_capacity, index) MACRO_ckit_memory_delete_index(data, data_capacity, sizeof(data[0]), index)
+    #define ckit_memory_insert_index(data, data_capacity, element, index) MACRO_ckit_memory_delete_index(data, data_capacity, sizeof(data[0]), index); data[index] = element;
 #else 
     #define ckit_free(data) data = MACRO_ckit_free(data);
     #define ckit_memory_delete_index(data, data_capacity, index) MACRO_ckit_memory_delete_index(data, data_capacity, sizeof(data[0]), index)
+    #define ckit_memory_insert_index(data, data_capacity, element, index) MACRO_ckit_memory_delete_index(data, data_capacity, sizeof(data[0]), index); data[index] = element;
 #endif
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++

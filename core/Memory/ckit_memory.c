@@ -85,7 +85,10 @@ void* ckit_alloc(size_t byte_allocation_size, MemoryTag memory_tag) {
 	return data;
 }
 
-void* MACRO_ckit_free_tag_check(void* data) {
+// Date: July 16, 2024
+// TODO(Jovanni): This can be so much more powerful because I can use the tag system to see if a tag is registered and used that free method that is provided
+// this is really awesome because this means you have generic frees for everything.
+void* MACRO_ckit_free_tag_check(void* data) { 
 	ckit_assert_msg(data, "ckit_free: Data passed is null in free\n");
   	const MemoryHeader header = *ckit_memory_base(data);
 	switch (header.memory_tag) {
@@ -96,13 +99,16 @@ void* MACRO_ckit_free_tag_check(void* data) {
 
 		case MEMORY_TAG_VECTOR: {
 			#include "../Collection/Vector/ckit_vector.h"
-
 			ckit_vector_free(data);
 		} break;
 
 		case MEMORY_TAG_ARENA: {
 			#include "./ckit_arena.h"
 			ckit_arena_free(data);
+		} break;
+
+		default : {
+			ckit_free(data);
 		} break;
 	}
 
@@ -146,6 +152,10 @@ void ckit_memory_zero(void* data, size_t data_size_in_bytes) {
 
 void MACRO_ckit_memory_delete_index(void* data, u32 data_capacity, size_t element_size_in_bytes, u32 index) {
 	MACRO_ckg_memory_delete_index(data, data_capacity, element_size_in_bytes, index);
+}
+
+void MACRO_ckit_memory_insert_index(void* data, u32 data_capacity, size_t element_size_in_bytes, u32 index) {
+	MACRO_ckg_memory_insert_index(data, data_capacity, element_size_in_bytes, index);
 }
 
 void ckit_memory_arena_register(CKIT_Arena* arena) {
