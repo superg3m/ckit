@@ -44,6 +44,13 @@ void* MACRO_ckit_hashmap_put(CKIT_HashMap* hashmap, char* key, void* value) {
 
 	u32 index =  ckit_hash_value(key) % vector_capacity(hashmap->entries);
 	u32 real_index = ckit_hashmap_resolve_collision(hashmap, key, index);
+
+	// Date: July 17, 2024
+	// NOTE(Jovanni): THIS IS A TERRIBLE IDEA BECAUSE IF ITS STACK ALLOCATED YOU ARE IN TROUBLE WHEN IT GOES OUT OF SCOPE
+	// NOTE(Jovanni): THIS IS A TERRIBLE IDEA BECAUSE IF ITS STACK ALLOCATED YOU ARE IN TROUBLE WHEN IT GOES OUT OF SCOPE
+	// NOTE(Jovanni): THIS IS A TERRIBLE IDEA BECAUSE IF ITS STACK ALLOCATED YOU ARE IN TROUBLE WHEN IT GOES OUT OF SCOPE
+	// NOTE(Jovanni): THIS IS A TERRIBLE IDEA BECAUSE IF ITS STACK ALLOCATED YOU ARE IN TROUBLE WHEN IT GOES OUT OF SCOPE
+	// NOTE(Jovanni): THIS IS A TERRIBLE IDEA BECAUSE IF ITS STACK ALLOCATED YOU ARE IN TROUBLE WHEN IT GOES OUT OF SCOPE
 	hashmap->entries[real_index].value = value;
  
 	// vector_insert(hash_map->data, index, value);
