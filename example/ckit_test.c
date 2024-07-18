@@ -194,6 +194,7 @@ int main() {
 
 	for (int i = 0; i < 2; i++) { // growing hashmap is broken
 		LOG_DEBUG("(key: %s | value: %d)\n", names[i], *((u32*)ckit_hashmap_get(name_to_age, names[i])));
+		ckit_assert(ckit_hashmap_has(name_to_age, names[i]));
 	}
 
 	ckit_cleanup();
