@@ -10,7 +10,7 @@
 
 typedef u32(CKIT_HashFunction)(void* key);
 typedef u32(CKIT_CompareFunction)(void* element);
-
+#define CKIT_HASHMAP_DEFAULT_LOAD_FACTOR 0.75
 //========================== Begin Types ==========================
 
 typedef struct CKIT_HashMapEntry {
@@ -21,9 +21,9 @@ typedef struct CKIT_HashMapEntry {
 typedef struct CKIT_HashMap {
 	CKIT_HashFunction* hash_func;
 	CKIT_CompareFunction* compare_func;
-	CKIT_HashMapEntry* entries;
-	float loadfactor;
 	u32 capacity;
+	u32 count;
+	CKIT_HashMapEntry* entries; // not a vector
 	size_t element_size;
 } CKIT_HashMap;
 //=========================== End Types ===========================
