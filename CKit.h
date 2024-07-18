@@ -18,6 +18,7 @@
 #include "./core/Math/ckit_math.h"
 #include "./core/Collection/Vector/ckit_vector.h"
 #include "./core/Collection/HashMap/ckit_hashing.h"
+#include "./core/Collection/HashMap/ckit_hashmap.h"
 
 // Modules
 #include "./modules/Parser/Asset/BMP/bmp_parser.h"

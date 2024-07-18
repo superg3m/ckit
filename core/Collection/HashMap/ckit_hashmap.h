@@ -26,18 +26,6 @@ typedef struct CKIT_HashMap {
 } CKIT_HashMap;
 //=========================== End Types ===========================
 
-u32 compare_integer(void* known_integer_one, void* known_integer_two) {
-	int* integer_one = (int*)known_integer_one;
-	int* integer_two = (int*)known_integer_two;
-	return *integer_one == *integer_one;
-}
-
-u32 compare_string(void* known_string_one, void* known_string_two) {
-	char* string_one = (char*)known_string_one;
-	char* string_two = (char*)known_string_two;
-	return ckit_str_equal(string_one, string_two);
-}
-
 //************************* Begin Functions *************************
 #ifdef __cplusplus
 extern "C" {
@@ -48,8 +36,8 @@ void MACRO_ckit_hashmap_create_custom(CKIT_HashFunction* hash_func, size_t eleme
 CKIT_HashMap* MACRO_ckit_hashmap_free(CKIT_HashMap* hashmap);
 
 // Returns previous value
-void MACRO_ckit_hashmap_put(CKIT_HashMap* hashmap, char* key, void* value, void* returned_value);
-void ckit_hashmap_get(CKIT_HashMap* hashmap, char* key, void* returned_value);
+void ckit_hashmap_put(CKIT_HashMap* hashmap, char* key, void* value, void* returned_value);
+void* ckit_hashmap_get(CKIT_HashMap* hashmap, char* key);
 Boolean ckit_hashmap_has(CKIT_HashMap* hashmap, char* key);
 
 #ifdef __cplusplus

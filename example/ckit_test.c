@@ -178,6 +178,17 @@ int main() {
 	}
 	ckit_vector_free(split_strings);
 
+	CKIT_HashMap* name_to_age = ckit_hashmap_create(4, u32);
+	u32 test_1 = 5;
+	ckit_hashmap_put(name_to_age, "john", &test_1, NULLPTR);
+	test_1 = 7;
+	ckit_hashmap_put(name_to_age, "john", &test_1, NULLPTR);
+	LOG_DEBUG("(key: %s | value: %d)\n", "john", *((u32*)ckit_hashmap_get(name_to_age, "john")));
+
+	// ckit_hashmap_put(name_to_age, "john", &test_1, NULLPTR);
+	// ckit_hashmap_put(name_to_age, "john", &test_1, NULLPTR);
+	// ckit_hashmap_put(name_to_age, "john", &test_1, NULLPTR);
+
 	ckit_cleanup();
 	return 0;
 }
