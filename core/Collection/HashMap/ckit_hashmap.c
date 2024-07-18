@@ -81,22 +81,24 @@ internal u64 ckit_hashmap_resolve_collision(CKIT_HashMap* hashmap, char* key, u6
 }
 
 Boolean ckit_hashmap_entry_exists(CKIT_HashMap* hashmap, u32 index) {
-	return hashmap->entries[index].value != NULLPTR;
+	return hashmap->entries[index].key != NULLPTR;
 }
 
 void MACRO_ckit_hashmap_put(CKIT_HashMap* hashmap, char* key, void* value, void* possible_value_returned) {
-	if (ckit_hashmap_load_factor(hashmap) >= CKIT_HASHMAP_DEFAULT_LOAD_FACTOR) {
-		ckit_hashmap_grow(hashmap->entries, hashmap->element_size);
-	}
-
+	// update
 	u32 index =  ckit_hash_value(key) % vector_capacity(hashmap->entries);
 	u32 real_index = ckit_hashmap_resolve_collision(hashmap, key, index);
 
-	// update
 	if (ckit_hashmap_entry_exists(hashmap, real_index)) {
+		hashmap->count++;
+		possible_value_returned = NULLPTR;
+	} else {
 		possible_value_returned = hashmap->entries[real_index].value;
 	}
-	
+
+	if (ckit_hashmap_load_factor(hashmap) >= CKIT_HASHMAP_DEFAULT_LOAD_FACTOR) {
+		ckit_hashmap_grow(hashmap->entries, hashmap->element_size);
+	}
 
 	// set
 	if (hashmap->entries[real_index].value == NULLPTR) {
