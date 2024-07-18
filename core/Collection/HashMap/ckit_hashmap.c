@@ -53,7 +53,7 @@ void ckit_hashmap_grow(CKIT_HashMap* hashmap) {
 CKIT_HashMap* MACRO_ckit_hashmap_create(u32 hashmap_capacity, size_t element_size) {
 	CKIT_HashMap* ret = ckit_alloc(sizeof(CKIT_HashMap), MEMORY_TAG_TEMPORARY);
 	ret->capacity = 1;
-	ret->entries = (CKIT_HashMapEntry*)ckit_alloc(element_size * hashmap_capacity, MEMORY_TAG_TEMPORARY);
+	ret->entries = (CKIT_HashMapEntry*)ckit_alloc(sizeof(CKIT_HashMapEntry) * hashmap_capacity, MEMORY_TAG_TEMPORARY);
 	ret->element_size = element_size;
 	ret->count = 0;
 	ret->capacity = hashmap_capacity;
@@ -88,10 +88,10 @@ void ckit_hashmap_put(CKIT_HashMap* hashmap, char* key, void* value, void* possi
 	u32 real_index = ckit_hashmap_resolve_collision(hashmap, key, index);
 
 	if (ckit_hashmap_entry_exists(hashmap, real_index)) {
+		possible_value_returned = hashmap->entries[real_index].value;
+	} else {
 		hashmap->count++;
 		possible_value_returned = NULLPTR;
-	} else {
-		possible_value_returned = hashmap->entries[real_index].value;
 	}
 
 	ckit_hashmap_grow(hashmap);
