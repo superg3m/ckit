@@ -26,14 +26,14 @@ internal u64 ckit_hashmap_resolve_collision(CKIT_HashMap* hashmap, char* key, u6
 }
 
 void ckit_hashmap_grow(CKIT_HashMap* hashmap) {
-	if (!ckit_hashmap_load_factor(hashmap) >= CKIT_HASHMAP_DEFAULT_LOAD_FACTOR) {
+	if (ckit_hashmap_load_factor(hashmap) < CKIT_HASHMAP_DEFAULT_LOAD_FACTOR) {
 		return;
 	}
 
 	u32 old_capacity = hashmap->capacity;
 	hashmap->capacity *= 2;
-	CKIT_HashMapEntry* temp_entries = ckit_alloc(hashmap->element_size * hashmap->capacity, MEMORY_TAG_TEMPORARY);
-	ckit_memory_copy(hashmap->entries, temp_entries, hashmap->element_size * old_capacity, hashmap->element_size * hashmap->capacity);
+	CKIT_HashMapEntry* temp_entries = ckit_alloc(sizeof(CKIT_HashMapEntry) * hashmap->capacity, MEMORY_TAG_TEMPORARY);
+	ckit_memory_copy(hashmap->entries, temp_entries, sizeof(CKIT_HashMapEntry) * old_capacity, sizeof(CKIT_HashMapEntry) * hashmap->capacity);
 
 	
 	// rehash
@@ -88,15 +88,16 @@ void ckit_hashmap_put(CKIT_HashMap* hashmap, char* key, void* value, void* possi
 	u32 real_index = ckit_hashmap_resolve_collision(hashmap, key, index);
 
 	if (ckit_hashmap_entry_exists(hashmap, real_index)) {
-		possible_value_returned = hashmap->entries[real_index].value;
+		//possible_value_returned = hashmap->entries[real_index].value;
 	} else {
 		hashmap->count++;
-		possible_value_returned = NULLPTR;
+		//possible_value_returned = NULLPTR;
 	}
 
 	ckit_hashmap_grow(hashmap);
 
-	if (hashmap->entries[real_index].value == NULLPTR) {
+	if (hashmap->entries[real_index].key == NULLPTR) {
+		hashmap->entries[real_index].key = key;
 		hashmap->entries[real_index].value = ckit_alloc(hashmap->element_size, MEMORY_TAG_TEMPORARY);
 	}
 
