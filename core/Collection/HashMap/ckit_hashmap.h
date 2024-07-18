@@ -9,7 +9,6 @@
 #include "../../String/ckit_string.h"
 
 typedef u32(CKIT_HashFunction)(void* key);
-typedef u32(CKIT_CompareFunction)(void* element);
 #define CKIT_HASHMAP_DEFAULT_LOAD_FACTOR 0.75
 //========================== Begin Types ==========================
 
@@ -20,7 +19,6 @@ typedef struct CKIT_HashMapEntry {
 
 typedef struct CKIT_HashMap {
 	CKIT_HashFunction* hash_func;
-	CKIT_CompareFunction* compare_func;
 	u32 capacity;
 	u32 count;
 	CKIT_HashMapEntry* entries; // not a vector
@@ -45,9 +43,9 @@ u32 compare_string(void* known_string_one, void* known_string_two) {
 extern "C" {
 #endif
 u32 ckit_hash_value(char *str);
-CKIT_HashMap* MACRO_ckit_hashmap_create(CKIT_CompareFunction* compare_func, size_t element_size);
-void MACRO_ckit_hashmap_create_custom(CKIT_HashFunction* hash_func, CKIT_CompareFunction* compare_func);
-void* MACRO_ckit_hashmap_free(CKIT_HashMap* hashmap);
+CKIT_HashMap* MACRO_ckit_hashmap_create(u32 hashmap_capacity, size_t element_size);
+void MACRO_ckit_hashmap_create_custom(CKIT_HashFunction* hash_func, size_t element_size);
+CKIT_HashMap* MACRO_ckit_hashmap_free(CKIT_HashMap* hashmap);
 
 // Returns previous value
 void MACRO_ckit_hashmap_put(CKIT_HashMap* hashmap, char* key, void* value, void* returned_value);
@@ -60,8 +58,6 @@ Boolean ckit_hashmap_has(CKIT_HashMap* hashmap, char* key);
 //************************** End Functions **************************
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
-#define ckit_hashmap_create(compare_func, type) MACRO_ckit_hashmap_create(compare_func, sizeof(type))
-#define ckit_hashmap_put(hashmap, key, element) ckit_hashmap_put(hash_map, key, element)
-#define ckit_hashmap_put(hashmap, key, element) ckit_hashmap_put(hash_map, key, element)
+#define ckit_hashmap_create(capacity, type) MACRO_ckit_hashmap_create(capacity, sizeof(type))
 #define ckit_hashmap_free(hashmap) hashmap = MACRO_ckit_hashmap_free(hash_map)
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++

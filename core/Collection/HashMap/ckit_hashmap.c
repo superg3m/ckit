@@ -13,10 +13,27 @@ u32 ckit_hash_value(char *str) {
 }
 
 float ckit_hashmap_load_factor(CKIT_HashMap* hashmap) {
-	return (float)ckit_vector_count(hashmap->entries) / (float)ckit_vector_capacity(hashmap->entries);
+	return (float)hashmap->count / (float)hashmap->capacity;
+}
+
+// Date: July 01, 2024
+// TODO(Jovanni): This is complete trash i'm to tired to actually code this right lmao
+// Date: July 17, 2024
+// NOTE(Jovanni): I'm a bit less tired not and this doesn't seem to bad, its just linear probing nothing diabolical here???
+internal u64 ckit_hashmap_resolve_collision(CKIT_HashMap* hashmap, char* key, u64 inital_hash_index) {
+    u64 cannonical_hash_index = inital_hash_index;
+    while (!ckit_str_equal(hashmap->entries[cannonical_hash_index].key, key)) {
+        cannonical_hash_index++;
+        cannonical_hash_index = cannonical_hash_index % (hashmap->capacity - 1);
+    }
+    return cannonical_hash_index;
 }
 
 void ckit_hashmap_grow(CKIT_HashMap* hashmap) {
+	if (!ckit_hashmap_load_factor(hashmap) >= CKIT_HASHMAP_DEFAULT_LOAD_FACTOR) {
+		return;
+	}
+	
 	u32 old_capacity = hashmap->capacity;
 	hashmap->capacity *= 2;
 	CKIT_HashMapEntry* temp_entries = ckit_alloc(hashmap->element_size * hashmap->capacity, MEMORY_TAG_TEMPORARY);
@@ -37,10 +54,9 @@ void ckit_hashmap_grow(CKIT_HashMap* hashmap) {
 	hashmap->entries = temp_entries;
 }
 
-CKIT_HashMap* MACRO_ckit_hashmap_create(CKIT_CompareFunction* compare_func, u32 hashmap_capacity, size_t element_size) {
+CKIT_HashMap* MACRO_ckit_hashmap_create(u32 hashmap_capacity, size_t element_size) {
 	CKIT_HashMap* ret = ckit_alloc(sizeof(CKIT_HashMap), MEMORY_TAG_TEMPORARY);
 	ret->capacity = 1;
-	ret->compare_func = compare_func;
 	ret->entries = (CKIT_HashMapEntry*)ckit_alloc(element_size * hashmap_capacity, MEMORY_TAG_TEMPORARY);
 	ret->element_size = element_size;
 	ret->count = 0;
@@ -57,28 +73,14 @@ CKIT_HashMapEntry ckit_hashmap_entry_create(char* key, void* value) {
 }
 
 CKIT_HashMap* MACRO_ckit_hashmap_free(CKIT_HashMap* hashmap) {
-	hashmap->capacity = 0;
-	hashmap->compare_func = 0;
-	ckit_vector_free(hashmap->entries);
-	hashmap->element_size = 0;
 	hashmap->count = 0;
 	hashmap->capacity = 0;
+	ckit_vector_free(hashmap->entries);
+	hashmap->element_size = 0;
 
 	return hashmap;
 }
 
-// Date: July 01, 2024
-// TODO(Jovanni): This is complete trash i'm to tired to actually code this right lmao
-// Date: July 17, 2024
-// NOTE(Jovanni): I'm a bit less tired not and this doesn't seem to bad, its just linear probing nothing diabolical here???
-internal u64 ckit_hashmap_resolve_collision(CKIT_HashMap* hashmap, char* key, u64 inital_hash_index) {
-    u64 cannonical_hash_index = inital_hash_index;
-    while (!ckit_str_equal(hashmap->entries[cannonical_hash_index].key, key)) {
-        cannonical_hash_index++;
-        cannonical_hash_index = cannonical_hash_index % (hashmap->capacity - 1);
-    }
-    return cannonical_hash_index;
-}
 
 Boolean ckit_hashmap_entry_exists(CKIT_HashMap* hashmap, u32 index) {
 	return hashmap->entries[index].key != NULLPTR;
@@ -96,11 +98,8 @@ void MACRO_ckit_hashmap_put(CKIT_HashMap* hashmap, char* key, void* value, void*
 		possible_value_returned = hashmap->entries[real_index].value;
 	}
 
-	if (ckit_hashmap_load_factor(hashmap) >= CKIT_HASHMAP_DEFAULT_LOAD_FACTOR) {
-		ckit_hashmap_grow(hashmap->entries, hashmap->element_size);
-	}
+	ckit_hashmap_grow(hashmap);
 
-	// set
 	if (hashmap->entries[real_index].value == NULLPTR) {
 		hashmap->entries[real_index].value = ckit_alloc(hashmap->element_size, MEMORY_TAG_TEMPORARY);
 	}
@@ -110,12 +109,12 @@ void MACRO_ckit_hashmap_put(CKIT_HashMap* hashmap, char* key, void* value, void*
 
 void* MACRO_ckit_hashmap_get(CKIT_HashMap* hashmap, char* key) {
 	u32 index =  ckit_hash_value(key) % vector_capacity(hashmap->entries);
-	return NULLPTR;
+	return hashmap->entries[index].value;
 }
 
 Boolean MACRO_ckit_hashmap_has(CKIT_HashMap* hashmap, char* key) {
 	u32 index =  ckit_hash_value(key) % vector_capacity(hashmap->entries);
-	return (hashmap->entries + index) == NULLPTR;
+	return hashmap->entries[index].key != NULLPTR;
 }
 
 // open addressing
