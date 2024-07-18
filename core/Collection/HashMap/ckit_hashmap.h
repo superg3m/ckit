@@ -45,13 +45,13 @@ u32 compare_string(void* known_string_one, void* known_string_two) {
 extern "C" {
 #endif
 u32 ckit_hash_value(char *str);
-CKIT_HashMap MACRO_ckit_hashmap_create(CKIT_CompareFunction* compare_func, size_t element_size);
+CKIT_HashMap* MACRO_ckit_hashmap_create(CKIT_CompareFunction* compare_func, size_t element_size);
 void MACRO_ckit_hashmap_create_custom(CKIT_HashFunction* hash_func, CKIT_CompareFunction* compare_func);
 void* MACRO_ckit_hashmap_free(CKIT_HashMap* hashmap);
 
 // Returns previous value
-void* ckit_hashmap_put(CKIT_HashMap* hashmap, char* key, void* element);
-void* ckit_hashmap_get(CKIT_HashMap* hashmap, char* key);
+void MACRO_ckit_hashmap_put(CKIT_HashMap* hashmap, char* key, void* value, void* returned_value);
+void ckit_hashmap_get(CKIT_HashMap* hashmap, char* key, void* returned_value);
 Boolean ckit_hashmap_has(CKIT_HashMap* hashmap, char* key);
 
 #ifdef __cplusplus

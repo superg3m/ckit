@@ -11,13 +11,34 @@ u32 ckit_hash_value(char *str) {
 	return hash;
 }
 
-CKIT_HashMap MACRO_ckit_hashmap_create(CKIT_CompareFunction* compare_func, size_t element_size) {
-	CKIT_HashMap ret;
-	ret.capacity = 1;
-	ret.compare_func = compare_func;
-	ret.entries = NULLPTR;
-	ret.element_size = element_size;
-	ret.loadfactor = 0.0;
+float ckit_hashmap_load_factor(CKIT_HashMap* hashmap) {
+	return (float)ckit_vector_count(hashmap->entries) / (float)ckit_vector_capacity(hashmap->entries);
+}
+
+CKIT_HashMap* MACRO_ckit_hashmap_create(CKIT_CompareFunction* compare_func, u32 hashmap_capacity, size_t element_size) {
+	CKIT_HashMap* ret = ckit_alloc(sizeof(CKIT_HashMap), MEMORY_TAG_TEMPORARY);
+	ret->capacity = 1;
+	ret->compare_func = compare_func;
+	ret->entries = (CKIT_HashMapEntry*)MACRO_ckit_vector_reserve(element_size, hashmap_capacity);
+	ret->element_size = element_size;
+	ret->loadfactor = ckit_hashmap_load_factor(ret);
+
+	return ret;
+}
+
+CKIT_HashMapEntry* ckit_hashmap_entry_free(CKIT_HashMapEntry* entry) {
+	ckit_free(entry->value);
+	ckit_free(entry);
+	return entry;
+}
+
+CKIT_HashMap* MACRO_ckit_hashmap_free(CKIT_HashMap* hashmap) {
+	hashmap->capacity = 0;
+	hashmap->compare_func = 0;
+	ckit_vector_free(hashmap->entries);
+	hashmap->element_size = 0;
+	hashmap->loadfactor = 0.0;
+	return hashmap;
 }
 
 // Date: July 01, 2024
@@ -33,27 +54,34 @@ internal u64 ckit_hashmap_resolve_collision(CKIT_HashMap* hashmap, char* key, u6
     return cannonical_hash_index;
 }
 
-void* MACRO_ckit_hashmap_put(CKIT_HashMap* hashmap, char* key, void* value) {
+Boolean ckit_hashmap_entry_exists(CKIT_HashMap* hashmap, u32 index) {
+	return hashmap->entries[index].value != NULLPTR;
+}
+
+void MACRO_ckit_hashmap_put(CKIT_HashMap* hashmap, char* key, void* value, void* possible_value_returned) {
 	if (hashmap->loadfactor >= 0.75) {
 		ckit_vector_grow(hashmap->entries, hashmap->element_size, TRUE);
 	}
 
-	// update
 
-	// set
 
 	u32 index =  ckit_hash_value(key) % vector_capacity(hashmap->entries);
 	u32 real_index = ckit_hashmap_resolve_collision(hashmap, key, index);
 
-	// Date: July 17, 2024
-	// NOTE(Jovanni): THIS IS A TERRIBLE IDEA BECAUSE IF ITS STACK ALLOCATED YOU ARE IN TROUBLE WHEN IT GOES OUT OF SCOPE
-	// NOTE(Jovanni): THIS IS A TERRIBLE IDEA BECAUSE IF ITS STACK ALLOCATED YOU ARE IN TROUBLE WHEN IT GOES OUT OF SCOPE
-	// NOTE(Jovanni): THIS IS A TERRIBLE IDEA BECAUSE IF ITS STACK ALLOCATED YOU ARE IN TROUBLE WHEN IT GOES OUT OF SCOPE
-	// NOTE(Jovanni): THIS IS A TERRIBLE IDEA BECAUSE IF ITS STACK ALLOCATED YOU ARE IN TROUBLE WHEN IT GOES OUT OF SCOPE
-	// NOTE(Jovanni): THIS IS A TERRIBLE IDEA BECAUSE IF ITS STACK ALLOCATED YOU ARE IN TROUBLE WHEN IT GOES OUT OF SCOPE
-	hashmap->entries[real_index].value = value;
- 
-	// vector_insert(hash_map->data, index, value);
+	CKIT_HashMapEntry* entry = ckit_alloc(sizeof(CKIT_HashMapEntry), MEMORY_TAG_TEMPORARY);
+	// hashmap->entries[real_index] = entry;
+
+	// update
+	if (ckit_hashmap_entry_exists(hashmap, real_index)) {
+		possible_value_returned = hashmap->entries[real_index].value;
+	}
+	
+	// set
+	if (hashmap->entries[real_index].value == NULLPTR) {
+		hashmap->entries[real_index].value = ckit_alloc(hashmap->element_size, MEMORY_TAG_TEMPORARY);
+	}
+
+	ckit_memory_copy(value, hashmap->entries[real_index].value, hashmap->element_size, hashmap->element_size);
 }
 
 void* MACRO_ckit_hashmap_get(CKIT_HashMap* hashmap, char* key) {
