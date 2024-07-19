@@ -47,6 +47,24 @@ Thoughts:
 	- [x] ckit_LOG_SUCCESS(msg, ...)
 	- [x] ckit_LOG_PRINT(msg, ...)
 
+### OS
+- [ ] ckit_os.h
+	- [ ] ckit_os_get_cwd();
+	- [ ] ckit_os_ls();
+	- [ ] ckit_os_get_items();
+	- [ ] ckit_os_chdir();
+	- [ ] ckit_os_mkdir();
+	- [ ] ckit_os_create_file();
+	- [ ] ckit_os_exists();
+	- [ ] ckit_os_run_subprocess();
+	- [ ] ckit_os_get_file_info();
+	- [ ] ckit_os_system();
+	- [ ] ckit_os_path_join();
+	- [ ] ckit_os_push();
+	- [ ] ckit_os_pop();
+	- [ ] ckit_os_dir_append_subdir(directory, sub_directory);
+	- [ ] ckit_os_dir_append_file(directory, file);
+
 ### Collection 
 - [X] ckit_hashmap.h (Tested on integers, char, string, and structs) (WANT TO REVISIT THIS BECAUSE I CAN MAKE IT BETTER 100%)
 	- [x] ckit_hashmap_create(type)
