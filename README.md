@@ -47,18 +47,20 @@ Thoughts:
 	- [x] ckit_LOG_SUCCESS(msg, ...)
 	- [x] ckit_LOG_PRINT(msg, ...)
 
-### Collection
-- [/] ckit_hashmap.h
+### Collection (Tested on integers, char, string, and structs) (WANT TO REVISIT THIS BECAUSE I CAN MAKE IT BETTER 100%)
+- [X] ckit_hashmap.h
 	- [x] ckit_hashmap_create(type)
-	- [/] ckit_hashmap_put(hashmap, key, element)
-		- [/] ckit_hashmap_grow(hashmap)
+	- [x] ckit_hashmap_put(hashmap, key, element)
+		- [x] ckit_hashmap_grow(hashmap)
 	- [x] ckit_hashmap_has(hashmap, key)
 	- [x] ckit_hashmap_get(hashmap, key, returned_element)
-	- [/] ckit_hashmap_free(hashmap)
+	- [X] ckit_hashmap_free(hashmap)
 
 - [ ] ckit_linked_list.h
 - [ ] ckit_stack.h
 - [ ] ckit_queue.h
+	- Write pointer
+	- Read pointer
 - [ ] ckit_binary_tree.h
 
 - [x] ckit_vector.h

@@ -47,5 +47,5 @@ Boolean ckit_hashmap_has(CKIT_HashMap* hashmap, char* key);
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
 #define ckit_hashmap_create(capacity, type) MACRO_ckit_hashmap_create(capacity, sizeof(type))
-#define ckit_hashmap_free(hashmap) hashmap = MACRO_ckit_hashmap_free(hash_map)
+#define ckit_hashmap_free(hashmap) hashmap = MACRO_ckit_hashmap_free(hashmap)
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++

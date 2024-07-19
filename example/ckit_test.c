@@ -178,7 +178,7 @@ int main() {
 	}
 	ckit_vector_free(split_strings);
 
-	CKIT_HashMap* name_to_age = ckit_hashmap_create(4, u32);
+	CKIT_HashMap* name_to_age = ckit_hashmap_create(4, char*);
 
 	char* names[5] = {
 		"jofhn",
@@ -188,14 +188,24 @@ int main() {
 		"jo234hyn",
 	};
 
-	for (int i = 0; i < 2; i++) {
-		ckit_hashmap_put(name_to_age, names[i], &i, NULLPTR);
+	char* value[5] = {
+		"10",
+		"11",
+		"12",
+		"13",
+		"14",
+	};
+
+	for (int i = 0; i < 5; i++) {
+		ckit_hashmap_put(name_to_age, names[i], value[i], NULLPTR);
 	}
 
-	for (int i = 0; i < 2; i++) { // growing hashmap is broken
-		LOG_DEBUG("(key: %s | value: %d)\n", names[i], *((u32*)ckit_hashmap_get(name_to_age, names[i])));
+	for (int i = 0; i < 5; i++) { // growing hashmap is broken
+		LOG_DEBUG("(key: %s | value: %s)\n", names[i], (char*)ckit_hashmap_get(name_to_age, names[i]));
 		ckit_assert(ckit_hashmap_has(name_to_age, names[i]));
 	}
+
+	ckit_hashmap_free(name_to_age);
 
 	ckit_cleanup();
 	return 0;

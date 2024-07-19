@@ -33,14 +33,16 @@ void ckit_hashmap_grow(CKIT_HashMap* hashmap) {
 	u32 old_capacity = hashmap->capacity;
 	hashmap->capacity *= 2;
 	CKIT_HashMapEntry* temp_entries = ckit_alloc(sizeof(CKIT_HashMapEntry) * hashmap->capacity, MEMORY_TAG_TEMPORARY);
-	ckit_memory_copy(hashmap->entries, temp_entries, sizeof(CKIT_HashMapEntry) * old_capacity, sizeof(CKIT_HashMapEntry) * hashmap->capacity);
-
 	
 	// rehash
 	for (int i = 0; i < old_capacity; i++) {
 		if (hashmap->entries[i].key != NULLPTR) {
 			u32 index =  ckit_hash_value(hashmap->entries[i].key) % hashmap->capacity;
-			u32 real_index = ckit_hashmap_resolve_collision(hashmap, hashmap->entries[i].key, index);
+			LOG_PRINT("String: %s\n", hashmap->entries[i].key);
+			CKIT_HashMapEntry* cached_ptr = hashmap->entries;
+			hashmap->entries = temp_entries;
+			u32 real_index = ckit_hashmap_resolve_collision(hashmap, cached_ptr[i].key, index);
+			hashmap->entries = cached_ptr;
 
 			temp_entries[real_index] = hashmap->entries[i];
 		}
@@ -69,10 +71,13 @@ CKIT_HashMapEntry ckit_hashmap_entry_create(char* key, void* value) {
 }
 
 CKIT_HashMap* MACRO_ckit_hashmap_free(CKIT_HashMap* hashmap) {
-	hashmap->count = 0;
-	hashmap->capacity = 0;
-	ckit_vector_free(hashmap->entries);
-	hashmap->element_size = 0;
+	for (int i = 0; i < hashmap->capacity; i++) {
+		if (hashmap->entries[i].value) {
+			ckit_free(hashmap->entries[i].value)
+		}
+	}
+	ckit_free(hashmap->entries);
+	ckit_free(hashmap);
 
 	return hashmap;
 }
@@ -83,7 +88,8 @@ Boolean ckit_hashmap_entry_exists(CKIT_HashMap* hashmap, u32 index) {
 }
 
 void ckit_hashmap_put(CKIT_HashMap* hashmap, char* key, void* value, void* possible_value_returned) {
-	// update
+	ckit_hashmap_grow(hashmap);
+
 	u32 index =  ckit_hash_value(key) % hashmap->capacity;
 	u32 real_index = ckit_hashmap_resolve_collision(hashmap, key, index);
 
@@ -93,8 +99,6 @@ void ckit_hashmap_put(CKIT_HashMap* hashmap, char* key, void* value, void* possi
 		hashmap->count++;
 		//possible_value_returned = NULLPTR;
 	}
-
-	ckit_hashmap_grow(hashmap);
 
 	if (hashmap->entries[real_index].key == NULLPTR) {
 		hashmap->entries[real_index].key = key;
@@ -106,12 +110,16 @@ void ckit_hashmap_put(CKIT_HashMap* hashmap, char* key, void* value, void* possi
 
 void* ckit_hashmap_get(CKIT_HashMap* hashmap, char* key) {
 	u32 index =  ckit_hash_value(key) % hashmap->capacity;
-	return hashmap->entries[index].value;
+	u32 real_index = ckit_hashmap_resolve_collision(hashmap, key, index);
+
+	return hashmap->entries[real_index].value;
 }
 
 Boolean ckit_hashmap_has(CKIT_HashMap* hashmap, char* key) {
 	u32 index =  ckit_hash_value(key) % hashmap->capacity;
-	return hashmap->entries[index].key != NULLPTR;
+	u32 real_index = ckit_hashmap_resolve_collision(hashmap, key, index);
+
+	return hashmap->entries[real_index].key != NULLPTR;
 }
 
 // open addressing
