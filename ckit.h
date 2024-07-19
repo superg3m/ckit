@@ -22,7 +22,7 @@
 #include "./core/Collection/Queue/ckit_queue.h"
 
 // Modules
-#include "./modules/Parser/Asset/BMP/bmp_parser.h"
+#include "./modules/File_Format_Parser/Asset/BMP/bmp_parser.h"
 
 
 #ifdef __cplusplus

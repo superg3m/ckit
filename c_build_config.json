@@ -27,7 +27,8 @@
             "../core/Math/*.c", 
             "../core/FileIO/*.c",
             "../core/Logger/*.c",
-            "../modules/parser/asset/bmp/*.c"
+            "../modules/File_Format_Parser/asset/bmp/*.c",
+            "../modules/Lexer/*.c"
         ],
 
         "additional_libs" : ["../ckg/build_cl/ckg.lib"]
