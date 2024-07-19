@@ -12,6 +12,8 @@ CKIT_LinkedList* MACRO_ckit_linked_list_create(size_t element_size_in_bytes) {
 
 // Date: July 05, 2024
 // TODO(Jovanni): BADD THIS DOESN"T WORK
+// Date: July 19, 2024
+// NOTE(Jovanni): I have no idea why this doesn't work...? Was this guy ok or i'm I not ok?
 CKIT_Node* MACRO_ckit_node_create(void* data, size_t element_size_in_bytes) {
     CKIT_Node* ret = ckit_alloc(sizeof(CKIT_Node), MEMORY_TAG_TEMPORARY); 
     ret->data = ckit_alloc(element_size_in_bytes, MEMORY_TAG_TEMPORARY);
@@ -41,8 +43,33 @@ void ckit_node_get(CKIT_Node* node, void* returned_value) {
     ckit_memory_copy(node->data, returned_value, node->element_size_in_bytes, node->element_size_in_bytes);
 }
 
-CKIT_Node* ckit_linked_list_insert(CKIT_LinkedList* linked_list, u32 index) {
-    return NULL;
+CKIT_Node* ckit_linked_list_insert(CKIT_LinkedList* linked_list, u32 index, void* data) {
+    CKIT_Node* new_node_to_insert = ckit_node_create(data); 
+    if (index == 0) { // insert head
+        linked_list->head->prev = new_node_to_insert;
+        new_node_to_insert->next = linked_list->head;
+        linked_list->head = new_node_to_insert;
+        return new_node_to_insert;
+    }
+
+    if (linked_list->count == index - 1) { // insert tail
+        linked_list->tail->next = new_node_to_insert;
+        new_node_to_insert->prev = linked_list->tail;
+        linked_list->tail = new_node_to_insert;
+        return new_node_to_insert;
+    }
+
+    CKIT_Node* current_node = linked_list->head; 
+    for (int i = 0; i < index; i++) {
+        CKIT_Node* current_node = current_node->next;
+    }
+
+    current_node->next->prev = current_node->prev;
+    current_node->prev->next = current_node->next;
+    CKIT_Node ret = *current_node; 
+    ckit_node_free(current_node);
+
+    return ret;
 }
 
 CKIT_Node* ckit_linked_list_get_node(CKIT_LinkedList* linked_list, u32 index) {

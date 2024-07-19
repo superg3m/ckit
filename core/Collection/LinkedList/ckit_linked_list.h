@@ -26,7 +26,7 @@ extern "C" {
     CKIT_LinkedList* MACRO_ckit_linked_list_create(size_t element_size_in_bytes);
     CKIT_Node* MACRO_ckit_node_create(void* data, size_t element_size_in_bytes);
     void ckit_node_get(CKIT_Node* node, void* returned_value);
-    CKIT_Node* ckit_linked_list_insert(CKIT_LinkedList* linked_list, u32 index);
+    CKIT_Node* ckit_linked_list_insert(CKIT_LinkedList* linked_list, u32 index, void* data);
     CKIT_Node* ckit_linked_list_get_node(CKIT_LinkedList* linked_list, u32 index);
     void ckit_linked_list_get(CKIT_LinkedList* linked_list, u32 index, void* data);
     void ckit_linked_list_push(CKIT_LinkedList* linked_list, CKIT_Node* node);
