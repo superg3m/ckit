@@ -47,8 +47,8 @@ Thoughts:
 	- [x] ckit_LOG_SUCCESS(msg, ...)
 	- [x] ckit_LOG_PRINT(msg, ...)
 
-### Collection (Tested on integers, char, string, and structs) (WANT TO REVISIT THIS BECAUSE I CAN MAKE IT BETTER 100%)
-- [X] ckit_hashmap.h
+### Collection 
+- [X] ckit_hashmap.h (Tested on integers, char, string, and structs) (WANT TO REVISIT THIS BECAUSE I CAN MAKE IT BETTER 100%)
 	- [x] ckit_hashmap_create(type)
 	- [x] ckit_hashmap_put(hashmap, key, element)
 		- [x] ckit_hashmap_grow(hashmap)
@@ -58,11 +58,11 @@ Thoughts:
 
 - [ ] ckit_linked_list.h
 - [ ] ckit_stack.h
-- [ ] ckit_queue.h
-	- [] ckit_queue_write()
-	- [] ckit_queue_read()
-	- [] ckit_queue_capacity()
-	- [] ckit_queue_count()
+- [x] ckit_queue.h (NOT REALLY TESTED) (WANT TO REVISIT THIS BECAUSE I CAN MAKE IT BETTER 100%)
+	- [x] ckit_enqueue()
+	- [x] ckit_dequeue()
+	- [x] ckit_queue_capacity()
+	- [x] ckit_queue_count()
 - [ ] ckit_binary_tree.h
 
 - [x] ckit_vector.h
@@ -95,7 +95,7 @@ Thoughts:
 	- [x] ckit_str_ends_with(str, ends_with)
 	- [x] ckit_str_reverse(str)
 
-### Memory
+### Memory (REFORMS COMING SOON FOR THE MEMORY TAG SYSTEM NOT EXPRESSIVE ENOUGH I WOULD LIKE TO REGISTER TAGS TBH)
 - [x] ckit_memory.h
     - [x] ckit_bind_alloc_callback(func_allocator)
     - [x] ckit_bind_free_callback(func_allocator)

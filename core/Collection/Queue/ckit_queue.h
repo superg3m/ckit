@@ -6,8 +6,8 @@
 // if the write pointer is greater than the next_read pointer then assert
 // if read pointer is on next read pointer and you try to read again assert because you will be ahead of the write pointer
 
-#include "../ckit_types.h"
-#include "../Memory/ckit_memory.h"
+#include "../../ckit_types.h"
+#include "../../Memory/ckit_memory.h"
 //========================== Begin Types ==========================
 typedef struct CKIT_Queue {
 	u32 capacity;

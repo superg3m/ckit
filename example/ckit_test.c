@@ -207,6 +207,26 @@ int main() {
 
 	ckit_hashmap_free(name_to_age);
 
+
+	CKIT_Queue* queue = ckit_queue_create(5, u32);
+
+	u32 queue_values[6] = {1, 2, 3, 4, 5, 6};
+
+	ckit_enqueue(queue, &queue_values[0]);
+
+	s32 current_value = -1;
+	ckit_dequeue(queue, &current_value);
+	LOG_DEBUG("value: %d\n", current_value);
+
+	for (u32 i = 1; i < 6; i++) {
+		ckit_enqueue(queue, &queue_values[i]);
+	}
+
+	for (u32 i = 1; i < 6; i++) {
+		ckit_dequeue(queue, &current_value);
+		LOG_DEBUG("value: %d\n", current_value);
+	}
+
 	ckit_cleanup();
 	return 0;
 }

@@ -19,6 +19,7 @@
 #include "./core/Collection/Vector/ckit_vector.h"
 #include "./core/Collection/HashMap/ckit_hashing.h"
 #include "./core/Collection/HashMap/ckit_hashmap.h"
+#include "./core/Collection/Queue/ckit_queue.h"
 
 // Modules
 #include "./modules/Parser/Asset/BMP/bmp_parser.h"
