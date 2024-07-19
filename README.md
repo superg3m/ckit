@@ -59,8 +59,10 @@ Thoughts:
 - [ ] ckit_linked_list.h
 - [ ] ckit_stack.h
 - [ ] ckit_queue.h
-	- Write pointer
-	- Read pointer
+	- [] ckit_queue_write()
+	- [] ckit_queue_read()
+	- [] ckit_queue_capacity()
+	- [] ckit_queue_count()
 - [ ] ckit_binary_tree.h
 
 - [x] ckit_vector.h

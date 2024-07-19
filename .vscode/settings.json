@@ -43,7 +43,8 @@
 		"setjmp.h": "c",
 		"array": "c",
 		"xstring": "c",
-		"functional": "c"
+		"functional": "c",
+		"ckit_queue.h": "c"
 	},
 	"editor.insertSpaces": false
 }
