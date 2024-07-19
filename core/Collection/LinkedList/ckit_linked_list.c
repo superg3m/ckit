@@ -59,17 +59,21 @@ CKIT_Node* ckit_linked_list_insert(CKIT_LinkedList* linked_list, u32 index, void
         return new_node_to_insert;
     }
 
+    // Date: July 19, 2024
+    // TODO(Jovanni): check if index is closer to count or not then reverse the loop if approaching from the tail end.
+    // as opposed to the head end.
     CKIT_Node* current_node = linked_list->head; 
     for (int i = 0; i < index; i++) {
         CKIT_Node* current_node = current_node->next;
     }
 
-    current_node->next->prev = current_node->prev;
-    current_node->prev->next = current_node->next;
-    CKIT_Node ret = *current_node; 
-    ckit_node_free(current_node);
+    new_node_to_insert->prev = current_node;
+    new_node_to_insert->next = current_node->next;
 
-    return ret;
+    current_node->next->prev = new_node_to_insert;
+    current_node->next = new_node_to_insert;
+
+    return new_node_to_insert;
 }
 
 CKIT_Node* ckit_linked_list_get_node(CKIT_LinkedList* linked_list, u32 index) {
