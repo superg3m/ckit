@@ -23,6 +23,7 @@
 
 // Modules
 #include "./modules/File_Format_Parser/Asset/BMP/bmp_parser.h"
+#include "../modules/Lexer/ckit_lexer.h"
 
 
 #ifdef __cplusplus
