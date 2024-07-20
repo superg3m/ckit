@@ -246,6 +246,8 @@ CKIT_Token ckit_lexer_generate_next_token(CKIT_Lexer* lexer) {
 	// populate the scratch buffer
 	char c = '\0';
 	while (TRUE) {
+		// Date: July 20, 2024
+		// TODO(Jovanni): Might not be a good idea tbh seperating the scratch buffer might not a be a good idea
 		c = ckit_lexer_consume_next_char(lexer);
 		if (c == ' ' || c == '\n') {
 			break;
