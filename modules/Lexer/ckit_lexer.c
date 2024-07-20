@@ -202,10 +202,10 @@ CKIT_Token ckit_lexer_classify_token(CKIT_Lexer* lexer) {
 	}
 
 	if (ckit_char_is_digit(lexer->scratch_buffer[0])) {
-		u32 count = 1;
+		u32 count = 0;
 		Boolean is_float = FALSE;
-		while (ckit_char_is_digit(lexer->scratch_buffer[count] || lexer->scratch_buffer[count++] == '.')) {
-			if (lexer->scratch_buffer[count] == '.') {
+		while (ckit_char_is_digit(lexer->scratch_buffer[count]) || lexer->scratch_buffer[count] == '.') {
+			if (lexer->scratch_buffer[count++] == '.') {
 				if (is_float) {
 					// bad token 1..10512 (might be interesting for: for loops like range)
 				}
@@ -248,6 +248,7 @@ CKIT_Token ckit_lexer_generate_next_token(CKIT_Lexer* lexer) {
 	while (TRUE) {
 		// Date: July 20, 2024
 		// TODO(Jovanni): Might not be a good idea tbh seperating the scratch buffer might not a be a good idea
+		// This doesn't wrok at all because when you consume a token you will know exectly what token it should be so this needs a rewrite.
 		c = ckit_lexer_consume_next_char(lexer);
 		if (c == ' ' || c == '\n') {
 			break;

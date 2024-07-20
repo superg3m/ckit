@@ -230,7 +230,9 @@ int main() {
 	ckit_queue_free(queue);
 
 	CKIT_Lexer lexer;
-	ckit_lexer_load_string(&lexer, "int x = 5;");
+	ckit_lexer_load_string(&lexer, "int x = 5 ;");
+	LOG_SUCCESS("%s\n", ckit_lexer_token_to_string(ckit_lexer_generate_next_token(&lexer)));
+	LOG_SUCCESS("%s\n", ckit_lexer_token_to_string(ckit_lexer_generate_next_token(&lexer)));
 	LOG_SUCCESS("%s\n", ckit_lexer_token_to_string(ckit_lexer_generate_next_token(&lexer)));
 	LOG_SUCCESS("%s\n", ckit_lexer_token_to_string(ckit_lexer_generate_next_token(&lexer)));
 	LOG_SUCCESS("%s\n", ckit_lexer_token_to_string(ckit_lexer_generate_next_token(&lexer)));
