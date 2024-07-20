@@ -14,6 +14,7 @@
 #include "./core/Assert/ckit_assert.h"
 #include "./core/EventSystem/ckit_event_system.h"
 #include "./core/String/ckit_string.h"
+#include "./core/String/ckit_char.h"
 #include "./core/FileIO/ckit_file_system.h"
 #include "./core/Math/ckit_math.h"
 #include "./core/Collection/Vector/ckit_vector.h"
