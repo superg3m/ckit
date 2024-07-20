@@ -75,12 +75,32 @@ Thoughts:
 	- [X] ckit_hashmap_free(hashmap)
 
 - [ ] ckit_linked_list.h
+    - [x] ckit_linked_list_create(element_size_in_bytes);
+    - [x] ckit_node_create(data, element_size_in_bytes);
+    - [x] ckit_node_get(node, returned_value);
+    - [/] ckit_linked_list_insert(linked_list, index,  data);
+    - [ ] ckit_linked_list_get_node(linked_list, index);
+    - [/] ckit_linked_list_get(linked_list, index,  data);
+    - [ ] ckit_linked_list_push(linked_list, node);
+    - [ ] ckit_linked_list_pop(linked_list, node);
+    - [x] ckit_linked_list_remove(linked_list, index);
+
+
+
+
+
+
+
+
 - [ ] ckit_stack.h
 - [x] ckit_queue.h (NOT REALLY TESTED) (WANT TO REVISIT THIS BECAUSE I CAN MAKE IT BETTER 100%)
-	- [x] ckit_enqueue()
-	- [x] ckit_dequeue()
-	- [x] ckit_queue_capacity()
-	- [x] ckit_queue_count()
+	- [x] ckit_queue_create(inital_capacity, element_size_in_bytes);
+	- [x] ckit_queue_free(queue);
+	- [x] ckit_enqueue(queue, element);
+	- [x] ckit_dequeue(queue, returned_elemenet);
+	- [x] ckit_queue_capacity(queue);
+	- [x] ckit_queue_count(queue);
+
 - [ ] ckit_binary_tree.h
 
 - [x] ckit_vector.h
