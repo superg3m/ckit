@@ -163,6 +163,18 @@ Thoughts:
 ### Native_Window
 - [ ] ckit_native_window_open()
 
+
+### Lexer
+- [ ] ckit_lexer.h
+	- [x] void ckit_lexer_load_file_data(lexer, file_path);
+	- [x] void ckit_lexer_load_string(lexer, string);
+	- [x] char* ckit_lexer_token_to_string(token);
+	- [/] CKIT_Tokens ckit_lexer_generate_next_token(lexer);
+
+	- [ ] CKIT_Tokens* ckit_lexer_generate_token_stream(lexer);
+	- [ ] CKIT_Tokens* ckit_lexer_consume_token_stream(lexer);
+	- [ ] CKIT_Tokens* ckit_lexer_peek_token_stream(lexer);
+
 ### Networking
 - [ ] ckit_client.h
 - [ ] ckit_server.h

@@ -2,6 +2,7 @@
 #include "../../core/String/ckit_char.h"
 #include "../../core/FileIO/ckit_file_system.h"
 #include "../../core/Memory/ckit_memory.h"
+#include "../../core/Collection/Vector/ckit_vector.h"
 
 char* keywords[] = {
 	"if",
@@ -55,6 +56,7 @@ void ckit_lexer_load_file_data(CKIT_Lexer* lexer, char* file_path) {
 	lexer->file_size = fs.file_size;
 	lexer->character_index = 0;
 	lexer->scratch_buffer_index = 0;
+	lexer->token_stream = NULLPTR;
 	ckit_memory_zero(lexer->scratch_buffer, CKIT_LEXER_SCRATCH_BUFFER_CAPACITY);
 	file_close(&fs);
 }
@@ -64,6 +66,7 @@ void ckit_lexer_load_string(CKIT_Lexer* lexer, char* string) {
 	lexer->file_size = ckit_cstr_length(string) + 1;
 	lexer->character_index = 0;
 	lexer->scratch_buffer_index = 0;
+	lexer->token_stream = NULLPTR;
 	ckit_memory_zero(lexer->scratch_buffer, CKIT_LEXER_SCRATCH_BUFFER_CAPACITY);
 }
 
@@ -187,7 +190,9 @@ CKIT_Tokens ckit_lexer_generate_next_token(CKIT_Lexer* lexer) {
 		lexer->scratch_buffer[lexer->scratch_buffer_index++] = c;
 	}
 
-	return ckit_lexer_classify_token(lexer);
+	ckit_vector_push(lexer->token_stream, ckit_lexer_classify_token(lexer));
+
+	return lexer->token_stream[ckit_vector_count(lexer->token_stream) - 1];
 }
 
 char* ckit_lexer_token_to_string(CKIT_Tokens token) {
