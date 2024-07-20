@@ -3,6 +3,7 @@
 #include "../../core/FileIO/ckit_file_system.h"
 #include "../../core/Memory/ckit_memory.h"
 #include "../../core/Collection/Vector/ckit_vector.h"
+#include "../../core/Collection/HashMap/ckit_hashmap.h"
 
 char* keywords[] = {
 	"if",
@@ -47,8 +48,63 @@ char* primative_types[] = {
 	"f32",
 	"f64",
 };
+CKIT_HashMap* token_map = NULLPTR; 
+
+void ckit_token_map_init() {
+	if (!token_map) {
+		CKIT_Token tokens[] = {
+			TOKEN_ASSIGNMENT_EQUAL,
+			TOKEN_COMPARE_EQUALS,
+			TOKEN_COMPARE_NOT_EQUALS,
+			TOKEN_COMPARE_LESS_THAN,
+			TOKEN_COMPARE_GREATER_THAN,
+			TOKEN_COMPARE_LESS_THAN_OR_EQUAL,
+			TOKEN_COMPARE_GREATER_THAN_OR_EQUAL,
+			TOKEN_COMPARE_AND,
+			TOKEN_COMPARE_OR,
+			TOKEN_ASSIGNMENT_ADDITION,
+			TOKEN_ASSIGNMENT_SUBTRACTION,
+			TOKEN_ASSIGNMENT_AND,
+			TOKEN_ASSIGNMENT_OR,
+			TOKEN_ASSIGNMENT_XOR,
+			TOKEN_ASSIGNMENT_LEFT_SHIFT,
+			TOKEN_ASSIGNMENT_RIGHT_SHIFT,
+			TOKEN_BITWISE_AND,
+			TOKEN_BITWISE_XOR,
+			TOKEN_BITWISE_OR,
+			TOKEN_BITWISE_LEFT_SHIFT,
+			TOKEN_BITWISE_RIGHT_SHIFT,
+			TOKEN_SYNTAX_SEMICOLON,
+			TOKEN_SYNTAX_COMMA,
+			TOKEN_SYNTAX_LEFT_PAREN,
+			TOKEN_SYNTAX_RIGHT_PAREN,
+			TOKEN_SYNTAX_LEFT_BRACE,
+			TOKEN_SYNTAX_RIGHT_BRACE,
+			TOKEN_COMMENT_SINGLE_LINE,
+			TOKEN_COMMENT_MULTI_LINE_START,
+			TOKEN_COMMENT_MULTI_LINE_END,
+			TOKEN_END_OF_FILE
+		};
+
+		char* token_strings[] = {
+			"=", "==", "!=", "<", ">", "<=", ">=", 
+			"&&", "||", 
+			"+=", "-=", 
+			"&=", "|=", "^=", "<<=", ">>=",
+			"&", "|", "^", "<<", ">>",
+			";", ",", "(", ")", "{", "}", "//", "/*", "*/", ""
+		};
+
+		token_map = ckit_hashmap_create(32, CKIT_Token);
+
+		for (u32 i = 0; i < ArrayCount(tokens); i++) {
+			ckit_hashmap_put(token_map, token_strings[i], &tokens[i], NULLPTR);
+		}
+	}
+}
 
 void ckit_lexer_load_file_data(CKIT_Lexer* lexer, char* file_path) {
+	ckit_token_map_init();
 	FileSystem fs = file_system_create(file_path);
 	file_open(&fs);
 
@@ -62,6 +118,7 @@ void ckit_lexer_load_file_data(CKIT_Lexer* lexer, char* file_path) {
 }
 
 void ckit_lexer_load_string(CKIT_Lexer* lexer, char* string) {
+	ckit_token_map_init();
 	lexer->file_data = string;
 	lexer->file_size = ckit_cstr_length(string) + 1;
 	lexer->character_index = 0;
@@ -88,9 +145,15 @@ internal char ckit_lexer_peek_next_char(CKIT_Lexer* lexer) {
 
 // Date: July 20, 2024
 // TODO(Jovanni): Fix this because its really really messy
-CKIT_Tokens ckit_lexer_classify_token(CKIT_Lexer* lexer) {
+CKIT_Token ckit_lexer_classify_token(CKIT_Lexer* lexer) {
 	// take the scratch buffer and generate a token
-	CKIT_Tokens ret = TOKEN_ILLEGAL;
+	CKIT_Token ret = TOKEN_ILLEGAL;
+	if (ckit_hashmap_has(token_map, lexer->scratch_buffer)) {
+		ret = *((CKIT_Token*)ckit_hashmap_get(token_map, lexer->scratch_buffer));
+		ckit_memory_zero(lexer->scratch_buffer, CKIT_LEXER_SCRATCH_BUFFER_CAPACITY);
+		lexer->scratch_buffer_index = 0;
+		return ret;
+	}
 
 	if (lexer->scratch_buffer[0] == '\"') {
 		u32 count = 1;
@@ -179,7 +242,7 @@ CKIT_Tokens ckit_lexer_classify_token(CKIT_Lexer* lexer) {
 	return ret;
 }
 
-CKIT_Tokens ckit_lexer_generate_next_token(CKIT_Lexer* lexer) {
+CKIT_Token ckit_lexer_generate_next_token(CKIT_Lexer* lexer) {
 	// populate the scratch buffer
 	char c = '\0';
 	while (TRUE) {
@@ -195,7 +258,7 @@ CKIT_Tokens ckit_lexer_generate_next_token(CKIT_Lexer* lexer) {
 	return lexer->token_stream[ckit_vector_count(lexer->token_stream) - 1];
 }
 
-char* ckit_lexer_token_to_string(CKIT_Tokens token) {
+char* ckit_lexer_token_to_string(CKIT_Token token) {
     switch (token) {
         case TOKEN_KEYWORD: return "TOKEN_KEYWORD";
         case TOKEN_DIRECTIVE: return "TOKEN_DIRECTIVE";
@@ -250,20 +313,20 @@ char* ckit_lexer_token_to_string(CKIT_Tokens token) {
     }
 }
 
-CKIT_Tokens* ckit_lexer_generate_token_stream(CKIT_Lexer* lexer) {
-	CKIT_Tokens* ret = lexer->token_stream;
+CKIT_Token* ckit_lexer_generate_token_stream(CKIT_Lexer* lexer) {
+	CKIT_Token* ret = lexer->token_stream;
 	lexer->token_stream = NULLPTR;
 	return ret;
 }
 
-CKIT_Tokens* ckit_lexer_consume_token_stream(CKIT_Lexer* lexer) {
-	CKIT_Tokens* ret = lexer->token_stream;
+CKIT_Token* ckit_lexer_consume_token_stream(CKIT_Lexer* lexer) {
+	CKIT_Token* ret = lexer->token_stream;
 	lexer->token_stream = NULLPTR;
 	return ret;
 }
 
-CKIT_Tokens* ckit_lexer_peek_token_stream(CKIT_Lexer* lexer) {
-	CKIT_Tokens* ret = lexer->token_stream;
+CKIT_Token* ckit_lexer_peek_token_stream(CKIT_Lexer* lexer) {
+	CKIT_Token* ret = lexer->token_stream;
 	lexer->token_stream = NULLPTR;
 	return ret;
 }

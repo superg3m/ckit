@@ -1,6 +1,6 @@
 # Ckits's Core Thesis
 - The point of the ckit is to provide a nice library to build c projects with.
-- Ckit is built with the granular api ckit granular [CKG](https://github.com/superg3m/ckit)
+- Ckit is built with the granular api ckit granular [CKG](https://github.com/superg3m/ckg)
 - This library will be completly cross-platform
 - Collection of tools, data structures, and algorithms that I find useful
 
