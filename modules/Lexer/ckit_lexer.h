@@ -10,10 +10,29 @@ typedef struct CKIT_Lexer {
 	CKIT_Tokens* token_stream; // vector
 } CKIT_Lexer;
 
+typedef struct CKIT_StructMemberInfo {
+	char* struct_parent_name;
+	char* name;
+	size_t offset_in_bytes;
+} CKIT_StructMemberInfo;
+
+typedef struct CKIT_StructInfo {
+	void* base_address;
+	char* struct_type_name; // this will be ckit string
+	char* struct_instance_name; // this will be ckit string
+	CKIT_StructMemberInfo* members_info; // this will be a vector
+} CKIT_StructInfo;
+
+typedef struct CKIT_Function {
+	char* arguments;
+} CKIT_Function;
+
 typedef enum CKIT_Tokens {
 	TOKEN_KEYWORD = 200,
 	TOKEN_DIRECTIVES,
 	TOKEN_IDENTIFIER,
+	TOKEN_FUNCTION_CALL,
+	TOKEN_INTRINSICS,
 
 	// Literals (naming here is a bit inconsistent)
 	TOKEN_STRING_LITERAL = 300,
@@ -90,6 +109,14 @@ char** keywords = {
 
 char** directives = {
 	"#if",
+	"#ifndef",
+	"#ifdef",
+	"#include",
+	"#define"
+};
+
+char** intrinsics = {
+	"sizeof()",
 	"#ifndef",
 	"#ifdef",
 	"#include",
