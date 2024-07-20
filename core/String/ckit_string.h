@@ -33,7 +33,7 @@ extern "C" {
 
   void ckit_str_insert(String str, const u32 index);
   void ckit_str_insert_char(String str, const u32 index);
-  void ckit_str_clear(String str);
+  void ckit_str_clear(const char* str1);
 
   // If you are copying data to the string and need to update the header state specifically for length
   void ckit_str_recanonicalize_header_length(String str);

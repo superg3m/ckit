@@ -88,7 +88,7 @@ Boolean ckit_str_equal(const char* str1, const char* str2) {
     return ckg_cstr_equal(str1, str2);
 }
 
-void ckit_str_clear(const String str1) {
+void ckit_str_clear(const char* str1) {
     ckg_cstr_clear(str1);
 }
 

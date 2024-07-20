@@ -5,7 +5,9 @@
 typedef struct CKIT_Lexer {
 	u32 line_number;
 	u32 character_index;
+	u32 file_size;
 	u8* file_data;
+	u32 scratch_buffer_index;
 	char scratch_buffer[CKIT_LEXER_SCRATCH_BUFFER_CAPACITY]; // used to hold the number of things resets when you generate a new token
 	CKIT_Tokens* token_stream; // vector
 } CKIT_Lexer;
@@ -72,36 +74,8 @@ typedef enum CKIT_Tokens {
 
 	// MISC
 	TOKEN_END_OF_FILE = 900,
-	TOKEN_ILLEGAL,
+	TOKEN_ILLEGAL = -1,
 } CKIT_Tokens;
-
-/*
-char** keywords = {
-	"if",
-	"while",
-	"struct",
-	"typedef",
-	"return",
-	"continue",
-	"break"
-};
-
-char** directives = {
-	"#if",
-	"#ifndef",
-	"#ifdef",
-	"#include",
-	"#define"
-};
-
-char** intrinsics = {
-	"sizeof()",
-	"#ifndef",
-	"#ifdef",
-	"#include",
-	"#define"
-};
-*/
 
 void ckit_lexer_load_file_data(CKIT_Lexer* lexer, char* file_path);
 char ckit_lexer_consume_next_char(CKIT_Lexer* lexer);
