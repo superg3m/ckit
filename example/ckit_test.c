@@ -87,7 +87,7 @@ void test_vector_operations() {
 	ckit_assert_msg(charVector == NULLPTR, "Error: Vector data is not NULL\n");
 	ckit_assert_msg(stringVector == NULLPTR, "Error: Vector data is not NULL\n");
 
-	LOG_INFO("All vector tests passed!\n"); 
+	LOG_SUCCESS("All vector tests passed!\n"); 
 	return;
 }
 
@@ -95,7 +95,7 @@ void test_string_operations() {
 	// Test types
 
 
-	LOG_INFO("All string tests passed!\n"); 
+	LOG_SUCCESS("All string tests passed!\n"); 
 	return;
 }
 
@@ -127,7 +127,7 @@ int main() {
 	ckg_memory_copy(int_array2, int_array, sizeof(int) * 5, sizeof(int) * 5);
 	for (int i = 0; i < 5; i++) {
 		ckit_assert_msg(int_array[i] == 1432, "Memory copy is fucked!");
-		LOG_INFO("Element: %d\n", int_array[i]);
+		LOG_SUCCESS("Element: %d\n", int_array[i]);
 	}
 
 	LOG_DEBUG("Element: %d\n\n", int_array[0]);
@@ -136,7 +136,7 @@ int main() {
 	LOG_ERROR("TESTING\n");
 	LOG_WARN("TESTING\n");
 	LOG_DEBUG("TESTING\n");
-	LOG_INFO("TESTING\n");
+	LOG_SUCCESS("TESTING\n");
 	LOG_PRINT("TESTING %s\n\n", str);
 
 	ckit_free(int_array);
@@ -173,7 +173,7 @@ int main() {
 	// String str_to_be_split = ckit_str_create("They said it couldn't be done. They tried to recite the dark magics to me! THEY DON'T KNOW I WAS THERE WHEN THEY WERE WRITTEN!");
 	String* split_strings = ckit_str_split("They said it couldn't be done. They tried to recite the dark magics to me! THEY DON'T KNOW I WAS THERE WHEN THEY WERE WRITTEN!", " ");
 	for (int i = 0; i < ckit_vector_count(split_strings); i++) {
-		LOG_INFO("str #%d | %s\n", i, split_strings[i]);
+		LOG_SUCCESS("str #%d | %s\n", i, split_strings[i]);
 		ckit_str_free(split_strings[i]);
 	}
 	ckit_vector_free(split_strings);
@@ -226,6 +226,14 @@ int main() {
 		ckit_dequeue(queue, &current_value);
 		LOG_DEBUG("value: %d\n", current_value);
 	}
+
+	ckit_queue_free(queue);
+
+	CKIT_Lexer lexer;
+	ckit_lexer_load_string(&lexer, "int x = 5;");
+	LOG_SUCCESS("%s\n", ckit_lexer_token_to_string(ckit_lexer_generate_next_token(&lexer)));
+	LOG_SUCCESS("%s\n", ckit_lexer_token_to_string(ckit_lexer_generate_next_token(&lexer)));
+	// LOG_SUCCESS("%s\n", ckit_lexer_token_to_string(ckit_lexer_generate_next_token(&lexer)));
 
 	ckit_cleanup();
 	return 0;

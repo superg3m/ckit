@@ -9,7 +9,7 @@
 //========================== Begin Types ==========================
 #define LOGGING_ENABLED TRUE
 #define LOG_PRINT_ENABLED TRUE
-#define LOG_INFO_ENABLED TRUE
+#define LOG_SUCCESS_ENABLED TRUE
 #define LOG_DEBUG_ENABLED TRUE
 #define LOG_WARN_ENABLED TRUE
 
@@ -44,7 +44,7 @@ extern "C" {
 // #define log_output(log_level, message, ...) MACRO_log_output(log_level, message, ##__VA_ARGS__)
 #define log_output(log_level, message, ...) MACRO_ckg_log_output(log_level, message, ##__VA_ARGS__)
 #define LOG_PRINT(message, ...) CKG_LOG_PRINT(message, ##__VA_ARGS__)
-#define LOG_INFO(message, ...) CKG_LOG_SUCCESS(message, ##__VA_ARGS__)
+#define LOG_SUCCESS(message, ...) CKG_LOG_SUCCESS(message, ##__VA_ARGS__)
 #define LOG_DEBUG(message, ...) CKG_LOG_DEBUG(message, ##__VA_ARGS__)
 #define LOG_WARN(message, ...) CKG_LOG_WARN(message, ##__VA_ARGS__)
 #define LOG_ERROR(message, ...) CKG_LOG_ERROR(message, ##__VA_ARGS__)

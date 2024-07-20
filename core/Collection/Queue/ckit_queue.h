@@ -26,6 +26,7 @@ typedef struct CKIT_Queue {
 extern "C" {
 #endif
 	CKIT_Queue* MACRO_ckit_queue_create(u32 inital_capacity, size_t element_size_in_bytes);
+	CKIT_Queue* MACRO_ckit_queue_free(CKIT_Queue* queue);
 	void ckit_enqueue(CKIT_Queue* queue, void* element);
 	void ckit_dequeue(CKIT_Queue* queue, void* returned_elemenet);
 	u32 ckit_queue_capacity(CKIT_Queue* queue);
@@ -37,5 +38,6 @@ extern "C" {
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
 #define ckit_queue_create(inital_capacity, type) MACRO_ckit_queue_create(inital_capacity, sizeof(type));
+#define ckit_queue_free(queue) MACRO_ckit_queue_free(queue);
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 

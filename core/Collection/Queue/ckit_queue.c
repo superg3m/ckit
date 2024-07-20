@@ -10,6 +10,16 @@ CKIT_Queue* MACRO_ckit_queue_create(u32 inital_capacity, size_t element_size_in_
 	return ret;
 }
 
+CKIT_Queue* MACRO_ckit_queue_free(CKIT_Queue* queue) {
+	queue->element_size_in_bytes = 0;
+	queue->capacity = 0;
+	queue->count = 0;
+	ckit_free(queue->data);
+	ckit_free(queue);
+	return queue;
+}
+
+
 // Date: July 19, 2024
 // NOTE(Jovanni): If you have a count it kind of defeats the purpose sort of
 void ckit_dequeue(CKIT_Queue* queue, void* returned_element) {

@@ -2,16 +2,6 @@
 
 #define CKIT_LEXER_SCRATCH_BUFFER_CAPACITY 512
 
-typedef struct CKIT_Lexer {
-	u32 line_number;
-	u32 character_index;
-	u32 file_size;
-	u8* file_data;
-	u32 scratch_buffer_index;
-	char scratch_buffer[CKIT_LEXER_SCRATCH_BUFFER_CAPACITY]; // used to hold the number of things resets when you generate a new token
-	CKIT_Tokens* token_stream; // vector
-} CKIT_Lexer;
-
 typedef enum CKIT_Tokens {
 	TOKEN_KEYWORD = 200,
 	TOKEN_DIRECTIVE,
@@ -22,7 +12,7 @@ typedef enum CKIT_Tokens {
 	// Literals (naming here is a bit inconsistent)
 	TOKEN_STRING_LITERAL = 300,
 	TOKEN_CHARACTER_LITERAL,
-	TOKEN_INTERGER_LITERAL, // Allow 1_000_000
+	TOKEN_INTEGER_LITERAL, // Allow 1_000_000
 	TOKEN_FLOAT_LITERAL,
 	TOKEN_STRUCT_LITERAL,
 	TOKEN_ARRAY_LITERAL,
@@ -78,11 +68,20 @@ typedef enum CKIT_Tokens {
 	TOKEN_ILLEGAL = -1,
 } CKIT_Tokens;
 
+typedef struct CKIT_Lexer {
+	u32 line_number;
+	u32 character_index;
+	u32 file_size;
+	u8* file_data;
+	u32 scratch_buffer_index;
+	char scratch_buffer[CKIT_LEXER_SCRATCH_BUFFER_CAPACITY]; // used to hold the number of things resets when you generate a new token
+	CKIT_Tokens* token_stream; // vector
+} CKIT_Lexer;
+
 void ckit_lexer_load_file_data(CKIT_Lexer* lexer, char* file_path);
-void ckit_lexer_load_file_data(CKIT_Lexer* lexer, char* file_path);
-char ckit_lexer_consume_next_char(CKIT_Lexer* lexer);
-char ckit_lexer_peek_next_char(CKIT_Lexer* lexer);
-CKIT_Tokens ckit_lexer_generate_token(CKIT_Lexer* lexer);
+void ckit_lexer_load_string(CKIT_Lexer* lexer, char* string);
+char* ckit_lexer_token_to_string(CKIT_Tokens token);
+CKIT_Tokens ckit_lexer_generate_next_token(CKIT_Lexer* lexer);
 
 CKIT_Tokens* ckit_lexer_generate_token_stream(CKIT_Lexer* lexer);
 CKIT_Tokens* ckit_lexer_consume_token_stream(CKIT_Lexer* lexer);
