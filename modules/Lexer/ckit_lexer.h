@@ -14,9 +14,10 @@ typedef struct CKIT_Lexer {
 
 typedef enum CKIT_Tokens {
 	TOKEN_KEYWORD = 200,
-	TOKEN_DIRECTIVES,
+	TOKEN_DIRECTIVE,
 	TOKEN_IDENTIFIER,
-	TOKEN_INTRINSICS,
+	TOKEN_INTRINSIC,
+	TOKEN_PRIMATIVE,
 
 	// Literals (naming here is a bit inconsistent)
 	TOKEN_STRING_LITERAL = 300,
@@ -29,8 +30,8 @@ typedef enum CKIT_Tokens {
 	// Syntax
 	TOKEN_SYNTAX_SEMICOLON = 400,
 	TOKEN_SYNTAX_COMMA,
-	TOKEN_SYNTAX_DOUBLE_QUOTES,
-	TOKEN_SYNTAX_SINGLE_QUOTES,
+	TOKEN_SYNTAX_DOUBLE_QUOTE,
+	TOKEN_SYNTAX_SINGLE_QUOTE,
 	TOKEN_SYNTAX_POINTER,
 	TOKEN_SYNTAX_REFERENCE,
 	TOKEN_SYNTAX_LEFT_PAREN,
@@ -78,7 +79,11 @@ typedef enum CKIT_Tokens {
 } CKIT_Tokens;
 
 void ckit_lexer_load_file_data(CKIT_Lexer* lexer, char* file_path);
+void ckit_lexer_load_file_data(CKIT_Lexer* lexer, char* file_path);
 char ckit_lexer_consume_next_char(CKIT_Lexer* lexer);
 char ckit_lexer_peek_next_char(CKIT_Lexer* lexer);
 CKIT_Tokens ckit_lexer_generate_token(CKIT_Lexer* lexer);
+
+CKIT_Tokens* ckit_lexer_generate_token_stream(CKIT_Lexer* lexer);
 CKIT_Tokens* ckit_lexer_consume_token_stream(CKIT_Lexer* lexer);
+CKIT_Tokens* ckit_lexer_peek_token_stream(CKIT_Lexer* lexer);
