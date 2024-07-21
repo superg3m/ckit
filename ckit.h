@@ -20,6 +20,7 @@
 #include "./core/Collection/Vector/ckit_vector.h"
 #include "./core/Collection/HashMap/ckit_hashing.h"
 #include "./core/Collection/HashMap/ckit_hashmap.h"
+#include "./core/Collection/HashSet/ckit_hashset.h"
 #include "./core/Collection/Queue/ckit_queue.h"
 
 // Modules

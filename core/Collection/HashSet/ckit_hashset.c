@@ -1,17 +1,6 @@
 #include "./ckit_hashset.h"
 #include "../Vector/ckit_vector.h"
 
-u32 ckit_hash_value(char *str) {
-	unsigned long hash = 5381;
-	int c;
-
-	while (c = *str++) {
-		hash = ((hash << 5) + hash) + c;
-	}
-
-	return hash;
-}
-
 float ckit_hashset_load_factor(CKIT_HashSet* hashset) {
 	return (float)hashset->count / (float)hashset->capacity;
 }

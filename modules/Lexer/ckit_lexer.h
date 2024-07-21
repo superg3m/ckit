@@ -1,8 +1,7 @@
 #include "../../core/ckit_types.h"
-
 #define CKIT_LEXER_SCRATCH_BUFFER_CAPACITY 512
 
-typedef enum CKIT_Token {
+typedef enum CKIT_Token_Type {
 	TOKEN_KEYWORD = 200,
 	TOKEN_DIRECTIVE,
 	TOKEN_IDENTIFIER,
@@ -65,7 +64,13 @@ typedef enum CKIT_Token {
 
 	// MISC
 	TOKEN_END_OF_FILE = 900,
-	TOKEN_ILLEGAL = -1,
+	TOKEN_ILLEGAL,
+} CKIT_Token_Type;
+
+typedef struct CKIT_Token {
+	CKIT_Token_Type type;
+	size_t value_size_in_bytes;
+	void* value;
 } CKIT_Token;
 
 typedef struct CKIT_Lexer {
@@ -73,9 +78,11 @@ typedef struct CKIT_Lexer {
 	u32 character_index;
 	u32 file_size;
 	u8* file_data;
+	CKIT_Token token; // current token this is a good idea I promise
+	CKIT_Token* token_stream; // vector
 	u32 scratch_buffer_index;
 	char scratch_buffer[CKIT_LEXER_SCRATCH_BUFFER_CAPACITY]; // used to hold the number of things resets when you generate a new token
-	CKIT_Token* token_stream; // vector
+	char c;
 } CKIT_Lexer;
 
 void ckit_lexer_load_file_data(CKIT_Lexer* lexer, char* file_path);

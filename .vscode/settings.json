@@ -47,7 +47,8 @@
 		"ckit_queue.h": "c",
 		"ckit_os.h": "c",
 		"ckit_lexer.h": "c",
-		"ckit_char.h": "c"
+		"ckit_char.h": "c",
+		"ckit_hashset.h": "c"
 	},
 	"editor.insertSpaces": false
 }

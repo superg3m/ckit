@@ -4,9 +4,11 @@
 #include "../../core/Memory/ckit_memory.h"
 #include "../../core/Collection/Vector/ckit_vector.h"
 #include "../../core/Collection/HashMap/ckit_hashmap.h"
+#include "../../core/Collection/HashSet/ckit_hashset.h"
 
 char* keywords[] = {
 	"if",
+	"else",
 	"while",
 	"struct",
 	"typedef",
@@ -48,11 +50,14 @@ char* primative_types[] = {
 	"f32",
 	"f64",
 };
-CKIT_HashMap* token_map = NULLPTR; 
 
-void ckit_token_map_init() {
-	if (!token_map) {
-		CKIT_Token tokens[] = {
+CKIT_HashMap* syntax_token_type_map = NULLPTR;
+CKIT_HashSet* keyword_set = NULLPTR;
+CKIT_HashSet* primative_types_set = NULLPTR;
+
+void ckit_lexer_token_map_init() {
+	if (!syntax_token_type_map) {
+		CKIT_Token_Type syntax_token_types[] = {
 			TOKEN_ASSIGNMENT_EQUAL,
 			TOKEN_COMPARE_EQUALS,
 			TOKEN_COMPARE_NOT_EQUALS,
@@ -86,7 +91,7 @@ void ckit_token_map_init() {
 			TOKEN_END_OF_FILE
 		};
 
-		char* token_strings[] = {
+		char* syntax_token_type_strings[] = {
 			"=", "==", "!=", "<", ">", "<=", ">=", 
 			"&&", "||", 
 			"+=", "-=", 
@@ -95,174 +100,244 @@ void ckit_token_map_init() {
 			";", ",", "(", ")", "{", "}", "//", "/*", "*/", ""
 		};
 
-		token_map = ckit_hashmap_create(32, CKIT_Token);
+		syntax_token_type_map = ckit_hashmap_create(32, CKIT_Token_Type);
 
-		for (u32 i = 0; i < ArrayCount(tokens); i++) {
-			ckit_hashmap_put(token_map, token_strings[i], &tokens[i], NULLPTR);
+		for (u32 i = 0; i < ArrayCount(syntax_token_types); i++) {
+			ckit_hashmap_put(syntax_token_type_map, syntax_token_type_strings[i], &syntax_token_types[i], NULLPTR);
 		}
 	}
 }
 
-void ckit_lexer_load_file_data(CKIT_Lexer* lexer, char* file_path) {
-	ckit_token_map_init();
-	FileSystem fs = file_system_create(file_path);
-	file_open(&fs);
+void ckit_lexer_init_keyword_set() {
+	keyword_set = ckit_hashset_create(32);
 
-	lexer->file_data = fs.data;
-	lexer->file_size = fs.file_size;
-	lexer->character_index = 0;
-	lexer->scratch_buffer_index = 0;
-	lexer->token_stream = NULLPTR;
-	ckit_memory_zero(lexer->scratch_buffer, CKIT_LEXER_SCRATCH_BUFFER_CAPACITY);
-	file_close(&fs);
-}
-
-void ckit_lexer_load_string(CKIT_Lexer* lexer, char* string) {
-	ckit_token_map_init();
-	lexer->file_data = string;
-	lexer->file_size = ckit_cstr_length(string) + 1;
-	lexer->character_index = 0;
-	lexer->scratch_buffer_index = 0;
-	lexer->token_stream = NULLPTR;
-	ckit_memory_zero(lexer->scratch_buffer, CKIT_LEXER_SCRATCH_BUFFER_CAPACITY);
-}
-
-internal char ckit_lexer_consume_next_char(CKIT_Lexer* lexer) {
-	ckit_assert(lexer->scratch_buffer_index < CKIT_LEXER_SCRATCH_BUFFER_CAPACITY);
-
-	char c = lexer->file_data[lexer->character_index++];
-	if (c == '\n') {
-		lexer->line_number++;
+	for (u32 i = 0; i < ArrayCount(keywords); i++) {
+		ckit_hashset_put(keyword_set, keywords[i]);
 	}
-
-	return c;
 }
+
+void ckit_lexer_init_primative_types_set() {
+	primative_types_set = ckit_hashset_create(32);
+
+	for (u32 i = 0; i < ArrayCount(primative_types); i++) {
+		ckit_hashset_put(primative_types_set, primative_types[i]);
+	}
+}
+
 
 internal char ckit_lexer_peek_next_char(CKIT_Lexer* lexer) {
 	char c = lexer->file_data[lexer->character_index];
 	return c;
 }
 
-// Date: July 20, 2024
-// TODO(Jovanni): Fix this because its really really messy
-CKIT_Token ckit_lexer_classify_token(CKIT_Lexer* lexer) {
-	// take the scratch buffer and generate a token
-	CKIT_Token ret = TOKEN_ILLEGAL;
-	if (ckit_hashmap_has(token_map, lexer->scratch_buffer)) {
-		ret = *((CKIT_Token*)ckit_hashmap_get(token_map, lexer->scratch_buffer));
-		ckit_memory_zero(lexer->scratch_buffer, CKIT_LEXER_SCRATCH_BUFFER_CAPACITY);
-		lexer->scratch_buffer_index = 0;
+internal char ckit_lexer_consume_next_char(CKIT_Lexer* lexer) {
+	ckit_assert(lexer->scratch_buffer_index < CKIT_LEXER_SCRATCH_BUFFER_CAPACITY);
+	lexer->scratch_buffer[lexer->scratch_buffer_index++] = lexer->c;
+	lexer->c = lexer->file_data[++lexer->character_index];
+	if (lexer->c == '\n') {
+		lexer->line_number++;
+	}
+	return lexer->c;
+}
+
+void ckit_lexer_load_file_data(CKIT_Lexer* lexer, char* file_path) {
+	ckit_lexer_token_map_init();
+	ckit_lexer_init_keyword_set();
+	ckit_lexer_init_primative_types_set();
+
+	FileSystem fs = file_system_create(file_path);
+	file_open(&fs);
+	lexer->file_data = fs.data;
+	lexer->file_size = fs.file_size;
+	lexer->character_index = 0;
+	lexer->scratch_buffer_index = 0;
+	lexer->token_stream = NULLPTR;
+	lexer->c = ckit_lexer_peek_next_char(lexer);
+	ckit_memory_zero(lexer->scratch_buffer, CKIT_LEXER_SCRATCH_BUFFER_CAPACITY);
+	file_close(&fs);
+}
+
+void ckit_lexer_load_string(CKIT_Lexer* lexer, char* string) {
+	ckit_lexer_token_map_init();
+	ckit_lexer_init_keyword_set();
+	ckit_lexer_init_primative_types_set();
+	lexer->file_data = string;
+	lexer->file_size = ckit_cstr_length(string) + 1;
+	lexer->character_index = 0;
+	lexer->scratch_buffer_index = 0;
+	lexer->token_stream = NULLPTR;
+	lexer->c = ckit_lexer_peek_next_char(lexer);
+	ckit_memory_zero(lexer->scratch_buffer, CKIT_LEXER_SCRATCH_BUFFER_CAPACITY);
+}
+
+internal void ckit_lexer_skip_whitespace(CKIT_Lexer* lexer) { // actually bad behavior you are consuming the whitespace and putting it into the scratch buffer
+	while (lexer->c == ' ' || lexer->c == '\t') {
+		ckit_lexer_consume_next_char(lexer);
+	}
+}
+
+// skip_white_space
+// check if literal
+// check if keyword
+// check if identifer
+// check if ...
+
+// int x = 4.9;
+
+internal CKIT_Token ckit_lexer_null_token() {
+	CKIT_Token ret; 
+	ret.value_size_in_bytes = 0;
+	ret.value = NULLPTR;
+	ret.type = TOKEN_ILLEGAL;
+	return ret;
+}
+
+CKIT_Token MACRO_ckit_lexer_token_create(CKIT_Token_Type token_type, size_t value_size_in_bytes, void* value) {
+	CKIT_Token ret = ckit_lexer_null_token(); 
+	if (token_type == TOKEN_ILLEGAL) {
+		ret.value_size_in_bytes = 0;
+		ret.value = NULLPTR;
+		ret.type = TOKEN_ILLEGAL;
 		return ret;
 	}
 
-	if (lexer->scratch_buffer[0] == '\"') {
-		u32 count = 1;
-		while (lexer->file_size < count++) {
-			if (lexer->scratch_buffer[count++] == '\"') {
-				ret = TOKEN_STRING_LITERAL;
-				break;
-			}
+
+
+	ret.value_size_in_bytes = value_size_in_bytes;
+	ret.value = ckit_alloc(value_size_in_bytes, MEMORY_TAG_TEMPORARY);
+	ckit_memory_copy(value, ret.value, ret.value_size_in_bytes, ret.value_size_in_bytes);
+	ret.type = token_type;
+
+	return ret;
+}
+#define ckit_lexer_token_create(type, value) MACRO_ckit_lexer_token_create(type, sizeof(value), value)
+
+
+
+internal CKIT_Token ckit_lexer_maybe_consume_number_literal(CKIT_Lexer* lexer) {
+	CKIT_Token_Type ret_type = TOKEN_ILLEGAL;
+
+	Boolean is_float = FALSE;
+	while (ckit_char_is_digit(lexer->c)) {
+		ckit_lexer_skip_whitespace(lexer);
+		ckit_lexer_consume_next_char(lexer);
+		if (!is_float) {
+			ret_type = TOKEN_INTEGER_LITERAL;
+		}
+		if (lexer->c == '.') { // float
+			is_float = TRUE;
+			ret_type = TOKEN_FLOAT_LITERAL;
+			ckit_lexer_consume_next_char(lexer);
 		}
 	}
 
-	for (int i = 0; i < ArrayCount(keywords); i++) {
-		if (ckit_str_equal(keywords[i], lexer->scratch_buffer)) {
-			ret = TOKEN_KEYWORD;
-			ckit_memory_zero(lexer->scratch_buffer, CKIT_LEXER_SCRATCH_BUFFER_CAPACITY);
-			lexer->scratch_buffer_index = 0;
-			return ret;
-		}
+	CKIT_Token ret = ckit_lexer_null_token();
+
+	if (ret_type == TOKEN_FLOAT_LITERAL) {
+		double float_literal = atof(lexer->scratch_buffer);
+		ret = ckit_lexer_token_create(ret_type, &float_literal); 
+	} else if (ret_type == TOKEN_INTEGER_LITERAL) {
+		int integer_literal = atoi(lexer->scratch_buffer);
+		ret = ckit_lexer_token_create(ret_type, &integer_literal);
 	}
-
-	for (int i = 0; i < ArrayCount(directives); i++) {
-		if (ckit_str_equal(directives[i], lexer->scratch_buffer)) {
-			ret = TOKEN_DIRECTIVE;
-			ckit_memory_zero(lexer->scratch_buffer, CKIT_LEXER_SCRATCH_BUFFER_CAPACITY);
-			lexer->scratch_buffer_index = 0;
-			return ret;
-		}
-	}
-
-	for (int i = 0; i < ArrayCount(intrinsics); i++) {
-		if (ckit_str_equal(intrinsics[i], lexer->scratch_buffer)) {
-			ret = TOKEN_INTRINSIC;
-			ckit_memory_zero(lexer->scratch_buffer, CKIT_LEXER_SCRATCH_BUFFER_CAPACITY);
-			lexer->scratch_buffer_index = 0;
-			return ret;
-		}
-	}
-
-	for (int i = 0; i < ArrayCount(primative_types); i++) {
-		if (ckit_str_equal(primative_types[i], lexer->scratch_buffer)) {
-			ret = TOKEN_PRIMATIVE;
-			ckit_memory_zero(lexer->scratch_buffer, CKIT_LEXER_SCRATCH_BUFFER_CAPACITY);
-			lexer->scratch_buffer_index = 0;
-			return ret;
-		}
-	}
-
-	if (ckit_char_is_digit(lexer->scratch_buffer[0])) {
-		u32 count = 0;
-		Boolean is_float = FALSE;
-		while (ckit_char_is_digit(lexer->scratch_buffer[count]) || lexer->scratch_buffer[count] == '.') {
-			if (lexer->scratch_buffer[count++] == '.') {
-				if (is_float) {
-					// bad token 1..10512 (might be interesting for: for loops like range)
-				}
-				is_float = TRUE;
-				ret = TOKEN_FLOAT_LITERAL;
-			}
-
-			if (!is_float) {
-				ret = TOKEN_INTEGER_LITERAL;
-			}
-
-			if (lexer->scratch_buffer[count] == '\0') {
-				ckit_memory_zero(lexer->scratch_buffer, CKIT_LEXER_SCRATCH_BUFFER_CAPACITY);
-				lexer->scratch_buffer_index = 0;
-				return ret;
-			}
-		}
-	}
-
-	
-	if (ckit_char_is_alpha(lexer->scratch_buffer[0])) {
-		u32 count = 0;
-		while (ckit_char_is_alpha_numeric(lexer->scratch_buffer[count++])) {
-			if (lexer->scratch_buffer[count] == '\0') {
-				ret = TOKEN_IDENTIFIER;
-				break;
-			}
-		}
-	}
-
-	ckit_str_clear(lexer->scratch_buffer);
-	lexer->scratch_buffer_index = 0;
 
 	return ret;
 }
 
-CKIT_Token ckit_lexer_generate_next_token(CKIT_Lexer* lexer) {
-	// populate the scratch buffer
-	char c = '\0';
-	while (TRUE) {
-		// Date: July 20, 2024
-		// TODO(Jovanni): Might not be a good idea tbh seperating the scratch buffer might not a be a good idea
-		// This doesn't wrok at all because when you consume a token you will know exectly what token it should be so this needs a rewrite.
-		c = ckit_lexer_consume_next_char(lexer);
-		if (c == ' ' || c == '\n') {
-			break;
+internal void ckit_lexer_report_error(CKIT_Lexer* lexer, char* message) {
+
+}
+
+internal CKIT_Token ckit_lexer_maybe_consume_string_literal(CKIT_Lexer* lexer) {
+	CKIT_Token_Type ret_type = TOKEN_ILLEGAL;
+
+	Boolean first_character_processed = FALSE;
+	if (lexer->c == '\"') {
+		ckit_lexer_consume_next_char(lexer);
+		while (lexer->c != '\"' && (lexer->file_size > lexer->character_index)) {
+			ret_type = TOKEN_STRING_LITERAL;
+			first_character_processed = TRUE;
+			ckit_lexer_consume_next_char(lexer);
 		}
-		lexer->scratch_buffer[lexer->scratch_buffer_index++] = c;
 	}
 
-	ckit_vector_push(lexer->token_stream, ckit_lexer_classify_token(lexer));
+	CKIT_Token ret = ckit_lexer_token_create(ret_type, lexer->scratch_buffer);
 
-	return lexer->token_stream[ckit_vector_count(lexer->token_stream) - 1];
+	return ret;
+}
+
+internal CKIT_Token ckit_lexer_maybe_consume_identifier(CKIT_Lexer* lexer) {
+	CKIT_Token_Type ret_type = TOKEN_ILLEGAL;
+
+	Boolean first_character_processed = FALSE;
+	while (ckit_char_is_alpha(lexer->c) || (first_character_processed && ckit_char_is_alpha_numeric(lexer->c))) {
+		first_character_processed = TRUE;
+		ckit_lexer_consume_next_char(lexer);
+		ret_type = TOKEN_IDENTIFIER;
+	}
+
+	if (ckit_hashset_has(keyword_set, lexer->scratch_buffer)) {
+		ret_type = TOKEN_KEYWORD;
+	} else if (ckit_hashset_has(primative_types_set, lexer->scratch_buffer)) {
+		ret_type = TOKEN_PRIMATIVE;
+	}
+
+	CKIT_Token ret = ckit_lexer_token_create(ret_type, lexer->scratch_buffer);
+	return ret;
+}
+
+internal CKIT_Token ckit_lexer_maybe_consume_syntax_token(CKIT_Lexer* lexer) {
+	CKIT_Token_Type ret_type = TOKEN_ILLEGAL;
+
+	ckit_lexer_consume_next_char(lexer); // should be pretty much guarenteed
+
+	switch (lexer->c) {
+		case '<': {
+			if (ckit_lexer_peek_next_char(lexer) == '<') ckit_lexer_consume_next_char(lexer);
+			if (ckit_lexer_peek_next_char(lexer) == '=') ckit_lexer_consume_next_char(lexer);
+		} break;
+
+		case '>': {
+			if (ckit_lexer_peek_next_char(lexer) == '>') ckit_lexer_consume_next_char(lexer);
+			if (ckit_lexer_peek_next_char(lexer) == '=') ckit_lexer_consume_next_char(lexer);
+		} break;
+
+		case '-': {
+			if (ckit_lexer_peek_next_char(lexer) == '=') ckit_lexer_consume_next_char(lexer);
+			if (ckit_lexer_peek_next_char(lexer) == '-') ckit_lexer_consume_next_char(lexer);
+		} break;
+
+		case '+': {
+			if (ckit_lexer_peek_next_char(lexer) == '=') ckit_lexer_consume_next_char(lexer);
+			if (ckit_lexer_peek_next_char(lexer) == '+') ckit_lexer_consume_next_char(lexer);
+		} break;
+		
+		case '/': {
+			if (ckit_lexer_peek_next_char(lexer) == '*') ckit_lexer_consume_next_char(lexer);
+			if (ckit_lexer_peek_next_char(lexer) == '/') ckit_lexer_consume_next_char(lexer);
+		} break;
+
+		case '!':
+		case '|':
+		case '^':
+		case '*':
+		case '=':
+		case '&': {
+			if (ckit_lexer_peek_next_char(lexer) == '=') ckit_lexer_consume_next_char(lexer);
+		} break;
+	}
+
+	if (ckit_hashmap_has(syntax_token_type_map, lexer->scratch_buffer)) {
+		ret_type = *((CKIT_Token_Type*)ckit_hashmap_get(syntax_token_type_map, lexer->scratch_buffer));
+	}
+
+	CKIT_Token ret = ckit_lexer_token_create(ret_type, lexer->scratch_buffer);
+
+	return ret;
 }
 
 char* ckit_lexer_token_to_string(CKIT_Token token) {
-    switch (token) {
+    switch (token.type) {
         case TOKEN_KEYWORD: return "TOKEN_KEYWORD";
         case TOKEN_DIRECTIVE: return "TOKEN_DIRECTIVE";
         case TOKEN_IDENTIFIER: return "TOKEN_IDENTIFIER";
@@ -316,6 +391,38 @@ char* ckit_lexer_token_to_string(CKIT_Token token) {
     }
 }
 
+CKIT_Token ckit_lexer_generate_next_token(CKIT_Lexer* lexer) {
+	ckit_lexer_skip_whitespace(lexer);
+
+	ckit_memory_zero(lexer->scratch_buffer, CKIT_LEXER_SCRATCH_BUFFER_CAPACITY);
+	lexer->scratch_buffer_index = 0;
+	CKIT_Token ret = ckit_lexer_null_token();
+
+	ret = ckit_lexer_maybe_consume_string_literal(lexer);
+	if (ret.type != TOKEN_ILLEGAL) {
+		return ret;
+	}
+
+	ret = ckit_lexer_maybe_consume_number_literal(lexer);
+	if (ret.type != TOKEN_ILLEGAL) {
+		return ret;
+	}
+
+	ret = ckit_lexer_maybe_consume_identifier(lexer); // primative, identifer, keyword
+	if (ret.type != TOKEN_ILLEGAL) {
+		return ret;
+	}
+
+	ret = ckit_lexer_maybe_consume_syntax_token(lexer);
+	if (ret.type != TOKEN_ILLEGAL) {
+		return ret;
+	}
+
+
+
+	return ret;
+}
+
 CKIT_Token* ckit_lexer_generate_token_stream(CKIT_Lexer* lexer) {
 	CKIT_Token* ret = lexer->token_stream;
 	lexer->token_stream = NULLPTR;
@@ -334,3 +441,8 @@ CKIT_Token* ckit_lexer_peek_token_stream(CKIT_Lexer* lexer) {
 	return ret;
 }
 
+// ckit_lexer_skip_whitespace(lexer);
+// ckit_lexer_maybe_consume_string_literal
+// ckit_lexer_maybe_consume_number_literal
+// ckit_lexer_maybe_consume_indentifer_literal
+// ckit_lexer_maybe_consume_keyword_literal

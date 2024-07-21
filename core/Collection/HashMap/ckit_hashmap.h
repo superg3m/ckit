@@ -8,7 +8,7 @@
 #include "../../ckit_types.h"
 #include "../../String/ckit_string.h"
 
-typedef u32(CKIT_HashFunction)(void* key);
+typedef u32(CKIT_HashFunction)(void*);
 #define CKIT_HASHMAP_DEFAULT_LOAD_FACTOR 0.75
 //========================== Begin Types ==========================
 
