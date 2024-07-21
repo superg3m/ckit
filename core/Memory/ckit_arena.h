@@ -24,6 +24,7 @@ typedef struct CKIT_Arena {
 	CKIT_ArenaFlags flags;
 	void* base_address;
 	u64 memory_tag_values[MEMORY_TAG_COUNT];
+	u8 alignment; // if 0 then unaligned memory, default is 8 byte alignment
 } CKIT_Arena;
 
 //=========================== End Types ===========================
@@ -32,7 +33,7 @@ typedef struct CKIT_Arena {
 #ifdef __cplusplus
 extern "C" {
 #endif
-	CKIT_Arena* MACRO_ckit_arena_create(size_t allocation, const char* name, CKIT_ArenaFlags flags);
+	CKIT_Arena* MACRO_ckit_arena_create(size_t allocation, const char* name, CKIT_ArenaFlags flags, u8 alignment);
 	void* MACRO_ckit_arena_push(CKIT_Arena* arena, size_t element_size, CKIT_MemoryTag memory_tag);
 	void ckit_arena_output_allocations(CKIT_Arena* arena, CKG_LogLevel log_level);
 	
@@ -47,11 +48,11 @@ extern "C" {
 //************************** End Functions **************************
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
-#define arena_create(allocation_size, name) MACRO_ckit_arena_create(allocation_size, name, CKIT_ARENA_FLAG_DEFAULT)
-#define arena_create_custom(allocation_size, name, flags) MACRO_ckit_arena_create(allocation_size, name, flags)
+#define ckit_arena_create(allocation_size, name, alignment) MACRO_ckit_arena_create(allocation_size, name, CKIT_ARENA_FLAG_DEFAULT, alignment)
+#define ckit_arena_create_custom(allocation_size, name, flags) MACRO_ckit_arena_create(allocation_size, name, flags)
 
-#define arena_push(arena, type, memory_tag) ((type*)MACRO_ckit_arena_push(arena, sizeof(type), memory_tag))
-#define arena_push_array(arena, type, element_count, memory_tag) ((type*)MACRO_ckit_arena_push(arena, sizeof(type) * element_count, memory_tag))
+#define ckit_arena_push(arena, type, memory_tag) ((type*)MACRO_ckit_arena_push(arena, sizeof(type), memory_tag))
+#define ckit_arena_push_array(arena, type, element_count, memory_tag) ((type*)MACRO_ckit_arena_push(arena, sizeof(type) * element_count, memory_tag))
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 
 

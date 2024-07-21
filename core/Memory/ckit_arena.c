@@ -15,8 +15,10 @@ void arena_init() {
 
 }
 
-CKIT_Arena* MACRO_ckit_arena_create(size_t allocation_size, const char* name, CKIT_ArenaFlags flags) {
+CKIT_Arena* MACRO_ckit_arena_create(size_t allocation_size, const char* name, CKIT_ArenaFlags flags, u8 alignment) {
+    ckit_assert_msg((alignment & 1) == 0, "Arena alignment is not a power of two\n");
     CKIT_Arena* arena = ckit_alloc(sizeof(CKIT_Arena), MEMORY_TAG_ARENA);
+    arena->alignment = alignment == 0 ? 8 : alignment;
     arena->name = name;
     arena->flags = flags;
     arena->capacity = allocation_size != 0 ? allocation_size : ARENA_DEFAULT_ALLOCATION_SIZE;
@@ -70,6 +72,9 @@ void* MACRO_ckit_arena_push(CKIT_Arena* arena, size_t element_size, CKIT_MemoryT
     u8* ret = (u8*)arena->base_address + arena->used;
     arena->memory_tag_values[memory_tag] += element_size;
     arena->used += element_size;
+    if ((arena->used & (arena->alignment - 1)) != 0) { // if first bit is set then its not aligned
+        arena->used += (arena->alignment - (arena->used & (arena->alignment - 1)));
+    }
     
     return ret;
 }

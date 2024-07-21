@@ -1,11 +1,12 @@
 #include "./ckit_queue.h"
 #include "../../Assert/ckit_assert.h"
 
-CKIT_Queue* MACRO_ckit_queue_create(u32 inital_capacity, size_t element_size_in_bytes) {
+CKIT_Queue* MACRO_ckit_queue_create(u32 inital_capacity, size_t element_size_in_bytes, Boolean is_pointer_type) {
 	CKIT_Queue* ret = ckit_alloc(sizeof(CKIT_Queue), MEMORY_TAG_TEMPORARY);
 	ret->element_size_in_bytes = element_size_in_bytes;
 	ret->capacity = inital_capacity;
 	ret->count = 0;
+	ret->is_pointer_type = is_pointer_type;
 	ret->data = ckit_alloc(element_size_in_bytes * ret->capacity, MEMORY_TAG_TEMPORARY);
 	return ret;
 }
@@ -22,14 +23,24 @@ CKIT_Queue* MACRO_ckit_queue_free(CKIT_Queue* queue) {
 
 // Date: July 19, 2024
 // NOTE(Jovanni): If you have a count it kind of defeats the purpose sort of
-void ckit_dequeue(CKIT_Queue* queue, void* returned_element) {
+void* ckit_dequeue(CKIT_Queue* queue) {
 	ckit_assert(queue->count > 0);
 	ckit_assert(queue->has_next_to_read || queue->read_index != queue->write_index);
 	queue->has_next_to_read = FALSE;
+
+	void* ret = NULLPTR;
 	
 	queue->read_index = queue->read_index % queue->capacity;
-	ckit_memory_copy((u8*)queue->data + (queue->element_size_in_bytes * queue->read_index++), returned_element, queue->element_size_in_bytes, queue->element_size_in_bytes);
+	if (queue->is_pointer_type) {
+		u8* temp_ptr = (u8*)queue->data + (queue->element_size_in_bytes * queue->write_index++);
+		ret = temp_ptr;
+	} else {
+		ret = ckit_alloc(queue->element_size_in_bytes, MEMORY_TAG_TEMPORARY);
+		ckit_memory_copy((u8*)queue->data + (queue->element_size_in_bytes * queue->read_index++), ret, queue->element_size_in_bytes, queue->element_size_in_bytes);
+	}
 	queue->count--;
+
+	return ret;
 }
 
 void ckit_enqueue(CKIT_Queue* queue, void* element) {
@@ -38,7 +49,13 @@ void ckit_enqueue(CKIT_Queue* queue, void* element) {
 	queue->has_next_to_read = TRUE;
 
 	queue->write_index = queue->write_index % queue->capacity;
-	ckit_memory_copy(element, (u8*)queue->data + (queue->element_size_in_bytes * queue->write_index++), queue->element_size_in_bytes, queue->element_size_in_bytes);
+	if (queue->is_pointer_type) {
+		u8* temp_ptr = (u8*)queue->data + (queue->element_size_in_bytes * queue->write_index++);
+		temp_ptr  = element;
+	}  else {
+		ckit_memory_copy(element, (u8*)queue->data + (queue->element_size_in_bytes * queue->write_index++), queue->element_size_in_bytes, queue->element_size_in_bytes);
+	}
+
 	queue->count++;
 }
 

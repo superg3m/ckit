@@ -100,10 +100,10 @@ void ckit_lexer_token_map_init() {
 			";", ",", "(", ")", "{", "}", "//", "/*", "*/", ""
 		};
 
-		syntax_token_type_map = ckit_hashmap_create(32, CKIT_Token_Type);
+		syntax_token_type_map = ckit_hashmap_create(32, CKIT_Token_Type, FALSE);
 
 		for (u32 i = 0; i < ArrayCount(syntax_token_types); i++) {
-			ckit_hashmap_put(syntax_token_type_map, syntax_token_type_strings[i], &syntax_token_types[i], NULLPTR);
+			ckit_hashmap_put(syntax_token_type_map, syntax_token_type_strings[i], &syntax_token_types[i]);
 		}
 	}
 }

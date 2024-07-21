@@ -67,12 +67,20 @@ Thoughts:
 
 ### Collection 
 - [X] ckit_hashmap.h (Tested on integers, char, string, and structs) (WANT TO REVISIT THIS BECAUSE I CAN MAKE IT BETTER 100%)
-	- [x] ckit_hashmap_create(type)
+	- [x] ckit_hashmap_create(capacity type, is_pointer_type)
 	- [x] ckit_hashmap_put(hashmap, key, element)
 		- [x] ckit_hashmap_grow(hashmap)
 	- [x] ckit_hashmap_has(hashmap, key)
 	- [x] ckit_hashmap_get(hashmap, key, returned_element)
 	- [X] ckit_hashmap_free(hashmap)
+
+- [X] ckit_hashset.h (Tested on integers, char, string, and structs) (WANT TO REVISIT THIS BECAUSE I CAN MAKE IT BETTER 100%)
+	- [x] ckit_hashset_create(capacity, type)
+	- [x] ckit_hashset_put(hashmap, key, element)
+		- [x] ckit_hashset_grow(hashmap)
+	- [x] ckit_hashset_has(hashmap, key)
+	- [X] ckit_hashset_free(hashmap)
+
 
 - [ ] ckit_linked_list.h
     - [x] ckit_linked_list_create(element_size_in_bytes);
@@ -84,13 +92,6 @@ Thoughts:
     - [ ] ckit_linked_list_push(linked_list, node);
     - [ ] ckit_linked_list_pop(linked_list, node);
     - [x] ckit_linked_list_remove(linked_list, index);
-
-
-
-
-
-
-
 
 - [ ] ckit_stack.h
 - [x] ckit_queue.h (NOT REALLY TESTED) (WANT TO REVISIT THIS BECAUSE I CAN MAKE IT BETTER 100%)
@@ -150,7 +151,7 @@ Thoughts:
 - [x] ckit_arena.h (NOT TESTED)
 	- [x] ckit_arena_create(allocation, name)
 	- [x] ckit_arena_create_custom(allocation, name, flag)
-	- [x] ckit_arena_push(arena, type, byte_alignment = 4)
+	- [x] ckit_arena_push(arena, type, byte_alignment = 8)
 	- [x] ckit_arena_free(arena)
 	- [x] ckit_arena_clear(arena)
 

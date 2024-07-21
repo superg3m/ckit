@@ -18,6 +18,7 @@ typedef struct CKIT_Queue {
 	u32 read_index;
 	Boolean has_next_to_read;
 	u32 write_index;
+	Boolean is_pointer_type;
 } CKIT_Queue;
 //=========================== End Types ===========================
 
@@ -25,10 +26,13 @@ typedef struct CKIT_Queue {
 #ifdef __cplusplus
 extern "C" {
 #endif
-	CKIT_Queue* MACRO_ckit_queue_create(u32 inital_capacity, size_t element_size_in_bytes);
+	CKIT_Queue* MACRO_ckit_queue_create(u32 inital_capacity, size_t element_size_in_bytes, Boolean is_pointer_type);
 	CKIT_Queue* MACRO_ckit_queue_free(CKIT_Queue* queue);
 	void ckit_enqueue(CKIT_Queue* queue, void* element);
-	void ckit_dequeue(CKIT_Queue* queue, void* returned_elemenet);
+	/*
+	 You are responsible for freeing the result, I think arenas is gonna be pretty big for this whole thing.
+	*/
+	void* ckit_dequeue(CKIT_Queue* queue);
 	u32 ckit_queue_capacity(CKIT_Queue* queue);
 	u32 ckit_queue_count(CKIT_Queue* queue);
 #ifdef __cplusplus
@@ -37,7 +41,7 @@ extern "C" {
 //************************** End Functions **************************
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
-#define ckit_queue_create(inital_capacity, type) MACRO_ckit_queue_create(inital_capacity, sizeof(type));
+#define ckit_queue_create(inital_capacity, type, is_pointer_type) MACRO_ckit_queue_create(inital_capacity, sizeof(type), is_pointer_type);
 #define ckit_queue_free(queue) MACRO_ckit_queue_free(queue);
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 

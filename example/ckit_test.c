@@ -167,7 +167,8 @@ int main() {
 
 	test_hash_collisions();
 
-	CKIT_Arena* frame_boundary_arena = arena_create(500, "Frame Boundary");
+	CKIT_Arena* frame_boundary_arena = ckit_arena_create(500, "Frame Boundary", 0);
+	ckit_arena_push(frame_boundary_arena, Boolean, MEMORY_TAG_TEMPORARY);
 	ckit_arena_free(frame_boundary_arena);
 
 	// String str_to_be_split = ckit_str_create("They said it couldn't be done. They tried to recite the dark magics to me! THEY DON'T KNOW I WAS THERE WHEN THEY WERE WRITTEN!");
@@ -178,14 +179,14 @@ int main() {
 	}
 	ckit_vector_free(split_strings);
 
-	CKIT_HashMap* name_to_age = ckit_hashmap_create(4, char*);
+	CKIT_HashMap* name_to_age = ckit_hashmap_create(4, char*, TRUE);
 
 	char* names[5] = {
 		"jofhn",
 		"john",
 		"johhn",
 		"johyn",
-		"jo234hyn",
+		"jo234hyn234235325",
 	};
 
 	char* value[5] = {
@@ -193,11 +194,11 @@ int main() {
 		"11",
 		"12",
 		"13",
-		"14",
+		"144353454416231sdfsfdsfs",
 	};
 
 	for (int i = 0; i < 5; i++) {
-		ckit_hashmap_put(name_to_age, names[i], value[i], NULLPTR);
+		ckit_hashmap_put(name_to_age, names[i], value[i]);
 	}
 
 	for (int i = 0; i < 5; i++) { // growing hashmap is broken
@@ -208,14 +209,14 @@ int main() {
 	ckit_hashmap_free(name_to_age);
 
 
-	CKIT_Queue* queue = ckit_queue_create(5, u32);
+	CKIT_Queue* queue = ckit_queue_create(5, u32, FALSE);
 
 	u32 queue_values[6] = {1, 2, 3, 4, 5, 6};
 
 	ckit_enqueue(queue, &queue_values[0]);
 
 	s32 current_value = -1;
-	ckit_dequeue(queue, &current_value);
+	current_value = *((s32*)ckit_dequeue(queue));
 	LOG_DEBUG("value: %d\n", current_value);
 
 	for (u32 i = 1; i < 6; i++) {
@@ -223,7 +224,7 @@ int main() {
 	}
 
 	for (u32 i = 1; i < 6; i++) {
-		ckit_dequeue(queue, &current_value);
+		current_value = *((s32*)ckit_dequeue(queue));
 		LOG_DEBUG("value: %d\n", current_value);
 	}
 
@@ -238,7 +239,6 @@ int main() {
 	LOG_SUCCESS("%s\n", ckit_lexer_token_to_string(ckit_lexer_generate_next_token(&lexer)));
 
 	// LOG_SUCCESS("%s\n", ckit_lexer_token_to_string(ckit_lexer_generate_next_token(&lexer)));
-
 
 	ckit_cleanup();
 	return 0;
