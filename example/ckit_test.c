@@ -231,14 +231,16 @@ int main() {
 	ckit_queue_free(queue);
 
 	CKIT_Lexer lexer;
-	ckit_lexer_load_string(&lexer, "int x = 5;");
-	LOG_SUCCESS("%s\n", ckit_lexer_token_to_string(ckit_lexer_generate_next_token(&lexer)));
-	LOG_SUCCESS("%s\n", ckit_lexer_token_to_string(ckit_lexer_generate_next_token(&lexer)));
-	LOG_SUCCESS("%s\n", ckit_lexer_token_to_string(ckit_lexer_generate_next_token(&lexer)));
-	LOG_SUCCESS("%s\n", ckit_lexer_token_to_string(ckit_lexer_generate_next_token(&lexer)));
-	LOG_SUCCESS("%s\n", ckit_lexer_token_to_string(ckit_lexer_generate_next_token(&lexer)));
+	ckit_lexer_load_string(&lexer, "int x = 5; char* testing = \"hello\";");
 
-	// LOG_SUCCESS("%s\n", ckit_lexer_token_to_string(ckit_lexer_generate_next_token(&lexer)));
+	CKIT_Token* token_stream = ckit_lexer_generate_token_stream(&lexer);
+	for (int i = 0; i < ckit_vector_count(token_stream); i++) {
+		if (token_stream[i].type == TOKEN_ILLEGAL) {
+			LOG_ERROR("%s\n", ckit_lexer_token_to_string(token_stream[i]));
+		} else {
+			LOG_SUCCESS("%s\n", ckit_lexer_token_to_string(token_stream[i]));
+		}
+	}
 
 	ckit_cleanup();
 	return 0;

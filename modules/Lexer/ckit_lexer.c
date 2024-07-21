@@ -85,9 +85,11 @@ void ckit_lexer_token_map_init() {
 			TOKEN_SYNTAX_RIGHT_PAREN,
 			TOKEN_SYNTAX_LEFT_BRACE,
 			TOKEN_SYNTAX_RIGHT_BRACE,
+			TOKEN_SYNTAX_POINTER,
 			TOKEN_COMMENT_SINGLE_LINE,
 			TOKEN_COMMENT_MULTI_LINE_START,
 			TOKEN_COMMENT_MULTI_LINE_END,
+
 			TOKEN_END_OF_FILE
 		};
 
@@ -97,7 +99,7 @@ void ckit_lexer_token_map_init() {
 			"+=", "-=", 
 			"&=", "|=", "^=", "<<=", ">>=",
 			"&", "|", "^", "<<", ">>",
-			";", ",", "(", ")", "{", "}", "//", "/*", "*/", ""
+			";", ",", "(", ")", "{", "}", "*", "//", "/*", "*/", ""
 		};
 
 		syntax_token_type_map = ckit_hashmap_create(32, CKIT_Token_Type, FALSE);
@@ -259,6 +261,7 @@ internal CKIT_Token ckit_lexer_maybe_consume_string_literal(CKIT_Lexer* lexer) {
 			first_character_processed = TRUE;
 			ckit_lexer_consume_next_char(lexer);
 		}
+		ckit_lexer_consume_next_char(lexer); // add the last '\"'
 	}
 
 	CKIT_Token ret = ckit_lexer_token_create(ret_type, lexer->scratch_buffer);
@@ -289,9 +292,11 @@ internal CKIT_Token ckit_lexer_maybe_consume_identifier(CKIT_Lexer* lexer) {
 internal CKIT_Token ckit_lexer_maybe_consume_syntax_token(CKIT_Lexer* lexer) {
 	CKIT_Token_Type ret_type = TOKEN_ILLEGAL;
 
-	ckit_lexer_consume_next_char(lexer); // should be pretty much guarenteed
+	if (lexer->c != '\0' && lexer->c != EOF) {
+		ckit_lexer_consume_next_char(lexer); // should be pretty much guarenteed
+	}
 
-	switch (lexer->c) {
+	switch (lexer->scratch_buffer[0]) {
 		case '<': {
 			if (ckit_lexer_peek_next_char(lexer) == '<') ckit_lexer_consume_next_char(lexer);
 			if (ckit_lexer_peek_next_char(lexer) == '=') ckit_lexer_consume_next_char(lexer);
@@ -418,15 +423,18 @@ CKIT_Token ckit_lexer_generate_next_token(CKIT_Lexer* lexer) {
 		return ret;
 	}
 
-
-
 	return ret;
 }
 
 CKIT_Token* ckit_lexer_generate_token_stream(CKIT_Lexer* lexer) {
-	CKIT_Token* ret = lexer->token_stream;
 	lexer->token_stream = NULLPTR;
-	return ret;
+	CKIT_Token token = ckit_lexer_null_token();
+	while (token.type != TOKEN_END_OF_FILE) {
+		token = ckit_lexer_generate_next_token(lexer);
+		ckit_vector_push(lexer->token_stream, token);
+	}
+
+	return lexer->token_stream;
 }
 
 CKIT_Token* ckit_lexer_consume_token_stream(CKIT_Lexer* lexer) {

@@ -4,7 +4,8 @@
 #include "../Collection/Vector/ckit_vector.h"
 
 typedef enum MemoryTag { // Reserved tags
-    MEMORY_TAG_CKIT_TEMPORARY,
+    MEMORY_TAG_CKIT_UNKNOWN, // this is the default
+    MEMORY_TAG_CKIT_TEMP,
     MEMORY_TAG_CKIT_INTERNAL,
     MEMORY_TAG_CKIT_STRING,
     MEMORY_TAG_CKIT_VECTOR,
@@ -41,10 +42,6 @@ char known_memory_tag_strings[MEMORY_TAG_COUNT][MEMORY_TAG_CHARACTER_LIMIT] = {
     "VECTOR       : ",
     "ARENA        : ",
 };
-
-MemoryHeader memory_tracker_create_header(size_t allocation_size, ) {
-
-}
 
 internal void* memory_insert_header(void* data, MemoryHeader header) {
   	((MemoryHeader*)data)[0] = header;

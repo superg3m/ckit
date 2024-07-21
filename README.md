@@ -95,10 +95,10 @@ Thoughts:
 
 - [ ] ckit_stack.h
 - [x] ckit_queue.h (NOT REALLY TESTED) (WANT TO REVISIT THIS BECAUSE I CAN MAKE IT BETTER 100%)
-	- [x] ckit_queue_create(inital_capacity, element_size_in_bytes);
+	- [x] ckit_queue_create(inital_capacity, element_size_in_bytes, is_pointer_type);
 	- [x] ckit_queue_free(queue);
 	- [x] ckit_enqueue(queue, element);
-	- [x] ckit_dequeue(queue, returned_elemenet);
+	- [x] ckit_dequeue(queue);
 	- [x] ckit_queue_capacity(queue);
 	- [x] ckit_queue_count(queue);
 
@@ -148,6 +148,9 @@ Thoughts:
     - [x] ckit_memory_delete_index(data, data_capacity, index)
     - [x] ckit_memory_insert_index(data, data_capacity, element, index)
 
+- [ ] ckit_memory_tracker.h
+	- [ ] 
+
 - [x] ckit_arena.h (NOT TESTED)
 	- [x] ckit_arena_create(allocation, name)
 	- [x] ckit_arena_create_custom(allocation, name, flag)
@@ -190,7 +193,7 @@ Thoughts:
 	- [x] void ckit_lexer_load_file_data(lexer, file_path);
 	- [x] void ckit_lexer_load_string(lexer, string);
 	- [x] char* ckit_lexer_token_to_string(token);
-	- [/] CKIT_Tokens ckit_lexer_generate_next_token(lexer);
+	- [x] CKIT_Tokens ckit_lexer_generate_next_token(lexer);
 
 	- [ ] CKIT_Tokens* ckit_lexer_generate_token_stream(lexer);
 	- [ ] CKIT_Tokens* ckit_lexer_consume_token_stream(lexer);
