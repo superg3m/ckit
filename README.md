@@ -149,7 +149,7 @@ Thoughts:
     - [x] ckit_memory_insert_index(data, data_capacity, element, index)
 
 - [ ] ckit_memory_tracker.h
-	- [ ] 
+	- [ ] ckit_memory_tracker_register_tag(tag, name)
 
 - [x] ckit_arena.h (NOT TESTED)
 	- [x] ckit_arena_create(allocation, name)
@@ -194,10 +194,10 @@ Thoughts:
 	- [x] void ckit_lexer_load_string(lexer, string);
 	- [x] char* ckit_lexer_token_to_string(token);
 	- [x] CKIT_Tokens ckit_lexer_generate_next_token(lexer);
-
-	- [ ] CKIT_Tokens* ckit_lexer_generate_token_stream(lexer);
+	- [ ] CKIT_Tokens* ckit_lexer_peek_next_token(lexer);
+	- [x] CKIT_Tokens* ckit_lexer_generate_token_stream(lexer);
 	- [ ] CKIT_Tokens* ckit_lexer_consume_token_stream(lexer);
-	- [ ] CKIT_Tokens* ckit_lexer_peek_token_stream(lexer);
+	- [ ] CKIT_Tokens* ckit_lexer_free(lexer);
 
 ### Networking
 - [ ] ckit_client.h

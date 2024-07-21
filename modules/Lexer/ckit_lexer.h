@@ -87,8 +87,9 @@ typedef struct CKIT_Lexer {
 
 void ckit_lexer_load_file_data(CKIT_Lexer* lexer, char* file_path);
 void ckit_lexer_load_string(CKIT_Lexer* lexer, char* string);
-char* ckit_lexer_token_to_string(CKIT_Token token);
+void ckit_lexer_print_token(CKIT_Token token);
 CKIT_Token ckit_lexer_generate_next_token(CKIT_Lexer* lexer);
+
 
 CKIT_Token* ckit_lexer_generate_token_stream(CKIT_Lexer* lexer);
 CKIT_Token* ckit_lexer_consume_token_stream(CKIT_Lexer* lexer);

@@ -215,32 +215,32 @@ int main() {
 
 	ckit_enqueue(queue, &queue_values[0]);
 
-	s32 current_value = -1;
-	current_value = *((s32*)ckit_dequeue(queue));
-	LOG_DEBUG("value: %d\n", current_value);
+	s32* current_value = NULLPTR;
+	current_value = ckit_dequeue(queue);
+	LOG_DEBUG("value: %d\n", *current_value);
+	ckit_free(current_value);
 
 	for (u32 i = 1; i < 6; i++) {
 		ckit_enqueue(queue, &queue_values[i]);
 	}
 
 	for (u32 i = 1; i < 6; i++) {
-		current_value = *((s32*)ckit_dequeue(queue));
-		LOG_DEBUG("value: %d\n", current_value);
+		current_value = ckit_dequeue(queue);
+		LOG_DEBUG("value: %d\n", *current_value);
+		ckit_free(current_value);
 	}
 
 	ckit_queue_free(queue);
 
 	CKIT_Lexer lexer;
-	ckit_lexer_load_string(&lexer, "int x = 5; char* testing = \"hello\";");
+	//ckit_lexer_load_string(&lexer, "int x = 5; char* testing = \"hello\";");
+	ckit_lexer_load_string(&lexer, "int ~~~ xESFDGATW52324112 = 5;");
 
 	CKIT_Token* token_stream = ckit_lexer_generate_token_stream(&lexer);
 	for (int i = 0; i < ckit_vector_count(token_stream); i++) {
-		if (token_stream[i].type == TOKEN_ILLEGAL) {
-			LOG_ERROR("%s\n", ckit_lexer_token_to_string(token_stream[i]));
-		} else {
-			LOG_SUCCESS("%s\n", ckit_lexer_token_to_string(token_stream[i]));
-		}
+		ckit_lexer_print_token(token_stream[i]);
 	}
+	// ckit_lexer_free(&lexer);
 
 	ckit_cleanup();
 	return 0;

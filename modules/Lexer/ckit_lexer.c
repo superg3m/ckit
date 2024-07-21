@@ -341,7 +341,7 @@ internal CKIT_Token ckit_lexer_maybe_consume_syntax_token(CKIT_Lexer* lexer) {
 	return ret;
 }
 
-char* ckit_lexer_token_to_string(CKIT_Token token) {
+internal char* ckit_lexer_token_to_string(CKIT_Token token) {
     switch (token.type) {
         case TOKEN_KEYWORD: return "TOKEN_KEYWORD";
         case TOKEN_DIRECTIVE: return "TOKEN_DIRECTIVE";
@@ -396,6 +396,75 @@ char* ckit_lexer_token_to_string(CKIT_Token token) {
     }
 }
 
+internal char* ckit_lexer_token_value_to_string(CKIT_Token token) {
+	char* big_buffer = ckit_alloc(1024, MEMORY_TAG_TEMPORARY);
+	ckit_memory_zero(big_buffer, 1024);
+    switch (token.type) {
+		case TOKEN_KEYWORD: 
+		case TOKEN_DIRECTIVE:
+		case TOKEN_IDENTIFIER:
+		case TOKEN_INTRINSIC:
+		case TOKEN_PRIMATIVE:
+		case TOKEN_STRING_LITERAL:
+		case TOKEN_SYNTAX_SEMICOLON:
+		case TOKEN_SYNTAX_COMMA:
+		case TOKEN_SYNTAX_DOUBLE_QUOTE:
+		case TOKEN_SYNTAX_SINGLE_QUOTE:
+		case TOKEN_SYNTAX_POINTER:
+		case TOKEN_SYNTAX_REFERENCE:
+		case TOKEN_SYNTAX_LEFT_PAREN:
+		case TOKEN_SYNTAX_RIGHT_PAREN:
+		case TOKEN_SYNTAX_LEFT_BRACE:
+		case TOKEN_SYNTAX_RIGHT_BRACE:
+		case TOKEN_COMMENT_SINGLE_LINE:
+		case TOKEN_COMMENT_MULTI_LINE_START:
+		case TOKEN_COMMENT_MULTI_LINE_END:
+		case TOKEN_COMPARE_EQUALS:
+		case TOKEN_COMPARE_NOT_EQUALS:
+		case TOKEN_COMPARE_LESS_THAN:
+		case TOKEN_COMPARE_GREATER_THAN:
+		case TOKEN_COMPARE_LESS_THAN_OR_EQUAL:
+		case TOKEN_COMPARE_GREATER_THAN_OR_EQUAL:
+		case TOKEN_COMPARE_AND:
+		case TOKEN_COMPARE_OR:
+		case TOKEN_ASSIGNMENT_EQUAL:
+		case TOKEN_ASSIGNMENT_INCREMENT:
+		case TOKEN_ASSIGNMENT_DECREMENT:
+		case TOKEN_ASSIGNMENT_ADDITION:
+		case TOKEN_ASSIGNMENT_SUBTRACTION:
+		case TOKEN_ASSIGNMENT_OR:
+		case TOKEN_ASSIGNMENT_AND:
+		case TOKEN_ASSIGNMENT_XOR:
+		case TOKEN_ASSIGNMENT_LEFT_SHIFT:
+		case TOKEN_ASSIGNMENT_RIGHT_SHIFT:
+		case TOKEN_BITWISE_AND:
+		case TOKEN_BITWISE_XOR:
+		case TOKEN_BITWISE_OR:
+		case TOKEN_BITWISE_LEFT_SHIFT:
+		case TOKEN_BITWISE_RIGHT_SHIFT:
+		case TOKEN_ILLEGAL:
+		case TOKEN_CHARACTER_LITERAL: sprintf(big_buffer, "%s", ((char*)token.value)); return big_buffer;
+
+		case TOKEN_END_OF_FILE: sprintf(big_buffer, "%s", "EOF"); return big_buffer;
+
+		case TOKEN_INTEGER_LITERAL: sprintf(big_buffer, "%d", *((int*)token.value)); return big_buffer;
+		case TOKEN_FLOAT_LITERAL: sprintf(big_buffer, "%f", *((float*)token.value)); return big_buffer;
+    }
+
+	return big_buffer;
+}
+
+void ckit_lexer_print_token(CKIT_Token token) {
+	char* value =  ckit_lexer_token_value_to_string(token);
+	if (token.type == TOKEN_ILLEGAL) {
+		LOG_ERROR("%s | %s\n", ckit_lexer_token_to_string(token), value);
+	} else {
+		LOG_SUCCESS("%s | %s\n", ckit_lexer_token_to_string(token), value);
+	}
+	
+	ckit_free(value);
+}
+
 CKIT_Token ckit_lexer_generate_next_token(CKIT_Lexer* lexer) {
 	ckit_lexer_skip_whitespace(lexer);
 
@@ -423,6 +492,8 @@ CKIT_Token ckit_lexer_generate_next_token(CKIT_Lexer* lexer) {
 		return ret;
 	}
 
+	// ret.value = ckit_alloc(2, MEMORY_TAG_TEMPORARY);
+	// ckit_memory_copy(&lexer->c, ret.value, 2, 2);
 	return ret;
 }
 
