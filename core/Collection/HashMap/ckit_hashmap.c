@@ -66,7 +66,7 @@ CKIT_HashMap* MACRO_ckit_hashmap_create(u32 hashmap_capacity, size_t element_siz
 CKIT_HashMapEntry ckit_hashmap_entry_create(char* key, void* value) {
 	CKIT_HashMapEntry entry;
 	entry.key = key;
-	value = value;
+	entry.value = value;
 	return entry;
 }
 
