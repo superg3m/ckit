@@ -247,6 +247,17 @@ int main() {
 	}
 	// ckit_lexer_free(&lexer);
 
+	for (int i = 0; i < 25; i++) {
+		LOG_PRINT("\n");
+	}
+
+	CKIT_LinkedList* linked_list = ckit_linked_list_create(char*, TRUE);
+	ckit_linked_list_insert(linked_list, 0, "hello");
+	ckit_linked_list_push(linked_list, "hello_sailor!");
+	char* test_str = ckit_linked_list_pop(linked_list).data;
+	LOG_DEBUG("list value: %s\n", test_str);
+	
+
 	ckit_cleanup();
 	return 0;
 }

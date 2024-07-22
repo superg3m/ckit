@@ -21,6 +21,7 @@
 #include "./core/Collection/HashMap/ckit_hashing.h"
 #include "./core/Collection/HashMap/ckit_hashmap.h"
 #include "./core/Collection/HashSet/ckit_hashset.h"
+#include "./core/Collection/LinkedList/ckit_linked_list.h"
 #include "./core/Collection/Queue/ckit_queue.h"
 
 // Modules

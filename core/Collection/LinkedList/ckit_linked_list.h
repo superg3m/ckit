@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../core/ckit_types.h"
+#include "../../ckit_types.h"
 //========================== Begin Types ==========================
 typedef struct CKIT_Node {
     struct CKIT_Node* next;
@@ -14,6 +14,7 @@ typedef struct CKIT_LinkedList {
     CKIT_Node* tail;
     size_t element_size_in_bytes;
     u32 count;
+    Boolean is_pointer_type;
 } CKIT_LinkedList;
 //=========================== End Types ===========================
 
@@ -23,14 +24,14 @@ typedef struct CKIT_LinkedList {
 #ifdef __cplusplus
 extern "C" {
 #endif
-    CKIT_LinkedList* MACRO_ckit_linked_list_create(size_t element_size_in_bytes);
-    CKIT_Node* MACRO_ckit_node_create(void* data, size_t element_size_in_bytes);
+    CKIT_LinkedList* MACRO_ckit_linked_list_create(size_t element_size_in_bytes, Boolean is_pointer_type);
+    CKIT_Node* MACRO_ckit_node_create(CKIT_LinkedList* linked_list, void* data);
     void ckit_node_get(CKIT_Node* node, void* returned_value);
     CKIT_Node* ckit_linked_list_insert(CKIT_LinkedList* linked_list, u32 index, void* data);
     CKIT_Node* ckit_linked_list_get_node(CKIT_LinkedList* linked_list, u32 index);
-    void ckit_linked_list_get(CKIT_LinkedList* linked_list, u32 index, void* data);
-    void ckit_linked_list_push(CKIT_LinkedList* linked_list, CKIT_Node* node);
-    CKIT_Node ckit_linked_list_pop(CKIT_LinkedList* linked_list, CKIT_Node* node);
+    void* ckit_linked_list_get(CKIT_LinkedList* linked_list, u32 index);
+    CKIT_Node* ckit_linked_list_push(CKIT_LinkedList* linked_list, void* data);
+    CKIT_Node ckit_linked_list_pop(CKIT_LinkedList* linked_list);
     CKIT_Node ckit_linked_list_remove(CKIT_LinkedList* linked_list, u32 index);
 #ifdef __cplusplus
 }
@@ -38,7 +39,7 @@ extern "C" {
 //************************** End Functions **************************
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
-#define ckit_linked_list_create(type) MACRO_ckit_linked_list_create(sizeof(type))
-#define ckit_node_create(data_t) MACRO_ckit_node_create(data_t, sizeof(data_t))
-#define ckit_node_free(node) node = MACRO_ckit_node_free(node)
+#define ckit_linked_list_create(type, is_pointer_type) MACRO_ckit_linked_list_create(sizeof(type), is_pointer_type)
+#define ckit_node_create(linked_list, data) MACRO_ckit_node_create(linked_list, data)
+#define ckit_node_free(linked_list, node) node = MACRO_ckit_node_free(linked_list, node)
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++

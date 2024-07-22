@@ -11,7 +11,7 @@
 4. ./run.ps1
 
 ### Known issues/bugs
-1. - [/] Queue might not be able to hold more than 8 characters (the sizeof(char*)) easy fix
+1. - [x] Queue might not be able to hold more than 8 characters (the sizeof(char*)) easy fix
 
 ### Next Steps
 0. - [/] Finish the linked list should be super duper easy to finish.
