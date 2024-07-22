@@ -253,10 +253,56 @@ int main() {
 
 	CKIT_LinkedList* linked_list = ckit_linked_list_create(char*, TRUE);
 	ckit_linked_list_insert(linked_list, 0, "hello");
-	ckit_linked_list_push(linked_list, "hello_sailor!");
+	ckit_linked_list_push(linked_list, "hello_sailor1!");
+	ckit_linked_list_push(linked_list, "hello_sailor2!");
+	ckit_linked_list_push(linked_list, "hello_sailor3!");
+	ckit_linked_list_push(linked_list, "hello_sailor4!");
 	char* test_str = ckit_linked_list_pop(linked_list).data;
 	LOG_DEBUG("list value: %s\n", test_str);
+	test_str = ckit_linked_list_pop(linked_list).data;
+	LOG_DEBUG("list value: %s\n", test_str);
+	test_str = ckit_linked_list_pop(linked_list).data;
+	LOG_DEBUG("list value: %s\n", test_str);
+	test_str = ckit_linked_list_pop(linked_list).data;
+	LOG_DEBUG("list value: %s\n", test_str);
+	test_str = ckit_linked_list_pop(linked_list).data;
+	LOG_DEBUG("list value: %s\n", test_str);
+
+
+	CKIT_LinkedList* linked_list_int = ckit_linked_list_create(u32, FALSE);
 	
+	u32 value1[5] = {
+		10,
+		11,
+		12,
+		13,
+		14434623,
+	};
+
+	ckit_linked_list_insert(linked_list_int, 0, &value1[0]);
+	ckit_linked_list_push(linked_list_int, &value1[1]);
+	ckit_linked_list_push(linked_list_int, &value1[2]);
+	ckit_linked_list_push(linked_list_int, &value1[3]);
+	ckit_linked_list_push(linked_list_int, &value1[4]);
+	u32* test_u32 = ckit_linked_list_pop(linked_list_int).data;
+	LOG_DEBUG("list value: %d\n", *test_u32);
+	ckit_free(test_u32);
+
+	test_u32 = ckit_linked_list_pop(linked_list_int).data;
+	LOG_DEBUG("list value: %d\n", *test_u32);
+	ckit_free(test_u32);
+
+	test_u32 = ckit_linked_list_pop(linked_list_int).data;
+	LOG_DEBUG("list value: %d\n", *test_u32);
+	ckit_free(test_u32);
+
+	test_u32 = ckit_linked_list_pop(linked_list_int).data;
+	LOG_DEBUG("list value: %d\n", *test_u32);
+	ckit_free(test_u32);
+
+	test_u32 = ckit_linked_list_pop(linked_list_int).data;
+	LOG_DEBUG("list value: %d\n", *test_u32);
+	ckit_free(test_u32);
 
 	ckit_cleanup();
 	return 0;
