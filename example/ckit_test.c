@@ -272,11 +272,11 @@ int main() {
 	CKIT_LinkedList* linked_list_int = ckit_linked_list_create(u32, FALSE);
 	
 	u32 value1[5] = {
-		10,
-		11,
-		12,
-		13,
-		14434623,
+		1,
+		2,
+		3,
+		4,
+		5,
 	};
 
 	ckit_linked_list_insert(linked_list_int, 0, &value1[0]);
@@ -288,7 +288,7 @@ int main() {
 	LOG_DEBUG("list value: %d\n", *test_u32);
 	ckit_free(test_u32);
 
-	test_u32 = ckit_linked_list_pop(linked_list_int).data;
+	test_u32 = ckit_linked_list_remove(linked_list_int, 2).data;
 	LOG_DEBUG("list value: %d\n", *test_u32);
 	ckit_free(test_u32);
 

@@ -102,15 +102,15 @@ Thoughts:
 	- [X] ckit_hashset_free(hashmap)
 
 
-- [ ] ckit_linked_list.h (I can finish this tomorrow)
+- [x] ckit_linked_list.h
     - [x] ckit_linked_list_create(element_size_in_bytes);
     - [x] ckit_node_create(data, element_size_in_bytes);
     - [x] ckit_node_get(node, returned_value);
-    - [/] ckit_linked_list_insert(linked_list, index,  data);
-    - [ ] ckit_linked_list_get_node(linked_list, index);
-    - [/] ckit_linked_list_get(linked_list, index,  data);
-    - [ ] ckit_linked_list_push(linked_list, node);
-    - [ ] ckit_linked_list_pop(linked_list, node);
+    - [x] ckit_linked_list_insert(linked_list, index,  data);
+    - [x] ckit_linked_list_get_node(linked_list, index);
+    - [x] ckit_linked_list_get(linked_list, index,  data);
+    - [x] ckit_linked_list_push(linked_list, node);
+    - [x] ckit_linked_list_pop(linked_list, node);
     - [x] ckit_linked_list_remove(linked_list, index);
 
 - [ ] ckit_stack.h
