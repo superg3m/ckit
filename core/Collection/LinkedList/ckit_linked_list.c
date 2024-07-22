@@ -12,10 +12,6 @@ CKIT_LinkedList* MACRO_ckit_linked_list_create(size_t element_size_in_bytes, Boo
     return ret;
 }
 
-// Date: July 05, 2024
-// TODO(Jovanni): BADD THIS DOESN"T WORK
-// Date: July 19, 2024
-// NOTE(Jovanni): I have no idea why this doesn't work...? Was this guy ok or i'm I not ok?
 CKIT_Node* MACRO_ckit_node_create(CKIT_LinkedList* linked_list, void* data) {
     CKIT_Node* ret = ckit_alloc(sizeof(CKIT_Node), MEMORY_TAG_TEMPORARY);
     if (linked_list->is_pointer_type) {
@@ -30,6 +26,7 @@ CKIT_Node* MACRO_ckit_node_create(CKIT_LinkedList* linked_list, void* data) {
     ret->prev = NULLPTR;
     return ret;
 }
+#define ckit_node_create(linked_list, data) MACRO_ckit_node_create(linked_list, data)
 
 /**
  * @brief returns a null ptr

@@ -14,8 +14,8 @@
 1. - [x] Queue might not be able to hold more than 8 characters (the sizeof(char*)) easy fix
 
 ### Next Steps
-0. - [/] Finish the linked list should be super duper easy to finish.
-
+-1. - [x] Finish the linked list should be super duper easy to finish.
+0. - [ ] Finish the stack collection using linked list
 1. - [ ] Rewrite the memory tagging system
 	- [ ] Register custom Tags
 	- [ ] ckit_alloc(size_in_bytes) // No longer requiring a tag it will just be a tag call user_unknown.
@@ -103,8 +103,7 @@ Thoughts:
 
 
 - [x] ckit_linked_list.h
-    - [x] ckit_linked_list_create(element_size_in_bytes);
-    - [x] ckit_node_create(data, element_size_in_bytes);
+    - [x] ckit_linked_list_create(element_size_in_bytes, is_pointer_type);
     - [x] ckit_node_get(node, returned_value);
     - [x] ckit_linked_list_insert(linked_list, index,  data);
     - [x] ckit_linked_list_get_node(linked_list, index);
