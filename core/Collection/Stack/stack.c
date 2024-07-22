@@ -1,1 +1,0 @@
-// could be implmeneted with a linked list I don't mind that 

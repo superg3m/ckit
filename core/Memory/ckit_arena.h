@@ -34,6 +34,7 @@ typedef struct CKIT_Arena {
 extern "C" {
 #endif
 	CKIT_Arena* MACRO_ckit_arena_create(size_t allocation, const char* name, CKIT_ArenaFlags flags, u8 alignment);
+	// Has the opporutnity to realloc (I think what i'm going to do moving forward is just another padge of memory on the end that way pointers don't get messed up)
 	void* MACRO_ckit_arena_push(CKIT_Arena* arena, size_t element_size, CKIT_MemoryTag memory_tag);
 	void ckit_arena_output_allocations(CKIT_Arena* arena, CKG_LogLevel log_level);
 	

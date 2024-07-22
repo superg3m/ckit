@@ -8,6 +8,8 @@ typedef struct CKIT_VectorHeader {
 	u32 count;
 	u32 capacity;
 	char* magic;
+	// Boolean is_pointer_type (if I know this then I can use arenas way way smarter, but actually maybe it doesn't matter maybe I need to rework arenas s
+	// it adds pages of memory and it links those together instead of copying and reallocing.)
 } CKIT_VectorHeader;
 
 //=========================== End Types ===========================
