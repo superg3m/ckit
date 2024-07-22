@@ -30,7 +30,7 @@ extern "C" {
 	CKIT_Queue* MACRO_ckit_queue_free(CKIT_Queue* queue);
 	void ckit_enqueue(CKIT_Queue* queue, void* element);
 	/*
-	 You are responsible for freeing the result, I think arenas is gonna be pretty big for this whole thing.
+	 You are responsible for freeing the result, if not a pointer type, I think arenas is gonna be pretty big for this whole thing.
 	*/
 	void* ckit_dequeue(CKIT_Queue* queue);
 	u32 ckit_queue_capacity(CKIT_Queue* queue);

@@ -208,27 +208,33 @@ int main() {
 
 	ckit_hashmap_free(name_to_age);
 
+	CKIT_Queue* queue = ckit_queue_create(4, char*, TRUE);
+	char* queue_values[] = {"\"1, 2, 3, 4, 5, 6\"", "\"HELLO!\"", "\"HELLO!12345!\"", "\"HEL45!\"", "\"!12345!\"", "\"!6H23dgfa45!\""};
+	ckit_enqueue(queue, queue_values[0]);
 
-	CKIT_Queue* queue = ckit_queue_create(5, u32, FALSE);
-
-	u32 queue_values[6] = {1, 2, 3, 4, 5, 6};
-
-	ckit_enqueue(queue, &queue_values[0]);
-
-	s32* current_value = NULLPTR;
+	char* current_value = NULLPTR;
 	current_value = ckit_dequeue(queue);
-	LOG_DEBUG("value: %d\n", *current_value);
-	ckit_free(current_value);
+	LOG_DEBUG("value: %s\n", current_value);
 
-	for (u32 i = 1; i < 6; i++) {
-		ckit_enqueue(queue, &queue_values[i]);
+	for (size_t i = 1; i < 4; i++) {
+		ckit_enqueue(queue, queue_values[i]);
 	}
 
-	for (u32 i = 1; i < 6; i++) {
+	for (size_t i = 1; i < 4; i++) {
+		char* current_value = NULLPTR;
 		current_value = ckit_dequeue(queue);
-		LOG_DEBUG("value: %d\n", *current_value);
-		ckit_free(current_value);
+		LOG_DEBUG("value: %s\n", current_value);
 	}
+
+	ckit_enqueue(queue, queue_values[4]);
+	current_value = NULLPTR;
+	current_value = ckit_dequeue(queue);
+	LOG_DEBUG("value: %s\n", current_value);
+
+	ckit_enqueue(queue, queue_values[5]);
+	current_value = NULLPTR;
+	current_value = ckit_dequeue(queue);
+	LOG_DEBUG("value: %s\n", current_value);
 
 	ckit_queue_free(queue);
 

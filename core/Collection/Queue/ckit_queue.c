@@ -32,8 +32,8 @@ void* ckit_dequeue(CKIT_Queue* queue) {
 	
 	queue->read_index = queue->read_index % queue->capacity;
 	if (queue->is_pointer_type) {
-		u8* temp_ptr = (u8*)queue->data + (queue->element_size_in_bytes * queue->write_index++);
-		ret = temp_ptr;
+		u8** temp_ptr = (u8**)((u8*)queue->data + (queue->element_size_in_bytes * queue->read_index++));
+		ret = *temp_ptr;
 	} else {
 		ret = ckit_alloc(queue->element_size_in_bytes, MEMORY_TAG_TEMPORARY);
 		ckit_memory_copy((u8*)queue->data + (queue->element_size_in_bytes * queue->read_index++), ret, queue->element_size_in_bytes, queue->element_size_in_bytes);
@@ -50,8 +50,8 @@ void ckit_enqueue(CKIT_Queue* queue, void* element) {
 
 	queue->write_index = queue->write_index % queue->capacity;
 	if (queue->is_pointer_type) {
-		u8* temp_ptr = (u8*)queue->data + (queue->element_size_in_bytes * queue->write_index++);
-		temp_ptr  = element;
+		u8** temp_ptr = (u8**)((u8*)queue->data + (queue->element_size_in_bytes * queue->write_index++));
+		*temp_ptr  = element;
 	}  else {
 		ckit_memory_copy(element, (u8*)queue->data + (queue->element_size_in_bytes * queue->write_index++), queue->element_size_in_bytes, queue->element_size_in_bytes);
 	}
