@@ -13,16 +13,8 @@
 
 
 Thoughts:
-	Vectors right now in their conception have a really big problem ckit's dyanmic arrays (vectors) rely on a header component before the actual 
-	data. This is a problem because taking a trivial example like a 2d dynamic array, if you push an array into a 2d array there is a high probability that the pointer to the array will get invalidated because when the dynamic array grows it changes address meaning I would somehow have to track references and update those. Updating refrences is a fools errand so what choices do we have?
-	OPTIONS
-		#1. Mandate that the code be written in a specific way that avoid this problem.
-			- very error prone (I litterally made this error myself when writing spline points)
-		#2 
-
-	Rethink dynamic allocations I think I need to get rid of the vector completely
-	There is a different line of thinking that doesn't use dynamic allocations
-	I don't necessarily have to push spline points I can just calculate how much something is needed before hand.
+	I need to rewrite the memory tagging system from the ground up and I need to incentivice arenas way more than I currently do it makes lifetimes
+	siginificantly easier.
 
 # Goals
 ### key
