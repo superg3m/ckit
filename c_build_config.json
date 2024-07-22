@@ -23,6 +23,7 @@
             "../core/Collection/HashSet/*.c", 
             "../core/Collection/Queue/*.c", 
             "../core/Collection/LinkedList/*.c", 
+            "../core/Collection/Stack/*.c", 
             "../core/String/*.c", 
             "../core/Memory/*.c", 
             "../core/Platform/*.c", 

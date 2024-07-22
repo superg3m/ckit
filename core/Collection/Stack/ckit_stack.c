@@ -25,4 +25,6 @@ void* ckit_stack_pop(CKIT_Stack* stack) {
 void* MACRO_ckit_stack_free(CKIT_Stack* stack) {
 	ckit_linked_list_free(stack->linked_list);
 	ckit_free(stack);
+
+	return stack;
 }

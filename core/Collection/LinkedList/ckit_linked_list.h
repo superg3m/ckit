@@ -31,6 +31,7 @@ extern "C" {
     CKIT_Node* ckit_linked_list_push(CKIT_LinkedList* linked_list, void* data);
     CKIT_Node ckit_linked_list_pop(CKIT_LinkedList* linked_list);
     CKIT_Node ckit_linked_list_remove(CKIT_LinkedList* linked_list, u32 index);
+    void* MACRO_ckit_linked_list_free(CKIT_LinkedList* linked_list);
 #ifdef __cplusplus
 }
 #endif
@@ -38,5 +39,5 @@ extern "C" {
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
 #define ckit_linked_list_create(type, is_pointer_type) MACRO_ckit_linked_list_create(sizeof(type), is_pointer_type)
-#define ckit_node_free(linked_list, node) node = MACRO_ckit_node_free(linked_list, node)
+#define ckit_linked_list_free(linked_list) linked_list = MACRO_ckit_linked_list_free(linked_list)
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
