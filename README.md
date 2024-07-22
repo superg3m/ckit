@@ -14,13 +14,12 @@
 1. - [x] Queue might not be able to hold more than 8 characters (the sizeof(char*)) easy fix
 
 ### Next Steps
--1. - [x] Finish the linked list should be super duper easy to finish.
-0. - [ ] Finish the stack collection using linked list
-1. - [ ] Rewrite the memory tagging system
-	- [ ] Register custom Tags
+1. - [/] Rewrite the memory tagging system
+	- [/] Register custom Tags
 	- [ ] ckit_alloc(size_in_bytes) // No longer requiring a tag it will just be a tag call user_unknown.
 	- [ ] It should be trivial to put file and function information from where an allocation originated. (be careful for reallocations)
-	- [ ] Introduce "MEMORY_TAG_MAGIC" in the header to catch bugs early
+	- [/] Introduce "MEMORY_TAG_MAGIC" in the header to catch bugs early
+
 2. - [ ] Clean up arenas and init pre-exisiting arenas for things like: Strings
 3. - [ ] Rewrite all Core utilities, and then Write a bunch of tests validating and verifying all the utilities and logic.
 4. - [ ] Start writing EventSystem
@@ -172,8 +171,8 @@ Thoughts:
     - [x] ckit_memory_delete_index(data, data_capacity, index)
     - [x] ckit_memory_insert_index(data, data_capacity, element, index)
 
-- [ ] ckit_memory_tracker.h
-	- [ ] ckit_memory_tracker_register_tag(tag, name)
+- [/] ckit_memory_tracker.h
+	- [/] ckit_memory_tracker_register_tag(tag, name)
 
 - [x] ckit_arena.h (NOT TESTED)
 	- [x] ckit_arena_create(allocation, name)
