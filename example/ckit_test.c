@@ -91,21 +91,7 @@ void test_vector_operations() {
 	return;
 }
 
-void test_string_operations() {
-	// Test types
-
-
-	LOG_SUCCESS("All string tests passed!\n"); 
-	return;
-}
-
-int main() {
-	ckit_init();
-	// memory_init();
-	test_string_operations();
-	test_vector_operations();
-	LOG_PRINT("\n");
-
+void inital_operations() {
 	String str = ckit_str_create("SOLAR_FLARE");
 	LOG_PRINT("String: %s\n", str);
 	LOG_PRINT("String Length: %d\n", ckit_str_length(str));
@@ -142,6 +128,12 @@ int main() {
 	ckit_free(int_array);
 	ckit_free(int_array2);
 
+
+	LOG_SUCCESS("All string tests passed!\n"); 
+	return;
+}
+
+void middle_ground_opperations() {
 	Vec2 points[4];
 	points[0] = (Vec2){0, 0};
 	points[1] = (Vec2){1, 2};
@@ -178,7 +170,9 @@ int main() {
 		ckit_str_free(split_strings[i]);
 	}
 	ckit_vector_free(split_strings);
+}
 
+void hashmap_operations() {
 	CKIT_HashMap* name_to_age = ckit_hashmap_create(4, char*, TRUE);
 
 	char* names[5] = {
@@ -207,7 +201,9 @@ int main() {
 	}
 
 	ckit_hashmap_free(name_to_age);
+}
 
+void queue_operations() {
 	CKIT_Queue* queue = ckit_queue_create(4, char*, TRUE);
 	char* queue_values[] = {"\"1, 2, 3, 4, 5, 6\"", "\"HELLO!\"", "\"HELLO!12345!\"", "\"HEL45!\"", "\"!12345!\"", "\"!6H23dgfa45!\""};
 	ckit_enqueue(queue, queue_values[0]);
@@ -237,16 +233,9 @@ int main() {
 	LOG_DEBUG("value: %s\n", current_value);
 
 	ckit_queue_free(queue);
+}
 
-	CKIT_Lexer lexer;
-	ckit_lexer_load_string(&lexer, "int x = 5; char* testing = \"hello\";");
-
-	CKIT_Token* token_stream = ckit_lexer_generate_token_stream(&lexer);
-	for (int i = 0; i < ckit_vector_count(token_stream); i++) {
-		ckit_lexer_print_token(token_stream[i]);
-	}
-	// ckit_lexer_free(&lexer);
-
+void linked_list_operations() {
 	for (int i = 0; i < 25; i++) {
 		LOG_PRINT("\n");
 	}
@@ -267,6 +256,7 @@ int main() {
 	LOG_DEBUG("list value: %s\n", test_str);
 	test_str = ckit_linked_list_pop(linked_list).data;
 	LOG_DEBUG("list value: %s\n", test_str);
+	ckit_linked_list_free(linked_list);
 
 
 	CKIT_LinkedList* linked_list_int = ckit_linked_list_create(u32, FALSE);
@@ -303,6 +293,46 @@ int main() {
 	test_u32 = ckit_linked_list_pop(linked_list_int).data;
 	LOG_DEBUG("list value: %d\n", *test_u32);
 	ckit_free(test_u32);
+	ckit_linked_list_free(linked_list_int);
+}
+
+void stack_operations() {
+	
+}
+
+int main() {
+	ckit_init();
+	// memory_init();
+
+	test_vector_operations();
+
+	LOG_PRINT("\n");
+	inital_operations();
+
+	LOG_PRINT("\n");
+	middle_ground_opperations();
+
+	LOG_PRINT("\n");
+	hashmap_operations();
+
+	LOG_PRINT("\n");
+	queue_operations();
+
+	/*
+	CKIT_Lexer lexer;
+	ckit_lexer_load_string(&lexer, "int x = 5; char* testing = \"hello\";");
+
+	CKIT_Token* token_stream = ckit_lexer_generate_token_stream(&lexer);
+	for (int i = 0; i < ckit_vector_count(token_stream); i++) {
+		ckit_lexer_print_token(token_stream[i]);
+	}
+
+	// ckit_lexer_free(&lexer);
+	*/
+
+	linked_list_operations();
+
+	stack_operations();
 
 	ckit_cleanup();
 	return 0;

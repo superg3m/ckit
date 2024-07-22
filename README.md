@@ -112,7 +112,12 @@ Thoughts:
     - [x] ckit_linked_list_pop(linked_list, node);
     - [x] ckit_linked_list_remove(linked_list, index);
 
-- [ ] ckit_stack.h
+- [x] ckit_stack.h
+	- [x] MACRO_ckit_stack_create(size_in_bytes, is_pointer_type);
+	- [x] ckit_stack_push(data);
+	- [x] ckit_stack_pop();
+	- [x] ckit_stack_free();
+
 - [x] ckit_queue.h (NOT REALLY TESTED) (WANT TO REVISIT THIS BECAUSE I CAN MAKE IT BETTER 100%)
 	- [x] ckit_queue_create(inital_capacity, element_size_in_bytes, is_pointer_type);
 	- [x] ckit_queue_free(queue);
