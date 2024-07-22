@@ -20,20 +20,23 @@ typedef struct CKIT_Directory {
 	size_t size;
 } CKIT_Directory;
 
-void ckit_os_get_cwd();
-void ckit_os_ls();
-void ckit_os_get_items();
-void ckit_os_chdir();
-void ckit_os_mkdir();
-Boolean ckit_os_create_file(); // can fail if name is not valid path
-Boolean ckit_os_exists();
-void ckit_os_run_subprocess();
-void ckit_os_get_file_info();
-void ckit_os_system();
-void ckit_os_path_join();
+// void ckit_os_get_cwd();
+// void ckit_os_ls();
+// void ckit_os_get_items();
+// void ckit_os_chdir();
+// void ckit_os_mkdir();
+// Boolean ckit_os_create_file(); // can fail if name is not valid path
+// Boolean ckit_os_exists();
+// void ckit_os_run_subprocess();
+// void ckit_os_get_file_info();
+// void ckit_os_system();
+// void ckit_os_path_join();
 
-void ckit_os_push();
-void ckit_os_pop();
+// void ckit_os_push();
+// void ckit_os_pop();
 
-void ckit_os_dir_append_subdir(CKIT_Directory* directory, CKIT_Directory* sub_directory);
-void ckit_os_dir_append_file(CKIT_Directory* directory, CKIT_File* file);
+// void ckit_os_dir_append_subdir(CKIT_Directory* directory, CKIT_Directory* sub_directory);
+// void ckit_os_dir_append_file(CKIT_Directory* directory, CKIT_File* file);
+
+// CKIT_Time ckit_os_timer_start()
+// CKIT_Time ckit_os_timer_end()
