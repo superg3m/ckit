@@ -366,8 +366,9 @@ int main() {
 	*/
 
 	linked_list_operations();
-
 	stack_operations();
+
+	
 
 	ckit_cleanup();
 	return 0;
