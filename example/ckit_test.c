@@ -232,17 +232,14 @@ int main() {
 
 	ckit_queue_free(queue);
 
-	/*
 	CKIT_Lexer lexer;
-	//ckit_lexer_load_string(&lexer, "int x = 5; char* testing = \"hello\";");
-	ckit_lexer_load_string(&lexer, "int ~~~ xESFDGATW52324112 = 5;");
+	ckit_lexer_load_string(&lexer, "int x = 5; char* testing = \"hello\";");
 
 	CKIT_Token* token_stream = ckit_lexer_generate_token_stream(&lexer);
 	for (int i = 0; i < ckit_vector_count(token_stream); i++) {
 		ckit_lexer_print_token(token_stream[i]);
 	}
 	// ckit_lexer_free(&lexer);
-	*/
 
 	ckit_cleanup();
 	return 0;
