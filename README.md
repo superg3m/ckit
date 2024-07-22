@@ -16,6 +16,8 @@ Thoughts:
 	I need to rewrite the memory tagging system from the ground up and I need to incentivice arenas way more than I currently do it makes lifetimes
 	siginificantly easier.
 
+	I need to really think about how data comes in an how it gets tagged this deserves some really critical thought!
+
 # Goals
 ### key
 - '[x]': Finished
