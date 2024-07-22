@@ -26,12 +26,12 @@
 5. - [ ] Start writing the **GAME ENGINE** you have everything you need in order to succeed
 
 ### Future Plans
-1. - [ ] Make logging system more robust with better way to color certain text and parse the message better so you can intuitively \n something
+1. - [ ] Make logging system more robust with better way to color certain text and parse the message better so you can intuitively \n something.
 2. - [ ] Make string stuff a bit more robust I would like to impose a cap on it.
 3. - [ ] More robust Debugging system the stacktrace is nice but I should properly implement it with stackwalker.
 
 Thoughts:
-	I need to rewrite the memory tagging system from the ground up and I need to incentivice arenas way more than I currently do it makes lifetimes
+	I need to rewrite the memory tagging system from the ground up and I need to insentivise arenas way more than I currently do it makes lifetimes
 	siginificantly easier.
 
 	I need to really think about how data comes in an how it gets tagged this deserves some really critical thought!
@@ -41,7 +41,7 @@ Thoughts:
 	Also almost certainly there is problems with puting pointers in arenas or dynamic allocated memory because you might just lose those. Thankfully for
 	the most part because of the tagging system I can catch all of these. One thing I need to do is really go through the entire lifetime of some data
 	and see if there is any possible way for it to not get picked up by the tag system I think not I think its literally impossible for that to be the case.
-	So if I have no memeory leaks according to the tag system then I can be reasonably confident that there are no memory bugs. 
+	So if I have no memeory leaks according to the tag system then I can be reasonably confident that there are no memory bugs.
 
 # Goals
 ### key
@@ -59,12 +59,12 @@ Thoughts:
 
 ### Logger (Cross-Platform) (Fully inherits CKG impl)
 - [x] ckit_logger.h
-	- [x] ckit_LOG_FATAL(msg, ...)
-	- [x] ckit_LOG_ERROR(msg, ...)
-	- [x] ckit_LOG_WARN(msg, ...)
-	- [x] ckit_LOG_DEBUG(msg, ...)
-	- [x] ckit_LOG_SUCCESS(msg, ...)
-	- [x] ckit_LOG_PRINT(msg, ...)
+	- [x] LOG_FATAL(msg, ...)
+	- [x] LOG_ERROR(msg, ...)
+	- [x] LOG_WARN(msg, ...)
+	- [x] LOG_DEBUG(msg, ...)
+	- [x] LOG_SUCCESS(msg, ...)
+	- [x] LOG_PRINT(msg, ...)
 
 ### OS
 - [ ] ckit_os.h
@@ -159,17 +159,17 @@ Thoughts:
 
 ### Memory (REFORMS COMING SOON FOR THE MEMORY TAG SYSTEM NOT EXPRESSIVE ENOUGH I WOULD LIKE TO REGISTER TAGS TBH)
 - [x] ckit_memory.h
-    - [x] ckit_bind_alloc_callback(func_allocator)
-    - [x] ckit_bind_free_callback(func_allocator)
-    - [x] ckit_alloc(allocation_size)
-    - [x] ckit_realloc(data, old_allocation_size, new_allocation_size)
-    - [x] ckit_free(data)
-    - [x] ckit_memory_compare(buffer_one, buffer_two, b1_allocation_size, b2_allocation_size)
-    - [x] ckit_memory_copy(source, destination, source_size, destination_capacity)
-    - [x] ckit_memory_move(source, destination, source_payload_size)
-    - [x] ckit_memory_zero(data, data_size_in_bytes)
-    - [x] ckit_memory_delete_index(data, data_capacity, index)
-    - [x] ckit_memory_insert_index(data, data_capacity, element, index)
+	- [x] ckit_bind_alloc_callback(func_allocator)
+	- [x] ckit_bind_free_callback(func_allocator)
+	- [x] ckit_alloc(allocation_size)
+	- [x] ckit_realloc(data, old_allocation_size, new_allocation_size)
+	- [x] ckit_free(data)
+	- [x] ckit_memory_compare(buffer_one, buffer_two, b1_allocation_size, b2_allocation_size)
+	- [x] ckit_memory_copy(source, destination, source_size, destination_capacity)
+	- [x] ckit_memory_move(source, destination, source_payload_size)
+	- [x] ckit_memory_zero(data, data_size_in_bytes)
+	- [x] ckit_memory_delete_index(data, data_capacity, index)
+	- [x] ckit_memory_insert_index(data, data_capacity, element, index)
 
 - [/] ckit_memory_tracker.h
 	- [/] ckit_memory_tracker_register_tag(tag, name)
