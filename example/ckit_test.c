@@ -258,9 +258,7 @@ void linked_list_operations() {
 	LOG_DEBUG("list value: %s\n", test_str);
 	ckit_linked_list_free(linked_list);
 
-
-	CKIT_LinkedList* linked_list_int = ckit_linked_list_create(u32, FALSE);
-	
+	CKIT_LinkedList* linked_list_int = ckit_linked_list_create(u32, FALSE);	
 	u32 value1[5] = {
 		1,
 		2,
@@ -297,7 +295,44 @@ void linked_list_operations() {
 }
 
 void stack_operations() {
-	
+	CKIT_Stack* stack_int = ckit_stack_create(u32, FALSE);	
+	u32 int_value[5] = {
+		15,
+		25,
+		35,
+		45,
+		55,
+	};
+
+	for (int i = 0; i < 5; i++) {
+		ckit_stack_push(stack_int, &int_value[i]);
+	}
+
+	for (int i = 0; i < 5; i++) {
+		u32* value_back = ckit_stack_pop(stack_int);
+		LOG_SUCCESS("stack_value #%d: %d\n", i + 1, *value_back);
+		ckit_free(value_back);
+	}
+	ckit_stack_free(stack_int);
+
+	CKIT_Stack* stack_str = ckit_stack_create(char*, TRUE);	
+	char* names[5] = {
+		"jofhn",
+		"john",
+		"johhn",
+		"johyn",
+		"jo234hyn234235325",
+	};
+
+	for (int i = 0; i < 5; i++) {
+		ckit_stack_push(stack_str, names[i]);
+	}
+
+	for (int i = 0; i < 5; i++) {
+		char* value_back = ckit_stack_pop(stack_str);
+		LOG_SUCCESS("stack_value #%d: %s\n", i + 1, value_back);
+	}
+	ckit_stack_free(stack_str);
 }
 
 int main() {
