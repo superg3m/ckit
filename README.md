@@ -11,7 +11,9 @@
 4. ./run.ps1
 
 ### Next Steps
-1. - [/] Rewrite the memory tagging system
+0. - [/] Finish the linked list should be super duper easy to finish.
+
+1. - [ ] Rewrite the memory tagging system
 	- [ ] Register custom Tags
 	- [ ] ckit_alloc(size_in_bytes) // No longer requiring a tag it will just be a tag call user_unknown.
 	- [ ] It should be trivial to put file and function information from where an allocation originated. (be careful for reallocations)
@@ -97,7 +99,7 @@ Thoughts:
 	- [X] ckit_hashset_free(hashmap)
 
 
-- [ ] ckit_linked_list.h
+- [ ] ckit_linked_list.h (I can finish this tomorrow)
     - [x] ckit_linked_list_create(element_size_in_bytes);
     - [x] ckit_node_create(data, element_size_in_bytes);
     - [x] ckit_node_get(node, returned_value);
