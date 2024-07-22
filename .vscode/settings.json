@@ -50,7 +50,8 @@
 		"ckit_char.h": "c",
 		"ckit_hashset.h": "c",
 		"cmath": "c",
-		"ckit_stack.h": "c"
+		"ckit_stack.h": "c",
+		"ckit_memory_tracker.h": "c"
 	},
 	"editor.insertSpaces": false
 }
