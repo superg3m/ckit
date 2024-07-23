@@ -146,6 +146,7 @@ u32 ckit_linked_list_node_to_index(CKIT_LinkedList* linked_list, CKIT_Node* addr
     }
 
     ckit_assert(FALSE); // couldn't match a node to an address
+    return -1; // shouldn't get here
 }
 
 CKIT_Node ckit_linked_list_pop(CKIT_LinkedList* linked_list) {

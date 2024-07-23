@@ -336,7 +336,6 @@ void stack_operations() {
 }
 
 int main() {
-	/*
 	ckit_init();
 	// memory_init();
 
@@ -354,7 +353,7 @@ int main() {
 	LOG_PRINT("\n");
 	queue_operations();
 
-
+	/*
 	CKIT_Lexer lexer;
 	ckit_lexer_load_string(&lexer, "int x = 5; char* testing = \"hello\";");
 
@@ -365,12 +364,13 @@ int main() {
 
 	// ckit_lexer_free(&lexer);
 
+	*/
+
 	linked_list_operations();
 	stack_operations();
 	u32 test_overflow = 5;
 	s32 max_value =  10;
 	LOG_SUCCESS("%d\n", CLAMP(65, test_overflow, max_value));
-	*/
 
 	ckit_cleanup();
 	return 0;
