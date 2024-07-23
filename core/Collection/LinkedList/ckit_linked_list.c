@@ -70,19 +70,21 @@ internal CKIT_Node* MACRO_ckit_node_data_free(CKIT_LinkedList* linked_list, CKIT
 CKIT_Node* ckit_linked_list_insert(CKIT_LinkedList* linked_list, u32 index, void* data) {
     ckit_assert(linked_list);
     ckit_assert(data);   
+
+    ckit_assert(index >= 0);
+
+    u32 old_count = linked_list->count++;
+
     if (linked_list->head == NULLPTR) { // there is not head and by definition no tail
         CKIT_Node* new_node_to_insert = ckit_node_create(linked_list, data);
         linked_list->head = new_node_to_insert;
         linked_list->tail = new_node_to_insert;
-        linked_list->count++;
+
         return linked_list->head;
     }
 
-    ckit_assert(index <= linked_list->count);
-    ckit_assert(index >= 0);
-
+    ckit_assert(index < old_count);
     CKIT_Node* new_node_to_insert = ckit_node_create(linked_list, data);
-    linked_list->count++;
     if (index == 0) { // insert at head
         linked_list->head->prev = new_node_to_insert;
         new_node_to_insert->next = linked_list->head;
@@ -91,7 +93,7 @@ CKIT_Node* ckit_linked_list_insert(CKIT_LinkedList* linked_list, u32 index, void
         return new_node_to_insert;
     }
 
-    if (index == linked_list->count - 1) { // insert at tail
+    if (index == old_count - 1) { // insert at tail
         linked_list->tail->next = new_node_to_insert;
         new_node_to_insert->prev = linked_list->tail;
         linked_list->tail = new_node_to_insert;
@@ -131,10 +133,8 @@ void* ckit_linked_list_get(CKIT_LinkedList* linked_list, u32 index) {
 }
 
 CKIT_Node* ckit_linked_list_push(CKIT_LinkedList* linked_list, void* data) {
-    return ckit_linked_list_insert(linked_list, linked_list->count, data);
+    return ckit_linked_list_insert(linked_list, linked_list->count - 1, data);
 }
-
-
 
 u32 ckit_linked_list_node_to_index(CKIT_LinkedList* linked_list, CKIT_Node* address) {
     CKIT_Node* current_node = linked_list->head; 
@@ -150,31 +150,31 @@ u32 ckit_linked_list_node_to_index(CKIT_LinkedList* linked_list, CKIT_Node* addr
 }
 
 CKIT_Node ckit_linked_list_pop(CKIT_LinkedList* linked_list) {
-    return ckit_linked_list_remove(linked_list, linked_list->count);
+    return ckit_linked_list_remove(linked_list, linked_list->count - 1);
 }
 
 CKIT_Node ckit_linked_list_remove(CKIT_LinkedList* linked_list, u32 index) {
     ckit_assert(linked_list); 
-    ckit_assert(linked_list->count != 0); 
-    ckit_assert(index <= linked_list->count);
+    ckit_assert(linked_list->count > 0); 
     ckit_assert(index >= 0);
+
+    u32 old_count = linked_list->count--;
 
     if (index == 0) { // remove head
         CKIT_Node* cached_head = linked_list->head;
         linked_list->head = linked_list->head->next;
         CKIT_Node ret = *cached_head; 
         ckit_node_free(linked_list, cached_head);
-        linked_list->count--;
 
         return ret;
     }
 
-    if (index == linked_list->count) { // remove tail
+    ckit_assert(index < old_count);
+    if (index == old_count - 1) { // remove tail
         CKIT_Node* cached_tail = linked_list->tail;
         linked_list->tail = linked_list->tail->prev;
         CKIT_Node ret = *cached_tail; 
         ckit_node_free(linked_list, cached_tail);
-        linked_list->count--;
 
         return ret;
     }

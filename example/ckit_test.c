@@ -7,6 +7,14 @@ void test_vector_operations() {
 	char charArray[] = {'a', 'b', 'c', 'd', 'e'};
 	char* stringArray[] = {"Hello", "World", "!", "OpenAI", "GPT-3"};
 
+	// Create vector of strings
+	char** stringVector = NULLPTR;
+	for (int i = 0; i < 5; i++) {
+		ckit_vector_push(stringVector, stringArray[i]);
+	}
+	return;
+
+
 	// Create vector of int
 	int* intVector = ckit_vector_reserve(5, int);
 	for (int i = 0; i < 5; i++) {
@@ -25,11 +33,7 @@ void test_vector_operations() {
 		ckit_vector_push(charVector, charArray[i]);
 	}
 
-	// Create vector of strings
-	char** stringVector = NULLPTR;
-	for (int i = 0; i < 5; i++) {
-		ckit_vector_push(stringVector, stringArray[i]);
-	}
+
 
 	// Test get
 	for (int i = 0; i < ckit_vector_count(intVector); i++) {
@@ -246,7 +250,7 @@ void linked_list_operations() {
 	ckit_linked_list_push(linked_list, "hello_sailor2!");
 	ckit_linked_list_push(linked_list, "hello_sailor3!");
 	ckit_linked_list_push(linked_list, "hello_sailor4!");
-	char* test_str = ckit_linked_list_pop(linked_list).data;
+	char* test_str = ckit_linked_list_remove(linked_list, 4).data;
 	LOG_DEBUG("list value: %s\n", test_str);
 	test_str = ckit_linked_list_pop(linked_list).data;
 	LOG_DEBUG("list value: %s\n", test_str);
@@ -336,16 +340,17 @@ void stack_operations() {
 }
 
 int main() {
-
 	ckit_init();
-	LOG_SUCCESS("TEST\n");
-	// memory_init();
-	/*
+	memory_init();
+
 	test_vector_operations();
+	LOG_SUCCESS("AT THE END TEST\n");
+
 
 	LOG_PRINT("\n");
 	inital_operations();
 
+	/*
 	LOG_PRINT("\n");
 	middle_ground_opperations();
 
@@ -365,6 +370,8 @@ int main() {
 	}
 
 	// ckit_lexer_free(&lexer);
+
+
 
 	linked_list_operations();
 	stack_operations();

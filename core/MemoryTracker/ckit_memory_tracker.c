@@ -1,6 +1,5 @@
 // This will do all the tag stuff
 #include "../../ckg/core/Vector/ckg_vector.h"
-#include "../Collection/LinkedList/ckit_linked_list.h"
 #include "../String/ckit_string.h"
 #include "../Assert/ckit_assert.h"
 
@@ -68,7 +67,7 @@ internal CKIT_MemoryTagPool ckit_tracker_tag_pool_create(CKIT_MemoryTagID tag_id
     ret.tag_id = tag_id;
     ret.pool_name = name;
     ret.total_pool_allocation_size = 0;
-    ret.allocated_headers = ckit_linked_list_create(CKIT_MemoryTag, FALSE);
+    ret.allocated_headers = ckg_linked_list_create(CKIT_MemoryTag, FALSE);
 
     return ret;
 }
@@ -86,7 +85,7 @@ internal CKIT_MemoryTag ckit_tracker_memory_tag_create(CKIT_MemoryTagID tag_id, 
 }
 
 internal u64 ckit_tracker_get_tag_pool_index(CKIT_MemoryTagID tag_id) {
-    for (int i = TAG_CKIT_RESERVED_COUNT; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
+    for (int i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
         if (global_memory_tag_pool_vector[i].tag_id == tag_id) {
             return i;
         }
@@ -97,7 +96,7 @@ internal u64 ckit_tracker_get_tag_pool_index(CKIT_MemoryTagID tag_id) {
 }
 
 internal Boolean ckit_tracker_tag_pool_exists(CKIT_MemoryTagID tag_id) {
-    for (int i = TAG_CKIT_RESERVED_COUNT; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
+    for (int i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
         if (global_memory_tag_pool_vector[i].tag_id == tag_id) {
             return TRUE;
         }
@@ -134,6 +133,7 @@ CKIT_MemoryHeader ckit_tracker_header_create(CKIT_MemoryTagID tag_id, size_t all
     ret.magic = CKIT_MEMORY_MAGIC;
 
     ret.tag.tag_id = tag_id;
+    ret.tag.tag_name = ckit_tracker_tag_to_string(tag_id);
     ret.tag.allocation_info.file_name = file_name;
     ret.tag.allocation_info.line = line;
     ret.tag.allocation_info.function_name = function_name;
@@ -158,22 +158,24 @@ void* MACRO_ckit_tracker_insert_header(void* data, CKIT_MemoryHeader header) {
 void ckit_tracker_add(CKIT_MemoryHeader* header) {
     u32 tag_pool_index = ckit_tracker_get_tag_pool_index(header->tag.tag_id);
 
-  	global_memory_tag_pool_vector[TAG_CKIT_INTERNAL].total_pool_allocation_size += sizeof(header);
+  	global_memory_tag_pool_vector[TAG_CKIT_INTERNAL].total_pool_allocation_size += sizeof(CKIT_MemoryHeader);
   	global_memory_tag_pool_vector[tag_pool_index].total_pool_allocation_size += (header->tag.allocation_info.allocation_size);
-  	global_total_pool_memory_used += sizeof(header) + header->tag.allocation_info.allocation_size;
+  	global_total_pool_memory_used += sizeof(CKIT_MemoryHeader) + header->tag.allocation_info.allocation_size;
 
-  	header->linked_list_index = global_memory_tag_pool_vector[tag_pool_index].allocated_headers->count;
-    ckit_linked_list_push(global_memory_tag_pool_vector[tag_pool_index].allocated_headers, &header);
+    header->linked_list_address = ckg_linked_list_push(global_memory_tag_pool_vector[tag_pool_index].allocated_headers, &header);
 }
 
 void ckit_tracker_remove(CKIT_MemoryHeader* header) {
     u32 tag_pool_index = ckit_tracker_get_tag_pool_index(header->tag.tag_id);
 
-  	global_memory_tag_pool_vector[TAG_CKIT_INTERNAL].total_pool_allocation_size -= sizeof(header);
-  	global_memory_tag_pool_vector[tag_pool_index].total_pool_allocation_size += (header->tag.allocation_info.allocation_size);
-  	global_total_pool_memory_used -= sizeof(header) + header->tag.allocation_info.allocation_size;
+  	global_memory_tag_pool_vector[TAG_CKIT_INTERNAL].total_pool_allocation_size -= sizeof(CKIT_MemoryHeader);
+  	global_memory_tag_pool_vector[tag_pool_index].total_pool_allocation_size -= (header->tag.allocation_info.allocation_size);
+  	global_total_pool_memory_used -= sizeof(CKIT_MemoryHeader) + header->tag.allocation_info.allocation_size;
     
-  	ckit_linked_list_remove(global_memory_tag_pool_vector[tag_pool_index].allocated_headers, header->linked_list_index);
+    // Date: July 23, 2024
+    // TODO(Jovanni): DETERMINE IF THIS IS A POINTER TYPE BECAUSE IF IT IS NOT YOUR ARE EXPECT TO FREE THE MEMORY, BY CHANGE IT NOT TO BE A POINTER TYPE;
+    u32 index = ckg_linked_list_node_to_index(global_memory_tag_pool_vector[tag_pool_index].allocated_headers,  header->linked_list_address);
+  	ckg_linked_list_remove(global_memory_tag_pool_vector[tag_pool_index].allocated_headers, index); 
 }
 
 void ckit_tracker_print_header(CKIT_MemoryHeader* header, CKG_LogLevel log_level) {
@@ -186,7 +188,7 @@ void ckit_tracker_print_header(CKIT_MemoryHeader* header, CKG_LogLevel log_level
 
 void ckit_tracker_print_pool(CKIT_MemoryTagPool* pool, CKG_LogLevel log_level) {
     LOG_PRINT("     ==================================== POOL NAME: %s | SIZE: %d ====================================\n", pool->pool_name, pool->total_pool_allocation_size);
-    CKIT_MemoryHeader* current_header = (CKIT_MemoryHeader*)ckit_linked_list_pop(pool->allocated_headers).data;
+    CKIT_MemoryHeader* current_header = (CKIT_MemoryHeader*)ckg_linked_list_pop(pool->allocated_headers).data;
     LOG_PRINT("     ============================================================================================================\n");
 }
 

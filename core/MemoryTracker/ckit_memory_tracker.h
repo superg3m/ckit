@@ -1,7 +1,10 @@
 #pragma once
 
 #include "../ckit_types.h"
+
 #include "../Collection/LinkedList/ckit_linked_list.h"
+#include "../../ckg/core/LinkedList/ckg_linked_list.h"
+
 #include "../Logger/ckit_logger.h"
 //========================== Begin Types ==========================
 typedef enum CKIT_MemoryTagID { // Reserved tags
@@ -47,13 +50,13 @@ typedef struct CKIT_MemoryTag {
 typedef struct CKIT_MemoryTagPool {
     CKIT_MemoryTagID tag_id;
     const char* pool_name;
-    CKIT_LinkedList* allocated_headers;
+    CKG_LinkedList* allocated_headers;
     size_t total_pool_allocation_size;
 } CKIT_MemoryTagPool;
 
 typedef struct CKIT_MemoryHeader {
 	CKIT_MemoryTag tag;
-    u32 linked_list_index;
+    CKG_Node* linked_list_address;
     const char* magic;
 } CKIT_MemoryHeader;
 //=========================== End Types ===========================
@@ -83,5 +86,5 @@ extern "C" {
 //************************** End Functions **************************
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
-#define ckit_tracker_insert_header(data, header) MACRO_ckit_tracker_insert_header(data, header)
+#define ckit_tracker_insert_header(data, header) data = MACRO_ckit_tracker_insert_header(data, header)
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
