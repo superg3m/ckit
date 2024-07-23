@@ -32,7 +32,7 @@ void ckit_hashmap_grow(CKIT_HashMap* hashmap) {
 
 	u32 old_capacity = hashmap->capacity;
 	hashmap->capacity *= 2;
-	CKIT_HashMapEntry* temp_entries = ckit_alloc_custom(sizeof(CKIT_HashMapEntry) * hashmap->capacity, TAG_CKIT_TEMP);
+	CKIT_HashMapEntry* new_entries = ckit_alloc_custom(sizeof(CKIT_HashMapEntry) * hashmap->capacity, TAG_CKIT_CORE_HASHMAP);
 	
 	// rehash
 	for (int i = 0; i < old_capacity; i++) {
@@ -40,16 +40,16 @@ void ckit_hashmap_grow(CKIT_HashMap* hashmap) {
 			u32 index =  ckit_hash_value(hashmap->entries[i].key) % hashmap->capacity;
 			LOG_PRINT("String: %s\n", hashmap->entries[i].key);
 			CKIT_HashMapEntry* cached_ptr = hashmap->entries;
-			hashmap->entries = temp_entries;
+			hashmap->entries = new_entries;
 			u32 real_index = ckit_hashmap_resolve_collision(hashmap, cached_ptr[i].key, index);
 			hashmap->entries = cached_ptr;
 
-			temp_entries[real_index] = hashmap->entries[i];
+			new_entries[real_index] = hashmap->entries[i];
 		}
 	}
 
 	ckit_free(hashmap->entries);
-	hashmap->entries = temp_entries;
+	hashmap->entries = new_entries;
 }
 
 CKIT_HashMap* MACRO_ckit_hashmap_create(u32 hashmap_capacity, size_t element_size, Boolean is_pointer_type) {

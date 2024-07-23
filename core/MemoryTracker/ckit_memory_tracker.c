@@ -207,7 +207,7 @@ void ckit_tracker_print_all_pools(CKG_LogLevel log_level) {
         return;
     }
 
-    log_output(log_level, "---------------------- Memory Leak Detected ----------------------\n");
+    LOG_ERROR("---------------------- Memory Leak Detected: %d(Bytes) ----------------------\n", global_total_pool_memory_used);
     u32 count = ckg_vector_capacity(global_memory_tag_pool_vector);
     Boolean has_start = FALSE; 
     Boolean has_end = FALSE; 
@@ -232,7 +232,7 @@ void ckit_tracker_print_all_pools(CKG_LogLevel log_level) {
         ckit_tracker_print_pool(&pool, log_level);
 
     }
-    log_output(log_level, "------------------------------------------------------------------\n");
+    LOG_ERROR("-----------------------------------------------------------------------------------------\n");
 }
 
 CKIT_MemoryHeader** ckit_tracker_get_all_headers();

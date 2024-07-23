@@ -16,12 +16,12 @@
 ### Next Steps
 1. - [/] Rewrite the memory tagging system
 	- [/] Register custom Tags
-	- [ ] ckit_alloc(size_in_bytes) // No longer requiring a tag it will just be a tag call user_unknown.
-	- [ ] It should be trivial to put file and function information from where an allocation originated. (be careful for reallocations)
-	- [/] Introduce "MEMORY_TAG_MAGIC" in the header to catch bugs early
+	- [x] ckit_alloc(size_in_bytes) // No longer requiring a tag it will just be a tag call user_unknown.
+	- [x] It should be trivial to put file and function information from where an allocation originated. (be careful for reallocations)
+	- [x] Introduce "MEMORY_TAG_MAGIC" in the header to catch bugs early
 
 2. - [ ] Clean up arenas and init pre-exisiting arenas for things like: Strings
-3. - [ ] Rewrite all Core utilities, and then Write a bunch of tests validating and verifying all the utilities and logic.
+3. - [ ] Rewrite all Core utilities using new tracker system, and then Write a bunch of tests validating and verifying all the utilities and logic.
 4. - [ ] Start writing EventSystem
 5. - [ ] Start writing the **GAME ENGINE** you have everything you need in order to succeed
 
@@ -173,7 +173,7 @@ Thoughts:
 
 - [/] ckit_memory_tracker.h
 	- [x] ckit_tracker_init();
-	- [/] ckit_tracker_register_tag_pool(tag_id, name);
+	- [/] ckit_tracker_register_tag_pool(tag_id, name); (NOT TESTED)
     - [x] MACRO_ckit_tracker_insert_header(data, CKIT_MemoryHeader header);
 
     - [x] ckit_tracker_header_create(tag_id, allocation_size);
@@ -182,8 +182,8 @@ Thoughts:
     - [x] ckit_tracker_remove(header);
     - [x] ckit_tracker_get_header(data);
 
-    - [/] ckit_tracker_print_header(header, log_level);
-    - [/] ckit_tracker_print_pool(pool, log_level);
+    - [x] ckit_tracker_print_header(header, log_level);
+    - [x] ckit_tracker_print_pool(pool, log_level);
 
     - [/] ckit_tracker_get_all_headers();
     - [/] ckit_tracker_get_all_pools();

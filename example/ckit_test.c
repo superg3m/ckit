@@ -354,8 +354,6 @@ int main() {
 	LOG_PRINT("\n");
 	queue_operations();
 
-
-	/*
 	CKIT_Lexer lexer;
 	ckit_lexer_load_string(&lexer, "int x = 5; char* testing = \"hello\";");
 
@@ -365,8 +363,6 @@ int main() {
 	}
 
 	// ckit_lexer_free(&lexer);
-
-	*/
 
 	linked_list_operations();
 	stack_operations();
