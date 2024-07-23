@@ -367,12 +367,9 @@ int main() {
 
 	linked_list_operations();
 	stack_operations();
-
-	u32 test_overflow = 11;
+	u32 test_overflow = 5;
 	s32 max_value =  10;
-
-	LOG_SUCCESS("%d\n", MAX(test_overflow, max_value));
-	
+	LOG_SUCCESS("%d\n", CLAMP(65, test_overflow, max_value));
 
 	ckit_cleanup();
 	return 0;
