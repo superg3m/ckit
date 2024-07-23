@@ -84,9 +84,9 @@ void test_vector_operations() {
 	return;
 
 	// Assert that the data is NULL
-	ckit_assert_msg(intVector == NULLPTR, "Error: Vector data is not NULL\n");
-	ckit_assert_msg(boolVector == NULLPTR, "Error: Vector data is not NULL\n");
-	ckit_assert_msg(charVector == NULLPTR, "Error: Vector data is not NULL\n");
+	// ckit_assert_msg(intVector == NULLPTR, "Error: Vector data is not NULL\n");
+	// ckit_assert_msg(boolVector == NULLPTR, "Error: Vector data is not NULL\n");
+	// ckit_assert_msg(charVector == NULLPTR, "Error: Vector data is not NULL\n");
 	ckit_assert_msg(stringVector == NULLPTR, "Error: Vector data is not NULL\n");
 
 	LOG_SUCCESS("All vector tests passed!\n"); 
@@ -365,7 +365,6 @@ int main() {
 	for (int i = 0; i < ckit_vector_count(token_stream); i++) {
 		ckit_lexer_print_token(token_stream[i]);
 	}
-	*/
 
 	// ckit_lexer_free(&lexer);
 
