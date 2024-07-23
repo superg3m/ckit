@@ -172,7 +172,21 @@ Thoughts:
 	- [x] ckit_memory_insert_index(data, data_capacity, element, index)
 
 - [/] ckit_memory_tracker.h
-	- [/] ckit_memory_tracker_register_tag(tag, name)
+	- [x] ckit_tracker_init();
+	- [/] ckit_tracker_register_tag_pool(tag_id, name);
+    - [x] MACRO_ckit_tracker_insert_header(data, CKIT_MemoryHeader header);
+
+    - [x] ckit_tracker_header_create(tag_id, allocation_size);
+	- [x] memory_insert_header(data, CKIT_MemoryHeader header);
+    - [x] ckit_tracker_add(header);
+    - [x] ckit_tracker_remove(header);
+    - [x] ckit_tracker_get_header(data);
+
+    - [/] ckit_tracker_print_header(header, log_level);
+    - [/] ckit_tracker_print_pool(pool, log_level);
+
+    - [/] ckit_tracker_get_all_headers();
+    - [/] ckit_tracker_get_all_pools();
 
 - [x] ckit_arena.h (NOT TESTED)
 	- [x] ckit_arena_create(allocation, name)
