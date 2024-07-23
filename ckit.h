@@ -11,6 +11,7 @@
 #include "./core/Logger/ckit_logger.h"
 #include "./core/Memory/ckit_memory.h"
 #include "./core/Memory/ckit_arena.h"
+#include "./core/MemoryTracker/ckit_memory_tracker.h"
 #include "./core/Assert/ckit_assert.h"
 #include "./core/EventSystem/ckit_event_system.h"
 #include "./core/String/ckit_string.h"

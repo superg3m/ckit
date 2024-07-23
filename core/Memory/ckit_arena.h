@@ -8,7 +8,6 @@
 #include "./ckit_memory.h"
 //========================== Begin Types ==========================
 typedef struct CKIT_MemoryTag CKIT_MemoryTag;
-typedef enum CKG_LogLevel CKG_LogLevel;
 
 typedef enum CKIT_ArenaFlags {
   CKIT_ARENA_FLAG_DEFAULT = 0x1,
@@ -36,7 +35,7 @@ extern "C" {
 	CKIT_Arena* MACRO_ckit_arena_create(size_t allocation, const char* name, CKIT_ArenaFlags flags, u8 alignment);
 	// Has the opporutnity to realloc (I think what i'm going to do moving forward is just another padge of memory on the end that way pointers don't get messed up)
 	void* MACRO_ckit_arena_push(CKIT_Arena* arena, size_t element_size, CKIT_MemoryTagID memory_tag);
-	void ckit_arena_output_allocations(CKIT_Arena* arena, CKG_LogLevel log_level);
+	// void ckit_arena_output_allocations(CKIT_Arena* arena, CKG_LogLevel log_level);
 	
 	// Date: May 11, 2024
 	// NOTE(Jovanni): I want better names for this action

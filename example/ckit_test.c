@@ -336,10 +336,11 @@ void stack_operations() {
 }
 
 int main() {
-	/*
-	ckit_init();
-	// memory_init();
 
+	ckit_init();
+	LOG_SUCCESS("TEST\n");
+	// memory_init();
+	/*
 	test_vector_operations();
 
 	LOG_PRINT("\n");

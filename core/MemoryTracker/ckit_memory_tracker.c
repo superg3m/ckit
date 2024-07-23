@@ -1,7 +1,8 @@
 // This will do all the tag stuff
-#include "../Collection/Vector/ckit_vector.h"
+#include "../../ckg/core/Vector/ckg_vector.h"
 #include "../Collection/LinkedList/ckit_linked_list.h"
 #include "../String/ckit_string.h"
+#include "../Assert/ckit_assert.h"
 
 #include "./ckit_memory_tracker.h"
 CKIT_MemoryTagID reserved_tags[] = {
@@ -85,7 +86,7 @@ internal CKIT_MemoryTag ckit_tracker_memory_tag_create(CKIT_MemoryTagID tag_id, 
 }
 
 internal u64 ckit_tracker_get_tag_pool_index(CKIT_MemoryTagID tag_id) {
-    for (int i = TAG_CKIT_RESERVED_COUNT; i < ckit_vector_count(global_memory_tag_pool_vector); i++) {
+    for (int i = TAG_CKIT_RESERVED_COUNT; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
         if (global_memory_tag_pool_vector[i].tag_id == tag_id) {
             return i;
         }
@@ -96,7 +97,7 @@ internal u64 ckit_tracker_get_tag_pool_index(CKIT_MemoryTagID tag_id) {
 }
 
 internal Boolean ckit_tracker_tag_pool_exists(CKIT_MemoryTagID tag_id) {
-    for (int i = TAG_CKIT_RESERVED_COUNT; i < ckit_vector_count(global_memory_tag_pool_vector); i++) {
+    for (int i = TAG_CKIT_RESERVED_COUNT; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
         if (global_memory_tag_pool_vector[i].tag_id == tag_id) {
             return TRUE;
         }
@@ -106,7 +107,7 @@ internal Boolean ckit_tracker_tag_pool_exists(CKIT_MemoryTagID tag_id) {
 }
 
 internal const char* ckit_tracker_tag_to_string(CKIT_MemoryTagID tag_id) {
-    for (int i = 0; i < ckit_vector_count(global_memory_tag_pool_vector); i++) {
+    for (int i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
         if (global_memory_tag_pool_vector[i].tag_id == tag_id) {
             return global_memory_tag_pool_vector[i].pool_name;
         }
@@ -117,11 +118,11 @@ internal const char* ckit_tracker_tag_to_string(CKIT_MemoryTagID tag_id) {
 }
 
 void ckit_tracker_init() {
-    global_memory_tag_pool_vector = ckit_vector_reserve(TAG_CKIT_RESERVED_COUNT, CKIT_MemoryTagPool);
+    global_memory_tag_pool_vector = NULLPTR;
 
     for (int i = 0; i < TAG_CKIT_RESERVED_COUNT; i++) {
         CKIT_MemoryTagPool tag_pool = ckit_tracker_tag_pool_create(reserved_tags[i], reserved_tags_stringified[i]);
-        ckit_vector_push(global_memory_tag_pool_vector, tag_pool);
+        ckg_vector_push(global_memory_tag_pool_vector, tag_pool);
     }
 }
 
@@ -145,7 +146,7 @@ void ckit_tracker_register_tag_pool(CKIT_MemoryTagID tag_id, const char* name) {
     ckit_assert(!ckit_tracker_tag_pool_exists(tag_id)); // don't register a tag that already exists/has been registered
 
     CKIT_MemoryTagPool tag_pool = ckit_tracker_tag_pool_create(tag_id, name);
-    ckit_vector_push(global_memory_tag_pool_vector, tag_pool);
+    ckg_vector_push(global_memory_tag_pool_vector, tag_pool);
 }
 
 void* MACRO_ckit_tracker_insert_header(void* data, CKIT_MemoryHeader header) {

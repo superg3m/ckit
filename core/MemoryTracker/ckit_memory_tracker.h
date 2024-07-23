@@ -2,6 +2,7 @@
 
 #include "../ckit_types.h"
 #include "../Collection/LinkedList/ckit_linked_list.h"
+#include "../Logger/ckit_logger.h"
 //========================== Begin Types ==========================
 typedef enum CKIT_MemoryTagID { // Reserved tags
     TAG_USER_UNKNOWN,

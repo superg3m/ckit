@@ -75,6 +75,7 @@ void* MACRO_ckit_arena_push(CKIT_Arena* arena, size_t element_size, CKIT_MemoryT
     return ret;
 }
 
+/*
 void ckit_arena_output_allocations(CKIT_Arena* arena, CKG_LogLevel log_level) {
     if (arena->used == 0) {
         log_output(log_level, " - %s not used! | struct_size: %d | allocation size: %d => total_allocation_size: %d \n", arena->name, sizeof(CKIT_Arena), arena->capacity, sizeof(CKIT_Arena) + arena->capacity);
@@ -103,3 +104,4 @@ void ckit_arena_output_allocations(CKIT_Arena* arena, CKG_LogLevel log_level) {
     }
     log_output(log_level, "     - ============== Total used: %lld ==============\n", arena->used);
 }
+*/
