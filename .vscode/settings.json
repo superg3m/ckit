@@ -51,7 +51,13 @@
 		"ckit_hashset.h": "c",
 		"cmath": "c",
 		"ckit_stack.h": "c",
-		"ckit_memory_tracker.h": "c"
+		"ckit_memory_tracker.h": "c",
+		"deque": "c",
+		"initializer_list": "c",
+		"list": "c",
+		"stack": "c",
+		"xhash": "c",
+		"xtree": "c"
 	},
 	"editor.insertSpaces": false
 }

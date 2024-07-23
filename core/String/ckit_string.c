@@ -167,7 +167,6 @@ internal String* ckit_str_split_helper(String* ret_buffer, const char* string_bu
 }
 
 String* ckit_str_split(const char* string_buffer, const char* delimitor) {
-    //ckit_str_check_magic(string_buffer);
     ckit_assert(string_buffer);
     ckit_assert(delimitor);
 
@@ -176,32 +175,26 @@ String* ckit_str_split(const char* string_buffer, const char* delimitor) {
 }
 
 Boolean kit_cstr_contains(const char* string_buffer, const char* contains) {
-    //ckit_str_check_magic(string_buffer);
     return ckg_cstr_contains(string_buffer, contains);
 }
 
 s32 ckit_str_index_of(const char* string_buffer, const char* sub_string) {
-    //ckit_str_check_magic(string_buffer);
     return ckg_cstr_index_of(string_buffer, sub_string);
 }
 
 s32 ckit_str_last_index_of(const char* string_buffer, const char* sub_string) {
-    //ckit_str_check_magic(string_buffer);
     return ckg_cstr_last_index_of(string_buffer, sub_string);
 }
 
 Boolean ckit_str_starts_with(const char* string_buffer, const char* starts_with) {
-    //ckit_str_check_magic(string_buffer);
     return ckg_cstr_starts_with(string_buffer, starts_with);
 }
 
 Boolean ckit_str_ends_with(const char* string_buffer, const char* ends_with) {
-    //ckit_str_check_magic(string_buffer);
     return ckg_cstr_ends_with(string_buffer, ends_with);
 }
 
 String ckit_str_reverse(const char* string_buffer) {
-    // ckit_str_check_magic(string_buffer);
     size_t reversed_string_buffer_capacity = ckit_cstr_length(string_buffer) + 1;
     String reversed_string_buffer = ckit_str_create_custom("", reversed_string_buffer_capacity);
     ckg_cstr_reverse(string_buffer, reversed_string_buffer, reversed_string_buffer_capacity);

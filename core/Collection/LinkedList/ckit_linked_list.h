@@ -32,6 +32,7 @@ extern "C" {
     CKIT_Node ckit_linked_list_pop(CKIT_LinkedList* linked_list);
     CKIT_Node ckit_linked_list_remove(CKIT_LinkedList* linked_list, u32 index);
     void* MACRO_ckit_linked_list_free(CKIT_LinkedList* linked_list);
+    u32 ckit_linked_list_node_to_index(CKIT_LinkedList* linked_list, CKIT_Node* address);
 #ifdef __cplusplus
 }
 #endif

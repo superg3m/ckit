@@ -1,8 +1,11 @@
 #pragma once
 
 #include "../ckit_types.h"
+#include "../Collection/LinkedList/ckit_linked_list.h"
 //========================== Begin Types ==========================
 typedef enum CKIT_MemoryTagID { // Reserved tags
+    TAG_USER_UNKNOWN,
+
     TAG_CKIT_CORE_STRING,
     TAG_CKIT_CORE_ARENA,
     TAG_CKIT_CORE_VECTOR,
@@ -21,6 +24,33 @@ typedef enum CKIT_MemoryTagID { // Reserved tags
     TAG_CKIT_INTERNAL,
     TAG_CKIT_RESERVED_COUNT
 } CKIT_MemoryTagID;
+
+typedef struct CKIT_AllocationInfo {
+    // allocation_site
+    char* file_name;
+    s64 line;
+    char* function_name;
+    size_t allocation_size;
+} CKIT_AllocationInfo;
+
+typedef struct CKIT_MemoryTag {
+    CKIT_MemoryTagID tag_id;
+    char* tag_name;
+    CKIT_AllocationInfo allocation_info;
+} CKIT_MemoryTag;
+
+typedef struct CKIT_MemoryTagPool {
+    CKIT_MemoryTagID tag_id;
+    char* pool_name;
+    CKIT_LinkedList* allocated_headers;
+    size_t total_pool_allocation_size;
+} CKIT_MemoryTagPool;
+
+typedef struct CKIT_MemoryHeader {
+	CKIT_MemoryTag tag;
+    u32 linked_list_index;
+    char* magic;
+} CKIT_MemoryHeader;
 //=========================== End Types ===========================
 
 //************************* Begin Functions *************************
@@ -28,15 +58,25 @@ typedef enum CKIT_MemoryTagID { // Reserved tags
 extern "C" {
 #endif
 	void ckit_tracker_init();
-	void ckit_tracker_register_tag_pool(u32 tag_id, const char* name);
+	void ckit_tracker_register_tag_pool(CKIT_MemoryTagID tag_id, const char* name);
+    void* MACRO_ckit_tracker_insert_header(void* data, CKIT_MemoryHeader header);
 
+    CKIT_MemoryHeader ckit_tracker_header_create(CKIT_MemoryTagID tag_id, size_t allocation_size, char* file_name, u64 line, char* function_name);
 	void* memory_insert_header(void* data, CKIT_MemoryHeader header);
-	void ckit_tracker_add(CKIT_MemoryTagID tag_id, CKIT_MemoryHeader header);
-	void ckit_tracker_remove(CKIT_MemoryTagID tag_id, CKIT_MemoryHeader header);
+    void ckit_tracker_add(CKIT_MemoryHeader* header);
+    void ckit_tracker_remove(CKIT_MemoryHeader* header);
+    CKIT_MemoryHeader* ckit_tracker_get_header(void* data);
+
+    void ckit_tracker_print_header(CKIT_MemoryHeader* header);
+    void ckit_tracker_print_pool(CKIT_MemoryTagPool* pool);
+
+    CKIT_MemoryHeader** ckit_tracker_geta_all_headers();
+    CKIT_MemoryTagPool** ckit_tracker_geta_all_pools();
 #ifdef __cplusplus
 }
 #endif
 //************************** End Functions **************************
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
+#define ckit_tracker_insert_header(data, header) MACRO_ckit_tracker_insert_header(data, header)
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++

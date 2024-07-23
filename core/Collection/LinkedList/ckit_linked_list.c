@@ -134,6 +134,20 @@ CKIT_Node* ckit_linked_list_push(CKIT_LinkedList* linked_list, void* data) {
     return ckit_linked_list_insert(linked_list, linked_list->count, data);
 }
 
+
+
+u32 ckit_linked_list_node_to_index(CKIT_LinkedList* linked_list, CKIT_Node* address) {
+    CKIT_Node* current_node = linked_list->head; 
+    for (int i = 0; i < linked_list->count; i++) {
+        if (current_node == address) {
+            return i;
+        }
+        current_node = current_node->next;
+    }
+
+    ckit_assert(FALSE); // couldn't match a node to an address
+}
+
 CKIT_Node ckit_linked_list_pop(CKIT_LinkedList* linked_list) {
     return ckit_linked_list_remove(linked_list, linked_list->count);
 }
