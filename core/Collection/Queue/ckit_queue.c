@@ -2,12 +2,12 @@
 #include "../../Assert/ckit_assert.h"
 
 CKIT_Queue* MACRO_ckit_queue_create(u32 inital_capacity, size_t element_size_in_bytes, Boolean is_pointer_type) {
-	CKIT_Queue* ret = ckit_alloc(sizeof(CKIT_Queue), MEMORY_TAG_TEMPORARY);
+	CKIT_Queue* ret = ckit_alloc_custom(sizeof(CKIT_Queue), TAG_CKIT_CORE_QUEUE);
 	ret->element_size_in_bytes = element_size_in_bytes;
 	ret->capacity = inital_capacity;
 	ret->count = 0;
 	ret->is_pointer_type = is_pointer_type;
-	ret->data = ckit_alloc(element_size_in_bytes * ret->capacity, MEMORY_TAG_TEMPORARY);
+	ret->data = ckit_alloc_custom(element_size_in_bytes * ret->capacity, TAG_CKIT_CORE_QUEUE);
 	return ret;
 }
 
@@ -35,7 +35,7 @@ void* ckit_dequeue(CKIT_Queue* queue) {
 		u8** temp_ptr = (u8**)((u8*)queue->data + (queue->element_size_in_bytes * queue->read_index++));
 		ret = *temp_ptr;
 	} else {
-		ret = ckit_alloc(queue->element_size_in_bytes, MEMORY_TAG_TEMPORARY);
+		ret = ckit_alloc_custom(queue->element_size_in_bytes, TAG_CKIT_EXPECTED_USER_FREE);
 		ckit_memory_copy((u8*)queue->data + (queue->element_size_in_bytes * queue->read_index++), ret, queue->element_size_in_bytes, queue->element_size_in_bytes);
 	}
 	queue->count--;

@@ -26,6 +26,7 @@
             "../core/Collection/Stack/*.c", 
             "../core/String/*.c", 
             "../core/Memory/*.c", 
+            "../core/MemoryTracker/*.c", 
             "../core/Platform/*.c", 
             "../core/Math/*.c", 
             "../core/FileIO/*.c",

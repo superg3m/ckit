@@ -32,7 +32,7 @@ void ckit_hashmap_grow(CKIT_HashMap* hashmap) {
 
 	u32 old_capacity = hashmap->capacity;
 	hashmap->capacity *= 2;
-	CKIT_HashMapEntry* temp_entries = ckit_alloc(sizeof(CKIT_HashMapEntry) * hashmap->capacity, MEMORY_TAG_TEMPORARY);
+	CKIT_HashMapEntry* temp_entries = ckit_alloc_custom(sizeof(CKIT_HashMapEntry) * hashmap->capacity, TAG_CKIT_TEMP);
 	
 	// rehash
 	for (int i = 0; i < old_capacity; i++) {
@@ -53,9 +53,9 @@ void ckit_hashmap_grow(CKIT_HashMap* hashmap) {
 }
 
 CKIT_HashMap* MACRO_ckit_hashmap_create(u32 hashmap_capacity, size_t element_size, Boolean is_pointer_type) {
-	CKIT_HashMap* ret = ckit_alloc(sizeof(CKIT_HashMap), MEMORY_TAG_TEMPORARY);
+	CKIT_HashMap* ret = ckit_alloc_custom(sizeof(CKIT_HashMap), TAG_CKIT_CORE_HASHMAP);
 	ret->capacity = 1;
-	ret->entries = (CKIT_HashMapEntry*)ckit_alloc(sizeof(CKIT_HashMapEntry) * hashmap_capacity, MEMORY_TAG_TEMPORARY);
+	ret->entries = (CKIT_HashMapEntry*)ckit_alloc_custom(sizeof(CKIT_HashMapEntry) * hashmap_capacity, TAG_CKIT_CORE_HASHMAP);
 	ret->element_size = element_size;
 	ret->count = 0;
 	ret->capacity = hashmap_capacity;
@@ -70,7 +70,7 @@ CKIT_HashMapEntry ckit_hashmap_entry_create(CKIT_HashMap* hashmap, char* key, vo
 	if (hashmap->is_pointer_type) {
 		entry.value = value;
 	} else {
-		entry.value = ckit_alloc(hashmap->element_size, MEMORY_TAG_TEMPORARY);
+		entry.value = ckit_alloc_custom(hashmap->element_size, TAG_CKIT_EXPECTED_USER_FREE);
 		ckit_memory_copy(value, entry.value, hashmap->element_size, hashmap->element_size);
 	}
 
@@ -81,7 +81,7 @@ CKIT_HashMap* MACRO_ckit_hashmap_free(CKIT_HashMap* hashmap) {
 	if (!hashmap->is_pointer_type) {
 		for (int i = 0; i < hashmap->capacity; i++) {
 			if (hashmap->entries[i].value) {
-				ckit_free(hashmap->entries[i].value)
+				ckit_free(hashmap->entries[i].value);
 			}
 		}
 	}

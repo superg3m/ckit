@@ -7,6 +7,7 @@
 CKIT_MemoryTagID reserved_tags[] = {
     TAG_USER_UNKNOWN,
 
+    TAG_CKIT_TEMP,
     TAG_CKIT_CORE_STRING,
     TAG_CKIT_CORE_ARENA,
     TAG_CKIT_CORE_VECTOR,
@@ -14,6 +15,8 @@ CKIT_MemoryTagID reserved_tags[] = {
     TAG_CKIT_CORE_LINKED_LIST,
     TAG_CKIT_CORE_QUEUE,
     TAG_CKIT_CORE_FILE_SYSTEM,
+    TAG_CKIT_CORE_HASHMAP,
+    TAG_CKIT_CORE_HASHSET,
 
     TAG_CKIT_MODULE_LEXER,
     TAG_CKIT_MODULE_FILE_FORMAT_PARSER_BMP,
@@ -27,6 +30,8 @@ CKIT_MemoryTagID reserved_tags[] = {
 
 char* reserved_tags_stringified[] = {
     stringify(TAG_USER_UNKNOWN),
+
+    stringify(TAG_CKIT_TEMP),
     stringify(TAG_CKIT_CORE_STRING),
     stringify(TAG_CKIT_CORE_ARENA),
     stringify(TAG_CKIT_CORE_VECTOR),
@@ -34,6 +39,8 @@ char* reserved_tags_stringified[] = {
     stringify(TAG_CKIT_CORE_LINKED_LIST),
     stringify(TAG_CKIT_CORE_QUEUE),
     stringify(TAG_CKIT_CORE_FILE_SYSTEM),
+    stringify(TAG_CKIT_CORE_HASHMAP),
+    stringify(TAG_CKIT_CORE_HASHSET),
 
     stringify(TAG_CKIT_MODULE_LEXER),
     stringify(TAG_CKIT_MODULE_FILE_FORMAT_PARSER_BMP),
@@ -55,7 +62,7 @@ internal void ckit_tracker_check_magic(void* data) {
     ckit_assert(ckit_str_equal(ckit_memory_header(data)->magic, CKIT_MEMORY_MAGIC));
 }
 
-internal CKIT_MemoryTagPool ckit_tracker_tag_pool_create(CKIT_MemoryTagID tag_id, char* name) {
+internal CKIT_MemoryTagPool ckit_tracker_tag_pool_create(CKIT_MemoryTagID tag_id, const char* name) {
     CKIT_MemoryTagPool ret;
     ret.tag_id = tag_id;
     ret.pool_name = name;
@@ -65,7 +72,7 @@ internal CKIT_MemoryTagPool ckit_tracker_tag_pool_create(CKIT_MemoryTagID tag_id
     return ret;
 }
 
-internal CKIT_MemoryTag ckit_tracker_memory_tag_create(CKIT_MemoryTagID tag_id, char* name) {
+internal CKIT_MemoryTag ckit_tracker_memory_tag_create(CKIT_MemoryTagID tag_id, const char* name) {
     CKIT_MemoryTag ret;
     ret.tag_id = tag_id;
     ret.tag_name = name;
@@ -75,11 +82,6 @@ internal CKIT_MemoryTag ckit_tracker_memory_tag_create(CKIT_MemoryTagID tag_id, 
     ret.allocation_info.function_name = NULLPTR;
     
     return ret;
-}
-
-internal void ckit_tracker_reserved_tag_to_string(CKIT_MemoryTagID reserved_tag_id_to_find) {
-    ckit_assert(reserved_tag_id_to_find < TAG_CKIT_RESERVED_COUNT);
-    return global_memory_tag_pool_vector[reserved_tag_id_to_find].pool_name;
 }
 
 internal u64 ckit_tracker_get_tag_pool_index(CKIT_MemoryTagID tag_id) {
@@ -103,7 +105,7 @@ internal Boolean ckit_tracker_tag_pool_exists(CKIT_MemoryTagID tag_id) {
     return FALSE;
 }
 
-internal char* ckit_tracker_tag_to_string(CKIT_MemoryTagID tag_id) {
+internal const char* ckit_tracker_tag_to_string(CKIT_MemoryTagID tag_id) {
     for (int i = 0; i < ckit_vector_count(global_memory_tag_pool_vector); i++) {
         if (global_memory_tag_pool_vector[i].tag_id == tag_id) {
             return global_memory_tag_pool_vector[i].pool_name;
@@ -115,7 +117,7 @@ internal char* ckit_tracker_tag_to_string(CKIT_MemoryTagID tag_id) {
 }
 
 void ckit_tracker_init() {
-    global_memory_tag_pool_vector = ckit_vector_reserve(TAG_CKIT_RESERVED_COUNT, CKIT_MemoryTag);
+    global_memory_tag_pool_vector = ckit_vector_reserve(TAG_CKIT_RESERVED_COUNT, CKIT_MemoryTagPool);
 
     for (int i = 0; i < TAG_CKIT_RESERVED_COUNT; i++) {
         CKIT_MemoryTagPool tag_pool = ckit_tracker_tag_pool_create(reserved_tags[i], reserved_tags_stringified[i]);
@@ -140,7 +142,7 @@ CKIT_MemoryHeader ckit_tracker_header_create(CKIT_MemoryTagID tag_id, size_t all
 }
 
 void ckit_tracker_register_tag_pool(CKIT_MemoryTagID tag_id, const char* name) {
-    ckit_assert(!ckit_tracker_tag_exists(tag_id)); // don't register a tag that already exists/has been registered
+    ckit_assert(!ckit_tracker_tag_pool_exists(tag_id)); // don't register a tag that already exists/has been registered
 
     CKIT_MemoryTagPool tag_pool = ckit_tracker_tag_pool_create(tag_id, name);
     ckit_vector_push(global_memory_tag_pool_vector, tag_pool);
@@ -181,9 +183,9 @@ void ckit_tracker_print_header(CKIT_MemoryHeader* header, CKG_LogLevel log_level
     log_output(log_level, "          - Function: %s\n\n", header->tag.allocation_info.function_name);
 }
 
-void ckit_tracker_print_pool(CKIT_MemoryTagPool pool, CKG_LogLevel log_level) {
-    LOG_PRINT("     ==================================== POOL NAME: %s | SIZE: %d ====================================\n", pool.pool_name, pool.total_pool_allocation_size);
-    CKIT_MemoryHeader* current_header = (CKIT_MemoryHeader*)ckit_linked_list_pop(pool.allocated_headers).data;
+void ckit_tracker_print_pool(CKIT_MemoryTagPool* pool, CKG_LogLevel log_level) {
+    LOG_PRINT("     ==================================== POOL NAME: %s | SIZE: %d ====================================\n", pool->pool_name, pool->total_pool_allocation_size);
+    CKIT_MemoryHeader* current_header = (CKIT_MemoryHeader*)ckit_linked_list_pop(pool->allocated_headers).data;
     LOG_PRINT("     ============================================================================================================\n");
 }
 
@@ -193,6 +195,6 @@ CKIT_MemoryHeader* ckit_tracker_get_header(void* data) {
     return header;
 }
 
-CKIT_MemoryHeader** ckit_tracker_geta_all_headers();
+CKIT_MemoryHeader** ckit_tracker_get_all_headers();
 
-CKIT_MemoryTagPool** ckit_tracker_geta_all_pools();
+CKIT_MemoryTagPool** ckit_tracker_get_all_pools();

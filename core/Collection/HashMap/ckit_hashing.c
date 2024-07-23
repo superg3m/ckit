@@ -45,7 +45,7 @@ void test_hash_collisions() {
 
     char test_strings[STRING_LENGTH + 1];
 
-    u8* hash_map = ckit_alloc(NUM_TESTS * sizeof(u8), MEMORY_TAG_TEMPORARY);
+    u8* hash_map = ckit_alloc_custom(NUM_TESTS * sizeof(u8), TAG_CKIT_CORE_HASHMAP); // not really a hashmap lmao
 
     char test_string[STRING_LENGTH + 1];
 

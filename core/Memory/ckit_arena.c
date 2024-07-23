@@ -2,14 +2,12 @@
 #include "./ckit_memory.h"
 #include "../Assert/ckit_assert.h"
 
-extern char known_memory_tag_strings[MEMORY_TAG_COUNT][MEMORY_TAG_CHARACTER_LIMIT];
+// extern char known_memory_tag_strings[TAG_CKIT_RESERVED_COUNT][MEMORY_TAG_CHARACTER_LIMIT];
 
 #define ARENA_DEFAULT_ALLOCATION_SIZE MegaBytes(1)
 
-void ckit_memory_arena_register(CKIT_Arena* arena);
-void ckit_memory_arena_unregister(CKIT_Arena* arena);
-// void ckit_memory_arena_unregister_all();
-
+// void ckit_memory_arena_register(CKIT_Arena* arena);
+// void ckit_memory_arena_unregister(CKIT_Arena* arena);
 
 void arena_init() {
 
@@ -17,21 +15,23 @@ void arena_init() {
 
 CKIT_Arena* MACRO_ckit_arena_create(size_t allocation_size, const char* name, CKIT_ArenaFlags flags, u8 alignment) {
     ckit_assert_msg((alignment & 1) == 0, "Arena alignment is not a power of two\n");
-    CKIT_Arena* arena = ckit_alloc(sizeof(CKIT_Arena), MEMORY_TAG_ARENA);
+    CKIT_Arena* arena = ckit_alloc_custom(sizeof(CKIT_Arena), TAG_CKIT_CORE_ARENA);
     arena->alignment = alignment == 0 ? 8 : alignment;
     arena->name = name;
     arena->flags = flags;
     arena->capacity = allocation_size != 0 ? allocation_size : ARENA_DEFAULT_ALLOCATION_SIZE;
     arena->used = 0;
     ckit_memory_zero(arena->memory_tag_values, sizeof(u64));
-    arena->base_address = ckit_alloc(arena->capacity, MEMORY_TAG_ARENA);
-    ckit_memory_arena_register(arena);
+    arena->base_address = ckit_alloc_custom(arena->capacity, TAG_CKIT_CORE_ARENA);
+
+    //ckit_memory_arena_register(arena);
+
     return arena;
 }
 
 void* ckit_arena_free(CKIT_Arena* arena) {
     ckit_assert(arena && arena->base_address);
-    ckit_memory_arena_unregister(arena);
+    //ckit_memory_arena_unregister(arena);
     ckit_free(arena->base_address);
     ckit_free(arena);
     return arena;
@@ -43,13 +43,9 @@ void ckit_arena_clear(CKIT_Arena* arena) {
     arena->used = 0;
 }
 
-void* MACRO_ckit_arena_push(CKIT_Arena* arena, size_t element_size, CKIT_MemoryTag memory_tag) {
+void* MACRO_ckit_arena_push(CKIT_Arena* arena, size_t element_size, CKIT_MemoryTagID tag_id) {
     ckit_assert_msg(arena && arena->base_address, "arena_push: arena is null\n");
     ckit_assert_msg((arena->used + element_size < arena->capacity), "arena_push: can't push element ran out of memory\n");
-
-    if (memory_tag == MEMORY_TAG_UNKNOWN) {
-        LOG_WARN("arena_push: memory tag unknown\n");
-    }
 
     if (arena->flags == CKIT_ARENA_FLAG_DEFAULT) {
         ckg_assert((arena->used + element_size <= arena->capacity));
@@ -70,7 +66,7 @@ void* MACRO_ckit_arena_push(CKIT_Arena* arena, size_t element_size, CKIT_MemoryT
     }
 
     u8* ret = (u8*)arena->base_address + arena->used;
-    arena->memory_tag_values[memory_tag] += element_size;
+    arena->memory_tag_values[tag_id] += element_size;
     arena->used += element_size;
     if ((arena->used & (arena->alignment - 1)) != 0) { // if first bit is set then its not aligned
         arena->used += (arena->alignment - (arena->used & (arena->alignment - 1)));
@@ -91,7 +87,7 @@ void ckit_arena_output_allocations(CKIT_Arena* arena, CKG_LogLevel log_level) {
     
     log_output(log_level, "     - =========== %s: %lld ===========\n", arena->name, arena->capacity);
     u32 sum = 0;
-    for (int level = 0; level < MEMORY_TAG_ARENA; level++) {
+    for (int level = 0; level < TAG_CKIT_RESERVED_COUNT; level++) {
         if (arena->memory_tag_values[level] == 0) {
             continue;
         } 
@@ -100,7 +96,7 @@ void ckit_arena_output_allocations(CKIT_Arena* arena, CKG_LogLevel log_level) {
         ckit_memory_zero(out_message2, sizeof(out_message2));
         ckit_memory_zero(out_message3, sizeof(out_message3));
 
-        sprintf(out_message, "  %s", known_memory_tag_strings[level]);
+        // sprintf(out_message, "  %s", known_memory_tag_strings[level]);
         sprintf(out_message2, " %lld", arena->memory_tag_values[level]);
         sprintf(out_message3, " %s%s", out_message, out_message2);
         log_output(log_level, " %s\n", out_message3);

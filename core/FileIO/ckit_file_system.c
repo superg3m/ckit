@@ -2,7 +2,7 @@
 #include "../String/ckit_string.h"
 #include "../Memory/ckit_memory.h"
 u8* file_data(FILE* handle, size_t file_size) {
-	u8* buffer = (u8*)ckit_alloc(file_size, MEMORY_TAG_TEMPORARY);
+	u8* buffer = (u8*)ckit_alloc_custom(file_size, TAG_CKIT_CORE_FILE_SYSTEM);
 	ckit_assert_msg(fread(buffer, file_size, 1 , handle) != file_size, "Error reading file");
 	rewind(handle);
 	return buffer;

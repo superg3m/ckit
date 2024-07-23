@@ -7,6 +7,6 @@ void ckit_init() {
 }
 void ckit_cleanup() {
 	// string_arena_free()
-	ckit_memory_arena_unregister_all();
-	memory_output_allocations(CKG_LOG_LEVEL_WARN);
+	// ckit_memory_arena_unregister_all();
+	// memory_output_allocations(CKG_LOG_LEVEL_WARN);
 }

@@ -103,8 +103,8 @@ void inital_operations() {
 	LOG_PRINT("\n");
 	ckit_str_free(str);
 
-	int* int_array = (int*)ckit_alloc(sizeof(int) * 5, MEMORY_TAG_TEMPORARY);
-	int* int_array2 = (int*)ckit_alloc(sizeof(int) * 5, MEMORY_TAG_TEMPORARY);
+	int* int_array = (int*)ckit_alloc(sizeof(int) * 5);
+	int* int_array2 = (int*)ckit_alloc(sizeof(int) * 5);
 	LOG_ERROR("Element: %d (SHOULD BE ZERO)\n\n", int_array[0]);
 	for (int i = 0; i < 5; i++) {
 		int_array2[i] = 1432;
@@ -160,7 +160,7 @@ void middle_ground_opperations() {
 	test_hash_collisions();
 
 	CKIT_Arena* frame_boundary_arena = ckit_arena_create(500, "Frame Boundary", 0);
-	ckit_arena_push(frame_boundary_arena, Boolean, MEMORY_TAG_TEMPORARY);
+	ckit_arena_push(frame_boundary_arena, Boolean, TAG_CKIT_TEMP);
 	ckit_arena_free(frame_boundary_arena);
 
 	// String str_to_be_split = ckit_str_create("They said it couldn't be done. They tried to recite the dark magics to me! THEY DON'T KNOW I WAS THERE WHEN THEY WERE WRITTEN!");

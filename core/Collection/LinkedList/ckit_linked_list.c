@@ -3,7 +3,7 @@
 #include "../../Assert/ckit_assert.h"
 
 CKIT_LinkedList* MACRO_ckit_linked_list_create(size_t element_size_in_bytes, Boolean is_pointer_type) {
-    CKIT_LinkedList* ret = ckit_alloc(sizeof(CKIT_LinkedList), MEMORY_TAG_TEMPORARY);
+    CKIT_LinkedList* ret = ckit_alloc_custom(sizeof(CKIT_LinkedList), TAG_CKIT_CORE_LINKED_LIST);
     ret->count = 0;
     ret->element_size_in_bytes = element_size_in_bytes;
     ret->head = NULLPTR;
@@ -13,11 +13,11 @@ CKIT_LinkedList* MACRO_ckit_linked_list_create(size_t element_size_in_bytes, Boo
 }
 
 CKIT_Node* MACRO_ckit_node_create(CKIT_LinkedList* linked_list, void* data) {
-    CKIT_Node* ret = ckit_alloc(sizeof(CKIT_Node), MEMORY_TAG_TEMPORARY);
+    CKIT_Node* ret = ckit_alloc_custom(sizeof(CKIT_Node), TAG_CKIT_CORE_LINKED_LIST);
     if (linked_list->is_pointer_type) {
         ret->data = data;
     } else {
-        ret->data = ckit_alloc(linked_list->element_size_in_bytes, MEMORY_TAG_TEMPORARY);
+        ret->data = ckit_alloc_custom(linked_list->element_size_in_bytes, TAG_CKIT_EXPECTED_USER_FREE);
         ckit_memory_copy(data, ret->data, linked_list->element_size_in_bytes, linked_list->element_size_in_bytes); 
     }
 
@@ -146,6 +146,7 @@ u32 ckit_linked_list_node_to_index(CKIT_LinkedList* linked_list, CKIT_Node* addr
     }
 
     ckit_assert(FALSE); // couldn't match a node to an address
+    return -1; // should never get here
 }
 
 CKIT_Node ckit_linked_list_pop(CKIT_LinkedList* linked_list) {

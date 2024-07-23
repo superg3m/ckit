@@ -6,6 +6,7 @@
 typedef enum CKIT_MemoryTagID { // Reserved tags
     TAG_USER_UNKNOWN,
 
+    TAG_CKIT_TEMP,
     TAG_CKIT_CORE_STRING,
     TAG_CKIT_CORE_ARENA,
     TAG_CKIT_CORE_VECTOR,
@@ -13,6 +14,9 @@ typedef enum CKIT_MemoryTagID { // Reserved tags
     TAG_CKIT_CORE_LINKED_LIST,
     TAG_CKIT_CORE_QUEUE,
     TAG_CKIT_CORE_FILE_SYSTEM,
+    TAG_CKIT_CORE_HASHMAP,
+    TAG_CKIT_CORE_HASHSET,
+
 
     TAG_CKIT_MODULE_LEXER,
     TAG_CKIT_MODULE_FILE_FORMAT_PARSER_BMP,
@@ -27,21 +31,21 @@ typedef enum CKIT_MemoryTagID { // Reserved tags
 
 typedef struct CKIT_AllocationInfo {
     // allocation_site
-    char* file_name;
+    const char* file_name;
     s64 line;
-    char* function_name;
+    const char* function_name;
     size_t allocation_size;
 } CKIT_AllocationInfo;
 
 typedef struct CKIT_MemoryTag {
     CKIT_MemoryTagID tag_id;
-    char* tag_name;
+    const char* tag_name;
     CKIT_AllocationInfo allocation_info;
 } CKIT_MemoryTag;
 
 typedef struct CKIT_MemoryTagPool {
     CKIT_MemoryTagID tag_id;
-    char* pool_name;
+    const char* pool_name;
     CKIT_LinkedList* allocated_headers;
     size_t total_pool_allocation_size;
 } CKIT_MemoryTagPool;
@@ -49,7 +53,7 @@ typedef struct CKIT_MemoryTagPool {
 typedef struct CKIT_MemoryHeader {
 	CKIT_MemoryTag tag;
     u32 linked_list_index;
-    char* magic;
+    const char* magic;
 } CKIT_MemoryHeader;
 //=========================== End Types ===========================
 
@@ -67,11 +71,11 @@ extern "C" {
     void ckit_tracker_remove(CKIT_MemoryHeader* header);
     CKIT_MemoryHeader* ckit_tracker_get_header(void* data);
 
-    void ckit_tracker_print_header(CKIT_MemoryHeader* header);
-    void ckit_tracker_print_pool(CKIT_MemoryTagPool* pool);
+    void ckit_tracker_print_header(CKIT_MemoryHeader* header, CKG_LogLevel log_level);
+    void ckit_tracker_print_pool(CKIT_MemoryTagPool* pool, CKG_LogLevel log_level);
 
-    CKIT_MemoryHeader** ckit_tracker_geta_all_headers();
-    CKIT_MemoryTagPool** ckit_tracker_geta_all_pools();
+    CKIT_MemoryHeader** ckit_tracker_get_all_headers();
+    CKIT_MemoryTagPool** ckit_tracker_get_all_pools();
 #ifdef __cplusplus
 }
 #endif

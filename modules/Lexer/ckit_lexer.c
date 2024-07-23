@@ -206,7 +206,7 @@ CKIT_Token MACRO_ckit_lexer_token_create(CKIT_Token_Type token_type, size_t valu
 
 
 	ret.value_size_in_bytes = value_size_in_bytes;
-	ret.value = ckit_alloc(value_size_in_bytes, MEMORY_TAG_TEMPORARY);
+	ret.value = ckit_alloc_custom(value_size_in_bytes, TAG_CKIT_MODULE_LEXER);
 	ckit_memory_copy(value, ret.value, ret.value_size_in_bytes, ret.value_size_in_bytes);
 	ret.type = token_type;
 
@@ -397,7 +397,7 @@ internal char* ckit_lexer_token_to_string(CKIT_Token token) {
 }
 
 internal char* ckit_lexer_token_value_to_string(CKIT_Token token) {
-	char* big_buffer = ckit_alloc(1024, MEMORY_TAG_TEMPORARY);
+	char* big_buffer = ckit_alloc_custom(1024, TAG_CKIT_EXPECTED_USER_FREE);
 	ckit_memory_zero(big_buffer, 1024);
     switch (token.type) {
 		case TOKEN_KEYWORD: 

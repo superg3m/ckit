@@ -5,105 +5,56 @@
 ===========================================================*/
 #include "../../ckg/Core/Memory/ckg_memory.h"
 
-#include "./ckit_memory.h"
-#include "./ckit_arena.h"
+
+
 #include "../Assert/ckit_assert.h"
 #include "../Logger/ckit_logger.h"
-#include "../Collection/Vector/ckit_vector.h"
+
 #include "../Platform/ckit_platform_services.h"
+
+#include "./ckit_memory.h"
 //========================== Begin Types ==========================
-typedef enum CKG_LogLevel CKG_LogLevel;
-typedef struct CKIT_Arena CKIT_Arena;
 
-typedef struct CKIT_MemoryHeader {
-	u32 allocation_size_without_header;
-    CKIT_MemoryTag memory_tag;
-} CKIT_MemoryHeader;
-
-
-internal u64 memory_used = 0; 
-internal u64 global_memory_tags[MEMORY_TAG_COUNT];
-internal CKIT_Arena** registered_arenas = NULLPTR;
-char known_memory_tag_strings[MEMORY_TAG_COUNT][MEMORY_TAG_CHARACTER_LIMIT] = {
-    "UNKNOWN      : ",
-    "TEMPORARY    : ",
-    "INTERNAL     : ",
-    "STRING       : ",
-    "VECTOR       : ",
-    "ARENA        : ",
-};
 //=========================== End Types ===========================
 
 //************************* Begin Functions *************************
-internal void memory_track_add(CKIT_MemoryHeader header, CKIT_MemoryTag memory_tag) {
-  	global_memory_tags[MEMORY_TAG_INTERNAL] += sizeof(header);
-  	global_memory_tags[memory_tag] += (header.allocation_size_without_header);
-  	memory_used += sizeof(header) + header.allocation_size_without_header;
-}
-
-internal void memory_track_remove(CKIT_MemoryHeader header, CKIT_MemoryTag memory_tag) {
-  	global_memory_tags[MEMORY_TAG_INTERNAL] -= sizeof(header);
-  	global_memory_tags[memory_tag] -= (header.allocation_size_without_header);
-  	memory_used -= sizeof(header) + header.allocation_size_without_header;
-}
-
-internal void* memory_insert_header(void* data, CKIT_MemoryHeader header) {
-  	((CKIT_MemoryHeader*)data)[0] = header;
-  	data = (u8*)data + sizeof(header);
-  	return data;
-}
-
-#define ckit_memory_base(data) (CKIT_MemoryHeader*)((u8*)data - sizeof(CKIT_MemoryHeader))
-
-Boolean memory_tag_is_valid(CKIT_MemoryTag memory_tag) {
-  	return (memory_tag >= 0 && memory_tag < MEMORY_TAG_COUNT);
-}
-
 void memory_init() {
 	ckg_bind_alloc_callback(&platform_allocate);
 	ckg_bind_free_callback(&platform_free);
 }
 
-void* ckit_alloc(size_t byte_allocation_size, CKIT_MemoryTag memory_tag) {
+void* MACRO_ckit_alloc(size_t byte_allocation_size, CKIT_MemoryTagID tag_id, char* file, u32 line, char* function) {
 	ckit_assert_msg(byte_allocation_size > 0, "Invalid allocation size zero or below\n");
-	ckit_assert_msg(memory_tag_is_valid(memory_tag), "ckit_alloc: Memory tag is invalid | value: (%d)\n", memory_tag);
-	if (memory_tag == MEMORY_TAG_UNKNOWN) {
-		LOG_WARN("ckit_alloc: memory tag unknown\n");
-	}
 
-	CKIT_MemoryHeader header;
-	header.allocation_size_without_header = byte_allocation_size;
-	header.memory_tag = memory_tag;
+	CKIT_MemoryHeader temp_header = ckit_tracker_header_create(tag_id, byte_allocation_size, file, line, function);
 
-	memory_track_add(header, memory_tag);
-	void* data = ckg_alloc(sizeof(header) + header.allocation_size_without_header);
-	ckit_memory_zero(data, sizeof(header) + header.allocation_size_without_header);
-	// Date: July 16, 2024
-	// NOTE(Jovanni): Somehow the memory we get from this isn't zeroed lmao?
-	data = memory_insert_header(data, header);
+	void* data = ckg_alloc(sizeof(temp_header) + byte_allocation_size);
+	ckit_memory_zero(data, sizeof(temp_header) + byte_allocation_size);
+	ckit_tracker_insert_header(data, temp_header);
+	CKIT_MemoryHeader* real_header = ckit_tracker_get_header(data); // this is probably a bad constrain I shouldn't have to think about getting the real header
+	ckit_tracker_add(real_header);
 
 	return data;
 }
 
 void* MACRO_ckit_free(void* data) {
   	ckit_assert_msg(data, "ckit_free: Data passed is null in free\n");
-  	const CKIT_MemoryHeader header = *ckit_memory_base(data);
-  	ckit_assert_msg(memory_tag_is_valid(header.memory_tag), "ckit_free: memory_tag is not valid\n");
 
-  	memory_track_remove(header, header.memory_tag);
-
-  	data = ckit_memory_base(data);
-	ckg_memory_zero(data, sizeof(header) + header.allocation_size_without_header);
+  	CKIT_MemoryHeader* header = ckit_tracker_get_header(data);
+	const size_t allocation_size = header->tag.allocation_info.allocation_size;
+  	ckit_tracker_remove(header);
+  	data = (u8*)data - sizeof(CKIT_MemoryHeader);
+	ckit_memory_zero(data, sizeof(header) + allocation_size);
   	ckg_free(data);
   	return data;
 }
 
-void* ckit_realloc(void* data, u64 new_allocation_size) {
+void* MACRO_ckit_realloc(void* data, u64 new_allocation_size, char* file, u32 line, char* function) {
   	ckit_assert_msg(data, "ckit_reallocation: Data passed is null\n");
-  	CKIT_MemoryHeader header = *ckit_memory_base(data);
+  	const CKIT_MemoryHeader* header = ckit_tracker_get_header(data);
 
-  	void* ret_data = ckit_alloc(sizeof(header) + new_allocation_size, header.memory_tag);
-  	ckg_memory_copy(data, ret_data, header.allocation_size_without_header, new_allocation_size);
+  	void* ret_data = MACRO_ckit_alloc(sizeof(header) + new_allocation_size, header->tag.tag_id, file, line, function);
+  	ckit_memory_copy(data, ret_data, header->tag.allocation_info.allocation_size, new_allocation_size);
   	ckit_free(data);
 
   	return ret_data;
@@ -128,28 +79,8 @@ void MACRO_ckit_memory_insert_index(void* data, u32 data_capacity, size_t elemen
 	MACRO_ckg_memory_insert_index(data, data_capacity, element_size_in_bytes, index);
 }
 
-void ckit_memory_arena_register(CKIT_Arena* arena) {
-	ckit_vector_push(registered_arenas, arena);
-}
-
-void ckit_memory_arena_unregister(CKIT_Arena* arena) {
-	for (int i = 0; i < ckit_vector_count(registered_arenas); i++) {
-		if (arena == registered_arenas[i]) {
-			ckit_vector_remove_at(registered_arenas, i);
-			break;
-		}
-	}
-}
-
-void ckit_memory_arena_unregister_all() {
-	for (int i = ckit_vector_count(registered_arenas) - 1; i >= 0; i--) {
-		ckit_arena_free(registered_arenas[i]);
-	}
-
-	ckit_vector_free(registered_arenas);
-}
-
-void memory_output_allocations(CKG_LogLevel log_level) {
+/*
+void ckit_memory_report(CKG_LogLevel log_level) {
     if (memory_used == 0) {
         log_output(log_level, "No memory allocations!\n");
         return;
@@ -180,6 +111,30 @@ void memory_output_allocations(CKG_LogLevel log_level) {
     }
     log_output(log_level, "=============================================\n");
 }
+
+
+void ckit_memory_arena_register(CKIT_Arena* arena) {
+	ckit_vector_push(registered_arenas, arena);
+}
+
+void ckit_memory_arena_unregister(CKIT_Arena* arena) {
+	for (int i = 0; i < ckit_vector_count(registered_arenas); i++) {
+		if (arena == registered_arenas[i]) {
+			ckit_vector_remove_at(registered_arenas, i);
+			break;
+		}
+	}
+}
+
+void ckit_memory_arena_unregister_all() {
+	for (int i = ckit_vector_count(registered_arenas) - 1; i >= 0; i--) {
+		ckit_arena_free(registered_arenas[i]);
+	}
+
+	ckit_vector_free(registered_arenas);
+}
+*/
+
 //************************** End Functions **************************
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++

@@ -21,7 +21,7 @@ void ckit_hashset_grow(CKIT_HashSet* hashset) {
 
 	u32 old_capacity = hashset->capacity;
 	hashset->capacity *= 2;
-	char** temp_entries = ckit_alloc(sizeof(char*) * hashset->capacity, MEMORY_TAG_TEMPORARY);
+	char** temp_entries = ckit_alloc_custom(sizeof(char*) * hashset->capacity, TAG_CKIT_TEMP);
 	
 	// rehash
 	for (int i = 0; i < old_capacity; i++) {
@@ -42,9 +42,9 @@ void ckit_hashset_grow(CKIT_HashSet* hashset) {
 }
 
 CKIT_HashSet* MACRO_ckit_hashset_create(u32 hashset_capacity) {
-	CKIT_HashSet* ret = ckit_alloc(sizeof(CKIT_HashSet), MEMORY_TAG_TEMPORARY);
+	CKIT_HashSet* ret = ckit_alloc_custom(sizeof(CKIT_HashSet), TAG_CKIT_CORE_HASHSET);
 	ret->capacity = 1;
-	ret->entries = (char**)ckit_alloc(sizeof(char*) * hashset_capacity, MEMORY_TAG_TEMPORARY);
+	ret->entries = (char**)ckit_alloc_custom(sizeof(char*) * hashset_capacity, TAG_CKIT_CORE_HASHSET);
 	ret->count = 0;
 	ret->capacity = hashset_capacity;
 

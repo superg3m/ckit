@@ -77,7 +77,7 @@ String ckit_str_create_custom(const char* c_string, u32 capacity) {
   	header.capacity = capacity != 0 ? capacity : sizeof(char) * (c_str_length + 1);
     header.magic = CKIT_STR_MAGIC;
 	
-  	String ret = ckit_alloc(sizeof(header) + header.capacity, MEMORY_TAG_STRING);
+  	String ret = ckit_alloc_custom(sizeof(header) + header.capacity, TAG_CKIT_CORE_STRING);
     ckit_str_insert_header(&ret, header);
 	
   	ckg_cstr_copy(ret, header.capacity, c_string);

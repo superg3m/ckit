@@ -13,7 +13,7 @@ internal void ckit_vector_check_magic(void* vector) {
 // TODO(Jovanni): HEY I THINK THIS SHOULD BE AN ARRENA ACTUALLY AND ITS LOCALLY SCOPED IN SOME WAY
 void* ckit_vector_grow(void* vector, size_t element_size, Boolean force_grow) {
     if (vector == NULLPTR) {
-        vector = ckit_alloc(sizeof(CKIT_VectorHeader) + (VECTOR_DEFAULT_CAPACITY * element_size), MEMORY_TAG_VECTOR);
+        vector = ckit_alloc_custom(sizeof(CKIT_VectorHeader) + (VECTOR_DEFAULT_CAPACITY * element_size), TAG_CKIT_CORE_VECTOR);
         vector = (u8*)vector + sizeof(CKIT_VectorHeader);
         ckit_vector_base(vector)->count = 0;
         ckit_vector_base(vector)->capacity = VECTOR_DEFAULT_CAPACITY;
@@ -40,7 +40,7 @@ void* ckit_vector_grow(void* vector, size_t element_size, Boolean force_grow) {
 }
 
 void* MACRO_ckit_vector_reserve(size_t element_size, u32 inital_capacity) {
-    void* vector = ckit_alloc(sizeof(CKIT_VectorHeader) + (inital_capacity * element_size), MEMORY_TAG_VECTOR);
+    void* vector = ckit_alloc_custom(sizeof(CKIT_VectorHeader) + (inital_capacity * element_size), TAG_CKIT_CORE_VECTOR);
     vector = (u8*)vector + sizeof(CKIT_VectorHeader);
     ckit_vector_base(vector)->count = 0;
     ckit_vector_base(vector)->capacity = inital_capacity;
