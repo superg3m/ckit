@@ -57,7 +57,9 @@
 		"list": "c",
 		"stack": "c",
 		"xhash": "c",
-		"xtree": "c"
+		"xtree": "c",
+		"algorithm": "c",
+		"iterator": "c"
 	},
 	"editor.insertSpaces": false
 }

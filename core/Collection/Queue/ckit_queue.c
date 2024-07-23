@@ -1,13 +1,13 @@
 #include "./ckit_queue.h"
 #include "../../Assert/ckit_assert.h"
 
-CKIT_Queue* MACRO_ckit_queue_create(u32 inital_capacity, size_t element_size_in_bytes, Boolean is_pointer_type) {
-	CKIT_Queue* ret = ckit_alloc_custom(sizeof(CKIT_Queue), TAG_CKIT_CORE_QUEUE);
+CKIT_Queue* MACRO_ckit_queue_create(u32 inital_capacity, size_t element_size_in_bytes, Boolean is_pointer_type, char* file, u32 line, char* function) {
+	CKIT_Queue* ret = MACRO_ckit_alloc(sizeof(CKIT_Queue), TAG_CKIT_CORE_QUEUE, file, line, function);
 	ret->element_size_in_bytes = element_size_in_bytes;
 	ret->capacity = inital_capacity;
 	ret->count = 0;
 	ret->is_pointer_type = is_pointer_type;
-	ret->data = ckit_alloc_custom(element_size_in_bytes * ret->capacity, TAG_CKIT_CORE_QUEUE);
+	ret->data = MACRO_ckit_alloc(element_size_in_bytes * ret->capacity, TAG_CKIT_CORE_QUEUE, file, line, function);
 	return ret;
 }
 

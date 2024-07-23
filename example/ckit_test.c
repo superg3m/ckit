@@ -7,14 +7,6 @@ void test_vector_operations() {
 	char charArray[] = {'a', 'b', 'c', 'd', 'e'};
 	char* stringArray[] = {"Hello", "World", "!", "OpenAI", "GPT-3"};
 
-	// Create vector of strings
-	char** stringVector = NULLPTR;
-	for (int i = 0; i < 5; i++) {
-		ckit_vector_push(stringVector, stringArray[i]);
-	}
-	return;
-
-
 	// Create vector of int
 	int* intVector = ckit_vector_reserve(5, int);
 	for (int i = 0; i < 5; i++) {
@@ -33,7 +25,11 @@ void test_vector_operations() {
 		ckit_vector_push(charVector, charArray[i]);
 	}
 
-
+	// Create vector of strings
+	char** stringVector = NULLPTR;
+	for (int i = 0; i < 5; i++) {
+		ckit_vector_push(stringVector, stringArray[i]);
+	}
 
 	// Test get
 	for (int i = 0; i < ckit_vector_count(intVector); i++) {
@@ -84,6 +80,8 @@ void test_vector_operations() {
 	ckit_vector_free(boolVector);
 	ckit_vector_free(charVector);
 	ckit_vector_free(stringVector);
+
+	return;
 
 	// Assert that the data is NULL
 	ckit_assert_msg(intVector == NULLPTR, "Error: Vector data is not NULL\n");
@@ -359,7 +357,7 @@ int main() {
 	queue_operations();
 
 
-
+	/*
 	CKIT_Lexer lexer;
 	ckit_lexer_load_string(&lexer, "int x = 5; char* testing = \"hello\";");
 
@@ -367,16 +365,17 @@ int main() {
 	for (int i = 0; i < ckit_vector_count(token_stream); i++) {
 		ckit_lexer_print_token(token_stream[i]);
 	}
+	*/
 
 	// ckit_lexer_free(&lexer);
-
-	LOG_SUCCESS("AT THE END TEST\n");
 
 	linked_list_operations();
 	stack_operations();
 	u32 test_overflow = 5;
 	s32 max_value =  10;
 	LOG_SUCCESS("%d\n", CLAMP(65, test_overflow, max_value));
+
+	LOG_ERROR("AT THE END TEST\n");
 
 	ckit_cleanup();
 	return 0;

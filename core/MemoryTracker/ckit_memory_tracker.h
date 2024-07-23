@@ -45,7 +45,6 @@ typedef enum CKIT_MemoryTagID { // Reserved tags
     TAG_CKIT_MODULE_FILE_FORMAT_PARSER_JSON,
 
     TAG_CKIT_EXPECTED_USER_FREE,
-    TAG_CKIT_INTERNAL,
     TAG_CKIT_RESERVED_COUNT
 } CKIT_MemoryTagID;
 
@@ -93,6 +92,8 @@ extern "C" {
 
     void ckit_tracker_print_header(CKIT_MemoryHeader* header, CKG_LogLevel log_level);
     void ckit_tracker_print_pool(CKIT_MemoryTagPool* pool, CKG_LogLevel log_level);
+
+    void ckit_tracker_print_all_pools(CKG_LogLevel log_level);
 
     CKIT_MemoryHeader** ckit_tracker_get_all_headers();
     CKIT_MemoryTagPool** ckit_tracker_get_all_pools();

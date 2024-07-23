@@ -26,7 +26,7 @@ typedef struct CKIT_Queue {
 #ifdef __cplusplus
 extern "C" {
 #endif
-	CKIT_Queue* MACRO_ckit_queue_create(u32 inital_capacity, size_t element_size_in_bytes, Boolean is_pointer_type);
+	CKIT_Queue* MACRO_ckit_queue_create(u32 inital_capacity, size_t element_size_in_bytes, Boolean is_pointer_type, char* file, u32 line, char* function);
 	CKIT_Queue* MACRO_ckit_queue_free(CKIT_Queue* queue);
 	void ckit_enqueue(CKIT_Queue* queue, void* element);
 	/*
@@ -41,7 +41,7 @@ extern "C" {
 //************************** End Functions **************************
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
-#define ckit_queue_create(inital_capacity, type, is_pointer_type) MACRO_ckit_queue_create(inital_capacity, sizeof(type), is_pointer_type);
+#define ckit_queue_create(inital_capacity, type, is_pointer_type) MACRO_ckit_queue_create(inital_capacity, sizeof(type), is_pointer_type, __FILE__, __LINE__, __func__);
 #define ckit_queue_free(queue) MACRO_ckit_queue_free(queue);
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 

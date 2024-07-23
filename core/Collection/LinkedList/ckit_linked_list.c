@@ -2,8 +2,8 @@
 #include "../../Memory/ckit_memory.h" 
 #include "../../Assert/ckit_assert.h"
 
-CKIT_LinkedList* MACRO_ckit_linked_list_create(size_t element_size_in_bytes, Boolean is_pointer_type) {
-    CKIT_LinkedList* ret = ckit_alloc_custom(sizeof(CKIT_LinkedList), TAG_CKIT_CORE_LINKED_LIST);
+CKIT_LinkedList* MACRO_ckit_linked_list_create(size_t element_size_in_bytes, Boolean is_pointer_type, char* file, u32 line, char* function) {
+    CKIT_LinkedList* ret = MACRO_ckit_alloc(sizeof(CKIT_LinkedList), TAG_CKIT_CORE_LINKED_LIST, file, line, function);
     ret->count = 0;
     ret->element_size_in_bytes = element_size_in_bytes;
     ret->head = NULLPTR;

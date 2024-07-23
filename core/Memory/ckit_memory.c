@@ -79,8 +79,9 @@ void MACRO_ckit_memory_insert_index(void* data, u32 data_capacity, size_t elemen
 	MACRO_ckg_memory_insert_index(data, data_capacity, element_size_in_bytes, index);
 }
 
-/*
+
 void ckit_memory_report(CKG_LogLevel log_level) {
+	/*
     if (memory_used == 0) {
         log_output(log_level, "No memory allocations!\n");
         return;
@@ -110,9 +111,12 @@ void ckit_memory_report(CKG_LogLevel log_level) {
 		}
     }
     log_output(log_level, "=============================================\n");
+	*/
+
+	ckit_tracker_print_all_pools(log_level);
 }
 
-
+/*
 void ckit_memory_arena_register(CKIT_Arena* arena) {
 	ckit_vector_push(registered_arenas, arena);
 }

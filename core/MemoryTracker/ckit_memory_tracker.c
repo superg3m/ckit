@@ -25,7 +25,6 @@ CKIT_MemoryTagID reserved_tags[] = {
     TAG_CKIT_MODULE_FILE_FORMAT_PARSER_JSON,
 
     TAG_CKIT_EXPECTED_USER_FREE,
-    TAG_CKIT_INTERNAL,
 };
 
 char* reserved_tags_stringified[] = {
@@ -49,7 +48,6 @@ char* reserved_tags_stringified[] = {
     stringify(TAG_CKIT_MODULE_FILE_FORMAT_PARSER_JSON),
 
     stringify(TAG_CKIT_EXPECTED_USER_FREE),
-    stringify(TAG_CKIT_INTERNAL)
 };
 
 #define CKIT_MEMORY_MAGIC "CKIT_MAGIC_MEMORY"
@@ -157,8 +155,7 @@ void* MACRO_ckit_tracker_insert_header(void* data, CKIT_MemoryHeader header) {
 
 void ckit_tracker_add(CKIT_MemoryHeader* header) {
     u32 tag_pool_index = ckit_tracker_get_tag_pool_index(header->tag.tag_id);
-
-  	global_memory_tag_pool_vector[TAG_CKIT_INTERNAL].total_pool_allocation_size += sizeof(CKIT_MemoryHeader);
+    
   	global_memory_tag_pool_vector[tag_pool_index].total_pool_allocation_size += (header->tag.allocation_info.allocation_size);
   	global_total_pool_memory_used += sizeof(CKIT_MemoryHeader) + header->tag.allocation_info.allocation_size;
 
@@ -168,7 +165,6 @@ void ckit_tracker_add(CKIT_MemoryHeader* header) {
 void ckit_tracker_remove(CKIT_MemoryHeader* header) {
     u32 tag_pool_index = ckit_tracker_get_tag_pool_index(header->tag.tag_id);
 
-  	global_memory_tag_pool_vector[TAG_CKIT_INTERNAL].total_pool_allocation_size -= sizeof(CKIT_MemoryHeader);
   	global_memory_tag_pool_vector[tag_pool_index].total_pool_allocation_size -= (header->tag.allocation_info.allocation_size);
   	global_total_pool_memory_used -= sizeof(CKIT_MemoryHeader) + header->tag.allocation_info.allocation_size;
     
@@ -180,16 +176,23 @@ void ckit_tracker_remove(CKIT_MemoryHeader* header) {
 
 void ckit_tracker_print_header(CKIT_MemoryHeader* header, CKG_LogLevel log_level) {
     u8* data_address = (u8*)header + sizeof(CKIT_MemoryHeader);
-    log_output(log_level, "     Address: %p | Size: %d(Bytes)\n", data_address, header->tag.allocation_info.allocation_size);
+    log_output(log_level, "=>     Address: %p | Size: %d(Bytes)\n", data_address, header->tag.allocation_info.allocation_size);
     log_output(log_level, "      - Allocation Site:\n");
     log_output(log_level, "          - File: %s:%d\n", header->tag.allocation_info.file_name, header->tag.allocation_info.line);
-    log_output(log_level, "          - Function: %s\n\n", header->tag.allocation_info.function_name);
+    log_output(log_level, "          - Function: %s\n", header->tag.allocation_info.function_name);
 }
 
 void ckit_tracker_print_pool(CKIT_MemoryTagPool* pool, CKG_LogLevel log_level) {
-    LOG_PRINT("     ==================================== POOL NAME: %s | SIZE: %d ====================================\n", pool->pool_name, pool->total_pool_allocation_size);
-    CKIT_MemoryHeader* current_header = (CKIT_MemoryHeader*)ckg_linked_list_pop(pool->allocated_headers).data;
-    LOG_PRINT("     ============================================================================================================\n");
+    LOG_PRINT("============================== POOL NAME: %s | SIZE: %d ==============================\n", pool->pool_name, pool->total_pool_allocation_size);
+    u32 count = pool->allocated_headers->count;
+    for (int i = 0; i < count; i++) {
+        CKIT_MemoryHeader* current_header = (CKIT_MemoryHeader*)ckg_linked_list_pop(pool->allocated_headers).data;
+        ckit_tracker_print_header(current_header, log_level);
+        if (i != count - 1) {
+            LOG_PRINT("\n");
+        }
+    }
+    LOG_PRINT("========================================================================================================\n");
 }
 
 CKIT_MemoryHeader* ckit_tracker_get_header(void* data) {
@@ -198,6 +201,39 @@ CKIT_MemoryHeader* ckit_tracker_get_header(void* data) {
     return header;
 }
 
-CKIT_MemoryHeader** ckit_tracker_get_all_headers();
+void ckit_tracker_print_all_pools(CKG_LogLevel log_level) {
+    if (global_total_pool_memory_used == 0) {
+        LOG_SUCCESS("--- No Memory Leaks Detected --- \n");
+        return;
+    }
 
+    log_output(log_level, "---------------------- Memory Leak Detected ----------------------\n");
+    u32 count = ckg_vector_capacity(global_memory_tag_pool_vector);
+    Boolean has_start = FALSE; 
+    Boolean has_end = FALSE; 
+    for (int i = 0; i < count; i++) {
+        CKIT_MemoryTagPool pool = global_memory_tag_pool_vector[i];
+        if (pool.total_pool_allocation_size == 0) {
+            continue;
+        }
+
+        if (!has_start) {
+            has_start = TRUE;
+        } else if (has_start && !has_end) {
+            has_end = TRUE;
+        }
+        
+        if (has_end && i != ckg_vector_capacity(global_memory_tag_pool_vector) - 1) {
+            LOG_PRINT("                                               |\n");
+            LOG_PRINT("                                               |\n");
+            has_end = FALSE;
+        }
+
+        ckit_tracker_print_pool(&pool, log_level);
+
+    }
+    log_output(log_level, "------------------------------------------------------------------\n");
+}
+
+CKIT_MemoryHeader** ckit_tracker_get_all_headers();
 CKIT_MemoryTagPool** ckit_tracker_get_all_pools();

@@ -24,7 +24,7 @@ typedef struct CKIT_LinkedList {
 #ifdef __cplusplus
 extern "C" {
 #endif
-    CKIT_LinkedList* MACRO_ckit_linked_list_create(size_t element_size_in_bytes, Boolean is_pointer_type);
+    CKIT_LinkedList* MACRO_ckit_linked_list_create(size_t element_size_in_bytes, Boolean is_pointer_type, char* file, u32 line, char* function);
     CKIT_Node* ckit_linked_list_insert(CKIT_LinkedList* linked_list, u32 index, void* data);
     CKIT_Node* ckit_linked_list_get_node(CKIT_LinkedList* linked_list, u32 index);
     void* ckit_linked_list_get(CKIT_LinkedList* linked_list, u32 index);
@@ -39,6 +39,6 @@ extern "C" {
 //************************** End Functions **************************
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
-#define ckit_linked_list_create(type, is_pointer_type) MACRO_ckit_linked_list_create(sizeof(type), is_pointer_type)
+#define ckit_linked_list_create(type, is_pointer_type) MACRO_ckit_linked_list_create(sizeof(type), is_pointer_type, __FILE__, __LINE__, __func__)
 #define ckit_linked_list_free(linked_list) linked_list = MACRO_ckit_linked_list_free(linked_list)
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
