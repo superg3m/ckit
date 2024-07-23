@@ -81,12 +81,10 @@ void test_vector_operations() {
 	ckit_vector_free(charVector);
 	ckit_vector_free(stringVector);
 
-	return;
-
 	// Assert that the data is NULL
-	// ckit_assert_msg(intVector == NULLPTR, "Error: Vector data is not NULL\n");
-	// ckit_assert_msg(boolVector == NULLPTR, "Error: Vector data is not NULL\n");
-	// ckit_assert_msg(charVector == NULLPTR, "Error: Vector data is not NULL\n");
+	ckit_assert_msg(intVector == NULLPTR, "Error: Vector data is not NULL\n");
+	ckit_assert_msg(boolVector == NULLPTR, "Error: Vector data is not NULL\n");
+	ckit_assert_msg(charVector == NULLPTR, "Error: Vector data is not NULL\n");
 	ckit_assert_msg(stringVector == NULLPTR, "Error: Vector data is not NULL\n");
 
 	LOG_SUCCESS("All vector tests passed!\n"); 
