@@ -162,6 +162,13 @@ CKIT_Node ckit_linked_list_remove(CKIT_LinkedList* linked_list, u32 index) {
     ckit_assert(index >= 0);
 
     u32 old_count = linked_list->count--;
+    if (index == 0 && old_count == 1) { // removing the head fully
+        CKIT_Node ret = *linked_list->head;
+        ckit_node_free(linked_list, linked_list->head);
+        linked_list->head = NULLPTR;
+
+        return ret;
+    }
 
     if (index == 0) { // remove head
         CKIT_Node* cached_head = linked_list->head;
@@ -191,8 +198,6 @@ CKIT_Node ckit_linked_list_remove(CKIT_LinkedList* linked_list, u32 index) {
     current_node->prev->next = current_node->next;
     CKIT_Node ret = *current_node; 
     ckit_node_free(linked_list, current_node);
-
-    linked_list->count--;
 
     return ret;
 }

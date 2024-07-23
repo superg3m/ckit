@@ -358,7 +358,7 @@ int main() {
 	LOG_PRINT("\n");
 	queue_operations();
 
-	LOG_SUCCESS("AT THE END TEST\n");
+
 
 	CKIT_Lexer lexer;
 	ckit_lexer_load_string(&lexer, "int x = 5; char* testing = \"hello\";");
@@ -370,7 +370,7 @@ int main() {
 
 	// ckit_lexer_free(&lexer);
 
-
+	LOG_SUCCESS("AT THE END TEST\n");
 
 	linked_list_operations();
 	stack_operations();
