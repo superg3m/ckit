@@ -369,6 +369,8 @@ int main() {
 
 	// ckit_lexer_free(&lexer);
 
+	*/
+
 	linked_list_operations();
 	stack_operations();
 	u32 test_overflow = 5;
