@@ -67,7 +67,7 @@ internal CKIT_MemoryTagPool ckit_tracker_tag_pool_create(CKIT_MemoryTagID tag_id
     ret.tag_id = tag_id;
     ret.pool_name = name;
     ret.total_pool_allocation_size = 0;
-    ret.allocated_headers = ckg_linked_list_create(CKIT_MemoryTag, FALSE);
+    ret.allocated_headers = ckg_linked_list_create(CKIT_MemoryHeader, TRUE);
 
     return ret;
 }
@@ -162,7 +162,7 @@ void ckit_tracker_add(CKIT_MemoryHeader* header) {
   	global_memory_tag_pool_vector[tag_pool_index].total_pool_allocation_size += (header->tag.allocation_info.allocation_size);
   	global_total_pool_memory_used += sizeof(CKIT_MemoryHeader) + header->tag.allocation_info.allocation_size;
 
-    header->linked_list_address = ckg_linked_list_push(global_memory_tag_pool_vector[tag_pool_index].allocated_headers, &header);
+    header->linked_list_address = ckg_linked_list_push(global_memory_tag_pool_vector[tag_pool_index].allocated_headers, header);
 }
 
 void ckit_tracker_remove(CKIT_MemoryHeader* header) {

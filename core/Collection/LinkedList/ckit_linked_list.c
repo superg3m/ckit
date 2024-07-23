@@ -83,7 +83,7 @@ CKIT_Node* ckit_linked_list_insert(CKIT_LinkedList* linked_list, u32 index, void
         return linked_list->head;
     }
 
-    ckit_assert(index < old_count);
+    ckit_assert(index <= old_count);
     CKIT_Node* new_node_to_insert = ckit_node_create(linked_list, data);
     if (index == 0) { // insert at head
         linked_list->head->prev = new_node_to_insert;
@@ -93,7 +93,7 @@ CKIT_Node* ckit_linked_list_insert(CKIT_LinkedList* linked_list, u32 index, void
         return new_node_to_insert;
     }
 
-    if (index == old_count - 1) { // insert at tail
+    if (index == old_count) { // insert at tail
         linked_list->tail->next = new_node_to_insert;
         new_node_to_insert->prev = linked_list->tail;
         linked_list->tail = new_node_to_insert;
@@ -133,16 +133,19 @@ void* ckit_linked_list_get(CKIT_LinkedList* linked_list, u32 index) {
 }
 
 CKIT_Node* ckit_linked_list_push(CKIT_LinkedList* linked_list, void* data) {
-    return ckit_linked_list_insert(linked_list, linked_list->count - 1, data);
+    return ckit_linked_list_insert(linked_list, linked_list->count, data);
 }
 
 u32 ckit_linked_list_node_to_index(CKIT_LinkedList* linked_list, CKIT_Node* address) {
     CKIT_Node* current_node = linked_list->head; 
-    for (int i = 0; i < linked_list->count; i++) {
+    if (current_node == address) {
+        return 0;
+    }
+    for (int i = 1; i < linked_list->count; i++) {
+        current_node = current_node->next;
         if (current_node == address) {
             return i;
         }
-        current_node = current_node->next;
     }
 
     ckit_assert(FALSE); // couldn't match a node to an address

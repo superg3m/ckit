@@ -344,13 +344,11 @@ int main() {
 	memory_init();
 
 	test_vector_operations();
-	LOG_SUCCESS("AT THE END TEST\n");
-
 
 	LOG_PRINT("\n");
 	inital_operations();
 
-	/*
+
 	LOG_PRINT("\n");
 	middle_ground_opperations();
 
@@ -360,6 +358,7 @@ int main() {
 	LOG_PRINT("\n");
 	queue_operations();
 
+	LOG_SUCCESS("AT THE END TEST\n");
 
 	CKIT_Lexer lexer;
 	ckit_lexer_load_string(&lexer, "int x = 5; char* testing = \"hello\";");
@@ -378,7 +377,6 @@ int main() {
 	u32 test_overflow = 5;
 	s32 max_value =  10;
 	LOG_SUCCESS("%d\n", CLAMP(65, test_overflow, max_value));
-	*/
 
 	ckit_cleanup();
 	return 0;
