@@ -354,6 +354,7 @@ int main() {
 	LOG_PRINT("\n");
 	queue_operations();
 
+	/*
 	CKIT_Lexer lexer;
 	ckit_lexer_load_string(&lexer, "int x = 5; char* testing = \"hello\";");
 
@@ -361,6 +362,7 @@ int main() {
 	for (int i = 0; i < ckit_vector_count(token_stream); i++) {
 		ckit_lexer_print_token(token_stream[i]);
 	}
+	*/
 
 	// ckit_lexer_free(&lexer);
 
@@ -370,7 +372,9 @@ int main() {
 	s32 max_value =  10;
 	LOG_SUCCESS("%d\n", CLAMP(65, test_overflow, max_value));
 
-	LOG_ERROR("AT THE END TEST\n");
+	String str_test = ckit_str_int_to_str(523);
+	LOG_ERROR("AT THE END TEST: %s\n", str_test);
+	ckit_str_free(str_test);
 
 	ckit_cleanup();
 	return 0;

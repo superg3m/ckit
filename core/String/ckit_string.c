@@ -9,7 +9,7 @@
 #include "../../ckg/core/String/ckg_cstring.h"
 typedef struct CKIT_StringHeader {
     u32 length; 
-    u32 capacity;
+    size_t capacity;
     char* magic; 
 } CKIT_StringHeader;
 
@@ -56,7 +56,7 @@ String MACRO_ckit_str_free(String str) {
     return str;
 }
 
-internal inline String ckit_str_grow(String str, u32 new_allocation_size) {
+internal inline String ckit_str_grow(String str, size_t new_allocation_size) {
     ckit_str_check_magic(str);
     CKIT_StringHeader header = *ckit_str_header(str);
     header.capacity = new_allocation_size;
@@ -70,7 +70,7 @@ internal inline String ckit_str_grow(String str, u32 new_allocation_size) {
 // Date: May 23, 2024
 // TODO(Jovanni): I need to eventually go back to using an arena I liked the idea
 // Of pushing the header then right after pushing the str data I think this worked really well.
-String ckit_str_create_custom(const char* c_string, u32 capacity) {
+String ckit_str_create_custom(const char* c_string, size_t capacity) {
   	u32 c_str_length = ckg_cstr_length(c_string);
   	CKIT_StringHeader header;
   	header.length = c_str_length;
@@ -86,6 +86,33 @@ String ckit_str_create_custom(const char* c_string, u32 capacity) {
 
 Boolean ckit_str_equal(const char* str1, const char* str2) {
     return ckg_cstr_equal(str1, str2);
+}
+
+String MACRO_ckit_str_insert(String str, const char* to_insert, const u32 index) {
+
+    u32 source_capacity = ckit_cstr_length(to_insert) + 1; 
+    CKIT_StringHeader* header = ckit_str_header(str);
+    if (header->length + source_capacity >= header->capacity) {
+        str = ckit_str_grow(str, (header->length + source_capacity) * 2);
+        header = ckit_str_header(str);
+    }
+
+    ckg_cstr_insert(str, header->capacity, to_insert, index);
+    header->length += source_capacity - 1;
+    return str;
+}
+
+String MACRO_ckit_str_insert_char(String str, const char to_insert, const u32 index) {
+    u32 source_size = 1;
+    CKIT_StringHeader* header = ckit_str_header(str);
+    if (header->length + source_size >= header->capacity) {
+        str = ckit_str_grow(str, (header->length + source_size) * 2);
+        header = ckit_str_header(str);
+    }
+
+    ckg_cstr_insert_char(str, header->capacity, to_insert, index);
+    header->length++;
+    return str;
 }
 
 void ckit_str_clear(char* str1) {
@@ -199,4 +226,17 @@ String ckit_str_reverse(const char* string_buffer) {
     String reversed_string_buffer = ckit_str_create_custom("", reversed_string_buffer_capacity);
     ckg_cstr_reverse(string_buffer, reversed_string_buffer, reversed_string_buffer_capacity);
     return reversed_string_buffer;
+}
+
+String ckit_str_int_to_str(int number) {
+    int length_of_number = 0;
+    String ret = ckit_str_create("");
+
+    while (number != 0) {
+		char c = '0' + (number % 10);
+		ckit_str_insert_char(ret, c, 0);
+		number /= (int)10;
+	}
+
+    return ret;
 }
