@@ -12,6 +12,7 @@
 
 ### Known issues/bugs
 1. - [x] Queue might not be able to hold more than 8 characters (the sizeof(char*)) easy fix
+2. - [ ] Hashmap is not very robust I should offer a compare funciton hashmap and give default presets for primatives.
 
 ### Next Steps
 1. - [/] Rewrite the memory tagging system
