@@ -86,7 +86,7 @@ Thoughts:
 	- [ ] ckit_os_dir_append_file(directory, file);
 
 ### Collection 
-- [X] ckit_hashmap.h (Tested on integers, char, string, and structs) (WANT TO REVISIT THIS BECAUSE I CAN MAKE IT BETTER 100%)
+- [X] ckit_hashmap.h (WANT TO REVISIT THIS BECAUSE I CAN MAKE IT BETTER 100%)
 	- [x] ckit_hashmap_create(capacity type, is_pointer_type)
 	- [x] ckit_hashmap_put(hashmap, key, element)
 		- [x] ckit_hashmap_grow(hashmap)
@@ -94,7 +94,7 @@ Thoughts:
 	- [x] ckit_hashmap_get(hashmap, key, returned_element)
 	- [X] ckit_hashmap_free(hashmap)
 
-- [X] ckit_hashset.h (Tested on integers, char, string, and structs) (WANT TO REVISIT THIS BECAUSE I CAN MAKE IT BETTER 100%)
+- [X] ckit_hashset.h 
 	- [x] ckit_hashset_create(capacity, type)
 	- [x] ckit_hashset_put(hashmap, key, element)
 		- [x] ckit_hashset_grow(hashmap)
@@ -118,7 +118,7 @@ Thoughts:
 	- [x] ckit_stack_pop();
 	- [x] ckit_stack_free();
 
-- [x] ckit_queue.h (NOT REALLY TESTED) (WANT TO REVISIT THIS BECAUSE I CAN MAKE IT BETTER 100%)
+- [x] ckit_queue.h
 	- [x] ckit_queue_create(inital_capacity, element_size_in_bytes, is_pointer_type);
 	- [x] ckit_queue_free(queue);
 	- [x] ckit_enqueue(queue, element);
@@ -157,8 +157,9 @@ Thoughts:
 	- [x] ckit_str_starts_with(str, starts_with)
 	- [x] ckit_str_ends_with(str, ends_with)
 	- [x] ckit_str_reverse(str)
+	- [x] ckit_str_int_to_str(int)
 
-### Memory (REFORMS COMING SOON FOR THE MEMORY TAG SYSTEM NOT EXPRESSIVE ENOUGH I WOULD LIKE TO REGISTER TAGS TBH)
+### Memory
 - [x] ckit_memory.h
 	- [x] ckit_bind_alloc_callback(func_allocator)
 	- [x] ckit_bind_free_callback(func_allocator)
