@@ -59,7 +59,10 @@
 		"xhash": "c",
 		"xtree": "c",
 		"algorithm": "c",
-		"iterator": "c"
+		"iterator": "c",
+		"ckg_io.h": "c",
+		"*.gitattributes": "c",
+		"ckg_stack_trace.h": "c"
 	},
 	"editor.insertSpaces": false
 }

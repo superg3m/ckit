@@ -1,0 +1,12 @@
+#include "../../Include/ckg.h"
+
+#include "./ckg_arena.c"
+#include "./ckg_assert.c"
+#include "./ckg_char.c"
+#include "./ckg_cstring.c"
+#include "./ckg_io.c"
+#include "./ckg_linked_list.c"
+#include "./ckg_logger.c"
+#include "./ckg_memory.c"
+#include "./ckg_stack_trace.c"
+#include "./ckg_vector.c"

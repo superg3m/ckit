@@ -45,6 +45,8 @@ ckit.c
 
 build_windows.ps1 -ckit|ckg  (optional)-debug  (optional)-tests
 build_posix.sh    -ckit|ckg  (optional)-debug  (optional)-tests
+Crank up those warnings (/W4 with cl) and pay attention to them! 
+There are a ton of const-incorrectness warnings, too. Also enable sanitizers (/fsanitize=address with cl). 
 
 run_tests.ps1	  -ckit|ckg  (optional)-debug
 run_tests.sh	  -ckit|ckg  (optional)-debug
