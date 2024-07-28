@@ -1,0 +1,54 @@
+This is the steps I must take in order to fix ckit
+
+C-Build was a cool idea, but its not practical.
+- [ ] Build System
+	- [ ] windows_build.ps1 (convient)
+	- [ ] unix_build.sh (learn how bash scripts work)
+
+- [ ] Transfer ckg to ckit then delete ckg
+
+- [ ] Restructure the project
+	- [ ] _test_ckit_string.c
+	- [ ] _test_ckit_vector.c
+	- [ ] _test_ckit_char.c
+	...
+	- [ ] Remove core folder
+	- [ ] Unity build for ckit.h/ckit.c
+
+- [ ] Better way to distribute the ckit.lib so I can just download the lib without having to complie it all the time.
+	- [ ] This runs into issues because I don't want people to have to do anything to download a lib from github all the time.
+
+- [ ] Memory Tracker (This one is unclear what to do here)
+	- [ ] Remove File, line and function
+
+
+./Test
+	./test_ckg
+		_test_ckg_*.c
+	./test_ckit
+		_test_ckit_*.c
+./Include
+
+./build_ckg
+	Has the ckg.lib and object files
+./build_ckit
+	Has the ckit.lib and object files
+
+./Source
+	./ckg
+		ckg_*.c
+	./ckit
+		ckit_*.c
+
+ckit.h
+ckit.c
+
+build_windows.ps1 -ckit|ckg  (optional)-debug  (optional)-tests
+build_posix.sh    -ckit|ckg  (optional)-debug  (optional)-tests
+
+run_tests.ps1	  -ckit|ckg  (optional)-debug
+run_tests.sh	  -ckit|ckg  (optional)-debug
+_test_ckit_string = outputs to file 
+Then the program will scan the first character for:
+S_ucceeded: function_name
+F_ailed: function_name
