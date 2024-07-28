@@ -16,31 +16,8 @@ typedef struct CKIT_StringHeader {
 #define ckit_str_header(string) ((CKIT_StringHeader*)(string - sizeof(CKIT_StringHeader)))
 #define CKIT_STR_MAGIC "CKIT_MAGIC_STRING"
 
-jmp_buf env;
-
-void handle_signal(int sig) {
-    longjmp(env, 1);
-}
-
-Boolean is_string_literal(const char *str) {
-    signal(SIGSEGV, handle_signal);
-    if (setjmp(env) == 0) {
-        // Attempt to modify the string
-        char *ptr = (char *)str;
-        char old = ptr[0];
-        ptr[0] = 'X';
-        ptr[0] = old;  // Restore original value
-        return FALSE;  // No crash, likely not a string literal
-    } else {
-        return TRUE;  // Crash, it's likely a string literal
-    }
-}
-
 internal void ckit_str_check_magic(String str) {
     ckit_assert_msg(str, "String: %s is null can't check magic: (%s) Likely not a CKIT_String\n", str, CKIT_STR_MAGIC);
-    if (is_string_literal(ckit_str_header(str)->magic)) {
-        ckit_assert_msg(FALSE, "String: %s contains the wrong magic: (%s) Likely not a CKIT_String\n", str, CKIT_STR_MAGIC);
-    }
     ckit_assert_msg(ckit_str_equal(ckit_str_header(str)->magic, CKIT_STR_MAGIC), "String: %s has the wrong magic: {%s} got: {%s} \n", str, CKIT_STR_MAGIC, ckit_str_header(str)->magic);
 }
 
