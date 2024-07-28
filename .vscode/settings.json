@@ -62,7 +62,8 @@
 		"iterator": "c",
 		"ckg_io.h": "c",
 		"*.gitattributes": "c",
-		"ckg_stack_trace.h": "c"
+		"ckg_stack_trace.h": "c",
+		"ckg_math.h": "c"
 	},
 	"editor.insertSpaces": false
 }
