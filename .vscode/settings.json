@@ -1,7 +1,5 @@
 {
     "files.associations": {
-		"type_traits": "cpp",
-		"xtr1common": "cpp",
 		"ckit_types.h": "c",
 		"platform_services.h": "c",
 		"ckit_assert.h": "c",
@@ -61,7 +59,6 @@
 		"algorithm": "c",
 		"iterator": "c",
 		"ckg_io.h": "c",
-		"*.gitattributes": "c",
 		"ckg_stack_trace.h": "c",
 		"ckg_math.h": "c"
 	},
