@@ -1,5 +1,5 @@
 #include "ckg_vector.h"
-#include "core/Memory/ckg_memory.h"
+#include "ckg_memory.h"
 
 void* ckg_vector_grow(void* vector, size_t element_size) {
     if (vector == NULLPTR) {

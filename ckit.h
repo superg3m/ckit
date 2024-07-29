@@ -1,11 +1,4 @@
 #pragma once 
-/*===========================================================
- * File: CKit.h
- * Date: April 29, 2024
- * Creator: Jovanni Djonaj
-===========================================================*/
-
-
 // CORE CKIT
 #include "./core/ckit_types.h"
 #include "./core/Logger/ckit_logger.h"
@@ -25,8 +18,6 @@
 #include "./core/Collection/LinkedList/ckit_linked_list.h"
 #include "./core/Collection/Queue/ckit_queue.h"
 #include "./core/Collection/Stack/ckit_stack.h"
-
-// Modules
 #include "./modules/File_Format_Parser/Asset/BMP/bmp_parser.h"
 #include "./modules/Lexer/ckit_lexer.h"
 
