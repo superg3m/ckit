@@ -2,18 +2,18 @@ This is the steps I must take in order to fix ckit
 
 C-Build was a cool idea, but its not practical.
 - [ ] Build System
-	- [ ] windows_build.ps1 (convient)
-	- [ ] unix_build.sh (learn how bash scripts work)
+	- [/] windows_build.ps1 (convient)
+	- [/] unix_build.sh (learn how bash scripts work)
 
-- [ ] Transfer ckg to ckit then delete ckg
+- [x] Transfer ckg to ckit then delete ckg
 
 - [ ] Restructure the project
 	- [ ] _test_ckit_string.c
 	- [ ] _test_ckit_vector.c
 	- [ ] _test_ckit_char.c
 	...
-	- [ ] Remove core folder
-	- [ ] Unity build for ckit.h/ckit.c
+	- [x] Remove core folder
+	- [x] Unity build for ckit.h/ckit.c
 
 - [ ] Better way to distribute the ckit.lib so I can just download the lib without having to complie it all the time.
 	- [ ] This runs into issues because I don't want people to have to do anything to download a lib from github all the time.
