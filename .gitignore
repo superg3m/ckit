@@ -36,8 +36,8 @@
 *.rdi
 
 # c-build
-example/cl
-ckg/
+example/cl/
+./ckg/
 c-build/
 *.ps1
 !bootstrap.ps1
