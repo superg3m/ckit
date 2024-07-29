@@ -1,6 +1,6 @@
 #include "ckg_linked_list.h"
-#include "Memory/ckg_memory.h" 
-#include "Assert/ckg_assert.h"
+#include "ckg_memory.h" 
+#include "ckg_assert.h"
 
 CKG_LinkedList* MACRO_ckg_linked_list_create(size_t element_size_in_bytes, Boolean is_pointer_type) {
     CKG_LinkedList* ret = ckg_alloc(sizeof(CKG_LinkedList));

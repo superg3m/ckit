@@ -1,5 +1,5 @@
 #include "ckg_io.h"
-#include "String/ckg_cstring.h"
+#include "ckg_cstring.h"
 
 CKG_FileSystem ckg_file_system_create(char* file_name) {
 	CKG_FileSystem file_system;

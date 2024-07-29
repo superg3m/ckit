@@ -1,7 +1,7 @@
 #include "ckg_logger.h"
 
-#include "Memory/ckg_memory.h"
-#include "String/ckg_cstring.h"
+#include "ckg_memory.h"
+#include "ckg_cstring.h"
 #if (_WIN32)
     #include <windows.h>
 #endif

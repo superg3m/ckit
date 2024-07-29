@@ -1,7 +1,7 @@
 #include "ckg_cstring.h"
 
-#include "Memory/ckg_memory.h"
-#include "Assert/ckg_assert.h"
+#include "ckg_memory.h"
+#include "ckg_assert.h"
 
 //************************* Begin Functions *************************
 u32 ckg_cstr_length(const char* cstring) {
