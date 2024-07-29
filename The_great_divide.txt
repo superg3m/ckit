@@ -3,7 +3,7 @@ This is the steps I must take in order to fix ckit
 C-Build was a cool idea, but its not practical.
 - [ ] Build System
 	- [/] windows_build.ps1 (convient)
-	- [/] unix_build.sh (learn how bash scripts work)
+	- [ ] unix_build.sh (learn how bash scripts work)
 
 - [x] Transfer ckg to ckit then delete ckg
 

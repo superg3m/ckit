@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../ckg_types.h"
+#include "ckg_types.h"
 
 //========================== Begin Types ==========================
 typedef struct CKG_Arena {
