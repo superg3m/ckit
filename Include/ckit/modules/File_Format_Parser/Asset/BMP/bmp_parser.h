@@ -1,4 +1,4 @@
-#include "../../../../core/ckit_types.h"
+#include "ckit_types.h"
 
 #pragma pack(push, 1)
 typedef struct BmpHeader { 	// total 40 bytes
