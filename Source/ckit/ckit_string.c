@@ -1,12 +1,10 @@
+#include "ckg_cstring.h"
 
-#include <setjmp.h>
-#include <signal.h>
+#include "ckit_string.h"
+#include "ckit_assert.h"
+#include "ckit_memory.h"
+#include "ckit_vector.h"
 
-#include "./ckit_string.h"
-#include "../Assert/ckit_assert.h"
-#include "../Memory/ckit_memory.h"
-#include "../Collection/Vector/ckit_vector.h"
-#include "../../ckg/core/String/ckg_cstring.h"
 typedef struct CKIT_StringHeader {
     u32 length; 
     size_t capacity;

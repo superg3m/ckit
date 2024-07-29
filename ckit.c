@@ -1,4 +1,4 @@
-#include "./ckit.h"
+#include "ckit.h"
 
 void ckit_memory_arena_unregister_all();
 
