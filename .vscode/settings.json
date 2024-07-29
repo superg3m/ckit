@@ -60,7 +60,8 @@
 		"iterator": "c",
 		"ckg_io.h": "c",
 		"ckg_stack_trace.h": "c",
-		"ckg_math.h": "c"
+		"ckg_math.h": "c",
+		"ckg_char.h": "c"
 	},
 	"editor.insertSpaces": false
 }

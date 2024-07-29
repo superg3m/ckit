@@ -1,10 +1,10 @@
-#include "./ckit_lexer.h"
-#include "../../core/String/ckit_char.h"
-#include "../../core/FileIO/ckit_file_system.h"
-#include "../../core/Memory/ckit_memory.h"
-#include "../../core/Collection/Vector/ckit_vector.h"
-#include "../../core/Collection/HashMap/ckit_hashmap.h"
-#include "../../core/Collection/HashSet/ckit_hashset.h"
+#include "ckit_lexer.h"
+#include "ckit_char.h"
+#include "ckit_file_system.h"
+#include "ckit_memory.h"
+#include "ckit_vector.h"
+#include "ckit_hashmap.h"
+#include "ckit_hashset.h"
 
 char* keywords[] = {
 	"if",

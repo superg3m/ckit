@@ -1,4 +1,4 @@
-#include "../../core/ckit_types.h"
+#include "ckit_types.h"
 #define CKIT_LEXER_SCRATCH_BUFFER_CAPACITY 512
 
 typedef enum CKIT_Token_Type {
