@@ -5,7 +5,7 @@
 #define ARENA_DEFAULT_ALLOCATION_SIZE MegaBytes(1)
 
 Boolean ckg_CKG_ARENA_FLAG_is_set(CKG_Arena* arena, CKG_ArenaFlag flag) {
-    return arena->flag == flag;
+    return arena->flag == flag; // This doesn't really make sense, because this doesn't check if the bit is set?
 }
 
 CKG_Arena MACRO_ckg_arena_create(u32 allocation_size, const char* name, CKG_ArenaFlag flag) {

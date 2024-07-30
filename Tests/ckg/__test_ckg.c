@@ -1,5 +1,5 @@
 #include "../ckg.h"
-#include "./tests/test_functions.c"
+#include "./__test_functions.c"
 #include <windows.h>
 
 void* win32_memory_alloc_callback(size_t allocation_size) {
