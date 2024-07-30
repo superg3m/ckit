@@ -35,7 +35,7 @@ void ckg_stack_trace_dump() {
             if (SymGetLineFromAddr64(process, (DWORD64)(stack[i]), &displacementLine, &line)) {
                 printf("%d: %s - %s:%d\n", count, symbol->Name, line.FileName, line.LineNumber);
             } else {
-                printf("%d: %s\n", count, symbol->Name, symbol->Address);
+                printf("%d: %s\n", count, symbol->Name);
             }
         }
         count++;

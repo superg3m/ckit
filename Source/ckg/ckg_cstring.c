@@ -123,7 +123,7 @@ void ckg_substring(const char* str, char* returned_buffer, u32 start, u32 end) {
 	size_t allocation_size = (end - start) + 2;
 
 	u32 counter = 0;
-	for (int i = start; i <= end; i++) {
+	for (u32 i = start; i <= end; i++) {
 		returned_buffer[counter++] = str[i];
 	}
 	returned_buffer[counter] = '\0'; 
@@ -153,12 +153,12 @@ Boolean ckg_cstr_contains(const char* str, const char* contains) {
 	// "fss\0" = 2
 	
 	Boolean contains_substring = FALSE;
-	for (int i = 0; !contains_substring && (i <= str_length - contains_length); i++) {
+	for (u32 i = 0; !contains_substring && (i <= str_length - contains_length); i++) {
 		if (str[i] != contains[0]) {
 			continue;
 		}
 
-		u32 end_index = (i + (contains_length - 1));
+		size_t end_index = (i + (contains_length - 1));
 		if (end_index > str_length) {
 			break;
 		}

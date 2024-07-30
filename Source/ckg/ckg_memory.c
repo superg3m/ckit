@@ -52,7 +52,7 @@ Boolean ckg_memory_compare(const void* buffer_one, const void* buffer_two, u32 b
 
     u8* buffer_one_data = (u8*)buffer_one;
     u8* buffer_two_data = (u8*)buffer_two;
-    for (int i = 0; i < buffer_one_size; i++) {
+    for (u32 i = 0; i < buffer_one_size; i++) {
         if (buffer_one_data[i] != buffer_two_data[i]) {
             return FALSE;
         }
