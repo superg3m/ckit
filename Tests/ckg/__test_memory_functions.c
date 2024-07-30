@@ -48,42 +48,42 @@ void test_ckg_memory_operations() {
 	int test_data[] = {1, 2, 3, 12, 22, 23, 41, 52, 73};
 	ckg_memory_delete_index(test_data, 9, 0);
 	CKG_LOG_PRINT("[ ");
-	for (int i = 0; i < 8; i++) {
+	for (int i = 0; i < 9; i++) {
 		CKG_LOG_PRINT("%d ", test_data[i]);
 	}
 	CKG_LOG_PRINT("]\n");
 
 	ckg_memory_delete_index(test_data, 9, 5);
 	CKG_LOG_PRINT("[ ");
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < 8; i++) {
 		CKG_LOG_PRINT("%d ", test_data[i]);
 	}
 	CKG_LOG_PRINT("]\n");
 
 	ckg_memory_delete_index(test_data, 9, 2);
 	CKG_LOG_PRINT("[ ");
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 7; i++) {
 		CKG_LOG_PRINT("%d ", test_data[i]);
 	}
 	CKG_LOG_PRINT("]\n");
 
 	ckg_memory_delete_index(test_data, 9, 5);
 	CKG_LOG_PRINT("[ ");
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 6; i++) {
 		CKG_LOG_PRINT("%d ", test_data[i]);
 	}
 	CKG_LOG_PRINT("]\n");
 
 	ckg_memory_insert_index(test_data, 9, 15161, 0);
 	CKG_LOG_PRINT("[ ");
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 7; i++) {
 		CKG_LOG_PRINT("%d ", test_data[i]);
 	}
 	CKG_LOG_PRINT("]\n");
 
 	ckg_memory_insert_index(test_data, 9, 51212, 6);
 	CKG_LOG_PRINT("[ ");
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < 8; i++) {
 		CKG_LOG_PRINT("%d ", test_data[i]);
 	}
 	CKG_LOG_PRINT("]\n");

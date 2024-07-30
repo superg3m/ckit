@@ -36,7 +36,8 @@
 *.rdi
 
 # c-build
-example/cl/
+ckg_build_cl/
+ckit_build_cl/
 ./ckg/
 c-build/
 *.ps1

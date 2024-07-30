@@ -3,7 +3,7 @@ param (
     [string]$project_to_build = "all",
 
     [Parameter(Mandatory=$false)]
-    [string]$is_debug = $false
+    [string]$is_debug = $true
 )
 
 . ./vars.ps1
