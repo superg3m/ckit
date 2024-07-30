@@ -1,4 +1,4 @@
-#include "../ckg.h"
+#include "../../ckg.h"
 #include "./__test_functions.c"
 #include <windows.h>
 

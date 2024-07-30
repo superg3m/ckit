@@ -13,12 +13,14 @@ if ($project_to_build -ne "all" -and $project_to_build -ne "ckg" -and $project_t
     exit
 }
 
-# Define common flags
-$flags = "cl /c /nologo /fsanitize=address /WX /MP /W3 /FC /std:c11 /TC /wd4267"
+$exe_flags = "cl /nologo /fsanitize=address /WX /MP /W3 /FC /std:c11 /TC /wd4267"
+$lib_flags = "cl /c /nologo /fsanitize=address /WX /MP /W3 /FC /std:c11 /TC /wd4267"
 if ($is_debug) {
-    $flags += " /Zi /Od"
+    $exe_flags += " /Zi /Od"
+    $lib_flags += " /Zi /Od"
 } else {
-    $flags += " /O2"
+    $exe_flags += " /O2"
+    $lib_flags += " /O2"
 }
 
 function Clean_Directory($directory) {
@@ -28,16 +30,15 @@ function Clean_Directory($directory) {
 function Build_Lib($output_name, [string[]]$include_paths, [string[]]$source_files, $buildDir) {
     $include_args = @()
     foreach ($include in $include_paths) {
-        $include_args += "/I " 
+        $include_args += "/I" 
         $include_args += $include
     }
     $source_args = @()
     foreach ($source in $source_files) {
         $source_args += $source
     }
-    $command = "$flags $include_args $source_args"
+    $command = "$lib_flags $include_args $source_args"
     $lib_command = "lib /NOLOGO /OUT:$output_name.lib ./*.obj"
-
     Write-Host "================================== $output_name ==================================" -ForegroundColor Green
     $timer = [Diagnostics.Stopwatch]::StartNew()
     Push-Location $buildDir
@@ -54,22 +55,26 @@ function Build_Lib($output_name, [string[]]$include_paths, [string[]]$source_fil
 function Build_Exe($output_name, [string[]]$include_paths, [string[]]$source_files, [string[]]$additional_libs, $buildDir) {
     $include_args = @()
     foreach ($include in $include_paths) {
-        $include_args += "/I " 
-        $include_args += $include
+        if ($include) {
+            $include_args += "/I" 
+            $include_args += $include
+        }
     }
     $source_args = @()
     foreach ($source in $source_files) {
         $source_args += $source
     }
-    $command = "$flags $include_args $source_args"
-    $lib_command = "lib /NOLOGO /OUT:$output_name.lib ./*.obj"
+    $lib_args = @()
+    foreach ($lib in $additional_libs) {
+        $lib_args += $lib 
+    }
 
+    $command = "$exe_flags $include_args $source_args /link $lib_args"
     Write-Host "================================== $output_name ==================================" -ForegroundColor Green
     $timer = [Diagnostics.Stopwatch]::StartNew()
     Push-Location $buildDir
     try {
         Invoke-Expression $command
-        Invoke-Expression $lib_command
     } finally {
         Pop-Location
     }
@@ -79,11 +84,11 @@ function Build_Exe($output_name, [string[]]$include_paths, [string[]]$source_fil
 
 if ($project_to_build -eq "all" -or $project_to_build -eq "ckg") {
     $build_directory = "./ckg_build_cl"
+    $test_directory = "./Tests/ckg_build_cl"
     Clean_Directory $build_directory
 
-    # Build_Lib "ckg" @("../Include/ckg") @("../ckg.c") $build_directory
     Build_Lib "ckg" @("../Include/ckg") @("../Source/ckg/*.c") $build_directory
-    Build_Exe "ckg_test" @("../Include/ckg") @("../Source/ckg/*.c") $build_directory
+    Build_Exe "ckg_test" @("../../Include/ckg") @("../ckg/__test_ckg.c") @("../../ckg_build_cl/ckg.lib") $test_directory
 }
 
 if ($project_to_build -eq "all" -or $project_to_build -eq "ckit") {
