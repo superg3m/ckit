@@ -1,13 +1,14 @@
 param(
 	[Parameter(Mandatory=$false)]
-	[string]$to_build = "all",
+	[string]$project_to_build = "all",
 
 	[Parameter(Mandatory=$false)]
 	[string]$is_debug = $false
 )
 
-if ($to_build -ne "all" -or $to_build -ne "ckg" -or $to_build -ne "ckit") {
-	# panic
+if ($project_to_build -ne "all" -or $project_to_build -ne "ckg" -or $project_to_build -ne "ckit") {
+	# Message
+	# Error Exit
 }
 
 # Compile CKG
