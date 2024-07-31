@@ -59,7 +59,7 @@ void ckg_cstr_insert_char(char* str, size_t str_capacity, const char to_insert, 
 	char* source_ptr = str + index;
 	size_t data_payload_size = ckg_cstr_length(source_ptr);
 
-	ckg_memory_copy(source_ptr, source_ptr + 1, str_length - index, str_capacity - (index + 1));
+	ckg_memory_move(source_ptr, source_ptr + 1, data_payload_size);
 	str[index] = to_insert;
 }
 
