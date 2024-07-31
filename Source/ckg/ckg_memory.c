@@ -61,22 +61,15 @@ Boolean ckg_memory_compare(const void* buffer_one, const void* buffer_two, u32 b
     return TRUE;
 }
 
-void ckg_memory_copy(const void* source, void* destination, size_t source_size_in_bytes, size_t destination_size_in_bytes) {
+void ckg_memory_copy(const void* source, void* destination, size_t source_data_payload_in_bytes, size_t destination_capacity_in_bytes) {
     ckg_assert(source);
     ckg_assert(destination);
-    ckg_assert(source_size_in_bytes <= destination_size_in_bytes);
-    if (source_size_in_bytes == 0) {
-        return;
-    }
 
-    for (int i = 0; i < source_size_in_bytes; i++) {
-        ((u8*)destination)[i] = ((u8*)source)[i];
-    }
-}
+    Boolean upper_bound = (u8*)source <= (u8*)destination;
+    Boolean lower_bound = ((u8*)source + source_data_payload_in_bytes) >= (u8*)destination;
+    Boolean is_memory_move = upper_bound && lower_bound;
 
-void ckg_memory_move(void* source, void* destination, size_t source_data_payload_in_bytes) {
-    ckg_assert(source);
-    ckg_assert(destination);
+    ckg_assert(is_memory_move || source_data_payload_in_bytes <= destination_capacity_in_bytes);
 
     if (source_data_payload_in_bytes == 0) {
         return;
@@ -88,10 +81,8 @@ void ckg_memory_move(void* source, void* destination, size_t source_data_payload
         temp_data_copy[i] = ((u8*)source)[i];
     }
 
-    size_t destination_capacity = source_data_payload_in_bytes - ((u8*)destination - (u8*)source);
-    destination_capacity = MIN(source_data_payload_in_bytes, destination_capacity);
-    for (int i = 0; i < destination_capacity; i++) {
-        ((u8*)destination)[i] = temp_data_copy[i];
+    for (int i = 0; i < MIN(destination_capacity_in_bytes, source_data_payload_in_bytes) ; i++) {
+        ((u8*)destination)[i] = ((u8*)temp_data_copy)[i];
     }
 
     ckg_free(temp_data_copy);
@@ -114,7 +105,7 @@ void MACRO_ckg_memory_delete_index(void* data, u32 data_capacity, size_t element
     size_t dest_offset =  index * element_size_in_bytes;
 
     size_t payload_source_size = total_size - source_offset;
-    ckg_memory_move(byte_data + source_offset, byte_data + dest_offset, payload_source_size);
+    ckg_memory_copy(byte_data + source_offset, byte_data + dest_offset, payload_source_size, total_size - dest_offset);
 }
 
 void MACRO_ckg_memory_insert_index(void* data, u32 data_capacity, size_t element_size_in_bytes, u32 index) {
@@ -129,5 +120,5 @@ void MACRO_ckg_memory_insert_index(void* data, u32 data_capacity, size_t element
 
     size_t payload_source_size = total_size - source_offset;
 
-    ckg_memory_move(byte_data + source_offset, byte_data + dest_offset, payload_source_size);
+    ckg_memory_copy(byte_data + source_offset, byte_data + dest_offset, payload_source_size, total_size - dest_offset);
 }

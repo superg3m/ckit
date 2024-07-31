@@ -42,7 +42,7 @@ void ckg_cstr_insert(char* str, size_t str_capacity, const char* to_insert, cons
 	ckg_memory_copy(move_source_ptr, move_dest_ptr, str_length - index, str_capacity - (index + to_insert_length));
 	
 	u8* copy_dest_ptr = str + index;
-	ckg_memory_copy(to_insert, copy_dest_ptr, to_insert_length, str_capacity);
+	ckg_memory_copy(to_insert, copy_dest_ptr, to_insert_length, str_capacity - index);
 }
 
 void ckg_cstr_insert_char(char* str, size_t str_capacity, const char to_insert, const u32 index) {
@@ -59,7 +59,7 @@ void ckg_cstr_insert_char(char* str, size_t str_capacity, const char to_insert, 
 	char* source_ptr = str + index;
 	size_t data_payload_size = ckg_cstr_length(source_ptr);
 
-	ckg_memory_move(source_ptr, source_ptr + 1, data_payload_size);
+	ckg_memory_copy(source_ptr, source_ptr + 1, data_payload_size, str_length - index);
 	str[index] = to_insert;
 }
 
