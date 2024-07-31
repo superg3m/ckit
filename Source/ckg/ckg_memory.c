@@ -75,7 +75,14 @@ void ckg_memory_copy(const void* source, void* destination, size_t source_size_i
         temp_data_copy[i] = ((u8*)source)[i];
     }
 
-    for (int i = 0; i < source_size_in_bytes; i++) {
+    s64 possible_offset_in_bytes = 0;
+    Boolean lower_bound = (u8*)destination >= (u8*)source;
+    Boolean upper_bound = (u8*)destination <= ((u8*)source + source_size_in_bytes);
+    if (lower_bound && upper_bound) {
+        possible_offset_in_bytes = (u8*)destination - (u8*)source;
+    }
+
+    for (int i = 0; i < (s64)source_size_in_bytes - (s64)possible_offset_in_bytes; i++) {
         ((u8*)destination)[i] = temp_data_copy[i];
     }
 
