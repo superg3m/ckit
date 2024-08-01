@@ -81,7 +81,7 @@ void ckg_memory_copy(const void* source, void* destination, size_t source_data_p
         temp_data_copy[i] = ((u8*)source)[i];
     }
 
-    for (int i = 0; i < MIN(destination_capacity_in_bytes, source_data_payload_in_bytes) ; i++) {
+    for (int i = 0; i < MIN(destination_capacity_in_bytes, source_data_payload_in_bytes); i++) {
         ((u8*)destination)[i] = ((u8*)temp_data_copy)[i];
     }
 
