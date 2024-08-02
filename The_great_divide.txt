@@ -54,3 +54,5 @@ _test_ckit_string = outputs to file
 Then the program will scan the first character for:
 S_ucceeded: function_name
 F_ailed: function_name
+
+legit the first thing to do is build out the build scripts and test scripts (LITTERALLY NOTHING CAN BE DONE BEFORE THIS!)
