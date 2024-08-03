@@ -13,8 +13,8 @@ if ($project_to_build -ne "all" -and $project_to_build -ne "ckg" -and $project_t
     exit
 }
 
-$exe_flags = "cl /nologo /fsanitize=address /WX /MP /W3 /FC /std:c11 /TC /wd4267"
-$lib_flags = "cl /c /nologo /fsanitize=address /WX /MP /W3 /FC /std:c11 /TC /wd4267"
+$exe_flags = "cl /nologo /fsanitize=address /WX /MP /W3 /FC /std:c11 /TC /wd4267 /wd4996"
+$lib_flags = "cl /c /nologo /fsanitize=address /WX /MP /W3 /FC /std:c11 /TC /wd4267 /wd4996"
 if ($is_debug) {
     $exe_flags += " /Zi /Od"
     $lib_flags += " /Zi /Od"
