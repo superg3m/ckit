@@ -83,7 +83,7 @@ internal CKIT_MemoryTag ckit_tracker_memory_tag_create(CKIT_MemoryTagID tag_id, 
 }
 
 internal u64 ckit_tracker_get_tag_pool_index(CKIT_MemoryTagID tag_id) {
-    for (int i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
+    for (u32 i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
         if (global_memory_tag_pool_vector[i].tag_id == tag_id) {
             return i;
         }
@@ -94,7 +94,7 @@ internal u64 ckit_tracker_get_tag_pool_index(CKIT_MemoryTagID tag_id) {
 }
 
 internal Boolean ckit_tracker_tag_pool_exists(CKIT_MemoryTagID tag_id) {
-    for (int i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
+    for (u32 i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
         if (global_memory_tag_pool_vector[i].tag_id == tag_id) {
             return TRUE;
         }
@@ -104,7 +104,7 @@ internal Boolean ckit_tracker_tag_pool_exists(CKIT_MemoryTagID tag_id) {
 }
 
 internal const char* ckit_tracker_tag_to_string(CKIT_MemoryTagID tag_id) {
-    for (int i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
+    for (u32 i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
         if (global_memory_tag_pool_vector[i].tag_id == tag_id) {
             return global_memory_tag_pool_vector[i].pool_name;
         }
@@ -117,7 +117,7 @@ internal const char* ckit_tracker_tag_to_string(CKIT_MemoryTagID tag_id) {
 void ckit_tracker_init() {
     global_memory_tag_pool_vector = NULLPTR;
 
-    for (int i = 0; i < TAG_CKIT_RESERVED_COUNT; i++) {
+    for (u32 i = 0; i < TAG_CKIT_RESERVED_COUNT; i++) {
         CKIT_MemoryTagPool tag_pool = ckit_tracker_tag_pool_create(reserved_tags[i], reserved_tags_stringified[i]);
         ckg_vector_push(global_memory_tag_pool_vector, tag_pool);
     }
@@ -154,7 +154,7 @@ void* MACRO_ckit_tracker_insert_header(void* data, CKIT_MemoryHeader header) {
 }
 
 void ckit_tracker_add(CKIT_MemoryHeader* header) {
-    u32 tag_pool_index = ckit_tracker_get_tag_pool_index(header->tag.tag_id);
+    u64 tag_pool_index = ckit_tracker_get_tag_pool_index(header->tag.tag_id);
     
   	global_memory_tag_pool_vector[tag_pool_index].total_pool_allocation_size += (header->tag.allocation_info.allocation_size);
   	global_total_pool_memory_used += sizeof(CKIT_MemoryHeader) + header->tag.allocation_info.allocation_size;
@@ -163,7 +163,7 @@ void ckit_tracker_add(CKIT_MemoryHeader* header) {
 }
 
 void ckit_tracker_remove(CKIT_MemoryHeader* header) {
-    u32 tag_pool_index = ckit_tracker_get_tag_pool_index(header->tag.tag_id);
+    u64 tag_pool_index = ckit_tracker_get_tag_pool_index(header->tag.tag_id);
 
   	global_memory_tag_pool_vector[tag_pool_index].total_pool_allocation_size -= (header->tag.allocation_info.allocation_size);
   	global_total_pool_memory_used -= sizeof(CKIT_MemoryHeader) + header->tag.allocation_info.allocation_size;
@@ -185,7 +185,7 @@ void ckit_tracker_print_header(CKIT_MemoryHeader* header, CKG_LogLevel log_level
 void ckit_tracker_print_pool(CKIT_MemoryTagPool* pool, CKG_LogLevel log_level) {
     LOG_PRINT("============================== POOL NAME: %s | SIZE: %d ==============================\n", pool->pool_name, pool->total_pool_allocation_size);
     u32 count = pool->allocated_headers->count;
-    for (int i = 0; i < count; i++) {
+    for (u32 i = 0; i < count; i++) {
         CKIT_MemoryHeader* current_header = (CKIT_MemoryHeader*)ckg_linked_list_pop(pool->allocated_headers).data;
         ckit_tracker_print_header(current_header, log_level);
         if (i != count - 1) {
@@ -211,7 +211,7 @@ void ckit_tracker_print_all_pools(CKG_LogLevel log_level) {
     u32 count = ckg_vector_capacity(global_memory_tag_pool_vector);
     Boolean has_start = FALSE; 
     Boolean has_end = FALSE; 
-    for (int i = 0; i < count; i++) {
+    for (u32 i = 0; i < count; i++) {
         CKIT_MemoryTagPool pool = global_memory_tag_pool_vector[i];
         if (pool.total_pool_allocation_size == 0) {
             continue;

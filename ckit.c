@@ -19,8 +19,8 @@
 #include "./Source/ckit/ckit_linked_list.c"
 #include "./Source/ckit/ckit_queue.c"
 #include "./Source/ckit/ckit_stack.c"
-#include "./Source/ckit/modules/File_Format_Parser/Asset/BMP/bmp_parser.c"
-#include "./Source/ckit/modules/Lexer/ckit_lexer.c"
+#include "./Source/ckit/File_Format_Parser/Asset/BMP/bmp_parser.c"
+#include "./Source/ckit/Lexer/ckit_lexer.c"
 
 void ckit_memory_arena_unregister_all();
 

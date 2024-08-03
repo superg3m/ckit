@@ -41,14 +41,10 @@ internal void rand_str(char *dest, size_t length) {
 }
 
 void test_hash_collisions() {
-    srand(time(NULL));
-
-    char test_strings[STRING_LENGTH + 1];
+    srand((u32)time(NULL));
 
     u8* hash_map = ckit_alloc_custom(NUM_TESTS * sizeof(u8), TAG_CKIT_CORE_HASHMAP); // not really a hashmap lmao
-
     char test_string[STRING_LENGTH + 1];
-
     s32 collisions = 0;
 
     for (s32 i = 0; i < NUM_TESTS; i++) {

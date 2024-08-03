@@ -27,11 +27,18 @@ function Clean_Directory($directory) {
     Get-ChildItem -Path $directory -File -Recurse | Remove-Item -Force
 }
 
-function Build_Lib($output_name, [string[]]$include_paths, [string[]]$source_files, $buildDir) {
+function Build_Lib($output_name, $include_paths, $source_files, $buildDir) {
     $include_args = @()
     foreach ($include in $include_paths) {
-        $include_args += "/I" 
-        $include_args += $include
+        if ($include -is [System.Array]) {
+            foreach ($inc in $include) {
+                $include_args += "/I"
+                $include_args += $inc
+            }
+        } else {
+            $include_args += "/I"
+            $include_args += $include
+        }
     }
     $source_args = @()
     foreach ($source in $source_files) {
@@ -55,8 +62,13 @@ function Build_Lib($output_name, [string[]]$include_paths, [string[]]$source_fil
 function Build_Exe($output_name, [string[]]$include_paths, [string[]]$source_files, [string[]]$additional_libs, $buildDir) {
     $include_args = @()
     foreach ($include in $include_paths) {
-        if ($include) {
-            $include_args += "/I" 
+        if ($include -is [System.Array]) {
+            foreach ($inc in $include) {
+                $include_args += "/I"
+                $include_args += $inc
+            }
+        } else {
+            $include_args += "/I"
             $include_args += $include
         }
     }
@@ -95,6 +107,13 @@ if ($project_to_build -eq "all" -or $project_to_build -eq "ckit") {
     $build_directory = "./ckit_build_cl"
     Clean_Directory $build_directory
 
-    #Build_Lib "ckit" @("../Include/ckit", "../Include/ckg") @("../ckit.c", "../ckg.c") $build_directory
+    Push-Location "./Include/ckit"
+    $module_directories_to_include = Get-ChildItem -Recurse -Directory | ForEach-Object { $_.FullName }
+    Pop-Location
+
+    Write-Host "Directories to include:" -ForegroundColor Yellow
+    $module_directories_to_include | ForEach-Object { Write-Host $_ -ForegroundColor Yellow }
+
+    Build_Lib "ckit" @("../Include/ckg", "../Include/ckit", $module_directories_to_include) @("../ckg.c", "../ckit.c") $build_directory
     # Build_Lib "ckit" "../Include/ckit ../Include/ckg" "../Source/ckit/*.c" $build_directory
 }

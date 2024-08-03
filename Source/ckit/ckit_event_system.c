@@ -27,7 +27,7 @@ typedef struct EventPacket {
 EventPacket event_steal_ownership(EventID id); // ensure 
 void event_transfer_ownership(EventID id, void* old_owner, void* new_owner);
 
-event_process()
+void event_process();
 
 // Prob not gonna live here
 typedef struct KeyCodeDown {

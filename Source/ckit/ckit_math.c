@@ -50,7 +50,7 @@ Vec2 vec2_spline_point(Vec2* spline_points, u32 spline_points_count, float t) {
 	}
 
 	Vec2* points_vector = NULLPTR;
-	for (int i = 0; i < spline_points_count - 1; i++) { // get lerp points
+	for (u32 i = 0; i < spline_points_count - 1; i++) { // get lerp points
 		Vec2 lerp_point = vec2_lerp(spline_points[i + 1], spline_points[i], t);
 		ckit_vector_push(points_vector, lerp_point);
 	}

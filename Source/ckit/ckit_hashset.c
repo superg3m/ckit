@@ -24,13 +24,13 @@ void ckit_hashset_grow(CKIT_HashSet* hashset) {
 	char** temp_entries = ckit_alloc_custom(sizeof(char*) * hashset->capacity, TAG_CKIT_TEMP);
 	
 	// rehash
-	for (int i = 0; i < old_capacity; i++) {
+	for (u32 i = 0; i < old_capacity; i++) {
 		if (hashset->entries[i] != NULLPTR) {
 			u32 index =  ckit_hash_value(hashset->entries[i]) % hashset->capacity;
 			LOG_PRINT("String: %s\n", hashset->entries[i]);
 			char** cached_ptr = hashset->entries;
 			hashset->entries = temp_entries;
-			u32 real_index = ckit_hashset_resolve_collision(hashset, cached_ptr[i], index);
+			u64 real_index = ckit_hashset_resolve_collision(hashset, cached_ptr[i], index);
 			hashset->entries = cached_ptr;
 
 			temp_entries[real_index] = hashset->entries[i];
@@ -66,7 +66,7 @@ void ckit_hashset_put(CKIT_HashSet* hashset, char* key) {
 	ckit_hashset_grow(hashset);
 
 	u32 index =  ckit_hash_value(key) % hashset->capacity;
-	u32 real_index = ckit_hashset_resolve_collision(hashset, key, index);
+	u64 real_index = ckit_hashset_resolve_collision(hashset, key, index);
 	if (hashset->entries[real_index] == NULLPTR) {
 		hashset->entries[real_index] = key;
 	}
@@ -74,7 +74,7 @@ void ckit_hashset_put(CKIT_HashSet* hashset, char* key) {
 
 Boolean ckit_hashset_has(CKIT_HashSet* hashset, char* key) {
 	u32 index =  ckit_hash_value(key) % hashset->capacity;
-	u32 real_index = ckit_hashset_resolve_collision(hashset, key, index);
+	u64 real_index = ckit_hashset_resolve_collision(hashset, key, index);
 
 	return hashset->entries[real_index] != NULLPTR;
 }

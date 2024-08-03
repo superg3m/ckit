@@ -106,7 +106,7 @@ CKIT_Node* ckit_linked_list_insert(CKIT_LinkedList* linked_list, u32 index, void
     // TODO(Jovanni): check if index is closer to count or not then reverse the loop if approaching from the tail end.
     // as opposed to the head end.
     CKIT_Node* current_node = linked_list->head; 
-    for (int i = 0; i < index; i++) {
+    for (u32 i = 0; i < index; i++) {
         current_node = current_node->next;
     }
 
@@ -122,7 +122,7 @@ CKIT_Node* ckit_linked_list_insert(CKIT_LinkedList* linked_list, u32 index, void
 CKIT_Node* ckit_linked_list_get_node(CKIT_LinkedList* linked_list, u32 index) {
     ckit_assert(linked_list);
     CKIT_Node* current_node = linked_list->head; 
-    for (int i = 0; i < index; i++) {
+    for (u32 i = 0; i < index; i++) {
         current_node = current_node->next;
     }
 
@@ -139,7 +139,7 @@ CKIT_Node* ckit_linked_list_push(CKIT_LinkedList* linked_list, void* data) {
 
 u32 ckit_linked_list_node_to_index(CKIT_LinkedList* linked_list, CKIT_Node* address) {
     CKIT_Node* current_node = linked_list->head; 
-    for (int i = 0; i < linked_list->count + 1; i++) {
+    for (u32 i = 0; i < linked_list->count + 1; i++) {
         if (current_node == address) {
             return i;
         }
@@ -188,7 +188,7 @@ CKIT_Node ckit_linked_list_remove(CKIT_LinkedList* linked_list, u32 index) {
     }
 
     CKIT_Node* current_node = linked_list->head; 
-    for (int i = 0; i < index; i++) {
+    for (u32 i = 0; i < index; i++) {
         current_node = current_node->next;
     }
 
@@ -204,7 +204,7 @@ void* MACRO_ckit_linked_list_free(CKIT_LinkedList* linked_list) {
     ckit_assert(linked_list); 
     CKIT_Node* current_node = linked_list->head; 
     CKIT_Node* next_node = NULLPTR; 
-    for (int i = 0; i < linked_list->count; i++) {
+    for (u32 i = 0; i < linked_list->count; i++) {
         next_node = current_node->next;
         ckit_node_data_free(linked_list, current_node);
         current_node = next_node;

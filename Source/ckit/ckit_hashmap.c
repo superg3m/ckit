@@ -35,13 +35,13 @@ void ckit_hashmap_grow(CKIT_HashMap* hashmap) {
 	CKIT_HashMapEntry* new_entries = ckit_alloc_custom(sizeof(CKIT_HashMapEntry) * hashmap->capacity, TAG_CKIT_CORE_HASHMAP);
 	
 	// rehash
-	for (int i = 0; i < old_capacity; i++) {
+	for (u32 i = 0; i < old_capacity; i++) {
 		if (hashmap->entries[i].key != NULLPTR) {
 			u32 index =  ckit_hash_value(hashmap->entries[i].key) % hashmap->capacity;
 			LOG_PRINT("String: %s\n", hashmap->entries[i].key);
 			CKIT_HashMapEntry* cached_ptr = hashmap->entries;
 			hashmap->entries = new_entries;
-			u32 real_index = ckit_hashmap_resolve_collision(hashmap, cached_ptr[i].key, index);
+			u64 real_index = ckit_hashmap_resolve_collision(hashmap, cached_ptr[i].key, index);
 			hashmap->entries = cached_ptr;
 
 			new_entries[real_index] = hashmap->entries[i];
@@ -79,7 +79,7 @@ CKIT_HashMapEntry ckit_hashmap_entry_create(CKIT_HashMap* hashmap, char* key, vo
 
 CKIT_HashMap* MACRO_ckit_hashmap_free(CKIT_HashMap* hashmap) {
 	if (!hashmap->is_pointer_type) {
-		for (int i = 0; i < hashmap->capacity; i++) {
+		for (u32 i = 0; i < hashmap->capacity; i++) {
 			if (hashmap->entries[i].value) {
 				ckit_free(hashmap->entries[i].value);
 			}
@@ -102,9 +102,9 @@ void* ckit_hashmap_put(CKIT_HashMap* hashmap, char* key, void* value) {
 	void* ret = NULLPTR;
 
 	u32 index =  ckit_hash_value(key) % hashmap->capacity;
-	u32 real_index = ckit_hashmap_resolve_collision(hashmap, key, index);
+	u64 real_index = ckit_hashmap_resolve_collision(hashmap, key, index);
 
-	if (ckit_hashmap_entry_exists(hashmap, real_index)) {
+	if (ckit_hashmap_entry_exists(hashmap, (u32)real_index)) {
 		ret = hashmap->entries[real_index].value; // get previous value
 		hashmap->entries[real_index] = ckit_hashmap_entry_create(hashmap, key, value);
 	} else { // don't have the value
@@ -117,14 +117,14 @@ void* ckit_hashmap_put(CKIT_HashMap* hashmap, char* key, void* value) {
 
 void* ckit_hashmap_get(CKIT_HashMap* hashmap, char* key) {
 	u32 index =  ckit_hash_value(key) % hashmap->capacity;
-	u32 real_index = ckit_hashmap_resolve_collision(hashmap, key, index);
+	u64 real_index = ckit_hashmap_resolve_collision(hashmap, key, index);
 
 	return hashmap->entries[real_index].value;
 }
 
 Boolean ckit_hashmap_has(CKIT_HashMap* hashmap, char* key) {
 	u32 index =  ckit_hash_value(key) % hashmap->capacity;
-	u32 real_index = ckit_hashmap_resolve_collision(hashmap, key, index);
+	u64 real_index = ckit_hashmap_resolve_collision(hashmap, key, index);
 
 	return hashmap->entries[real_index].key != NULLPTR;
 }
