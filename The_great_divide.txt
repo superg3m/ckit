@@ -21,28 +21,6 @@ C-Build was a cool idea, but its not practical.
 - [ ] Memory Tracker (This one is unclear what to do here)
 	- [ ] Remove File, line and function
 
-
-./Test
-	./test_ckg
-		_test_ckg_*.c
-	./test_ckit
-		_test_ckit_*.c
-./Include
-
-./build_ckg
-	Has the ckg.lib and object files
-./build_ckit
-	Has the ckit.lib and object files
-
-./Source
-	./ckg
-		ckg_*.c
-	./ckit
-		ckit_*.c
-
-ckit.h
-ckit.c
-
 build_windows.ps1 -default(all)|ckit|ckg  (optional)-debug  (optional)-tests
 build_posix.sh    -ckit|ckg  (optional)-debug  (optional)-tests
 Crank up those warnings (/W4 with cl) and pay attention to them! 
@@ -56,5 +34,5 @@ S_ucceeded: function_name
 F_ailed: function_name
 
 legit the first thing to do is build out the build scripts and test scripts (LITTERALLY NOTHING CAN BE DONE BEFORE THIS!)
-
 I think I will wnat to rename things to be core or modules
+HEY WE ARE BACK BABY!
