@@ -26,8 +26,8 @@ build_posix.sh    -ckit|ckg  (optional)-debug  (optional)-tests
 Crank up those warnings (/W4 with cl) and pay attention to them! 
 There are a ton of const-incorrectness warnings, too. Also enable sanitizers (/fsanitize=address with cl). 
 
-run_tests.ps1	  -ckit|ckg  (optional)-debug
-run_tests.sh	  -ckit|ckg  (optional)-debug
+run_tests.ps1	  -all|ckit|ckg  (optional)-debug
+run_tests.sh	  -all|ckit|ckg  (optional)-debug
 _test_ckit_string = outputs to file 
 Then the program will scan the first character for:
 S_ucceeded: function_name
