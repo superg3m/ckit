@@ -42,3 +42,21 @@ Vec3 vec3_lerp(Vec3 a, Vec3 b, float t);
 Vec4 vec4_lerp(Vec4 a, Vec4 b, float t);
 
 Vec2 vec2_spline_point(Vec2* spline_points, u32 spline_points_count, float t);
+
+Mat2x2 ckit_mat2x2_projection_mat();
+Mat2x2 ckit_mat2x2_rotation_mat();
+Mat2x2 ckit_mat2x2_transposition();
+Mat2x2 ckit_mat2x2_mult();
+Mat2x2 ckit_mat2x2_add();
+
+Mat3x3 ckit_mat3x3_projection_mat();
+Mat3x3 ckit_mat3x3_rotation_mat();
+Mat3x3 ckit_mat3x3_transposition();
+Mat3x3 ckit_mat3x3_mult();
+Mat3x3 ckit_mat3x3_add();
+
+Mat4x4 ckit_mat4x4_projection_mat();
+Mat4x4 ckit_mat4x4_rotation_mat();
+Mat4x4 ckit_mat4x4_transposition();
+Mat4x4 ckit_mat4x4_mult();
+Mat4x4 ckit_mat4x4_add();
