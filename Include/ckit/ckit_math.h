@@ -1,3 +1,5 @@
+#pragma once
+
 #include <math.h>
 
 #include "ckit_types.h"

@@ -443,12 +443,12 @@ internal char* ckit_lexer_token_value_to_string(CKIT_Token token) {
 		case TOKEN_BITWISE_LEFT_SHIFT:
 		case TOKEN_BITWISE_RIGHT_SHIFT:
 		case TOKEN_ILLEGAL:
-		case TOKEN_CHARACTER_LITERAL: sprintf(big_buffer, "%s", ((char*)token.value)); return big_buffer;
+		case TOKEN_CHARACTER_LITERAL: sprintf_s(big_buffer, 1024, "%s", ((char*)token.value)); return big_buffer;
 
-		case TOKEN_END_OF_FILE: sprintf(big_buffer, "%s", "EOF"); return big_buffer;
+		case TOKEN_END_OF_FILE: sprintf_s(big_buffer, 1024, "%s", "EOF"); return big_buffer;
 
-		case TOKEN_INTEGER_LITERAL: sprintf(big_buffer, "%d", *((int*)token.value)); return big_buffer;
-		case TOKEN_FLOAT_LITERAL: sprintf(big_buffer, "%f", *((float*)token.value)); return big_buffer;
+		case TOKEN_INTEGER_LITERAL: sprintf_s(big_buffer,1024, "%d", *((int*)token.value)); return big_buffer;
+		case TOKEN_FLOAT_LITERAL: sprintf_s(big_buffer, 1024, "%f", *((float*)token.value)); return big_buffer;
     }
 
 	return big_buffer;

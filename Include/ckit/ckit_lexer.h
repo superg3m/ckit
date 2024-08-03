@@ -1,3 +1,5 @@
+#pragma once
+
 #include "ckit_types.h"
 #define CKIT_LEXER_SCRATCH_BUFFER_CAPACITY 512
 

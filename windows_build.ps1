@@ -30,15 +30,8 @@ function Clean_Directory($directory) {
 function Build_Lib($output_name, $include_paths, $source_files, $buildDir) {
     $include_args = @()
     foreach ($include in $include_paths) {
-        if ($include -is [System.Array]) {
-            foreach ($inc in $include) {
-                $include_args += "/I"
-                $include_args += $inc
-            }
-        } else {
-            $include_args += "/I"
-            $include_args += $include
-        }
+        $include_args += "/I"
+        $include_args += $include
     }
     $source_args = @()
     foreach ($source in $source_files) {
@@ -105,15 +98,10 @@ if ($project_to_build -eq "all" -or $project_to_build -eq "ckg") {
 
 if ($project_to_build -eq "all" -or $project_to_build -eq "ckit") {
     $build_directory = "./ckit_build_cl"
+    $test_directory = "./Tests/ckit_build_cl"
+
     Clean_Directory $build_directory
 
-    Push-Location "./Include/ckit"
-    $module_directories_to_include = Get-ChildItem -Recurse -Directory | ForEach-Object { $_.FullName }
-    Pop-Location
-
-    Write-Host "Directories to include:" -ForegroundColor Yellow
-    $module_directories_to_include | ForEach-Object { Write-Host $_ -ForegroundColor Yellow }
-
-    Build_Lib "ckit" @("../Include/ckg", "../Include/ckit", $module_directories_to_include) @("../ckg.c", "../ckit.c") $build_directory
-    # Build_Lib "ckit" "../Include/ckit ../Include/ckg" "../Source/ckit/*.c" $build_directory
+    Build_Lib "ckit" @("../Include/ckg", "../Include/ckit") @("../ckg.c", "../ckit.c") $build_directory
+    Build_Exe "ckit_test" @("../../Include/ckg", "../../Include/ckit") @("../ckit/ckit_test.c") @("../../ckit_build_cl/ckit.lib") $test_directory
 }
