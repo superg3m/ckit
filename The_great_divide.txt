@@ -38,3 +38,14 @@ I think I will wnat to rename things to be core or modules
 HEY WE ARE BACK BABY!
 
 Reduce the number of macros
+
+- https://www.lucavall.in/blog/how-to-structure-c-projects-my-experience-best-practices
+
+
+So heres and idea for a new build system
+
+" Source Files "
+" Include Paths "
+" Library Paths "
+" Libraries "
+" Build Directory "
