@@ -49,3 +49,6 @@ So heres and idea for a new build system
 " Library Paths "
 " Libraries "
 " Build Directory "
+
+# RunTests
+run exe after exe and log output into a file to ensure it worked
