@@ -15,14 +15,14 @@ float lerp(float a, float b, float t) {
 }
 
 Vec2 vec2_lerp(Vec2 a, Vec2 b, float t) {
-	Vec2 vec_ret;
+	Vec2 vec_ret = {0};
 	vec_ret.x = lerp(a.x, b.x, t); 
 	vec_ret.y = lerp(a.y, b.y, t); 
 	return vec_ret;
 }
 
 Vec3 vec3_lerp(Vec3 a, Vec3 b, float t) {
-	Vec3 vec_ret;
+	Vec3 vec_ret = {0};
 	vec_ret.x = lerp(a.x, b.x, t);
 	vec_ret.y = lerp(a.y, b.y, t);
 	vec_ret.z = lerp(a.z, b.z, t);
@@ -31,11 +31,33 @@ Vec3 vec3_lerp(Vec3 a, Vec3 b, float t) {
 }
 
 Vec4 vec4_lerp(Vec4 a, Vec4 b, float t) {
-	Vec4 vec_ret;
+	Vec4 vec_ret = {0};
 	vec_ret.x = lerp(a.x, b.x, t);
 	vec_ret.y = lerp(a.y, b.y, t);
 	vec_ret.z = lerp(a.z, b.z, t);
 	vec_ret.w = lerp(a.w, b.w, t);
+
+	return vec_ret;
+}
+
+
+Vec2 vec2_projection(Vec2 a, Vec2 b) {
+	Vec2 vec_ret = {0};
+	(void)vec_ret;
+
+	return vec_ret;
+}
+
+Vec2 vec2_noramlize(Vec2 a) {
+	Vec2 vec_ret = {0};
+	(void)vec_ret;
+
+	return vec_ret;
+}
+
+Vec2 vec2_perpendicular(Vec2 a) {
+	Vec2 vec_ret = {0};
+	(void)vec_ret;
 
 	return vec_ret;
 }
@@ -59,3 +81,4 @@ Vec2 vec2_spline_point(Vec2* spline_points, u32 spline_points_count, float t) {
 	ckit_vector_free(points_vector);
 	return ret;
 }
+
