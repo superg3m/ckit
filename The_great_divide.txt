@@ -52,3 +52,7 @@ So heres and idea for a new build system
 
 # RunTests
 run exe after exe and log output into a file to ensure it worked
+
+
+https://floooh.github.io/2018/06/17/handles-vs-pointers.html (READ THIS AND TAKE NOTES)
+index-handles Very interseting idea instead of a pointer use the base of something and then just have and index to get to the data.
