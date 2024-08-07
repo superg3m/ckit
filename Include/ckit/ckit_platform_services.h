@@ -20,11 +20,11 @@
 #define BACK_RED       0x0040 // background color contains red.
 
 // Supported Platforms
-#if (_WIN32)
+#if defined(_WIN32)
   #define PLATFORM_WINDOWS
-#elif (__linux__)
+#elif defined(__linux__)
   #define PLATFORM_LINUX
-#elif (__APPLE__)
+#elif defined(__APPLE__)
   #define PLATFORM_MACOS
 #endif
 //=========================== End Types ===========================
@@ -39,7 +39,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-  void* platform_allocate(unsigned long long number_of_bytes);
+  void* platform_allocate(size_t number_of_bytes);
   void platform_free(void* data);
   void platform_console_write(const char* message, unsigned char color);
   void platform_console_init();

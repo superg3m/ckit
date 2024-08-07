@@ -80,7 +80,7 @@
 			}
 		}
 		*/
-	#elif PLATFORM_LINUX
+	#elif defined(PLATFORM_LINUX)
 		#define COLOR_RESET "\033[0"
 		#define BLU "\033[34"
 		#define GRN "\033[32"
@@ -143,11 +143,11 @@
 		
 		// Date: April 13, 2024
 		// TODO(Jovanni): Fix this to use linux's platfomr specific std console out
-		void platform_console_write(size_t message_size_in_bytes, const char* message, unsigned char color) {
+		void platform_console_write(const char* message, unsigned char color) {
 			const char* color_strings[] = {COLOR_RESET, BLU, GRN, RED, MAG, WHT, BLKB, GRNB, REDB};
 			printf("\033[%sm%s\033[0m", color_strings[translate_color(color)], message);
 		}
-	#elif PLATFORM_MACOS
+	#elif defined(PLATFORM_MACOS)
 	#endif
 #endif
 //************************** End Functions **************************
