@@ -2,7 +2,7 @@
     "c_build_version": "0.9",
     "project_name": "ckit",
     "github_root": "https://github.com/superg3m",
-    "compiler_type": "gcc",
+    "compiler_type": "cl",
     "std_version": "c11",
     "compiler_warning_level": "all",
 
@@ -16,7 +16,7 @@
     "inject_as_argument": [""],
 
     "./ckg_build_$compiler_type": {
-        "output_name": "ckg.a",
+        "output_name": "ckg.lib",
         "compile_time_defines": [""],
         "include_paths": ["../include/ckg"],
         "source_files": [
@@ -28,7 +28,7 @@
     },
 
     "./ckit_build_$compiler_type": {
-        "output_name": "ckit.a",
+        "output_name": "ckit.lib",
         "compile_time_defines": [""],
         "include_paths": [
             "../include/ckg",
@@ -42,7 +42,7 @@
             ""
         ],
 
-        "additional_libs": ["../ckg_build_$compiler_type/ckg.a"]
+        "additional_libs": ["../ckg_build_$compiler_type/ckg.lib"]
     },
 
     "./Tests/ckg_build_$compiler_type" : {
@@ -54,19 +54,19 @@
         ],
 
         "additional_libs" : [
-            "../../ckg_build_$compiler_type/ckg.a"
+            "../../ckg_build_$compiler_type/ckg.lib"
         ]
     },
 
-    "./Tests/ckit_build_cl" : {
+    "./Tests/ckit_build_$compiler_type" : {
         "output_name" : "test_ckit.exe",
         "compile_time_defines" : [""],
         "include_paths" : ["../../include/ckg", "../../include/ckit"],
         "source_files" : ["../ckit/*.c"],
 
         "additional_libs" : [
-            "../../ckg_build_$compiler_type/ckg.a",
-            "../../ckit_build_$compiler_type/ckit.a"
+            "../../ckg_build_$compiler_type/ckg.lib",
+            "../../ckit_build_$compiler_type/ckit.lib"
         ]
     },
 
