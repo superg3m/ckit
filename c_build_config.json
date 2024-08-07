@@ -1,53 +1,68 @@
 {
-    "c_build_version" : "0.8",
+    "c_build_version": "0.9",
+    "project_name": "ckit",
+    "github_root": "https://github.com/superg3m",
+    "compiler_type": "cl",
+    "std_version": "c11",
+    "compiler_warning_level": "all",
 
-    "project_name" : "ckit",
+    "compiler_disable_warnings": false,
+    "debug_with_visual_studio": false,
+    "should_rebuild_project_dependencies": false,
+    "compiler_treat_warnings_as_errors": true,
 
-    "debug_with_visual_studio" : false,
-    "should_rebuild_project_dependencies" : true,
+    "project_dependencies": [""],
+    "disable_specific_warnings": [""],
+    "inject_as_argument": [""],
 
-    "compiler_type" : "cl",
-
-    "std_version" : "c11",
-    "project_dependencies" : ["ckg"],
-
-    "./build_cl" : {
-        "output_name" : "ckit.lib",
-        "compile_time_defines" : "",
-        "include_paths" : "",
-        "source_paths" : [
-            "../ckit.c",
-            "../core/Assert/*.c", 
-            "../core/Collection/Vector/*.c", 
-            "../core/Collection/HashMap/*.c", 
-            "../core/Collection/HashSet/*.c", 
-            "../core/Collection/Queue/*.c", 
-            "../core/Collection/LinkedList/*.c", 
-            "../core/Collection/Stack/*.c", 
-            "../core/String/*.c", 
-            "../core/Memory/*.c", 
-            "../core/MemoryTracker/*.c", 
-            "../core/Platform/*.c", 
-            "../core/Math/*.c", 
-            "../core/FileIO/*.c",
-            "../core/Logger/*.c",
-            "../modules/File_Format_Parser/asset/bmp/*.c",
-            "../modules/Lexer/*.c"
+    "./ckg_build_cl": {
+        "output_name": "ckg.lib",
+        "compile_time_defines": [""],
+        "include_paths": ["../include/ckg"],
+        "source_files": [
+            "../ckg.c"
         ],
-
-        "additional_libs" : ["../ckg/build_cl/ckg.lib"]
+        "additional_libs": [""]
     },
 
-    "./example/cl" : {
+    "./ckit_build_cl": {
+        "output_name": "ckit.lib",
+        "compile_time_defines": [""],
+        "include_paths": [
+            "../include/ckg",
+            "../include/ckit"
+        ],
+        "source_files": [
+            "../ckit.c"
+        ],
+        "additional_libs": ["../ckg_build_cl/ckg.lib"]
+    },
+
+    "./Tests/ckg_build_cl" : {
+        "output_name" : "test_ckg.exe",
+        "compile_time_defines" : [""],
+        "include_paths" : ["../../include/ckg"],
+        "source_files" : [
+            "../ckg/__test_ckg.c"
+        ],
+
+        "additional_libs" : [
+            "../../ckg_build_cl/ckg.lib"
+        ]
+    },
+
+    "./Tests/ckit_build_cl" : {
         "output_name" : "test_ckit.exe",
-        "compile_time_defines" : "",
-        "include_paths" : "",
-        "source_paths" : [
-            "../*.c"
+        "compile_time_defines" : [""],
+        "include_paths" : ["../../include/ckg", "../../include/ckit"],
+        "source_files" : [
+            "../ckit/*.c"
         ],
 
-        "additional_libs" : ["../../build_cl/ckit.lib"]
+        "additional_libs" : [
+            "../../ckit_build_cl/ckit.lib"
+        ]
     },
 
-    "execute" : "test_ckit.exe"
+    "execute": ["test_ckg.exe", "test_ckit.exe"]
 }

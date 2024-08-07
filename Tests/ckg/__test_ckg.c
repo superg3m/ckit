@@ -82,7 +82,7 @@ int main() {
 
 	linked_list_operations();
 
-	CKG_LOG_WARN("THIS WORKS ALL THE WAY I THINK!");
+	CKG_LOG_WARN("THIS WORKS ALL THE WAY I THINK!\n");
 
 	return 0;
 }
