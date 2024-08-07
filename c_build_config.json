@@ -35,7 +35,7 @@
         "source_files": [
             "../ckit.c"
         ],
-        "additional_libs": ["../ckg_build_cl/ckg.lib"]
+        "additional_libs": ["../ckg_build_$compiler_type/ckg.lib"]
     },
 
     "./Tests/ckg_build_$compiler_type" : {
@@ -47,7 +47,7 @@
         ],
 
         "additional_libs" : [
-            "../../ckg_build_cl/ckg.lib"
+            "../../ckg_build_$compiler_type/ckg.lib"
         ]
     },
 
@@ -60,7 +60,7 @@
         ],
 
         "additional_libs" : [
-            "../../ckit_build_cl/ckit.lib"
+            "../../ckit_build_$compiler_type/ckit.lib"
         ]
     },
 
