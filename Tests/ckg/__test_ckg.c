@@ -1,5 +1,7 @@
 #include "../../ckg.h"
 #include "./__test_functions.c"
+
+#if defined(PLATFORM_WINDOWS)
 #include <windows.h>
 
 void* win32_memory_alloc_callback(size_t allocation_size) {
@@ -10,6 +12,8 @@ void* win32_memory_alloc_callback(size_t allocation_size) {
 void win32_memory_free_callback(void* data) {
 	VirtualFree(data, 0, MEM_RELEASE);
 }
+#endif
+
 
 void linked_list_operations() {
 	for (int i = 0; i < 25; i++) {
@@ -72,8 +76,10 @@ void linked_list_operations() {
 }
 
 int main() {
+	#if defined(PLATFORM_WINDOWS)
 	ckg_bind_alloc_callback(win32_memory_alloc_callback);
 	ckg_bind_free_callback(win32_memory_free_callback);
+	#endif
 
 	test_ckg_memory_operations();
 	test_ckg_arena_operations();
