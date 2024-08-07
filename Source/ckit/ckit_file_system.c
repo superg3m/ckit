@@ -9,8 +9,8 @@ u8* file_data(FILE* handle, size_t file_size) {
 }
 
 void file_open(FileSystem* file_system) {
-	errno_t error = fopen_s(&file_system->handle, file_system->file_name, "r");
-	ckit_assert_msg(file_system->handle != NULLPTR, "FILE IS NULL, CHECK INITIAL FILE NAME\n");
+	file_system->handle = fopen(file_system->file_name, "r");
+	ckit_assert_msg(file_system->handle != NULLPTR, "FILE HANDLE IS NULL, CHECK INITIAL FILE NAME\n");
 	fseek(file_system->handle, 0L, SEEK_END);
 	file_system->file_size = ftell(file_system->handle);
 	rewind(file_system->handle);

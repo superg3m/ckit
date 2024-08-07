@@ -9,7 +9,7 @@ typedef struct CKIT_Stack CKIT_Stack;
 #ifdef __cplusplus
 extern "C" {
 #endif
-	CKIT_Stack* MACRO_ckit_stack_create(size_t size_in_bytes, Boolean is_pointer_type, char* file, u32 line, char* function);
+	CKIT_Stack* MACRO_ckit_stack_create(size_t size_in_bytes, Boolean is_pointer_type, const char* file, const u32 line, const char* function);
 	void* ckit_stack_push(CKIT_Stack* stack, void* data);
 	// Date: July 22, 2024
 	// NOTE(Jovanni): If pointer type is true you must free this yourself, trivially this should be able to go into an arena.

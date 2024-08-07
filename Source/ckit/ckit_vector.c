@@ -11,7 +11,7 @@ internal void ckit_vector_check_magic(void* vector) {
 
 // Date: July 14, 2024
 // TODO(Jovanni): HEY I THINK THIS SHOULD BE AN ARRENA ACTUALLY AND ITS LOCALLY SCOPED IN SOME WAY
-void* ckit_vector_grow(void* vector, size_t element_size, Boolean force_grow, char* file, u32 line, char* function) {
+void* ckit_vector_grow(void* vector, size_t element_size, Boolean force_grow, const char* file, const u32 line, const char* function) {
     if (vector == NULLPTR) {
         vector = ckit_alloc_custom(sizeof(CKIT_VectorHeader) + (VECTOR_DEFAULT_CAPACITY * element_size), TAG_CKIT_CORE_VECTOR);
         vector = (u8*)vector + sizeof(CKIT_VectorHeader);
@@ -39,7 +39,7 @@ void* ckit_vector_grow(void* vector, size_t element_size, Boolean force_grow, ch
     return vector;
 }
 
-void* MACRO_ckit_vector_reserve(size_t element_size, u32 inital_capacity, char* file, u32 line, char* function) {
+void* MACRO_ckit_vector_reserve(size_t element_size, u32 inital_capacity, const char* file, const u32 line, const char* function) {
     void* vector = MACRO_ckit_alloc(sizeof(CKIT_VectorHeader) + (inital_capacity * element_size), TAG_CKIT_CORE_VECTOR, file, line, function);
     vector = (u8*)vector + sizeof(CKIT_VectorHeader);
     ckit_vector_base(vector)->count = 0;

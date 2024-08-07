@@ -84,7 +84,7 @@ extern "C" {
 	void ckit_tracker_register_tag_pool(CKIT_MemoryTagID tag_id, const char* name);
     void* MACRO_ckit_tracker_insert_header(void* data, CKIT_MemoryHeader header);
 
-    CKIT_MemoryHeader ckit_tracker_header_create(CKIT_MemoryTagID tag_id, size_t allocation_size, char* file_name, u64 line, char* function_name);
+    CKIT_MemoryHeader ckit_tracker_header_create(CKIT_MemoryTagID tag_id, size_t allocation_size, const char* file_name, const u64 line, const char* function_name);
 	void* memory_insert_header(void* data, CKIT_MemoryHeader header);
     void ckit_tracker_add(CKIT_MemoryHeader* header);
     void ckit_tracker_remove(CKIT_MemoryHeader* header);

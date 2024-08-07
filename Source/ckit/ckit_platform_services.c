@@ -17,7 +17,7 @@
 #ifndef CUSTOM_PLATFORM_IMPL
 	#ifdef PLATFORM_WINDOWS
 		#include <windows.h>
-		void* platform_allocate(unsigned long long  number_of_bytes) {
+		void* platform_allocate(size_t number_of_bytes) {
 			// Date: July 07, 2024
 			// TODO(Jovanni): I'm thinking you can put the memory tracker in here 
 			return VirtualAlloc(NULL, number_of_bytes, MEM_COMMIT, PAGE_READWRITE); 

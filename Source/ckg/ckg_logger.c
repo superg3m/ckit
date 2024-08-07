@@ -38,7 +38,7 @@ void MACRO_ckg_log_output(CKG_LogLevel log_level, const char* message, ...) {
     vsnprintf(out_message, CKG_PLATFORM_CHARACTER_LIMIT, message, args_list);
     va_end(args_list);
 
-    sprintf_s(out_message2, CKG_PLATFORM_CHARACTER_LIMIT, "%s%s", log_level_strings[log_level], out_message);
+    sprintf(out_message2, "%s%s", log_level_strings[log_level], out_message);
 
     int out_message2_length = ckg_cstr_length(out_message2);
 

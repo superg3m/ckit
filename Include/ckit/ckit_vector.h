@@ -18,8 +18,8 @@ typedef struct CKIT_VectorHeader {
 #ifdef __cplusplus
 extern "C" {
 #endif
-    void* ckit_vector_grow(void* vector, size_t element_size, Boolean force_grow, char* file, u32 line, char* function);
-    void* MACRO_ckit_vector_reserve(size_t element_size, u32 capacity, char* file, u32 line, char* function);
+    void* ckit_vector_grow(void* vector, size_t element_size, Boolean force_grow, const char* file, const u32 line, const char* function);
+    void* MACRO_ckit_vector_reserve(size_t element_size, u32 capacity, const char* file, const u32 line, const char* function);
 	void* MACRO_ckit_vector_free(void* vector);
 #ifdef __cplusplus
 }

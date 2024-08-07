@@ -9,7 +9,7 @@ void memory_init() {
 	ckg_bind_free_callback(&platform_free);
 }
 
-void* MACRO_ckit_alloc(size_t byte_allocation_size, CKIT_MemoryTagID tag_id, char* file, u32 line, char* function) {
+void* MACRO_ckit_alloc(size_t byte_allocation_size, CKIT_MemoryTagID tag_id, const char* file, const u32 line, const char* function) {
 	ckit_assert_msg(byte_allocation_size > 0, "Invalid allocation size zero or below\n");
 
 	CKIT_MemoryHeader temp_header = ckit_tracker_header_create(tag_id, byte_allocation_size, file, line, function);
@@ -35,7 +35,7 @@ void* MACRO_ckit_free(void* data) {
   	return data;
 }
 
-void* MACRO_ckit_realloc(void* data, u64 new_allocation_size, char* file, u32 line, char* function) {
+void* MACRO_ckit_realloc(void* data, u64 new_allocation_size, const char* file, const u32 line, const char* function) {
   	ckit_assert_msg(data, "ckit_reallocation: Data passed is null\n");
   	const CKIT_MemoryHeader* header = ckit_tracker_get_header(data);
 

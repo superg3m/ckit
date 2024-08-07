@@ -15,8 +15,8 @@
 extern "C" {
 #endif
     void memory_init();
-    void* MACRO_ckit_alloc(size_t number_of_bytes, CKIT_MemoryTagID tag_id, char* file, u32 line, char* function);
-    void* MACRO_ckit_realloc(void* data, u64 new_allocation_size, char* file, u32 line, char* function);
+    void* MACRO_ckit_alloc(size_t number_of_bytes, CKIT_MemoryTagID tag_id, const char* file, const u32 line, const char* function);
+    void* MACRO_ckit_realloc(void* data, u64 new_allocation_size, const char* file, const u32 line, const char* function);
     void* MACRO_ckit_free(void* data);
 
     void ckit_memory_report(CKG_LogLevel log_level);
