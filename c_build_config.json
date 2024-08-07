@@ -15,7 +15,7 @@
     "disable_specific_warnings": [""],
     "inject_as_argument": [""],
 
-    "./ckg_build_cl": {
+    "./ckg_build_$compiler_type": {
         "output_name": "ckg.lib",
         "compile_time_defines": [""],
         "include_paths": ["../include/ckg"],
@@ -25,7 +25,7 @@
         "additional_libs": [""]
     },
 
-    "./ckit_build_cl": {
+    "./ckit_build_$compiler_type": {
         "output_name": "ckit.lib",
         "compile_time_defines": [""],
         "include_paths": [
@@ -38,7 +38,7 @@
         "additional_libs": ["../ckg_build_cl/ckg.lib"]
     },
 
-    "./Tests/ckg_build_cl" : {
+    "./Tests/ckg_build_$compiler_type" : {
         "output_name" : "test_ckg.exe",
         "compile_time_defines" : [""],
         "include_paths" : ["../../include/ckg"],
