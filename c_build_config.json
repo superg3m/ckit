@@ -2,7 +2,7 @@
     "c_build_version": "0.9",
     "project_name": "ckit",
     "github_root": "https://github.com/superg3m",
-    "compiler_type": "gcc",
+    "compiler_type": "cl",
     "std_version": "c11",
     "compiler_warning_level": "all",
 
@@ -22,8 +22,7 @@
         "source_files": [
             "../ckg.c"
         ],
-
-        "additional_lib_paths" : [""],
+        
         "additional_libs": [""]
     },
 
@@ -35,14 +34,11 @@
             "../include/ckit"
         ],
         "source_files": [
+            "../ckg.c",
             "../ckit.c"
         ],
 
-        "additional_lib_paths" : [
-            ""
-        ],
-
-        "additional_libs": ["../ckg_build_$compiler_type/ckg.lib"]
+        "additional_libs": [""]
     },
 
     "./Tests/ckg_build_$compiler_type" : {
@@ -65,7 +61,6 @@
         "source_files" : ["../ckit/*.c"],
 
         "additional_libs" : [
-            "../../ckg_build_$compiler_type/ckg.lib",
             "../../ckit_build_$compiler_type/ckit.lib"
         ]
     },

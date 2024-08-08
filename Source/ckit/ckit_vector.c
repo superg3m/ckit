@@ -2,6 +2,16 @@
 #include "ckit_memory.h"
 #include "ckit_string.h"
 
+// Start experimenting with returning an index back
+// - [ ] Serializable
+// - [ ] Deletable
+// - [ ] Relocatable (shuffuling the data) (update the referece so you have the right index?)
+// - [ ] No dangling pointers
+
+// typedef struct CKIT_MemoryIndex {
+//     u32 index;
+// } CKIT_MemoryIndex;
+
 #define VECTOR_DEFAULT_CAPACITY 1
 #define CKIT_VECTOR_MAGIC "CKIT_MAGIC_VECTOR"
 
