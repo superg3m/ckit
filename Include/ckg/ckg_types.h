@@ -43,7 +43,7 @@ typedef u8 Boolean;
 // TODO(Jovanni): Test this to make sure its actually works but it makes sense to me
 #define OFFSET_OF(type, member) ((u64)(&(((type*)0)->member)))
 
-#define FIRST_DIGIT(number) (((int)number % 10) / 10); 
+#define FIRST_DIGIT(number) ((int)number % 10); 
 
 /**
  * @brief This only works on static arrays not buffers

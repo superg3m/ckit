@@ -207,7 +207,7 @@ String ckit_str_int_to_str(int number) {
     String ret = ckit_str_create("");
 
     while (number != 0) {
-		char c = '0' + (number % 10);
+		char c = '0' + FIRST_DIGIT(number);
 		ckit_str_insert_char(ret, c, 0);
 		number /= (int)10;
 	}

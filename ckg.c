@@ -1,7 +1,6 @@
 #include "ckg.h"
 
 #include "./Source/ckg/ckg_arena.c"
-#include "./Source/ckg/ckg_assert.c"
 #include "./Source/ckg/ckg_char.c"
 #include "./Source/ckg/ckg_cstring.c"
 #include "./Source/ckg/ckg_io.c"

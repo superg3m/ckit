@@ -372,7 +372,9 @@ int main() {
 	u32 max_value =  10;
 	LOG_SUCCESS("%d\n", CLAMP(65, test_overflow, max_value));
 
-	String str_test = ckit_str_int_to_str(523);
+	int test_int_to_str = 5235;
+
+	String str_test = ckit_str_int_to_str(test_int_to_str);
 	LOG_ERROR("AT THE END TEST: %s\n", str_test);
 	ckit_str_free(str_test);
 

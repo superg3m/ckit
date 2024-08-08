@@ -2,18 +2,18 @@
 #include "stdlib.h"
 #include "../../core/ckit_types.h"
 
-typedef struct StructMemberInfo {
+typedef struct CKIT_StructMemberInfo {
 	char* struct_parent_name;
 	char* name;
 	size_t offset_in_bytes;
-} StructMemberInfo;
+} CKIT_StructMemberInfo;
 
-typedef struct StructInfo {
+typedef struct CKIT_StructInfo {
 	void* base_address;
 	char* struct_type_name; // this will be ckit string
 	char* struct_instance_name; // this will be ckit string
 	StructMemberInfo* members_info; // this will be a vector
-} StructInfo;
+} CKIT_StructInfo;
 
 typedef struct CKIT_Example {
 	int ark;
