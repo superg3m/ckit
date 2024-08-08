@@ -175,7 +175,7 @@ Thoughts:
 
 - [/] ckit_memory_tracker.h
 	- [x] ckit_tracker_init();
-	- [/] ckit_tracker_register_tag_pool(tag_id, name); (NOT TESTED)
+	- [x] ckit_tracker_register_tag_pool(tag_id, name);
     - [x] MACRO_ckit_tracker_insert_header(data, CKIT_MemoryHeader header);
 
     - [x] ckit_tracker_header_create(tag_id, allocation_size);

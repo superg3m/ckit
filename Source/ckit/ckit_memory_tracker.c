@@ -93,9 +93,9 @@ internal u64 ckit_tracker_get_tag_pool_index(CKIT_MemoryTagID tag_id) {
     return -1; // never gets here
 }
 
-internal Boolean ckit_tracker_tag_pool_exists(CKIT_MemoryTagID tag_id) {
+internal Boolean ckit_tracker_tag_pool_exists(CKIT_MemoryTagID tag_id, const char* name) {
     for (u32 i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
-        if (global_memory_tag_pool_vector[i].tag_id == tag_id) {
+        if (global_memory_tag_pool_vector[i].tag_id == tag_id || ckit_str_equal(global_memory_tag_pool_vector[i].pool_name, name)) {
             return TRUE;
         }
     }
@@ -141,7 +141,7 @@ CKIT_MemoryHeader ckit_tracker_header_create(CKIT_MemoryTagID tag_id, size_t all
 }
 
 void ckit_tracker_register_tag_pool(CKIT_MemoryTagID tag_id, const char* name) {
-    ckit_assert(!ckit_tracker_tag_pool_exists(tag_id)); // don't register a tag that already exists/has been registered
+    ckit_assert(!ckit_tracker_tag_pool_exists(tag_id, name)); // don't register a tag that already exists/has been registered (name can't be the same either)
 
     CKIT_MemoryTagPool tag_pool = ckit_tracker_tag_pool_create(tag_id, name);
     ckg_vector_push(global_memory_tag_pool_vector, tag_pool);
@@ -197,7 +197,7 @@ void ckit_tracker_print_pool(CKIT_MemoryTagPool* pool, CKG_LogLevel log_level) {
 
 CKIT_MemoryHeader* ckit_tracker_get_header(void* data) {
     CKIT_MemoryHeader* header = (CKIT_MemoryHeader*)((u8*)data - sizeof(CKIT_MemoryHeader));
-    ckit_assert(ckit_tracker_tag_pool_exists(header->tag.tag_id));
+    ckit_assert(ckit_tracker_tag_pool_exists(header->tag.tag_id, header->tag.tag_name));
     return header;
 }
 
@@ -235,5 +235,5 @@ void ckit_tracker_print_all_pools(CKG_LogLevel log_level) {
     LOG_ERROR("-----------------------------------------------------------------------------------------\n");
 }
 
-CKIT_MemoryHeader** ckit_tracker_get_all_headers();
-CKIT_MemoryTagPool** ckit_tracker_get_all_pools();
+// CKIT_MemoryHeader** ckit_tracker_get_all_headers();
+// CKIT_MemoryTagPool** ckit_tracker_get_all_pools();

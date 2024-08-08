@@ -1,5 +1,9 @@
 #include "../../ckit.h"
 
+typedef enum CustomTagPool {
+	USER_TEMP_SUPER3M = TAG_CKIT_RESERVED_COUNT
+} CustomTagPool;
+
 void test_vector_operations() {
 	// Test types
 	int intArray[] = {1, 2, 3, 4, 5};
@@ -236,10 +240,6 @@ void queue_operations() {
 }
 
 void linked_list_operations() {
-	for (int i = 0; i < 25; i++) {
-		LOG_PRINT("\n");
-	}
-
 	CKIT_LinkedList* linked_list = ckit_linked_list_create(char*, TRUE);
 	ckit_linked_list_insert(linked_list, 0, "hello");
 	ckit_linked_list_push(linked_list, "hello_sailor1!");
@@ -375,7 +375,7 @@ int main() {
 	int test_int_to_str = 5235;
 
 	String str_test = ckit_str_int_to_str(test_int_to_str);
-	LOG_ERROR("AT THE END TEST: %s\n", str_test);
+	LOG_ERROR("AT THE END TEST: %s\n\n", str_test);
 	ckit_str_free(str_test);
 
 	ckit_cleanup();

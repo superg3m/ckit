@@ -16,10 +16,6 @@ void win32_memory_free_callback(void* data) {
 
 
 void linked_list_operations() {
-	for (int i = 0; i < 25; i++) {
-		CKG_LOG_PRINT("\n");
-	}
-
 	CKG_LinkedList* linked_list = ckg_linked_list_create(char*, TRUE);
 	CKG_Node* address = ckg_linked_list_insert(linked_list, 0, "hello");
 	ckg_linked_list_push(linked_list, "hello_sailor1!");
@@ -88,7 +84,7 @@ int main() {
 
 	linked_list_operations();
 
-	CKG_LOG_WARN("THIS WORKS ALL THE WAY I THINK!\n");
+	CKG_LOG_WARN("================================ THIS WORKS ALL THE WAY I THINK! CKG END ================================\n");
 
 	return 0;
 }

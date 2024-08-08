@@ -63,7 +63,9 @@
 		"ckg_math.h": "c",
 		"ckg_char.h": "c",
 		"windows.h": "c",
-		"ckit_input.h": "c"
+		"ckit_input.h": "c",
+		"ckg_vector.h": "c",
+		"ckg_linked_list.h": "c"
 	},
 	"editor.insertSpaces": false
 }

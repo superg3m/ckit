@@ -7,21 +7,6 @@
 
 #include "ckit_logger.h"
 
-// Date: July 23, 2024
-// TODO(Jovanni): SWITCH THIS TO BE INSTANCE BASED SO I CAN USE IT FOR ARENAS TOO!!!
-// TODO(Jovanni): SWITCH THIS TO BE INSTANCE BASED SO I CAN USE IT FOR ARENAS TOO!!!
-// TODO(Jovanni): SWITCH THIS TO BE INSTANCE BASED SO I CAN USE IT FOR ARENAS TOO!!!
-// TODO(Jovanni): SWITCH THIS TO BE INSTANCE BASED SO I CAN USE IT FOR ARENAS TOO!!!
-// TODO(Jovanni): SWITCH THIS TO BE INSTANCE BASED SO I CAN USE IT FOR ARENAS TOO!!!
-// TODO(Jovanni): SWITCH THIS TO BE INSTANCE BASED SO I CAN USE IT FOR ARENAS TOO!!!
-// TODO(Jovanni): SWITCH THIS TO BE INSTANCE BASED SO I CAN USE IT FOR ARENAS TOO!!!
-// TODO(Jovanni): SWITCH THIS TO BE INSTANCE BASED SO I CAN USE IT FOR ARENAS TOO!!!
-// TODO(Jovanni): SWITCH THIS TO BE INSTANCE BASED SO I CAN USE IT FOR ARENAS TOO!!!
-// TODO(Jovanni): SWITCH THIS TO BE INSTANCE BASED SO I CAN USE IT FOR ARENAS TOO!!!
-// TODO(Jovanni): SWITCH THIS TO BE INSTANCE BASED SO I CAN USE IT FOR ARENAS TOO!!!
-// TODO(Jovanni): SWITCH THIS TO BE INSTANCE BASED SO I CAN USE IT FOR ARENAS TOO!!!
-// TODO(Jovanni): SWITCH THIS TO BE INSTANCE BASED SO I CAN USE IT FOR ARENAS TOO!!!
-
 //========================== Begin Types ==========================
 typedef enum CKIT_MemoryTagID { // Reserved tags
     TAG_USER_UNKNOWN,
@@ -37,7 +22,6 @@ typedef enum CKIT_MemoryTagID { // Reserved tags
     TAG_CKIT_CORE_HASHMAP,
     TAG_CKIT_CORE_HASHSET,
 
-
     TAG_CKIT_MODULE_LEXER,
     TAG_CKIT_MODULE_FILE_FORMAT_PARSER_BMP,
     TAG_CKIT_MODULE_FILE_FORMAT_PARSER_OBJ,
@@ -45,6 +29,7 @@ typedef enum CKIT_MemoryTagID { // Reserved tags
     TAG_CKIT_MODULE_FILE_FORMAT_PARSER_JSON,
 
     TAG_CKIT_EXPECTED_USER_FREE,
+
     TAG_CKIT_RESERVED_COUNT
 } CKIT_MemoryTagID;
 
@@ -95,8 +80,8 @@ extern "C" {
 
     void ckit_tracker_print_all_pools(CKG_LogLevel log_level);
 
-    CKIT_MemoryHeader** ckit_tracker_get_all_headers();
-    CKIT_MemoryTagPool** ckit_tracker_get_all_pools();
+    // CKIT_MemoryHeader** ckit_tracker_get_all_headers();
+    // CKIT_MemoryTagPool** ckit_tracker_get_all_pools();
 #ifdef __cplusplus
 }
 #endif
