@@ -1,6 +1,6 @@
 # Ckits's Core Thesis
 - The point of the ckit is to provide a nice library to build c projects with.
-- Ckit is built with the granular api ckit granular [CKG](https://github.com/superg3m/ckg)
+- Ckit is built with the granular api ckit granular [CKG](https://github.com/superg3m/ckg) (OUT DATED FIX THIS!)
 - This library will be completly cross-platform (Will be windows exclusive for a while ngl)
 - Collection of tools, data structures, and algorithms that I find useful
 
@@ -15,8 +15,8 @@
 2. - [ ] Hashmap is not very robust I should offer a compare funciton hashmap and give default presets for primatives.
 
 ### Next Steps
-1. - [/] Rewrite the memory tagging system
-	- [/] Register custom Tags
+1. - [x] Rewrite the memory tagging system
+	- [x] Register custom Tags
 	- [x] ckit_alloc(size_in_bytes) // No longer requiring a tag it will just be a tag call user_unknown.
 	- [x] It should be trivial to put file and function information from where an allocation originated. (be careful for reallocations)
 	- [x] Introduce "MEMORY_TAG_MAGIC" in the header to catch bugs early
@@ -173,7 +173,7 @@ Thoughts:
 	- [x] ckit_memory_delete_index(data, data_capacity, index)
 	- [x] ckit_memory_insert_index(data, data_capacity, element, index)
 
-- [/] ckit_memory_tracker.h
+- [x] ckit_memory_tracker.h
 	- [x] ckit_tracker_init();
 	- [x] ckit_tracker_register_tag_pool(tag_id, name);
     - [x] MACRO_ckit_tracker_insert_header(data, CKIT_MemoryHeader header);
@@ -186,9 +186,6 @@ Thoughts:
 
     - [x] ckit_tracker_print_header(header, log_level);
     - [x] ckit_tracker_print_pool(pool, log_level);
-
-    - [/] ckit_tracker_get_all_headers();
-    - [/] ckit_tracker_get_all_pools();
 
 - [x] ckit_arena.h (NOT TESTED)
 	- [x] ckit_arena_create(allocation, name)
