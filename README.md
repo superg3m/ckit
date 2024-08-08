@@ -10,6 +10,11 @@
 3. ./debug.ps1
 4. ./run.ps1
 
+### key
+- '[x]': Finished
+- '[/]': Started working on it
+- '[ ]': Haven't started working on it
+
 ### Known issues/bugs
 1. - [x] Queue might not be able to hold more than 8 characters (the sizeof(char*)) easy fix
 2. - [ ] Hashmap is not very robust I should offer a compare funciton hashmap and give default presets for primatives.
@@ -21,13 +26,14 @@
 	- [x] It should be trivial to put file and function information from where an allocation originated. (be careful for reallocations)
 	- [x] Introduce "MEMORY_TAG_MAGIC" in the header to catch bugs early
 
-2. - [ ] Make logging system more robust with better way to color certain text and parse the message better so you can intuitively \n something.
-3. - [ ] Make string stuff a bit more robust I would like to impose a cap on it. (just make the capacity not be able to pass a max)
+2. - [ ] Make logging system more robust with better way to color certain text
+3. - [ ] Parse the message better so you can intuitively \n something.
+4. - [ ] Make string stuff a bit more robust I would like to impose a cap on it. (just make the capacity not be able to pass a max)
 
-4. - [ ] Clean up arenas and init pre-exisiting arenas for things like: Strings
-5. - [ ] Rewrite all Core utilities using new tracker system, and then Write a bunch of tests validating and verifying all the utilities and logic.
-6. - [ ] Start writing EventSystem
-7. - [ ] Start writing the **GAME ENGINE** you have everything you need in order to succeed
+5. - [ ] Clean up arenas and init pre-exisiting arenas for things like: Strings
+6. - [ ] Rewrite all Core utilities using new tracker system, and then Write a bunch of tests validating and verifying all the utilities and logic.
+7. - [ ] Start writing EventSystem
+8. - [ ] Start writing the **GAME ENGINE** you have everything you need in order to succeed
 
 Thoughts:
 	I need to insentivise arenas way more than I currently do it makes lifetimes siginificantly easier.
@@ -41,10 +47,6 @@ Thoughts:
 	Another Thought I should give some credence to is Zii (Zero is Initalization)
 
 # Goals
-### key
-- '[x]': Finished
-- '[/]': Started working on it
-- '[ ]': Haven't started working on it
 
 ## CORE
 - [x] ckit_types.c
