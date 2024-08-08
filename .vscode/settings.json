@@ -62,7 +62,8 @@
 		"ckg_stack_trace.h": "c",
 		"ckg_math.h": "c",
 		"ckg_char.h": "c",
-		"windows.h": "c"
+		"windows.h": "c",
+		"ckit_input.h": "c"
 	},
 	"editor.insertSpaces": false
 }

@@ -147,7 +147,6 @@ String MACRO_ckit_str_append_char(String str, const char source) {
     return str;
 }
 
-
 String ckit_substring(const char* string_buffer, u32 start_range, u32 end_range) {
     String ret_string = ckit_str_create_custom("", (end_range - start_range) + 1);
     ckg_substring(string_buffer, ret_string, start_range, end_range);
