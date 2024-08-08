@@ -112,21 +112,19 @@ Thoughts:
     - [x] ckit_linked_list_pop(linked_list, node);
     - [x] ckit_linked_list_remove(linked_list, index);
 
-- [x] ckit_stack.h
+- [x] ckit_stack.h (Probably will get rid of this because it can be built with Linked Lists/Vectors)
 	- [x] MACRO_ckit_stack_create(size_in_bytes, is_pointer_type);
 	- [x] ckit_stack_push(data);
 	- [x] ckit_stack_pop();
 	- [x] ckit_stack_free();
 
-- [x] ckit_queue.h
+- [x] ckit_queue.h (Probably will get rid of this because it can be built with Linked Lists/Vectors)
 	- [x] ckit_queue_create(inital_capacity, element_size_in_bytes, is_pointer_type);
 	- [x] ckit_queue_free(queue);
 	- [x] ckit_enqueue(queue, element);
 	- [x] ckit_dequeue(queue);
 	- [x] ckit_queue_capacity(queue);
 	- [x] ckit_queue_count(queue);
-
-- [ ] ckit_binary_tree.h
 
 - [x] ckit_vector.h
 	- [x] ckit_vector_length(vector)
