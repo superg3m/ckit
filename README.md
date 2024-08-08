@@ -21,28 +21,24 @@
 	- [x] It should be trivial to put file and function information from where an allocation originated. (be careful for reallocations)
 	- [x] Introduce "MEMORY_TAG_MAGIC" in the header to catch bugs early
 
-2. - [ ] Clean up arenas and init pre-exisiting arenas for things like: Strings
-3. - [ ] Rewrite all Core utilities using new tracker system, and then Write a bunch of tests validating and verifying all the utilities and logic.
-4. - [ ] Start writing EventSystem
-5. - [ ] Start writing the **GAME ENGINE** you have everything you need in order to succeed
+2. - [ ] Make logging system more robust with better way to color certain text and parse the message better so you can intuitively \n something.
+3. - [ ] Make string stuff a bit more robust I would like to impose a cap on it. (just make the capacity not be able to pass a max)
 
-### Future Plans
-1. - [ ] Make logging system more robust with better way to color certain text and parse the message better so you can intuitively \n something.
-2. - [ ] Make string stuff a bit more robust I would like to impose a cap on it.
-3. - [ ] More robust Debugging system the stacktrace is nice but I should properly implement it with stackwalker.
+4. - [ ] Clean up arenas and init pre-exisiting arenas for things like: Strings
+5. - [ ] Rewrite all Core utilities using new tracker system, and then Write a bunch of tests validating and verifying all the utilities and logic.
+6. - [ ] Start writing EventSystem
+7. - [ ] Start writing the **GAME ENGINE** you have everything you need in order to succeed
 
 Thoughts:
-	I need to rewrite the memory tagging system from the ground up and I need to insentivise arenas way more than I currently do it makes lifetimes
-	siginificantly easier.
-
-	I need to really think about how data comes in an how it gets tagged this deserves some really critical thought!
-	and then when I switch everything to arenas and I feel good about it I will be ready to move on to actual events than then from there we move onto
-	the GAME ENGINE!!!
+	I need to insentivise arenas way more than I currently do it makes lifetimes siginificantly easier.
 
 	Also almost certainly there is problems with puting pointers in arenas or dynamic allocated memory because you might just lose those. Thankfully for
 	the most part because of the tagging system I can catch all of these. One thing I need to do is really go through the entire lifetime of some data
 	and see if there is any possible way for it to not get picked up by the tag system I think not I think its literally impossible for that to be the case.
 	So if I have no memeory leaks according to the tag system then I can be reasonably confident that there are no memory bugs.
+
+	But in regards to dangling pointers maybe I can just give back a index indead of a pointer (Handles are the better pointers)
+	Another Thought I should give some credence to is Zii (Zero is Initalization)
 
 # Goals
 ### key
