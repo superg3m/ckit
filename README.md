@@ -26,6 +26,8 @@
 	- [x] It should be trivial to put file and function information from where an allocation originated. (be careful for reallocations)
 	- [x] Introduce "MEMORY_TAG_MAGIC" in the header to catch bugs early
 
+2. MASSIVE DIRECTIONAL CHANGE (removing ckg entirely) (NEW BRANCH)
+
 2. - [/] Make logging system more robust with better way to color certain text
 	- [ ] CKIT_SUCCESS("Well: ${Testings}\n") | surrounding text with ${} makes it green?
 		- [ ] CKIT_DEBUG("If there is no brackets everything is blue!\n")
@@ -47,6 +49,13 @@ Thoughts:
 
 	But in regards to dangling pointers maybe I can just give back a index indead of a pointer (Handles are the better pointers)
 	Another Thought I should give some credence to is Zii (Zero is Initalization)
+
+	- Memory Life Times -
+    1. Extremely short lived. Can be thrown away by end of function. 	  					 (Malloc|Arena)
+    2. Short lived + well defined lifetime. Memory allocated "per frame". 					 (Arena)
+    3. Long lived + well defined owner. Uniquely owned by a subsystem.    					 (Arena)
+    4. Long lived + unclear owner. Heavily shared, unknown when it may be accessed or freed. (Malloc)
+
 
 # Goals
 
