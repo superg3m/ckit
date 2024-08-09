@@ -64,6 +64,7 @@ extern "C" {
 	Boolean ckit_str_ends_with(const char* string_buffer, const char* ends_with);
 	String ckit_str_reverse(const char* string_buffer);
 	String ckit_str_int_to_str(int number);
+	String ckit_str_between_delimiters(const char* str, const char* start_delimitor, const char* end_delimitor);
 #ifdef __cplusplus
 }
 #endif

@@ -378,6 +378,10 @@ int main() {
 	LOG_ERROR("AT THE END TEST: %s\n\n", str_test);
 	ckit_str_free(str_test);
 
+	String str_between_test = ckit_str_between_delimiters("WOW - ${Hello!}", "${", "}");
+	LOG_DEBUG("String_Between: %s\n", str_between_test);
+	ckit_str_free(str_between_test);
+
 	ckit_cleanup();
 	return 0;
 }
