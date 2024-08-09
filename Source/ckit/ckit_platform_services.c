@@ -141,7 +141,6 @@
 			free(data);
 		}
 
-		
 		void platform_console_init() {
 
 		}
