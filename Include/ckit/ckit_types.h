@@ -1,12 +1,11 @@
 #pragma once
-/*===========================================================
- * File: ckit_types.h
- * Date: April 23, 2024
- * Creator: Jovanni Djonaj
-===========================================================*/
+
+#include <stdint.h>
+#include <stdio.h>
+#include <stdarg.h>
+#include <stdlib.h>
 #include "ckg_types.h"
 
-//+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
 #define MEMORY_TAG_CHARACTER_LIMIT 16
 
 // Date: May 04, 2024

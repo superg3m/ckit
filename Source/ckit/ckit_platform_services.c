@@ -140,6 +140,10 @@
 		void platform_free(void* data) {
 			free(data);
 		}
+
+		void platform_console_init() {
+
+		}
 		
 		// Date: April 13, 2024
 		// TODO(Jovanni): Fix this to use linux's platfomr specific std console out

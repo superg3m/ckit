@@ -123,9 +123,6 @@ void ckit_tracker_init() {
     }
 }
 
-// Date: July 22, 2024
-// TODO(Jovanni): Think about this some more does this actually let me know where something is allocated?
-// Maybe I need to actually have some linked list chain in the specific pool? (this would me I would know the type of the allocation because I know the pool)
 CKIT_MemoryHeader ckit_tracker_header_create(CKIT_MemoryTagID tag_id, size_t allocation_size, const char* file_name, const u64 line, const char* function_name) {
     CKIT_MemoryHeader ret;
     ret.magic = CKIT_MEMORY_MAGIC;

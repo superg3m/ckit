@@ -65,5 +65,5 @@
         ]
     },
 
-    "execute": ["test_ckg.exe", "test_ckit.exe"]
+    "execute": ["test_ckit.exe"]
 }

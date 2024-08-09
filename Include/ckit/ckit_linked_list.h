@@ -18,8 +18,6 @@ typedef struct CKIT_LinkedList {
 } CKIT_LinkedList;
 //=========================== End Types ===========================
 
-// Date: July 05, 2024
-// TODO(Jovanni): THIS IS ALL BAD NEED TO RETHINK
 //************************* Begin Functions *************************
 #ifdef __cplusplus
 extern "C" {
