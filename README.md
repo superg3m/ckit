@@ -26,7 +26,9 @@
 	- [x] It should be trivial to put file and function information from where an allocation originated. (be careful for reallocations)
 	- [x] Introduce "MEMORY_TAG_MAGIC" in the header to catch bugs early
 
-2. - [ ] Make logging system more robust with better way to color certain text
+2. - [/] Make logging system more robust with better way to color certain text
+	- [ ] CKIT_SUCCESS("Well: ${Testings}\n") | surrounding text with ${} makes it green?
+		- [ ] CKIT_DEBUG("If there is no brackets everything is blue!\n")
 3. - [ ] Parse the message better so you can intuitively \n something.
 4. - [ ] Make string stuff a bit more robust I would like to impose a cap on it. (just make the capacity not be able to pass a max)
 
@@ -154,6 +156,7 @@ Thoughts:
 	- [x] ckit_str_ends_with(str, ends_with)
 	- [x] ckit_str_reverse(str)
 	- [x] ckit_str_int_to_str(int)
+	- [/] ckit_str_between_delimiters(str, str, str)
 
 ### Memory
 - [x] ckit_memory.h
