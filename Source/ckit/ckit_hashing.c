@@ -1,4 +1,4 @@
-#include "./ckit_hashing.h"
+#include "ckit_hashing.h"
 
 #include "ckit_memory.h"
 #include "ckit_string.h"
