@@ -4,10 +4,6 @@
 - This library will be completly cross-platform (Will be windows exclusive for a while ngl)
 - Collection of tools, data structures, and algorithms that I find useful
 
-
-ckg will never allocate memory for you.
-
-
 # How to build
 1. ./bootstrap.ps1
 2. ./build.ps1 or ./build.ps1 -debug
@@ -24,13 +20,6 @@ ckg will never allocate memory for you.
 2. - [ ] Hashmap is not very robust I should offer a compare funciton hashmap and give default presets for primatives.
 
 ### Next Steps
-1. - [ ] Combine ckg with ckit as a simpler api with less power, but also more control.
-	- [ ] Core Structures
-		- [ ] Vector
-		- [ ] Arena
-		- [ ] LinkedList
-		- [ ] String
-
 1. - [/] Make logging system more robust with better way to color certain text
 	- [ ] CKIT_SUCCESS("Well: ${Testings}\n") | surrounding text with ${} makes it green?
 		- [ ] CKIT_DEBUG("If there is no brackets everything is blue!\n")
