@@ -42,3 +42,4 @@ ckit_build_cl/
 c-build/
 *.ps1
 !bootstrap.ps1
+ckg/
