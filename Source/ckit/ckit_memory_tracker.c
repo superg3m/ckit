@@ -1,5 +1,5 @@
 // This will do all the tag stuff
-#include "ckit_vector.h"
+#include "ckg_vector.h"
 
 #include "ckit_string.h"
 #include "ckit_assert.h"
@@ -84,7 +84,7 @@ internal CKIT_MemoryTag ckit_tracker_memory_tag_create(CKIT_MemoryTagID tag_id, 
 }
 
 internal u64 ckit_tracker_get_tag_pool_index(CKIT_MemoryTagID tag_id) {
-    for (u32 i = 0; i < ckit_vector_count(global_memory_tag_pool_vector); i++) {
+    for (u32 i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
         if (global_memory_tag_pool_vector[i].tag_id == tag_id) {
             return i;
         }
@@ -99,7 +99,7 @@ internal Boolean ckit_tracker_tag_pool_exists(CKIT_MemoryTagID tag_id, const cha
         return TRUE;
     }
 
-    for (u32 i = 0; i < ckit_vector_count(global_memory_tag_pool_vector); i++) {
+    for (u32 i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
         if (global_memory_tag_pool_vector[i].tag_id == tag_id || ckit_str_equal(global_memory_tag_pool_vector[i].pool_name, name)) {
             return TRUE;
         }
@@ -113,7 +113,7 @@ internal const char* ckit_tracker_tag_to_string(CKIT_MemoryTagID tag_id) {
         return NULL;
     }
 
-    for (u32 i = 0; i < ckit_vector_count(global_memory_tag_pool_vector); i++) {
+    for (u32 i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
         if (global_memory_tag_pool_vector[i].tag_id == tag_id) {
             return global_memory_tag_pool_vector[i].pool_name;
         }
@@ -132,7 +132,7 @@ void ckit_tracker_init() {
 
     for (u32 i = 0; i < TAG_CKIT_RESERVED_COUNT; i++) {
         CKIT_MemoryTagPool tag_pool = ckit_tracker_tag_pool_create(reserved_tags[i], reserved_tags_stringified[i]);
-        ckit_vector_push(global_memory_tag_pool_vector, tag_pool);
+        ckg_vector_push(global_memory_tag_pool_vector, tag_pool);
     }
 
     is_tracking = TRUE;
@@ -161,7 +161,7 @@ void ckit_tracker_register_tag_pool(CKIT_MemoryTagID tag_id, const char* name) {
     ckit_assert(!ckit_tracker_tag_pool_exists(tag_id, name)); // don't register a tag that already exists/has been registered (name can't be the same either)
 
     CKIT_MemoryTagPool tag_pool = ckit_tracker_tag_pool_create(tag_id, name);
-    ckit_vector_push(global_memory_tag_pool_vector, tag_pool);
+    ckg_vector_push(global_memory_tag_pool_vector, tag_pool);
 }
 
 void* MACRO_ckit_tracker_insert_header(void* data, CKIT_MemoryHeader header) {
@@ -233,7 +233,7 @@ void ckit_tracker_print_all_pools(CKG_LogLevel log_level) {
     }
 
     LOG_ERROR("---------------------- Memory Leak Detected: %d(Bytes) ----------------------\n", global_total_pool_memory_used);
-    u32 count = ckit_vector_capacity(global_memory_tag_pool_vector);
+    u32 count = ckg_vector_capacity(global_memory_tag_pool_vector);
     Boolean has_start = FALSE; 
     Boolean has_end = FALSE; 
     for (u32 i = 0; i < count; i++) {
@@ -248,7 +248,7 @@ void ckit_tracker_print_all_pools(CKG_LogLevel log_level) {
             has_end = TRUE;
         }
         
-        if (has_end && i != ckit_vector_capacity(global_memory_tag_pool_vector) - 1) {
+        if (has_end && i != ckg_vector_capacity(global_memory_tag_pool_vector) - 1) {
             LOG_PRINT("                                               |\n");
             LOG_PRINT("                                               |\n");
             has_end = FALSE;
