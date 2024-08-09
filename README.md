@@ -4,6 +4,8 @@
 - This library will be completly cross-platform (Will be windows exclusive for a while ngl)
 - Collection of tools, data structures, and algorithms that I find useful
 
+YEAH I'M GONIG TO SEPERATE THESE AGAIN I LIKED IT BETTER SEPERATED
+
 # How to build
 1. ./bootstrap.ps1
 2. ./build.ps1 or ./build.ps1 -debug

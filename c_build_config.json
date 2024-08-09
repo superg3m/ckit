@@ -2,7 +2,7 @@
     "c_build_version": "0.9",
     "project_name": "ckit",
     "github_root": "https://github.com/superg3m",
-    "compiler_type": "gcc",
+    "compiler_type": "cl",
     "std_version": "c11",
     "compiler_warning_level": "all",
 
@@ -11,20 +11,9 @@
     "should_rebuild_project_dependencies": false,
     "compiler_treat_warnings_as_errors": true,
 
-    "project_dependencies": [""],
+    "project_dependencies": ["ckg"],
     "disable_specific_warnings": [""],
     "inject_as_argument": [""],
-
-    "./ckg_build_$compiler_type": {
-        "output_name": "ckg.lib",
-        "compile_time_defines": [""],
-        "include_paths": ["../Include/ckg"],
-        "source_files": [
-            "../ckg.c"
-        ],
-        
-        "additional_libs": [""]
-    },
 
     "./ckit_build_$compiler_type": {
         "output_name": "ckit.lib",
@@ -34,24 +23,10 @@
             "../Include/ckit"
         ],
         "source_files": [
-            "../ckg.c",
             "../ckit.c"
         ],
 
-        "additional_libs": [""]
-    },
-
-    "./Tests/ckg_build_$compiler_type" : {
-        "output_name" : "test_ckg.exe",
-        "compile_time_defines" : [""],
-        "include_paths" : ["../../Include/ckg"],
-        "source_files" : [
-            "../ckg/__test_ckg.c"
-        ],
-
-        "additional_libs" : [
-            "../../ckg_build_$compiler_type/ckg.lib"
-        ]
+        "additional_libs": ["../ckg/build_$compiler_type/ckg.lib"]
     },
 
     "./Tests/ckit_build_$compiler_type" : {
