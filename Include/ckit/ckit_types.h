@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
-#include "ckg_types.h"
+#include "../ckg/core/ckg_types.h"
 
 #define MEMORY_TAG_CHARACTER_LIMIT 16
 
