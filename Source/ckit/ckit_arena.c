@@ -13,6 +13,12 @@ void arena_init() {
 
 }
 
+
+// Date: August 09, 2024
+// TODO(Jovanni): WHEN ARENA GROWS IT GROWS BY ADDING ANTOHER PAGE NOT REALLOCATING THAT WAY POINTERS ARE STILL VALID
+// TODO(Jovanni): WHEN ARENA GROWS IT GROWS BY ADDING ANTOHER PAGE NOT REALLOCATING THAT WAY POINTERS ARE STILL VALID
+// TODO(Jovanni): WHEN ARENA GROWS IT GROWS BY ADDING ANTOHER PAGE NOT REALLOCATING THAT WAY POINTERS ARE STILL VALID
+
 CKIT_Arena* MACRO_ckit_arena_create(size_t allocation_size, const char* name, CKIT_ArenaFlags flags, u8 alignment) {
     ckit_assert_msg((alignment & 1) == 0, "Arena alignment is not a power of two\n");
     CKIT_Arena* arena = ckit_alloc_custom(sizeof(CKIT_Arena), TAG_CKIT_CORE_ARENA);
