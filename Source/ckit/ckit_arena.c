@@ -54,7 +54,7 @@ void* MACRO_ckit_arena_push(CKIT_Arena* arena, size_t element_size, CKIT_MemoryT
     ckit_assert_msg((arena->used + element_size < arena->capacity), "arena_push: can't push element ran out of memory\n");
 
     if (arena->flags == CKIT_ARENA_FLAG_DEFAULT) {
-        ckg_assert((arena->used + element_size <= arena->capacity));
+        ckit_assert((arena->used + element_size <= arena->capacity));
     } else if (arena->flags == CKIT_ARENA_FLAG_CIRCULAR) {
 		if ((arena->used + element_size > arena->capacity)) {
 			arena->used = 0;

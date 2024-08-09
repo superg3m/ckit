@@ -26,6 +26,8 @@
 	- [x] It should be trivial to put file and function information from where an allocation originated. (be careful for reallocations)
 	- [x] Introduce "MEMORY_TAG_MAGIC" in the header to catch bugs early
 
+2. - [/] Add non-tracked boolean to everything
+
 2. - [/] Make logging system more robust with better way to color certain text
 	- [ ] CKIT_SUCCESS("Well: ${Testings}\n") | surrounding text with ${} makes it green?
 		- [ ] CKIT_DEBUG("If there is no brackets everything is blue!\n")
