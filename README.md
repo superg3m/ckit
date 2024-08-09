@@ -26,7 +26,7 @@
 	- [x] It should be trivial to put file and function information from where an allocation originated. (be careful for reallocations)
 	- [x] Introduce "MEMORY_TAG_MAGIC" in the header to catch bugs early
 
-2. MASSIVE DIRECTIONAL CHANGE (removing ckg entirely) (NEW BRANCH)
+2. - [/] MASSIVE DIRECTIONAL CHANGE (removing ckg entirely) (NEW BRANCH)
 
 2. - [/] Make logging system more robust with better way to color certain text
 	- [ ] CKIT_SUCCESS("Well: ${Testings}\n") | surrounding text with ${} makes it green?
