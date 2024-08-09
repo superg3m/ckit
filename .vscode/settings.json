@@ -65,7 +65,8 @@
 		"windows.h": "c",
 		"ckit_input.h": "c",
 		"ckg_vector.h": "c",
-		"ckg_linked_list.h": "c"
+		"ckg_linked_list.h": "c",
+		"stdio.h": "c"
 	},
 	"editor.insertSpaces": false
 }
