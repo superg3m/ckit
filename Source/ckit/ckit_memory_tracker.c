@@ -55,7 +55,6 @@ char* reserved_tags_stringified[] = {
 
 internal CKIT_MemoryTagPool* global_memory_tag_pool_vector = NULLPTR;
 internal u64 global_total_pool_memory_used = 0;
-internal Boolean is_tracking = FALSE;
 
 internal void ckit_tracker_check_magic(void* data) {
     ckit_assert(ckit_str_equal(ckit_memory_header(data)->magic, CKIT_MEMORY_MAGIC));
@@ -95,10 +94,6 @@ internal u64 ckit_tracker_get_tag_pool_index(CKIT_MemoryTagID tag_id) {
 }
 
 internal Boolean ckit_tracker_tag_pool_exists(CKIT_MemoryTagID tag_id, const char* name) {
-    if (!is_tracking) {
-        return TRUE;
-    }
-
     for (u32 i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
         if (global_memory_tag_pool_vector[i].tag_id == tag_id || ckit_str_equal(global_memory_tag_pool_vector[i].pool_name, name)) {
             return TRUE;
@@ -109,10 +104,6 @@ internal Boolean ckit_tracker_tag_pool_exists(CKIT_MemoryTagID tag_id, const cha
 }
 
 internal const char* ckit_tracker_tag_to_string(CKIT_MemoryTagID tag_id) {
-    if (!is_tracking) {
-        return NULL;
-    }
-
     for (u32 i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
         if (global_memory_tag_pool_vector[i].tag_id == tag_id) {
             return global_memory_tag_pool_vector[i].pool_name;
@@ -124,20 +115,12 @@ internal const char* ckit_tracker_tag_to_string(CKIT_MemoryTagID tag_id) {
 }
 
 void ckit_tracker_init() {
-    // Date: August 09, 2024
-    // TODO(Jovanni): DISABLE TRACKING HERE!
-
-    is_tracking = FALSE;
     global_memory_tag_pool_vector = NULLPTR;
 
     for (u32 i = 0; i < TAG_CKIT_RESERVED_COUNT; i++) {
         CKIT_MemoryTagPool tag_pool = ckit_tracker_tag_pool_create(reserved_tags[i], reserved_tags_stringified[i]);
         ckg_vector_push(global_memory_tag_pool_vector, tag_pool);
     }
-
-    is_tracking = TRUE;
-    // Date: August 09, 2024
-    // TODO(Jovanni): RE-ENABLE TRACKING HERE
 }
 
 CKIT_MemoryHeader ckit_tracker_header_create(CKIT_MemoryTagID tag_id, size_t allocation_size, const char* file_name, const u64 line, const char* function_name) {
@@ -168,10 +151,6 @@ void* MACRO_ckit_tracker_insert_header(void* data, CKIT_MemoryHeader header) {
 }
 
 void ckit_tracker_add(CKIT_MemoryHeader* header) {
-    if (!is_tracking) {
-        return;
-    }
-
     u64 tag_pool_index = ckit_tracker_get_tag_pool_index(header->tag.tag_id);
     
   	global_memory_tag_pool_vector[tag_pool_index].total_pool_allocation_size += (header->tag.allocation_info.allocation_size);
@@ -181,10 +160,6 @@ void ckit_tracker_add(CKIT_MemoryHeader* header) {
 }
 
 void ckit_tracker_remove(CKIT_MemoryHeader* header) {
-    if (!is_tracking) {
-        return;
-    }
-
     u64 tag_pool_index = ckit_tracker_get_tag_pool_index(header->tag.tag_id);
 
   	global_memory_tag_pool_vector[tag_pool_index].total_pool_allocation_size -= (header->tag.allocation_info.allocation_size);

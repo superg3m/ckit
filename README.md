@@ -20,22 +20,16 @@
 2. - [ ] Hashmap is not very robust I should offer a compare funciton hashmap and give default presets for primatives.
 
 ### Next Steps
-1. - [x] Rewrite the memory tagging system
-	- [x] Register custom Tags
-	- [x] ckit_alloc(size_in_bytes) // No longer requiring a tag it will just be a tag call user_unknown.
-	- [x] It should be trivial to put file and function information from where an allocation originated. (be careful for reallocations)
-	- [x] Introduce "MEMORY_TAG_MAGIC" in the header to catch bugs early
-
-2. - [/] Make logging system more robust with better way to color certain text
+1. - [/] Make logging system more robust with better way to color certain text
 	- [ ] CKIT_SUCCESS("Well: ${Testings}\n") | surrounding text with ${} makes it green?
 		- [ ] CKIT_DEBUG("If there is no brackets everything is blue!\n")
-3. - [ ] Parse the message better so you can intuitively \n something.
-4. - [ ] Make string stuff a bit more robust I would like to impose a cap on it. (just make the capacity not be able to pass a max)
+2. - [ ] Parse the message better so you can intuitively \n something.
+3. - [ ] Make string stuff a bit more robust I would like to impose a cap on it. (just make the capacity not be able to pass a max)
 
-5. - [ ] Clean up arenas and init pre-exisiting arenas for things like: Strings
-6. - [ ] Rewrite all Core utilities using new tracker system, and then Write a bunch of tests validating and verifying all the utilities and logic.
-7. - [ ] Start writing EventSystem
-8. - [ ] Start writing the **GAME ENGINE** you have everything you need in order to succeed
+4. - [ ] Clean up arenas and init pre-exisiting arenas for things like: Strings
+5. - [ ] Rewrite all Core utilities using new tracker system, and then Write a bunch of tests validating and verifying all the utilities and logic.
+6. - [ ] Start writing EventSystem
+7. - [ ] Start writing the **GAME ENGINE** you have everything you need in order to succeed
 
 Thoughts:
 	I need to insentivise arenas way more than I currently do it makes lifetimes siginificantly easier.
@@ -46,7 +40,7 @@ Thoughts:
 	So if I have no memeory leaks according to the tag system then I can be reasonably confident that there are no memory bugs.
 
 	But in regards to dangling pointers maybe I can just give back a index indead of a pointer (Handles are the better pointers)
-	Another Thought I should give some credence to is Zii (Zero is Initalization)
+	Another Thought I should give some credence to Zii (Zero is Initalization)
 
 # Goals
 
