@@ -2,7 +2,7 @@
     "c_build_version": "0.9",
     "project_name": "CKIT",
     "github_root": "https://github.com/superg3m",
-    "compiler_type": "cl",
+    "compiler_type": "gcc",
     "std_version": "c11",
     "compiler_warning_level": "all",
 
