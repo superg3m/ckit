@@ -2,8 +2,6 @@
 #define CKIT_IMPL
 #include "ckit.h"
 
-#include "./Source/ckit_vector.c"
-
 void ckit_memory_arena_unregister_all();
 
 void ckit_init() {
