@@ -1,3 +1,5 @@
+#pragma once
+
 #include "ckg_char.h"
 
 #define ckit_char_is_digit(c) ckg_char_is_digit(c)

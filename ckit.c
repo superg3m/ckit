@@ -2,19 +2,11 @@
 #define CKIT_IMPL
 #include "ckit.h"
 
-#include "./Source/ckit_memory.c"
 #include "./Source/ckit_platform_services.c"
-#include "./Source/ckit_memory_tracker.c"
 #include "./Source/ckit_string.c"
-#include "./Source/ckit_math.c"
 #include "./Source/ckit_vector.c"
-#include "./Source/ckit_hashing.c"
-#include "./Source/ckit_hashmap.c"
-#include "./Source/ckit_hashset.c"
-#include "./Source/ckit_linked_list.c"
 #include "./Source/ckit_queue.c"
 #include "./Source/ckit_stack.c"
-#include "./Source/ckit_lexer.c"
 
 void ckit_memory_arena_unregister_all();
 
