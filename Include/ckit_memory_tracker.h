@@ -3,7 +3,7 @@
 #include "ckit_types.h"
 
 #include "ckit_linked_list.h"
-#include "ckg_linked_list.h"
+#include "../ckg/core/LinkedList/ckg_linked_list.h"
 
 #include "ckit_logger.h"
 

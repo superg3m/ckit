@@ -5,7 +5,7 @@
  * Creator: Jovanni Djonaj
 ===========================================================*/
 #include "ckit_types.h"
-#include "ckg_logger.h"
+#include "../ckg/core/Logger/ckg_logger.h"
 //========================== Begin Types ==========================
 #define LOGGING_ENABLED TRUE
 #define LOG_PRINT_ENABLED TRUE

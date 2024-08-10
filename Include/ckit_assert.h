@@ -4,7 +4,7 @@
  * Date: May 18, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-#include "ckg_assert.h"
+#include "../ckg/core/Assert/ckg_assert.h"
 //========================== Begin Types ==========================
 #define CKIT_ASSERT_ENABLED TRUE
 //=========================== End Types ===========================

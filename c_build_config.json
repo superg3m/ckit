@@ -8,7 +8,7 @@
 
     "compiler_disable_warnings": false,
     "debug_with_visual_studio": false,
-    "should_rebuild_project_dependencies": false,
+    "should_rebuild_project_dependencies": true,
     "compiler_treat_warnings_as_errors": true,
 
     "project_dependencies": ["ckg"],
@@ -18,15 +18,7 @@
     "./ckit_build_$compiler_type": {
         "output_name": "ckit.lib",
         "compile_time_defines": [""],
-        "include_paths": [
-            "../ckg/core/Assert",
-            "../ckg/core/Memory",
-            "../ckg/core/String",
-            "../ckg/core/Logger",
-            "../ckg/core/Vector",
-            "../ckg/core/LinkedList",
-            "../Include"
-        ],
+        "include_paths": ["../Include"],
         "source_files": [
             "../ckit.c"
         ],
@@ -37,15 +29,7 @@
     "./Tests/ckit_build_$compiler_type" : {
         "output_name" : "test_ckit.exe",
         "compile_time_defines" : [""],
-        "include_paths" : [
-            "../../ckg/core/Assert",
-            "../../ckg/core/Memory",
-            "../../ckg/core/String",
-            "../../ckg/core/Logger",
-            "../../ckg/core/Vector",
-            "../../ckg/core/LinkedList",
-            "../../Include"
-        ],
+        "include_paths" : ["../Include"],
         "source_files" : ["../ckit/*.c"],
 
         "additional_libs" : [
