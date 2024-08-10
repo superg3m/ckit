@@ -1,4 +1,4 @@
-#include "../ckg/core/String/ckg_cstring.h"
+#include "ckg_cstring.h"
 
 #include "ckit_string.h"
 #include "ckit_assert.h"

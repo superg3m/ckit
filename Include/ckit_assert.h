@@ -4,22 +4,11 @@
  * Date: May 18, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-#include "../ckg/core/Assert/ckg_assert.h"
-//========================== Begin Types ==========================
-#define CKIT_ASSERT_ENABLED TRUE
-//=========================== End Types ===========================
-
-//************************* Begin Functions *************************
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#ifdef __cplusplus
-}
-#endif
-//************************** End Functions **************************
+#include "ckg_assert.h"
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
+#define CKIT_ASSERT_ENABLED TRUE
+
 #if CKIT_ASSERT_ENABLED == TRUE
 	#define ckit_assert_msg(expression, message, ...) ckg_assert_msg(expression, message, ##__VA_ARGS__)
 	#define ckit_assert(expression) ckg_assert(expression)

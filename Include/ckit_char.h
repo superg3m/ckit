@@ -1,4 +1,4 @@
-#include "../ckg/core/String/ckg_char.h"
+#include "ckg_char.h"
 
 #define ckit_char_is_digit(c) ckg_char_is_digit(c)
 #define ckit_char_is_upper(c) ckg_char_is_upper(c)

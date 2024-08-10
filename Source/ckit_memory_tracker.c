@@ -1,5 +1,5 @@
 // This will do all the tag stuff
-#include "../ckg/core/Vector/ckg_vector.h"
+#include "ckg_vector.h"
 
 #include "ckit_string.h"
 #include "ckit_assert.h"

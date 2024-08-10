@@ -1,4 +1,4 @@
-#include "../ckg/core/Memory/ckg_memory.h"
+#include "ckg_memory.h"
 
 #include "ckit_assert.h"
 #include "ckit_logger.h"
