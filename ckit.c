@@ -1,8 +1,6 @@
 
-
+#define CKIT_IMPL
 #include "ckit.h"
-
-// maybe? "./ckg.c"
 
 #include "./Source/ckit_logger.c"
 #include "./Source/ckit_memory.c"

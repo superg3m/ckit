@@ -20,12 +20,7 @@
         "compile_time_defines": [""],
         "include_paths": ["../Include"],
         "source_files": [
-            "../ckg/core/Assert/*.c",
-            "../ckg/core/Memory/*.c",
-            "../ckg/core/String/*.c",
-            "../ckg/core/Logger/*.c",
-            "../ckg/core/Vector/*.c",
-            "../ckg/core/LinkedList/*.c",
+            "../ckg/ckg.c",
             "../ckit.c"
         ],
 
