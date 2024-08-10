@@ -19,8 +19,13 @@
         "output_name": "ckit.lib",
         "compile_time_defines": [""],
         "include_paths": [
-            "../Include/ckg",
-            "../Include/ckit"
+            "../ckg/core/Assert",
+            "../ckg/core/Memory",
+            "../ckg/core/String",
+            "../ckg/core/Logger",
+            "../ckg/core/Vector",
+            "../ckg/core/LinkedList",
+            "../Include"
         ],
         "source_files": [
             "../ckit.c"
@@ -32,7 +37,15 @@
     "./Tests/ckit_build_$compiler_type" : {
         "output_name" : "test_ckit.exe",
         "compile_time_defines" : [""],
-        "include_paths" : ["../../Include/ckg", "../../Include/ckit"],
+        "include_paths" : [
+            "../../ckg/core/Assert",
+            "../../ckg/core/Memory",
+            "../../ckg/core/String",
+            "../../ckg/core/Logger",
+            "../../ckg/core/Vector",
+            "../../ckg/core/LinkedList",
+            "../../Include"
+        ],
         "source_files" : ["../ckit/*.c"],
 
         "additional_libs" : [
