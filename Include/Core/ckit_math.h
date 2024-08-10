@@ -155,4 +155,4 @@ extern "C" {
 		ckit_vector_free(points_vector);
 		return ret;
 	}
-#endif // CKG_IMPL
+#endif // CKIT_IMPL

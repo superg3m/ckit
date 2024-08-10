@@ -100,6 +100,7 @@ extern "C" {
     Boolean ckit_memory_compare(const void* buffer_one, const void* buffer_two, u32 b1_allocation_size, u32 b2_allocation_size) {
         return ckg_memory_compare(buffer_one, buffer_two, b1_allocation_size, b2_allocation_size);
     }
+    
     void ckit_memory_copy(const void* source, void* destination, size_t source_size_in_bytes, size_t destination_size_in_bytes) {
         ckg_memory_copy(source, destination, source_size_in_bytes, destination_size_in_bytes);
     }
@@ -175,4 +176,4 @@ extern "C" {
         ckit_vector_free(registered_arenas);
     }
     */
-#endif
+#endif // CKIT_IMPL

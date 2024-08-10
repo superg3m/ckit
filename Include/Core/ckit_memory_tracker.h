@@ -1,10 +1,8 @@
 #pragma once
 
 #include "ckit_types.h"
-
 #include "ckg_linked_list.h"
 #include "ckit_logger.h"
-
 //========================== Begin Types ==========================
 typedef enum CKIT_MemoryTagID { // Reserved tags
     TAG_USER_UNKNOWN,
@@ -91,7 +89,7 @@ extern "C" {
 
 #if defined(CKIT_IMPL)
     #include "ckg_vector.h"
-    #include "ckit_string.h"
+    #include "ckg_cstring.h"
     #include "ckit_assert.h"
     CKIT_MemoryTagID reserved_tags[] = {
         TAG_USER_UNKNOWN,
@@ -146,7 +144,7 @@ extern "C" {
     internal u64 global_total_pool_memory_used = 0;
 
     internal void ckit_tracker_check_magic(void* data) {
-        ckit_assert(ckit_str_equal(ckit_memory_header(data)->magic, CKIT_MEMORY_MAGIC));
+        ckit_assert(ckg_cstr_equal(ckit_memory_header(data)->magic, CKIT_MEMORY_MAGIC));
     }
 
     internal CKIT_MemoryTagPool ckit_tracker_tag_pool_create(CKIT_MemoryTagID tag_id, const char* name) {
@@ -184,7 +182,7 @@ extern "C" {
 
     internal Boolean ckit_tracker_tag_pool_exists(CKIT_MemoryTagID tag_id, const char* name) {
         for (u32 i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
-            if (global_memory_tag_pool_vector[i].tag_id == tag_id || ckit_str_equal(global_memory_tag_pool_vector[i].pool_name, name)) {
+            if (global_memory_tag_pool_vector[i].tag_id == tag_id || ckg_cstr_equal(global_memory_tag_pool_vector[i].pool_name, name)) {
                 return TRUE;
             }
         }
@@ -323,4 +321,4 @@ extern "C" {
 
     // CKIT_MemoryHeader** ckit_tracker_get_all_headers();
     // CKIT_MemoryTagPool** ckit_tracker_get_all_pools();
-#endif
+#endif // CKIT_IMPL

@@ -4,10 +4,6 @@
 - This library will be completly cross-platform (Will be windows exclusive for a while ngl)
 - Collection of tools, data structures, and algorithms that I find useful
 
-TURN EVERYTHING INTO HEADER ONLY LIBRARY
- - [ ] Less mental overhead on the files
- - [ ] Can easily build include pathing becomes easier too
-
 # How to build
 1. ./bootstrap.ps1
 2. ./build.ps1 or ./build.ps1 -debug
