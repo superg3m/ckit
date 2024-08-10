@@ -2,7 +2,7 @@
     "c_build_version": "0.9",
     "project_name": "ckit",
     "github_root": "https://github.com/superg3m",
-    "compiler_type": "cl",
+    "compiler_type": "gcc",
     "std_version": "c11",
     "compiler_warning_level": "all",
 
@@ -20,10 +20,16 @@
         "compile_time_defines": [""],
         "include_paths": ["../Include"],
         "source_files": [
+            "../ckg/core/Assert/*.c",
+            "../ckg/core/Memory/*.c",
+            "../ckg/core/String/*.c",
+            "../ckg/core/Logger/*.c",
+            "../ckg/core/Vector/*.c",
+            "../ckg/core/LinkedList/*.c",
             "../ckit.c"
         ],
 
-        "additional_libs": ["../ckg/build_$compiler_type/ckg.lib"]
+        "additional_libs": [""]
     },
 
     "./Tests/ckit_build_$compiler_type" : {
@@ -33,6 +39,7 @@
         "source_files" : ["../ckit/*.c"],
 
         "additional_libs" : [
+            "../../ckg/build_$compiler_type/ckg.lib",
             "../../ckit_build_$compiler_type/ckit.lib"
         ]
     },
