@@ -127,11 +127,12 @@ extern "C" {
     #include "ckit_platform_services.h"
     #include "../../ckg/Include/ckg_memory.h"
 
-        // 
+    // 
     // Memory Tracker
     //
     #include "../../ckg/Include/ckg_linked_list.h"
     #include "../../ckg/Include/ckg_vector.h"
+    #include "../../ckg/Include/ckg_cstring.h"
     CKIT_MemoryTagID reserved_tags[] = {
         TAG_USER_UNKNOWN,
 
