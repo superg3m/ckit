@@ -146,12 +146,12 @@ Boolean input_get_key_group_down(int number_of_keys, ...) {
 	CKIT_KeyCode* key_group = ckit_alloc(sizeof(CKIT_KeyCode) * number_of_keys);
 
 	va_start(variable_args, number_of_keys);
-	for (int i = 0; i < number_of_keys; i++) {
+	for (u32 i = 0; i < number_of_keys; i++) {
 		key_group[i] = va_arg(variable_args, CKIT_KeyCode);
 	}
 	va_end(variable_args);
 
-	for (int i = 0; i < number_of_keys; i++) {
+	for (u32 i = 0; i < number_of_keys; i++) {
 		// previous_key_map[key_group[i]] == FALSE;
 	}
 }

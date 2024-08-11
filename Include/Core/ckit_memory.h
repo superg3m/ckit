@@ -440,7 +440,7 @@ extern "C" {
     }
 
     void ckit_memory_arena_unregister(CKIT_Arena* arena) {
-        for (int i = 0; i < ckit_vector_count(registered_arenas); i++) {
+        for (u32 i = 0; i < ckit_vector_count(registered_arenas); i++) {
             if (arena == registered_arenas[i]) {
                 ckit_vector_remove_at(registered_arenas, i);
                 break;
@@ -449,7 +449,7 @@ extern "C" {
     }
 
     void ckit_memory_arena_unregister_all() {
-        for (int i = ckit_vector_count(registered_arenas) - 1; i >= 0; i--) {
+        for (u32 i = ckit_vector_count(registered_arenas) - 1; i >= 0; i--) {
             ckit_arena_free(registered_arenas[i]);
         }
 

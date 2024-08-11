@@ -13,25 +13,25 @@ void test_vector_operations() {
 
 	// Create vector of int
 	int* intVector = ckit_vector_reserve(5, int);
-	for (int i = 0; i < 5; i++) {
+	for (u32 i = 0; i < 5; i++) {
 		ckit_vector_push(intVector, intArray[i]);
 	}
 
 	// Create vector of bool
 	Boolean* boolVector = ckit_vector_reserve(5, Boolean);
-	for (int i = 0; i < 5; i++) {
+	for (u32 i = 0; i < 5; i++) {
 		ckit_vector_push(boolVector, boolArray[i]);
 	}
 
 	// Create vector of char
 	char* charVector = ckit_vector_reserve(5, char);
-	for (int i = 0; i < 5; i++) {
+	for (u32 i = 0; i < 5; i++) {
 		ckit_vector_push(charVector, charArray[i]);
 	}
 
 	// Create vector of strings
 	char** stringVector = NULLPTR;
-	for (int i = 0; i < 5; i++) {
+	for (u32 i = 0; i < 5; i++) {
 		ckit_vector_push(stringVector, stringArray[i]);
 	}
 
@@ -110,12 +110,12 @@ void inital_operations() {
 	int* int_array = (int*)ckit_alloc(sizeof(int) * 5);
 	int* int_array2 = (int*)ckit_alloc(sizeof(int) * 5);
 	LOG_ERROR("Element: %d (SHOULD BE ZERO)\n\n", int_array[0]);
-	for (int i = 0; i < 5; i++) {
+	for (u32 i = 0; i < 5; i++) {
 		int_array2[i] = 1432;
 	}
 
 	ckit_memory_copy(int_array2, int_array, sizeof(int) * 5, sizeof(int) * 5);
-	for (int i = 0; i < 5; i++) {
+	for (u32 i = 0; i < 5; i++) {
 		ckit_assert_msg(int_array[i] == 1432, "Memory copy is fucked!");
 		LOG_SUCCESS("Element: %d\n", int_array[i]);
 	}
@@ -195,11 +195,11 @@ void hashmap_operations() {
 		"144353454416231sdfsfdsfs",
 	};
 
-	for (int i = 0; i < 5; i++) {
+	for (u32 i = 0; i < 5; i++) {
 		ckit_hashmap_put(name_to_age, names[i], value[i]);
 	}
 
-	for (int i = 0; i < 5; i++) { // growing hashmap is broken
+	for (u32 i = 0; i < 5; i++) { // growing hashmap is broken
 		LOG_DEBUG("(key: %s | value: %s)\n", names[i], (char*)ckit_hashmap_get(name_to_age, names[i]));
 		ckit_assert(ckit_hashmap_has(name_to_age, names[i]));
 	}
@@ -304,11 +304,11 @@ void stack_operations() {
 		55,
 	};
 
-	for (int i = 0; i < 5; i++) {
+	for (u32 i = 0; i < 5; i++) {
 		ckit_stack_push(stack_int, &int_value[i]);
 	}
 
-	for (int i = 0; i < 5; i++) {
+	for (u32 i = 0; i < 5; i++) {
 		u32* value_back = ckit_stack_pop(stack_int);
 		LOG_SUCCESS("stack_value #%d: %d\n", i + 1, *value_back);
 		ckit_free(value_back);
@@ -324,11 +324,11 @@ void stack_operations() {
 		"jo234hyn234235325",
 	};
 
-	for (int i = 0; i < 5; i++) {
+	for (u32 i = 0; i < 5; i++) {
 		ckit_stack_push(stack_str, names[i]);
 	}
 
-	for (int i = 0; i < 5; i++) {
+	for (u32 i = 0; i < 5; i++) {
 		char* value_back = ckit_stack_pop(stack_str);
 		LOG_SUCCESS("stack_value #%d: %s\n", i + 1, value_back);
 	}
@@ -359,7 +359,7 @@ int main() {
 	ckit_lexer_load_string(&lexer, "int x = 5; char* testing = \"hello\";");
 
 	CKIT_Token* token_stream = ckit_lexer_generate_token_stream(&lexer);
-	for (int i = 0; i < ckit_vector_count(token_stream); i++) {
+	for (u32 i = 0; i < ckit_vector_count(token_stream); i++) {
 		ckit_lexer_print_token(token_stream[i]);
 	}
 	*/

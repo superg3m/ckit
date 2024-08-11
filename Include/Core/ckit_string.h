@@ -50,7 +50,7 @@ extern "C" {
 	// ckit_vector_count: to get the number of string it returned 
 	// Caller is required to loop through the vector and free all the strings
 	//
-	//  for (int i = 0; i < ckit_vector_count(string_vector); i++) {
+	//  for (u32 i = 0; i < ckit_vector_count(string_vector); i++) {
 	//     ckit_str_free(string_vector[i]);
 	//  }
 	//  ckit_vector_free(string_vector);
