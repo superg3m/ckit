@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ckit_types.h"
-#include "ckg_linked_list.h"
+#include "../../ckg/Include/ckg_linked_list.h"
 #include "ckit_logger.h"
 //========================== Begin Types ==========================
 typedef enum CKIT_MemoryTagID { // Reserved tags
@@ -88,8 +88,8 @@ extern "C" {
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 
 #if defined(CKIT_IMPL)
-    #include "ckg_vector.h"
-    #include "ckg_cstring.h"
+    #include "../../ckg/Include/ckg_vector.h"
+    #include "../../ckg/Include/ckg_cstring.h"
     #include "ckit_assert.h"
     CKIT_MemoryTagID reserved_tags[] = {
         TAG_USER_UNKNOWN,

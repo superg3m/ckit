@@ -75,7 +75,7 @@ extern "C" {
 //++++++++++++++++++++++++++++ End Macros ++++++++++++++++++++++++++
 
 #if defined(CKIT_IMPL)
-	#include "ckg_cstring.h"
+	#include "../../ckg/Include/ckg_cstring.h"
 
 	#include "ckit_assert.h"
 	#include "ckit_memory.h"

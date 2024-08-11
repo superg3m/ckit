@@ -1,9 +1,5 @@
 #pragma once 
-/*===========================================================
- * File: CKit.h
- * Date: April 29, 2024
- * Creator: Jovanni Djonaj
-===========================================================*/
+
 
 // CORE CKIT
 #include "./Include/Core/ckit_types.h"

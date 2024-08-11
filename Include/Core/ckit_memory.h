@@ -54,7 +54,7 @@ extern "C" {
     #include "ckit_assert.h"
     #include "ckit_logger.h"
     #include "ckit_platform_services.h"
-    #include "ckg_memory.h"
+    #include "../../ckg/Include/ckg_memory.h"
     void memory_init() {
         ckg_bind_alloc_callback(&platform_allocate);
         ckg_bind_free_callback(&platform_free);
