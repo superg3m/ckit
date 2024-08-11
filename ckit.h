@@ -4,7 +4,6 @@
 // CORE CKIT
 #include "./Include/Core/ckit_types.h"
 #include "./Include/Core/ckit_logger.h"
-#include "./Include/Core/ckit_memory_tracker.h"
 #include "./Include/Core/ckit_memory.h"
 #include "./Include/Core/ckit_arena.h"
 #include "./Include/Core/ckit_assert.h"
