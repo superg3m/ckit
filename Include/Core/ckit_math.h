@@ -155,4 +155,7 @@ extern "C" {
 		ckit_vector_free(points_vector);
 		return ret;
 	}
+
+	// Eventually I want to do some physics here Acceleration, Velocity, Position
+
 #endif // CKIT_IMPL
