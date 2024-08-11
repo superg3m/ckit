@@ -306,10 +306,12 @@ extern "C" {
 		String ret = ckit_str_create("");
 
 		if (start_delimitor_index == -1 || end_delimitor_index == -1) {
+			ckit_str_free(ret);
 			return NULLPTR;
 		}
 
 		if (start_delimitor_index > end_delimitor_index) {
+			ckit_str_free(ret);
 			return NULLPTR; // The start delimtor is after the end delimitor
 		}
 

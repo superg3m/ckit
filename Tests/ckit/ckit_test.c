@@ -382,6 +382,9 @@ int main() {
 	LOG_DEBUG("String_Between: %s\n", str_between_test);
 	ckit_str_free(str_between_test);
 
+	LOG_SUCCESS("String: %s\n", "Hello There! EVERYTHING IS GREEN!");
+	LOG_SUCCESS("String TESTING BINGO BONGO: ${%s} HAHHA THIS SHOULD WORK RIGHT?\n", "I'M GREEN ONLY!");
+
 	ckit_cleanup();
 	return 0;
 }

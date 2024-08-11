@@ -184,6 +184,7 @@ extern "C" {
 
     internal CKIT_MemoryTagPool* global_memory_tag_pool_vector = NULLPTR;
     internal u64 global_total_pool_memory_used = 0;
+    internal u64 global_total_pool_memory_internal = 0;
 
     internal void ckit_tracker_check_magic(void* data) {
         ckit_assert(ckg_cstr_equal(ckit_memory_header(data)->magic, CKIT_MEMORY_MAGIC));
@@ -282,7 +283,8 @@ extern "C" {
     void ckit_tracker_add(CKIT_MemoryHeader* header) {
         u64 tag_pool_index = ckit_tracker_get_tag_pool_index(header->tag.tag_id);
         
-        global_memory_tag_pool_vector[tag_pool_index].total_pool_allocation_size += (header->tag.allocation_info.allocation_size);
+        global_memory_tag_pool_vector[tag_pool_index].total_pool_allocation_size += header->tag.allocation_info.allocation_size;
+        global_total_pool_memory_internal += sizeof(CKIT_MemoryHeader);
         global_total_pool_memory_used += sizeof(CKIT_MemoryHeader) + header->tag.allocation_info.allocation_size;
 
         header->linked_list_address = ckg_linked_list_push(global_memory_tag_pool_vector[tag_pool_index].allocated_headers, header);
@@ -291,7 +293,8 @@ extern "C" {
     void ckit_tracker_remove(CKIT_MemoryHeader* header) {
         u64 tag_pool_index = ckit_tracker_get_tag_pool_index(header->tag.tag_id);
 
-        global_memory_tag_pool_vector[tag_pool_index].total_pool_allocation_size -= (header->tag.allocation_info.allocation_size);
+        global_memory_tag_pool_vector[tag_pool_index].total_pool_allocation_size -= header->tag.allocation_info.allocation_size;
+        global_total_pool_memory_internal -= sizeof(CKIT_MemoryHeader);
         global_total_pool_memory_used -= sizeof(CKIT_MemoryHeader) + header->tag.allocation_info.allocation_size;
         
         // Date: July 23, 2024
@@ -302,14 +305,14 @@ extern "C" {
 
     void ckit_tracker_print_header(CKIT_MemoryHeader* header, CKG_LogLevel log_level) {
         u8* data_address = (u8*)header + sizeof(CKIT_MemoryHeader);
-        log_output(log_level, "=>     Address: %p | Size: %d(Bytes)\n", data_address, header->tag.allocation_info.allocation_size);
-        log_output(log_level, "      - Allocation Site:\n");
-        log_output(log_level, "          - File: %s:%d\n", header->tag.allocation_info.file_name, header->tag.allocation_info.line);
-        log_output(log_level, "          - Function: %s\n", header->tag.allocation_info.function_name);
+        ckit_log_output(log_level, "=>     Address: %p | Size: %d(Bytes)\n", data_address, header->tag.allocation_info.allocation_size);
+        ckit_log_output(log_level, "      - Allocation Site:\n");
+        ckit_log_output(log_level, "          - File: %s:%d\n", header->tag.allocation_info.file_name, header->tag.allocation_info.line);
+        ckit_log_output(log_level, "          - Function: %s\n", header->tag.allocation_info.function_name);
     }
 
     void ckit_tracker_print_pool(CKIT_MemoryTagPool* pool, CKG_LogLevel log_level) {
-        LOG_PRINT("============================== POOL NAME: %s | SIZE: %d ==============================\n", pool->pool_name, pool->total_pool_allocation_size);
+        LOG_PRINT("============================== POOL NAME: %s | SIZE: %d | Items: %d ==============================\n", pool->pool_name, pool->total_pool_allocation_size, pool->allocated_headers->count);
         u32 count = pool->allocated_headers->count;
         for (u32 i = 0; i < count; i++) {
             CKIT_MemoryHeader* current_header = (CKIT_MemoryHeader*)ckg_linked_list_pop(pool->allocated_headers).data;
@@ -333,7 +336,7 @@ extern "C" {
             return;
         }
 
-        LOG_ERROR("---------------------- Memory Leak Detected: %d(Bytes) ----------------------\n", global_total_pool_memory_used);
+        LOG_ERROR("---------------------- Memory Leak Detected: %d(total) - %d(internal) = %d(Bytes) ----------------------\n", global_total_pool_memory_used, global_total_pool_memory_internal, global_total_pool_memory_used - global_total_pool_memory_internal);
         u32 count = ckg_vector_capacity(global_memory_tag_pool_vector);
         Boolean has_start = FALSE; 
         Boolean has_end = FALSE; 
@@ -358,7 +361,7 @@ extern "C" {
             ckit_tracker_print_pool(&pool, log_level);
 
         }
-        LOG_ERROR("-----------------------------------------------------------------------------------------\n");
+        LOG_ERROR("------------------------------------------------------------------------------------------------------------\n");
     }
 
     //
