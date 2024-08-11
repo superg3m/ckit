@@ -4,7 +4,7 @@
     "github_root": "https://github.com/superg3m",
     "compiler_type": "cl",
     "std_version": "c11",
-    "compiler_warning_level": "3",
+    "compiler_warning_level": "",
 
     "compiler_disable_warnings": false,
     "debug_with_visual_studio": false,
