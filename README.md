@@ -20,24 +20,13 @@
 2. - [ ] Hashmap is not very robust I should offer a compare funciton hashmap and give default presets for primatives.
 
 ### Next Steps
-1. - [x] Rewrite the memory tagging system
-	- [x] Register custom Tags
-	- [x] ckit_alloc(size_in_bytes) // No longer requiring a tag it will just be a tag call user_unknown.
-	- [x] It should be trivial to put file and function information from where an allocation originated. (be careful for reallocations)
-	- [x] Introduce "MEMORY_TAG_MAGIC" in the header to catch bugs early
+1. - [ ] Parse the message better so you can intuitively \n something.
+2. - [ ] Make string stuff a bit more robust I would like to impose a cap on it. (just make the capacity not be able to pass a max)
 
-2. - [/] MASSIVE DIRECTIONAL CHANGE (removing ckg entirely) (NEW BRANCH)
-
-2. - [/] Make logging system more robust with better way to color certain text
-	- [ ] CKIT_SUCCESS("Well: ${Testings}\n") | surrounding text with ${} makes it green?
-		- [ ] CKIT_DEBUG("If there is no brackets everything is blue!\n")
-2. - [ ] Parse the message better so you can intuitively \n something.
-3. - [ ] Make string stuff a bit more robust I would like to impose a cap on it. (just make the capacity not be able to pass a max)
-
-4. - [ ] Clean up arenas and init pre-exisiting arenas for things like: Strings
-5. - [ ] Rewrite all Core utilities using new tracker system, and then Write a bunch of tests validating and verifying all the utilities and logic.
-6. - [ ] Start writing EventSystem
-7. - [ ] Start writing the **GAME ENGINE** you have everything you need in order to succeed
+3. - [ ] Clean up arenas and init pre-exisiting arenas for things like: Strings
+4. - [ ] Rewrite all Core utilities using new tracker system, and then Write a bunch of tests validating and verifying all the utilities and logic.
+5. - [ ] Start writing EventSystem
+6. - [ ] Start writing the **GAME ENGINE** you have everything you need in order to succeed
 
 Thoughts:
 	I need to insentivise arenas way more than I currently do it makes lifetimes siginificantly easier.
@@ -67,7 +56,7 @@ Thoughts:
 	- [x] ckit_assert_msg(expression, msg, ...)
 	- [x] ckit_assert(expression)
 
-### Logger (Cross-Platform) (Fully inherits CKG impl)
+### Logger (Cross-Platform)
 - [x] ckit_logger.h
 	- [x] LOG_FATAL(msg, ...)
 	- [x] LOG_ERROR(msg, ...)
@@ -181,17 +170,14 @@ Thoughts:
 	- [x] ckit_memory_delete_index(data, data_capacity, index)
 	- [x] ckit_memory_insert_index(data, data_capacity, element, index)
 
-- [x] ckit_memory_tracker.h
 	- [x] ckit_tracker_init();
 	- [x] ckit_tracker_register_tag_pool(tag_id, name);
     - [x] MACRO_ckit_tracker_insert_header(data, CKIT_MemoryHeader header);
-
     - [x] ckit_tracker_header_create(tag_id, allocation_size);
 	- [x] memory_insert_header(data, CKIT_MemoryHeader header);
     - [x] ckit_tracker_add(header);
     - [x] ckit_tracker_remove(header);
     - [x] ckit_tracker_get_header(data);
-
     - [x] ckit_tracker_print_header(header, log_level);
     - [x] ckit_tracker_print_pool(pool, log_level);
 
