@@ -383,7 +383,7 @@ int main() {
 	ckit_str_free(str_between_test);
 
 	LOG_SUCCESS("String: %s\n", "Hello There! EVERYTHING IS GREEN!");
-	LOG_SUCCESS("String TESTING BINGO BONGO: ${%s} HAHHA THIS SHOULD WORK RIGHT?\n", "I'M GREEN ONLY!");
+	LOG_WARN("String ${WILL POWER = %d} TESTING BINGO BONGO: ${%s} HAHHA THIS SHOULD WORK ${RIGHT?}\n", 5, "I'M PURPLE ONLY!");
 
 	ckit_cleanup();
 	return 0;
