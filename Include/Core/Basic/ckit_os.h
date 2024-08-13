@@ -71,7 +71,6 @@ extern "C" {
 	#if defined(PLATFORM_WINDOWS)
 		#include <windows.h>
 
-
 		void ckit_os_init() {
 			cwd = ckit_str_create_custom("", PLATFORM_MAX_PATH);
 		}

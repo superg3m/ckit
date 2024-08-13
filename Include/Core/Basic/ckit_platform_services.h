@@ -64,8 +64,8 @@ extern "C" {
 
   //************************* Begin Functions *************************
   // DEFAULT IMPLEMENTATION
-  #ifndef CUSTOM_PLATFORM_IMPL
-    #ifdef PLATFORM_WINDOWS
+  #if defined(CUSTOM_PLATFORM_IMPL)
+    #if defined(PLATFORM_WINDOWS)
       #include <windows.h>
       void* platform_allocate(size_t number_of_bytes) {
         // Date: July 07, 2024
