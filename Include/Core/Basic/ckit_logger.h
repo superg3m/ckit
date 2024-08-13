@@ -90,7 +90,7 @@ extern "C" {
         }
     }
 
-    #if (_WIN32)
+    #if (PLATFORM_WINDOWS)
         #include <windows.h>
     #endif
 
