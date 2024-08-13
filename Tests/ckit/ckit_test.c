@@ -390,6 +390,8 @@ int main() {
 	ckit_memory_copy(file_data, &bmp_header, sizeof(BmpHeader), sizeof(BmpHeader));
 	ckit_free(file_data);
 
+	LOG_SUCCESS("%d\n", ckit_str_to_int("45125"));
+
 	ckit_cleanup();
 	return 0;
 }
