@@ -385,6 +385,11 @@ int main() {
 	LOG_SUCCESS("String: %s\n", "Hello There! EVERYTHING IS GREEN!");
 	LOG_WARN("String ${WILL POWER = %d} TESTING BINGO BONGO: ${%s} HAHHA THIS SHOULD WORK ${RIGHT?}\n", 5, "I'M PURPLE ONLY!");
 
+	u8* file_data = ckit_os_read_entire_file("../../assets/Learn_About_BMP.bmp");
+	BmpHeader bmp_header = {0};
+	ckit_memory_copy(file_data, &bmp_header, sizeof(BmpHeader), sizeof(BmpHeader));
+	ckit_free(file_data);
+
 	ckit_cleanup();
 	return 0;
 }

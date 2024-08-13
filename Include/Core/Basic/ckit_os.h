@@ -10,25 +10,26 @@ typedef struct CKIT_SystemObjectInfo {
 	int a;
 } CKIT_SystemObjectInfo;
 
+typedef struct CKIT_File {
+	char* name;
+	size_t size;
+} CKIT_File;
+
 typedef struct CKIT_Directory {
-	CKIT_Directory* parent_directory;
-	CKIT_Directory* sub_directories;
+	struct CKIT_Directory* parent_directory;
+	struct CKIT_Directory** sub_directories;
 	CKIT_File* files;
 	size_t size;
 } CKIT_Directory;
 
-typedef struct CKIT_File {
-	CKIT_Directory* parent_directory;
-	char* name;
-	size_t size;
-} CKIT_File;
+
 //=========================== End Types ===========================
 
 //************************* Begin Functions *************************
 #ifdef __cplusplus
 extern "C" {
 #endif
-	void ckit_os_get_cwd();
+	const char* ckit_os_get_cwd();
 	void ckit_os_ls();
 	void ckit_os_get_items();
 	void ckit_os_chdir();
@@ -39,7 +40,7 @@ extern "C" {
 	void ckit_os_get_file_info();
 	void ckit_os_path_join();
 
-	void* ckit_os_read_entire_file(const char* path);
+	u8* ckit_os_read_entire_file(const char* path);
 
 	void ckit_os_push();
 	void ckit_os_pop();
@@ -61,7 +62,7 @@ extern "C" {
 	#include "ckit_memory.h"
 	#include "ckit_string.h"
 	#if defined(PLATFORM_WINDOWS)
-		#include <windows>
+		#include <windows.h>
 	#endif
 
 	internal String cwd = NULLPTR;
@@ -73,7 +74,7 @@ extern "C" {
 		cwd = ckit_str_create_custom("", PLATFORM_MAX_PATH);
 	}
 
-	char* ckit_os_get_cwd() {
+	const char* ckit_os_get_cwd() {
 		return cwd;
 	}
 
@@ -81,13 +82,11 @@ extern "C" {
 	void ckit_os_get_items();
 	void ckit_os_chdir();
 	void ckit_os_mkdir();
-	void ckit_os_create_file() {
-		if (ckit_str_length(cwd) > PLATFORM_MAX_PATH) {
-			return FALSE;
-		}
+	void ckit_os_create_file(const char* path) {
+		// ckit_assert(ckit_str_length(cwd + path) > PLATFORM_MAX_PATH);
 	}
 
-	Boolean ckit_os_path_exists(char* path) {
+	Boolean ckit_os_path_exists(const char* path) {
 		return PathFileExistsA(path);
 	}
 	void ckit_os_run_subprocess(); // runs on seperate thread?
@@ -95,17 +94,17 @@ extern "C" {
 	void ckit_os_system();
 	void ckit_os_path_join();
 
-	void* ckit_os_read_entire_file(const char* path) {
+	u8* ckit_os_read_entire_file(const char* path) {
 		// ckit_assert(ckit_os_path_exists(path));
 
 		// THIS IS WINDOWS EXCLUSIVE FOR RIGHT NOW!!!
 		HANDLE file_handle = CreateFileA(path, GENERIC_READ, 0, NULLPTR, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULLPTR);
-		LARGE_INTEGER large_int = 0;
-		BOOL succuess == GetFileSizeEx(file_handle, &large_int);
+		LARGE_INTEGER large_int = {};
+		BOOL succuess = GetFileSizeEx(file_handle, &large_int);
 		u64 file_size = large_int.QuadPart;
 		DWORD bytes_read = 0;
 
-		void* file_data = ckit_alloc_custom(file_size, TAG_CKIT_EXPECTED_USER_FREE);
+		u8* file_data = ckit_alloc_custom(file_size, TAG_CKIT_EXPECTED_USER_FREE);
 		succuess = ReadFile(file_handle, file_data, file_size, &bytes_read, NULLPTR);
 
 		return file_data;

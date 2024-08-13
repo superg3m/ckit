@@ -11,6 +11,7 @@
 #include "./Include/Core/Basic/ckit_string.h"
 #include "./Include/Core/Basic/ckit_math.h"
 #include "./Include/Core/Basic/ckit_hashing.h"
+#include "./Include/Core/Basic/ckit_os.h"
 
 #include "./Include/Core/Collections/ckit_vector.h"
 #include "./Include/Core/Collections/ckit_hashmap.h"
