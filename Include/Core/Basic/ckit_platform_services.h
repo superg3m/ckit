@@ -5,7 +5,7 @@
  * Creator: Jovanni Djonaj
 ===========================================================*/
 
-
+#include "ckit_types.h"
 //========================== Begin Types ==========================
 #define TEXT_CLEAR     0x0000 // text color default clear
 #define TEXT_BLUE      0x0001 // text color contains blue.
@@ -18,20 +18,7 @@
 #define BACK_BLUE      0x0010 // background color contains blue.
 #define BACK_GREEN     0x0020 // background color contains green.
 #define BACK_RED       0x0040 // background color contains red.
-
-// Supported Platforms
-#if defined(_WIN32)
-  #define PLATFORM_WINDOWS
-#elif defined(__linux__)
-  #define PLATFORM_LINUX
-#elif defined(__APPLE__)
-  #define PLATFORM_MACOS
-#endif
 //=========================== End Types ===========================
-
-
-
-
 
 //************************* Begin Functions *************************
 // Supported Platform Operations
@@ -64,7 +51,7 @@ extern "C" {
 
   //************************* Begin Functions *************************
   // DEFAULT IMPLEMENTATION
-  #if defined(CUSTOM_PLATFORM_IMPL)
+  #if !defined(CUSTOM_PLATFORM_IMPL)
     #if defined(PLATFORM_WINDOWS)
       #include <windows.h>
       void* platform_allocate(size_t number_of_bytes) {

@@ -8,7 +8,7 @@
 
     "compiler_disable_warnings": false,
     "debug_with_visual_studio": false,
-    "should_rebuild_project_dependencies": false,
+    "should_rebuild_project_dependencies": true,
     "compiler_treat_warnings_as_errors": true,
 
     "project_dependencies": ["ckg"],
