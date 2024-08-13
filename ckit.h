@@ -2,27 +2,29 @@
 
 
 // CORE CKIT
-#include "./Include/Core/ckit_types.h"
-#include "./Include/Core/ckit_logger.h"
-#include "./Include/Core/ckit_memory.h"
-#include "./Include/Core/ckit_arena.h"
-#include "./Include/Core/ckit_assert.h"
-#include "./Include/Core/ckit_event_system.h"
-#include "./Include/Core/ckit_string.h"
-#include "./Include/Core/ckit_char.h"
-#include "./Include/Core/ckit_file_system.h"
-#include "./Include/Core/ckit_math.h"
-#include "./Include/Core/ckit_vector.h"
-#include "./Include/Core/ckit_hashing.h"
-#include "./Include/Core/ckit_hashmap.h"
-#include "./Include/Core/ckit_hashset.h"
-#include "./Include/Core/ckit_linked_list.h"
-#include "./Include/Core/ckit_queue.h"
-#include "./Include/Core/ckit_stack.h"
+#include "./Include/Core/Basic/ckit_types.h"
+#include "./Include/Core/Basic/ckit_assert.h"
+#include "./Include/Core/Basic/ckit_logger.h"
+#include "./Include/Core/Basic/ckit_memory.h"
+#include "./Include/Core/Basic/ckit_arena.h"
+#include "./Include/Core/Basic/ckit_char.h"
+#include "./Include/Core/Basic/ckit_string.h"
+#include "./Include/Core/Basic/ckit_math.h"
+#include "./Include/Core/Basic/ckit_hashing.h"
+
+#include "./Include/Core/Collections/ckit_vector.h"
+#include "./Include/Core/Collections/ckit_hashmap.h"
+#include "./Include/Core/Collections/ckit_hashset.h"
+#include "./Include/Core/Collections/ckit_linked_list.h"
+#include "./Include/Core/Collections/ckit_queue.h"
+#include "./Include/Core/Collections/ckit_stack.h"
 
 // Modules
-#include "./Include/Modules/bmp_parser.h"
-#include "./Include/Modules/ckit_lexer.h"
+#include "./Include/Modules/Structures/ckit_file_system.h"
+#include "./Include/Modules/Parser_and_Lexer/bmp_parser.h"
+// #include "./Include/Modules/Parser_and_Lexer/ckit_lexer.h"
+//#include "./Include/Modules/Structures/ckit_event_system.h"
+
 
 
 #ifdef __cplusplus

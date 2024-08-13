@@ -13,7 +13,7 @@ typedef enum CKIT_MemoryTagID { // Reserved tags
     TAG_CKIT_CORE_STACK,
     TAG_CKIT_CORE_LINKED_LIST,
     TAG_CKIT_CORE_QUEUE,
-    TAG_CKIT_CORE_FILE_SYSTEM,
+    TAG_CKIT_CORE_IO,
     TAG_CKIT_CORE_HASHMAP,
     TAG_CKIT_CORE_HASHSET,
 
@@ -63,7 +63,6 @@ typedef struct CKIT_MemoryHeader {
 #ifdef __cplusplus
 extern "C" {
 #endif
-
     //
     // Memory Tracker
     //
@@ -125,14 +124,14 @@ extern "C" {
     #include "ckit_assert.h"
     #include "ckit_logger.h"
     #include "ckit_platform_services.h"
-    #include "../../ckg/Include/ckg_memory.h"
+    #include "../../../ckg/Include/ckg_memory.h"
 
     // 
     // Memory Tracker
     //
-    #include "../../ckg/Include/ckg_linked_list.h"
-    #include "../../ckg/Include/ckg_vector.h"
-    #include "../../ckg/Include/ckg_cstring.h"
+    #include "../../../ckg/Include/ckg_linked_list.h"
+    #include "../../../ckg/Include/ckg_vector.h"
+    #include "../../../ckg/Include/ckg_cstring.h"
     CKIT_MemoryTagID reserved_tags[] = {
         TAG_USER_UNKNOWN,
 
@@ -143,7 +142,7 @@ extern "C" {
         TAG_CKIT_CORE_STACK,
         TAG_CKIT_CORE_LINKED_LIST,
         TAG_CKIT_CORE_QUEUE,
-        TAG_CKIT_CORE_FILE_SYSTEM,
+        TAG_CKIT_CORE_IO,
         TAG_CKIT_CORE_HASHMAP,
         TAG_CKIT_CORE_HASHSET,
 
@@ -166,7 +165,7 @@ extern "C" {
         stringify(TAG_CKIT_CORE_STACK),
         stringify(TAG_CKIT_CORE_LINKED_LIST),
         stringify(TAG_CKIT_CORE_QUEUE),
-        stringify(TAG_CKIT_CORE_FILE_SYSTEM),
+        stringify(TAG_CKIT_CORE_IO),
         stringify(TAG_CKIT_CORE_HASHMAP),
         stringify(TAG_CKIT_CORE_HASHSET),
 

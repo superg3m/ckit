@@ -18,7 +18,11 @@
     "./ckit_build_$compiler_type": {
         "output_name": "ckit.lib",
         "compile_time_defines": [""],
-        "include_paths": ["../Include/Core", "../Include/Modules"],
+        "include_paths": [
+            "../Include/Core/Basic", 
+            "../Include/Core/Collections", 
+            "../Include/Modules/Parser_and_Lexer"
+        ],
         "source_files": [
             "../ckg/ckg.c",
             "../ckit.c"
@@ -30,7 +34,11 @@
     "./Tests/ckit_build_$compiler_type" : {
         "output_name" : "test_ckit.exe",
         "compile_time_defines" : [""],
-        "include_paths" : ["../../Include/Core", "../Include/Modules"],
+        "include_paths" : [
+            "../../Include/Core/Basic", 
+            "../../Include/Core/Collections", 
+            "../../Include/Modules/Parser_and_Lexer"
+        ],
         "source_files" : ["../ckit/*.c"],
 
         "additional_libs" : [

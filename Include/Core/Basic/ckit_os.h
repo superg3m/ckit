@@ -33,12 +33,13 @@ extern "C" {
 	void ckit_os_get_items();
 	void ckit_os_chdir();
 	void ckit_os_mkdir();
-	// Boolean ckit_os_create_file(); // can fail if name is not valid path
-	// Boolean ckit_os_exists();
+	void ckit_os_create_file(const char* path); // prob just assert if path doesn't exists
+	Boolean ckit_os_path_exists(const char* path);
 	void ckit_os_run_subprocess();
 	void ckit_os_get_file_info();
-	void ckit_os_system();
 	void ckit_os_path_join();
+
+	void* ckit_os_read_entire_file(const char* path);
 
 	void ckit_os_push();
 	void ckit_os_pop();
@@ -57,10 +58,14 @@ extern "C" {
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 
 #if defined(CKIT_IMPL)
+	#include "ckit_memory.h"
 	#include "ckit_string.h"
+	#if defined(PLATFORM_WINDOWS)
+		#include <windows>
+	#endif
 
-	String cwd = NULLPTR;
-	String cached_directory = NULLPTR;
+	internal String cwd = NULLPTR;
+	internal String cached_directory = NULLPTR;
 
 	// just asserts because I don't like handling errors
 
@@ -82,11 +87,29 @@ extern "C" {
 		}
 	}
 
-	Boolean ckit_os_exists();
+	Boolean ckit_os_path_exists(char* path) {
+		return PathFileExistsA(path);
+	}
 	void ckit_os_run_subprocess(); // runs on seperate thread?
 	void ckit_os_get_file_info();
 	void ckit_os_system();
 	void ckit_os_path_join();
+
+	void* ckit_os_read_entire_file(const char* path) {
+		// ckit_assert(ckit_os_path_exists(path));
+
+		// THIS IS WINDOWS EXCLUSIVE FOR RIGHT NOW!!!
+		HANDLE file_handle = CreateFileA(path, GENERIC_READ, 0, NULLPTR, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULLPTR);
+		LARGE_INTEGER large_int = 0;
+		BOOL succuess == GetFileSizeEx(file_handle, &large_int);
+		u64 file_size = large_int.QuadPart;
+		DWORD bytes_read = 0;
+
+		void* file_data = ckit_alloc_custom(file_size, TAG_CKIT_EXPECTED_USER_FREE);
+		succuess = ReadFile(file_handle, file_data, file_size, &bytes_read, NULLPTR);
+
+		return file_data;
+	}
 
 	void ckit_os_push(char* path);
 	void ckit_os_pop();
