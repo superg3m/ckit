@@ -25,13 +25,14 @@ ckit_printf("%cv\n") // (char vector)
 2. - [ ] Hashmap is not very robust I should offer a compare funciton hashmap and give default presets for primatives.
 
 ### Next Steps
-1. - [ ] Parse the message better so you can intuitively \n something.
-2. - [ ] Make string stuff a bit more robust I would like to impose a cap on it. (just make the capacity not be able to pass a max)
+1. - [ ] Clean up arenas (Add extendable pages to arenas)
+2. - [ ] init pre-exisiting arenas for things like: Strings
 
-3. - [ ] Clean up arenas and init pre-exisiting arenas for things like: Strings
+3. - [ ] Make string stuff a bit more robust I would like to impose a cap on it. (just make the capacity not be able to pass a max)
 4. - [ ] Rewrite all Core utilities using new tracker system, and then Write a bunch of tests validating and verifying all the utilities and logic.
 5. - [ ] Start writing EventSystem
 6. - [ ] Start writing the **GAME ENGINE** you have everything you need in order to succeed
+7. - [ ] Parse the message better so you can intuitively \n something.
 
 Thoughts:
 	I need to insentivise arenas way more than I currently do it makes lifetimes siginificantly easier.
@@ -78,7 +79,8 @@ Thoughts:
 	- [ ] ckit_os_chdir();
 	- [ ] ckit_os_mkdir();
 	- [ ] ckit_os_create_file();
-	- [ ] ckit_os_exists();
+	- [x] ckit_os_exists();
+	- [x] ckit_os_read_entire_file();
 	- [ ] ckit_os_run_subprocess();
 	- [ ] ckit_os_get_file_info();
 	- [ ] ckit_os_system();
