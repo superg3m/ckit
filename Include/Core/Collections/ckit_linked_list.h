@@ -1,6 +1,6 @@
 #pragma once
 
-#include "./ckit_types.h"
+#include "../Basic/ckit_types.h"
 //========================== Begin Types ==========================
 typedef struct CKIT_Node {
     struct CKIT_Node* next;
@@ -44,8 +44,8 @@ extern "C" {
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 
 #if defined(CKIT_IMPL)
-    #include "./ckit_memory.h" 
-    #include "./ckit_assert.h"
+    #include  "../Basic/ckit_memory.h" 
+    #include  "../Basic/ckit_assert.h"
 
     CKIT_LinkedList* MACRO_ckit_linked_list_create(size_t element_size_in_bytes, Boolean is_pointer_type, const char* file, const u32 line, const char* function) {
         CKIT_LinkedList* ret = MACRO_ckit_alloc(sizeof(CKIT_LinkedList), TAG_CKIT_CORE_LINKED_LIST, file, line, function);
