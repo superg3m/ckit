@@ -95,7 +95,7 @@ extern "C" {
 	#define ckit_str_header(string) ((CKIT_StringHeader*)(string - sizeof(CKIT_StringHeader)))
 	#define CKIT_STR_MAGIC "CKIT_MAGIC_STRING"
 
-	#include "ckit_arena.h"
+	#include "./ckit_arena.h"
 	CKIT_Arena* string_arena;
 
 	void ckit_str_register_arena() {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ckit_string.h"
+#include "./ckit_types.h"
 //========================== Begin Types ==========================
 //=========================== End Types ===========================
 
@@ -20,8 +20,8 @@ extern "C" {
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 
 #if defined(CKIT_IMPL)
-	#include "ckit_memory.h"
-	#include "ckit_string.h"
+	#include "./ckit_memory.h"
+	#include "./ckit_string.h"
 	#include <stdlib.h>
 	#include <time.h>
 

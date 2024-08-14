@@ -1,7 +1,7 @@
 #pragma once
 
 // This is going to be windows only for a bit
-#include "ckit_types.h"
+#include "./ckit_types.h"
 
 //========================== Begin Types ==========================
 typedef struct CKIT_SystemObjectInfo {
@@ -59,8 +59,8 @@ extern "C" {
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 
 #if defined(CKIT_IMPL)
-	#include "ckit_memory.h"
-	#include "ckit_string.h"
+	#include "./ckit_memory.h"
+	#include "./ckit_string.h"
 
 
 	internal String cwd = NULLPTR;
@@ -70,7 +70,7 @@ extern "C" {
 
 	#if defined(PLATFORM_WINDOWS)
 		#include <windows.h>
-		#include "shlwapi.h"
+		#include <shlwapi.h>
 
 		void ckit_os_init() {
 			cwd = ckit_str_create_custom("", PLATFORM_MAX_PATH);

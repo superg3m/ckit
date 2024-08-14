@@ -1,7 +1,6 @@
 #pragma once
 
-#include "ckit_types.h"
-#include "ckit_logger.h"
+#include "./ckit_types.h"
 //========================== Begin Types ==========================
 typedef enum CKIT_MemoryTagID { // Reserved tags
     TAG_USER_UNKNOWN,
@@ -76,10 +75,10 @@ extern "C" {
     void ckit_tracker_remove(CKIT_MemoryHeader* header);
     CKIT_MemoryHeader* ckit_tracker_get_header(void* data);
 
-    void ckit_tracker_print_header(CKIT_MemoryHeader* header, CKG_LogLevel log_level);
-    void ckit_tracker_print_pool(CKIT_MemoryTagPool* pool, CKG_LogLevel log_level);
+    void ckit_tracker_print_header(CKIT_MemoryHeader* header, CKIT_LogLevel log_level);
+    void ckit_tracker_print_pool(CKIT_MemoryTagPool* pool, CKIT_LogLevel log_level);
 
-    void ckit_tracker_print_all_pools(CKG_LogLevel log_level);
+    void ckit_tracker_print_all_pools(CKIT_LogLevel log_level);
 
     // CKIT_MemoryHeader** ckit_tracker_get_all_headers();
     // CKIT_MemoryTagPool** ckit_tracker_get_all_pools();
@@ -121,9 +120,11 @@ extern "C" {
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 
 #if defined(CKIT_IMPL)
-    #include "ckit_assert.h"
-    #include "ckit_logger.h"
-    #include "ckit_platform_services.h"
+    #include "./ckit_assert.h"
+    #include "./ckit_logger.h"
+    #include "./ckit_platform_services.h"
+    #include "./ckit_logger.h"
+
     #include "../../../ckg/Include/ckg_memory.h"
 
     // 
@@ -302,7 +303,7 @@ extern "C" {
         ckg_linked_list_remove(global_memory_tag_pool_vector[tag_pool_index].allocated_headers, index); 
     }
 
-    void ckit_tracker_print_header(CKIT_MemoryHeader* header, CKG_LogLevel log_level) {
+    void ckit_tracker_print_header(CKIT_MemoryHeader* header, CKIT_LogLevel log_level) {
         u8* data_address = (u8*)header + sizeof(CKIT_MemoryHeader);
         ckit_log_output(log_level, "=>     Address: %p | Size: %d(Bytes)\n", data_address, header->tag.allocation_info.allocation_size);
         ckit_log_output(log_level, "      - Allocation Site:\n");
@@ -310,7 +311,7 @@ extern "C" {
         ckit_log_output(log_level, "          - Function: %s\n", header->tag.allocation_info.function_name);
     }
 
-    void ckit_tracker_print_pool(CKIT_MemoryTagPool* pool, CKG_LogLevel log_level) {
+    void ckit_tracker_print_pool(CKIT_MemoryTagPool* pool, CKIT_LogLevel log_level) {
         LOG_PRINT("============================== POOL NAME: %s | SIZE: %d | Items: %d ==============================\n", pool->pool_name, pool->total_pool_allocation_size, pool->allocated_headers->count);
         u32 count = pool->allocated_headers->count;
         for (u32 i = 0; i < count; i++) {

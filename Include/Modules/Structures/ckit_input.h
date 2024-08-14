@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ckit_types.h"
+#include "../../Core/Basic/ckit_types.h"
 //========================== Begin Types ==========================
 typedef enum CKIT_KeyCode {
     // Letters
@@ -128,8 +128,7 @@ extern "C" {
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 #if defined(CKIT_IMPL)
-#include "ckit_input.h"
-#include "ckit_memory.h"
+#include "../../Core/Basic/ckit_memory.h"
 
 #include <stdarg.h>
 

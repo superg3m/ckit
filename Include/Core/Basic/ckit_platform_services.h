@@ -5,7 +5,7 @@
  * Creator: Jovanni Djonaj
 ===========================================================*/
 
-#include "ckit_types.h"
+#include "./ckit_types.h"
 //========================== Begin Types ==========================
 #define TEXT_CLEAR     0x0000 // text color default clear
 #define TEXT_BLUE      0x0001 // text color contains blue.
@@ -45,9 +45,9 @@ extern "C" {
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 
 #if defined(CKIT_IMPL)
-  #include "ckit_types.h"
-  #include "ckit_string.h"
-  #include "ckit_assert.h"
+  #include "./ckit_types.h"
+  #include "./ckit_string.h"
+  #include "./ckit_assert.h"
 
   //************************* Begin Functions *************************
   // DEFAULT IMPLEMENTATION

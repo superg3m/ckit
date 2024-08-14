@@ -4,8 +4,7 @@
  * Date: May 11, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-#include "ckit_types.h"
-#include "../../../ckg/Include/ckg_logger.h"
+#include "./ckit_types.h"
 //========================== Begin Types ==========================
 #define LOGGING_ENABLED TRUE
 #define LOG_LEVEL_CHARACTER_LIMIT 11
@@ -47,10 +46,10 @@ extern "C" {
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 
 #if defined(CKIT_IMPL)
-    #include "ckit_memory.h"
-    #include "ckit_platform_services.h"
-    #include "ckit_assert.h"
-    #include "ckit_string.h"
+    #include "./ckit_memory.h"
+    #include "./ckit_platform_services.h"
+    #include "./ckit_assert.h"
+    #include "./ckit_string.h"
 
     internal Boolean logging_is_initialized = FALSE;
     internal const char* start_delimitor = "${";

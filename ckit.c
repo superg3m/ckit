@@ -1,6 +1,6 @@
 
 #define CKIT_IMPL
-#include "ckit.h"
+#include "./ckit.h"
 
 void ckit_str_register_arena();
 void ckit_memory_arena_unregister_all();
