@@ -25,7 +25,7 @@ ckit_printf("%cv\n") // (char vector)
 2. - [ ] Hashmap is not very robust I should offer a compare funciton hashmap and give default presets for primatives.
 
 ### Next Steps
-1. - [ ] Clean up arenas (Add extendable pages to arenas)
+1. - [x] Clean up arenas (Add extendable pages to arenas)
 2. - [ ] init pre-exisiting arenas for things like: Strings
 
 3. - [ ] Make string stuff a bit more robust I would like to impose a cap on it. (just make the capacity not be able to pass a max)

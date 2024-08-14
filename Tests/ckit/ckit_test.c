@@ -337,7 +337,7 @@ void stack_operations() {
 
 int main() {
 	ckit_init();
-	memory_init();
+
 
 	test_vector_operations();
 

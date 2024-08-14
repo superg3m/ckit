@@ -52,6 +52,9 @@ extern "C" {
 	#include "ckit_memory.h"
 	#include "ckit_assert.h"
 
+	void ckit_memory_arena_register(CKIT_Arena* arena);
+	void ckit_memory_arena_unregister(CKIT_Arena* arena);
+
 	#define ARENA_DEFAULT_ALLOCATION_SIZE MegaBytes(1)
 
 	Boolean ckit_CKIT_ARENA_FLAG_is_set(CKIT_Arena* arena, CKIT_ArenaFlag flag) {
@@ -62,20 +65,20 @@ extern "C" {
 		CKIT_ArenaPage* ret = ckit_alloc_custom(sizeof(CKIT_ArenaPage), TAG_CKIT_CORE_ARENA);
 		ret->used = 0;
 		ret->capacity = allocation_size;
-		ret->base_address = ckit_alloc(allocation_size != 0 ? allocation_size : ARENA_DEFAULT_ALLOCATION_SIZE);
+		ret->base_address = ckit_alloc_custom(allocation_size != 0 ? allocation_size : ARENA_DEFAULT_ALLOCATION_SIZE, TAG_CKIT_CORE_ARENA);
 
 		return ret;
 	}
 
 	CKIT_Arena* MACRO_ckit_arena_create(u32 allocation_size, const char* name, CKIT_ArenaFlag flag, u8 alignment) {
-		ckit_assert_msg((alignment & 1) == 0, "Arena alignment is not a power of two\n");
-		CKIT_Arena* arena = ckit_alloc(sizeof(CKIT_Arena));
+		CKIT_Arena* arena = ckit_alloc_custom(sizeof(CKIT_Arena), TAG_CKIT_CORE_ARENA);
 		arena->alignment = alignment == 0 ? 8 : alignment;
 		arena->name = name;
 		arena->flag = flag;
 		arena->pages = ckit_linked_list_create(CKIT_ArenaPage*, TRUE);
 		CKIT_ArenaPage* inital_page = ckit_arena_page_create(allocation_size);
 		ckit_linked_list_push(arena->pages, inital_page);
+		ckit_memory_arena_register(arena);
 
 		return arena;
 	}
@@ -90,6 +93,8 @@ extern "C" {
 			ckit_free(page);
 		}
 		ckit_linked_list_free(arena->pages);
+
+		ckit_memory_arena_unregister(arena);
 		ckit_free(arena);
 
 		return arena;

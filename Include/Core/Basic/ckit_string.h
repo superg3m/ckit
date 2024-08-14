@@ -95,6 +95,14 @@ extern "C" {
 	#define ckit_str_header(string) ((CKIT_StringHeader*)(string - sizeof(CKIT_StringHeader)))
 	#define CKIT_STR_MAGIC "CKIT_MAGIC_STRING"
 
+	#include "ckit_arena.h"
+	CKIT_Arena* string_arena;
+
+	void ckit_str_register_arena() {
+		#define STRING_ARENA_DEFAULT_CAPACITY MegaBytes(64)
+		string_arena = ckit_arena_create_custom(STRING_ARENA_DEFAULT_CAPACITY, "String Arena", CKIT_ARENA_FLAG_EXTENDABLE_PAGES, sizeof(char));
+	}
+
 	internal void ckit_str_check_magic(String str) {
 		ckit_assert_msg(str, "String: %s is null can't check magic: (%s) Likely not a CKIT_String\n", str, CKIT_STR_MAGIC);
 		ckit_assert_msg(ckit_str_equal(ckit_str_header(str)->magic, CKIT_STR_MAGIC), "String: %s has the wrong magic: {%s} got: {%s} \n", str, CKIT_STR_MAGIC, ckit_str_header(str)->magic);
@@ -145,7 +153,6 @@ extern "C" {
 	}
 
 	String MACRO_ckit_str_insert(String str, const char* to_insert, const u32 index) {
-
 		u32 source_capacity = ckit_cstr_length(to_insert) + 1; 
 		CKIT_StringHeader* header = ckit_str_header(str);
 		if (header->length + source_capacity >= header->capacity) {

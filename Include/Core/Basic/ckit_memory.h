@@ -366,7 +366,12 @@ extern "C" {
     //
     // Memory
     //
+
+    internal CKG_LinkedList* registered_arenas = NULLPTR;
+
     void memory_init() {
+        registered_arenas = ckg_linked_list_create(CKIT_Arena*, TRUE);
+
         ckg_bind_alloc_callback(&platform_allocate);
         ckg_bind_free_callback(&platform_free);
     }
@@ -428,31 +433,30 @@ extern "C" {
         MACRO_ckg_memory_insert_index(data, data_capacity, element_size_in_bytes, index);
     }
 
-
     void ckit_memory_report(CKG_LogLevel log_level) {
         ckit_tracker_print_all_pools(log_level);
     }
 
-    /*
     void ckit_memory_arena_register(CKIT_Arena* arena) {
-        ckit_vector_push(registered_arenas, arena);
+        ckg_linked_list_push(registered_arenas, arena);
     }
 
     void ckit_memory_arena_unregister(CKIT_Arena* arena) {
-        for (u32 i = 0; i < ckit_vector_count(registered_arenas); i++) {
-            if (arena == registered_arenas[i]) {
-                ckit_vector_remove_at(registered_arenas, i);
+        for (u32 i = 0; i < registered_arenas->count; i++) {
+            CKIT_Arena* current_arena = ckg_linked_list_get(registered_arenas, i);
+            if (arena == current_arena) {
+                ckg_linked_list_remove(registered_arenas, i);
                 break;
             }
         }
     }
 
     void ckit_memory_arena_unregister_all() {
-        for (u32 i = ckit_vector_count(registered_arenas) - 1; i >= 0; i--) {
-            ckit_arena_free(registered_arenas[i]);
+        for (u32 i = 0; i < registered_arenas->count; i++) {
+            CKIT_Arena* arena = ckg_linked_list_pop(registered_arenas).data;
+            ckit_arena_free(arena);
         }
 
-        ckit_vector_free(registered_arenas);
+        ckg_linked_list_free(registered_arenas);
     }
-    */
 #endif // CKIT_IMPL
