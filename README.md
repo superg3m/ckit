@@ -26,7 +26,7 @@ ckit_printf("%cv\n") // (char vector)
 
 ### Next Steps
 1. - [x] Clean up arenas (Add extendable pages to arenas)
-2. - [ ] init pre-exisiting arenas for things like: Strings
+2. - [/] init pre-exisiting arenas for things like: Strings
 
 3. - [ ] Make string stuff a bit more robust I would like to impose a cap on it. (just make the capacity not be able to pass a max)
 4. - [ ] Rewrite all Core utilities using new tracker system, and then Write a bunch of tests validating and verifying all the utilities and logic.

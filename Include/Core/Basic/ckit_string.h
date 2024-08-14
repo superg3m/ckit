@@ -115,8 +115,7 @@ extern "C" {
 
 	String MACRO_ckit_str_free(String str) {
 		ckit_str_check_magic(str);
-		str = str - sizeof(CKIT_StringHeader);
-		ckit_free(str);
+		str = NULLPTR;
 		return str;
 	}
 
@@ -125,8 +124,6 @@ extern "C" {
 		CKIT_StringHeader header = *ckit_str_header(str);
 		header.capacity = new_allocation_size;
 		String ret = ckit_str_create_custom(str, header.capacity);
-
-		str = MACRO_ckit_str_free(str);
 		
 		return ret;
 	}
@@ -136,15 +133,14 @@ extern "C" {
 	// Of pushing the header then right after pushing the str data I think this worked really well.
 	String ckit_str_create_custom(const char* c_string, size_t capacity) {
 		u32 c_str_length = ckg_cstr_length(c_string);
-		CKIT_StringHeader header;
-		header.length = c_str_length;
-		header.capacity = capacity != 0 ? capacity : sizeof(char) * (c_str_length + 1);
-		header.magic = CKIT_STR_MAGIC;
+		CKIT_StringHeader* header = MACRO_ckit_arena_push(string_arena, sizeof(CKIT_StringHeader));
+		header->length = c_str_length;
+		header->capacity = capacity != 0 ? capacity : sizeof(char) * (c_str_length + 1);
+		header->magic = CKIT_STR_MAGIC;
 		
-		String ret = ckit_alloc_custom(sizeof(header) + header.capacity, TAG_CKIT_CORE_STRING);
-		ckit_str_insert_header(&ret, header);
-		
-		ckg_cstr_copy(ret, header.capacity, c_string);
+		String ret = MACRO_ckit_arena_push(string_arena, header->capacity);
+
+		ckg_cstr_copy(ret, header->capacity, c_string);
 		return ret;
 	}
 
@@ -245,14 +241,15 @@ extern "C" {
 
 	internal String* ckit_str_split_helper(String* ret_buffer, const char* string_buffer, u32 offset_into_buffer, const char* delimitor) {
 		s32 found_index = ckit_str_index_of(string_buffer + offset_into_buffer, delimitor);
-		u32 offset_to_space = found_index + offset_into_buffer;
+		u32 offset_to_delimitor = found_index + offset_into_buffer;
 		if (found_index == -1) {
 			ckit_vector_push(ret_buffer, ckit_substring(string_buffer, offset_into_buffer, ckit_cstr_length(string_buffer) - 1));
 			return ret_buffer;
 		}
-		
-		ckit_vector_push(ret_buffer, ckit_substring(string_buffer, offset_into_buffer, offset_to_space - 1));
-		return ckit_str_split_helper(ret_buffer, string_buffer, offset_to_space + 1, delimitor);
+
+		String debug_test = ckit_substring(string_buffer, offset_into_buffer, offset_to_delimitor - 1);
+		ckit_vector_push(ret_buffer, debug_test);
+		return ckit_str_split_helper(ret_buffer, string_buffer, offset_to_delimitor + 1, delimitor);
 	}
 
 	String* ckit_str_split(const char* string_buffer, const char* delimitor) {
