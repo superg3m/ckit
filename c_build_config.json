@@ -28,7 +28,7 @@
             "../ckit.c"
         ],
 
-        "additional_libs": [""]
+        "additional_libs": ["Shlwapi.lib"]
     },
 
     "./Tests/ckit_build_$compiler_type" : {
@@ -42,8 +42,7 @@
         "source_files" : ["../ckit/*.c"],
 
         "additional_libs" : [
-            "../../ckit_build_$compiler_type/ckit.lib",
-            "Shlwapi.lib"
+            "../../ckit_build_$compiler_type/ckit.lib"
         ]
     },
 
