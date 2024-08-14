@@ -1,8 +1,8 @@
 #pragma once
 
-#include "ckit_types.h"
-#include "ckit_assert.h"
-#include "ckit_memory.h"
+#include "../Basic/ckit_types.h"
+#include "../Basic/ckit_assert.h"
+#include "../Basic/ckit_memory.h"
 //========================== Begin Types ==========================
 typedef struct CKIT_VectorHeader {
 	u32 count;
@@ -42,8 +42,8 @@ extern "C" {
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 
 #if defined(CKIT_IMPL)
-	#include "ckit_memory.h"
-	#include "ckit_string.h"
+	#include "../Basic/ckit_memory.h"
+	#include "../Basic/ckit_string.h"
 
 	// Start experimenting with returning an index back
 	// - [ ] Serializable

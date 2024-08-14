@@ -2,7 +2,7 @@
 
 #include <math.h>
 
-#include "ckit_types.h"
+#include "./ckit_types.h"
 //========================== Begin Types ==========================
 typedef struct Vec2 {
 	float x;
@@ -73,8 +73,8 @@ extern "C" {
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 #if defined(CKIT_IMPL)
-	#include "ckit_vector.h"
-	#include "ckit_logger.h"
+	#include "../Collections/ckit_vector.h"
+	#include "./ckit_logger.h"
 
 	int int_abs(int a) {
 		return a < 0 ? (a * -1) : a;

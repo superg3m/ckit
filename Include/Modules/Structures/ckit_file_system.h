@@ -1,8 +1,9 @@
 #pragma once
 
 #include <stdio.h>
-#include "ckit_assert.h"
-#include "ckit_string.h"
+
+
+#include "../../Core/Basic/ckit_types.h"
 
 typedef struct FileSystem {
 	String file_name;
@@ -28,8 +29,8 @@ extern "C" {
 //************************** End Functions **************************
 
 #if defined(CKIT_IMPL)
-	#include "ckit_string.h"
-	#include "ckit_memory.h"
+	#include "../../Core/Basic/ckit_assert.h"
+	#include "../../Core/Basic/ckit_string.h"
 	u8* file_data(FILE* handle, size_t file_size) {
 		u8* buffer = (u8*)ckit_alloc_custom(file_size, TAG_CKIT_CORE_IO);
 		ckit_assert_msg(fread(buffer, file_size, 1 , handle) != file_size, "Error reading file");

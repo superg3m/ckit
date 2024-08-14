@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ckit_types.h"
+#include "./ckit_types.h"
 //========================== Begin Types ==========================
 typedef char* String;
 
@@ -83,9 +83,9 @@ extern "C" {
 #if defined(CKIT_IMPL)
 	#include "../../../ckg/Include/ckg_cstring.h"
 
-	#include "ckit_assert.h"
-	#include "ckit_memory.h"
-	#include "ckit_vector.h"
+	#include "./ckit_assert.h"
+	#include "./ckit_memory.h"
+	#include "../Collections/ckit_vector.h"
 	typedef struct CKIT_StringHeader {
 		u32 length; 
 		size_t capacity;

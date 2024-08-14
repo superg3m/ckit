@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ckit_types.h"
+#include "../Basic/ckit_types.h"
 //========================== Begin Types ==========================
 typedef struct CKIT_Stack CKIT_Stack;
 //=========================== End Types ===========================
@@ -26,8 +26,8 @@ extern "C" {
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 
 #if defined(CKIT_IMPL)
-	#include "ckit_linked_list.h"
-	#include "ckit_memory.h"
+	#include "./ckit_linked_list.h"
+	#include "../Basic/ckit_memory.h"
 
 	typedef struct CKIT_Stack {
 		CKIT_LinkedList* linked_list;

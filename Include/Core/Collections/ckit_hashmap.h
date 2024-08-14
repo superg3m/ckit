@@ -5,8 +5,8 @@
  * Date: May 14, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-#include "ckit_types.h"
-#include "ckit_string.h"
+#include "../Basic/ckit_types.h"
+#include "../Basic/ckit_string.h"
 
 #define CKIT_HASHMAP_DEFAULT_LOAD_FACTOR 0.75
 //========================== Begin Types ==========================
@@ -49,7 +49,7 @@ Boolean ckit_hashmap_has(CKIT_HashMap* hashmap, char* key);
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 
 #if defined(CKIT_IMPL)
-	#include "ckit_vector.h"
+	#include "./ckit_vector.h"
 
 	u32 ckit_hash_value(char *str) {
 		unsigned long hash = 5381;
