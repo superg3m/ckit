@@ -26,6 +26,8 @@ extern "C" {
     CKIT_Node* ckit_linked_list_insert(CKIT_LinkedList* linked_list, u32 index, void* data);
     CKIT_Node* ckit_linked_list_get_node(CKIT_LinkedList* linked_list, u32 index);
     void* ckit_linked_list_get(CKIT_LinkedList* linked_list, u32 index);
+    void* ckit_linked_list_head(CKIT_LinkedList* linked_list);
+    void* ckit_linked_list_tail(CKIT_LinkedList* linked_list);
     CKIT_Node* ckit_linked_list_push(CKIT_LinkedList* linked_list, void* data);
     CKIT_Node ckit_linked_list_pop(CKIT_LinkedList* linked_list);
     CKIT_Node ckit_linked_list_remove(CKIT_LinkedList* linked_list, u32 index);
@@ -174,6 +176,14 @@ extern "C" {
 
     void* ckit_linked_list_get(CKIT_LinkedList* linked_list, u32 index) {
         return ckit_linked_list_get_node(linked_list, index)->data;
+    }
+
+    void* ckit_linked_list_peek_head(CKIT_LinkedList* linked_list) {
+        return ckit_linked_list_get_node(linked_list, 0)->data;
+    }
+
+    void* ckit_linked_list_peek_tail(CKIT_LinkedList* linked_list) {
+        return ckit_linked_list_get_node(linked_list, linked_list->count - 1)->data;
     }
 
     CKIT_Node* ckit_linked_list_push(CKIT_LinkedList* linked_list, void* data) {

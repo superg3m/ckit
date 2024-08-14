@@ -163,8 +163,8 @@ void middle_ground_opperations() {
 
 	test_hash_collisions();
 
-	CKIT_Arena* frame_boundary_arena = ckit_arena_create(500, "Frame Boundary", 0);
-	ckit_arena_push(frame_boundary_arena, Boolean, TAG_CKIT_TEMP);
+	CKIT_Arena* frame_boundary_arena = ckit_arena_create(500, "Frame Boundary");
+	ckit_arena_push(frame_boundary_arena, Boolean);
 	ckit_arena_free(frame_boundary_arena);
 
 	// String str_to_be_split = ckit_str_create("They said it couldn't be done. They tried to recite the dark magics to me! THEY DON'T KNOW I WAS THERE WHEN THEY WERE WRITTEN!");
