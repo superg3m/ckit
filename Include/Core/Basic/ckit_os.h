@@ -70,6 +70,7 @@ extern "C" {
 
 	#if defined(PLATFORM_WINDOWS)
 		#include <windows.h>
+		#include "shlwapi.h"
 
 		void ckit_os_init() {
 			cwd = ckit_str_create_custom("", PLATFORM_MAX_PATH);
@@ -96,11 +97,11 @@ extern "C" {
 		void ckit_os_path_join();
 
 		u8* ckit_os_read_entire_file(const char* path) {
-			// ckit_assert(ckit_os_path_exists(path));
+			ckit_assert(ckit_os_path_exists(path));
 
 			// THIS IS WINDOWS EXCLUSIVE FOR RIGHT NOW!!!
 			HANDLE file_handle = CreateFileA(path, GENERIC_READ, 0, NULLPTR, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULLPTR);
-			LARGE_INTEGER large_int = {};
+			LARGE_INTEGER large_int = {0};
 			BOOL succuess = GetFileSizeEx(file_handle, &large_int);
 			u64 file_size = large_int.QuadPart;
 			DWORD bytes_read = 0;
@@ -151,7 +152,7 @@ extern "C" {
 		void ckit_os_path_join();
 
 		u8* ckit_os_read_entire_file(const char* path) {
-			// ckit_assert(ckit_os_path_exists(path));
+			ckit_assert(ckit_os_path_exists(path));
 
 			FILE* file_handle = fopen(path, "r");
 
