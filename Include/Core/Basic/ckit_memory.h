@@ -91,7 +91,7 @@ extern "C" {
     void* MACRO_ckit_realloc(void* data, u64 new_allocation_size, const char* file, const u32 line, const char* function);
     void* MACRO_ckit_free(void* data);
 
-    void ckit_memory_report(CKG_LogLevel log_level);
+    void ckit_memory_report(CKIT_LogLevel log_level);
 
     Boolean ckit_memory_compare(const void* buffer_one, const void* buffer_two, u32 b1_allocation_size, u32 b2_allocation_size);
     void ckit_memory_copy(const void* source, void* destination, size_t source_size, size_t destination_capacity);
@@ -330,7 +330,7 @@ extern "C" {
         return header;
     }
 
-    void ckit_tracker_print_all_pools(CKG_LogLevel log_level) {
+    void ckit_tracker_print_all_pools(CKIT_LogLevel log_level) {
         if (global_total_pool_memory_used == 0) {
             LOG_SUCCESS("--- No Memory Leaks Detected --- \n");
             return;
@@ -434,7 +434,7 @@ extern "C" {
         MACRO_ckg_memory_insert_index(data, data_capacity, element_size_in_bytes, index);
     }
 
-    void ckit_memory_report(CKG_LogLevel log_level) {
+    void ckit_memory_report(CKIT_LogLevel log_level) {
         ckit_tracker_print_all_pools(log_level);
     }
 
