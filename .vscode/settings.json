@@ -67,7 +67,11 @@
 		"ckg_vector.h": "c",
 		"ckg_linked_list.h": "c",
 		"stdio.h": "c",
-		"stdarg.h": "c"
+		"stdarg.h": "c",
+		"ckit_opengl.h": "c",
+		"stb_image.h": "c",
+		"type_traits": "c",
+		"xtr1common": "c"
 	},
 	"editor.insertSpaces": false
 }
