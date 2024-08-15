@@ -46,7 +46,7 @@ extern "C" {
 	 */
 	String ckit_substring(const char* string_buffer, u32 start_range, u32 end_range);
 
-	// Little bit tricky. This method eturns a vector of strings so 
+	// Little bit tricky. This method returns a vector of strings so 
 	// ckit_vector_count: to get the number of string it returned 
 	// Caller is required to loop through the vector and free all the strings
 	//
