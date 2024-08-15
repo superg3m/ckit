@@ -46,6 +46,7 @@ extern "C" {
 	Vec3 vec3_lerp(Vec3 a, Vec3 b, float t);
 	Vec4 vec4_lerp(Vec4 a, Vec4 b, float t);
 
+	void vec2_print(Vec2 point);
 	Vec2 vec2_spline_point(Vec2* spline_points, u32 spline_points_count, float t);
 
 	Mat2x2 ckit_mat2x2_projection_mat();
