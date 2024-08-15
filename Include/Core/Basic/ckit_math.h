@@ -5,21 +5,21 @@
 #include "./ckit_types.h"
 //========================== Begin Types ==========================
 typedef struct Vec2 {
-	float x;
-	float y;
+	double x;
+	double y;
 } Vec2;
 
 typedef struct Vec3 {
-	float x;
-	float y;
-	float z;
+	double x;
+	double y;
+	double z;
 } Vec3;
 
 typedef struct Vec4 {
-	float x;
-	float y;
-	float z;
-	float w;
+	double x;
+	double y;
+	double z;
+	double w;
 } Vec4;
 
 typedef struct Mat2x2 {
@@ -41,7 +41,7 @@ extern "C" {
 #endif
 	int int_abs(int a);
 	double float_abs(double a);
-	float lerp(float a, float b, float t);
+	double lerp(float a, float b, float t);
 	Vec2 vec2_lerp(Vec2 a, Vec2 b, float t);
 	Vec3 vec3_lerp(Vec3 a, Vec3 b, float t);
 	Vec4 vec4_lerp(Vec4 a, Vec4 b, float t);
@@ -85,7 +85,7 @@ extern "C" {
 		return a < 0 ? (a * -1) : a;
 	}
 
-	float lerp(float a, float b, float t) {
+	double lerp(float a, float b, float t) {
 		return b + ((a - b) * t);
 	}
 
