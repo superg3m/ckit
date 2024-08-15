@@ -154,7 +154,7 @@ extern "C" {
 
         if (message_has_special_delmitor(out_message)) {
             special_print_helper(out_message, log_level);
-        } else if(out_message[out_message_length - 1] == '\n') {
+        } else {
             Boolean found = out_message[out_message_length - 1] == '\n';
             printf("%s%.*s%s", log_level_format[log_level], out_message_length - found, out_message, CKG_COLOR_RESET);
         } 
