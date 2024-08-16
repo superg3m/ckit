@@ -7,7 +7,7 @@ int main() {
 	u32 height = 600;
 
 
-	ckit_window_bind_icon(0, 0, "../../../assets/c_original_logo_icon_146611.ico");
+	ckit_window_bind_icon("../../../assets/c_original_logo_icon_146611.ico");
 	CKIT_Window* window = ckit_window_create(width, height, "GameEngine");
 
 

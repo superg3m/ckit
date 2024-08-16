@@ -15,8 +15,8 @@
 extern "C" {
 #endif
 	CKIT_Window* ckit_window_create(u32 width, u32 height, const char* name);
-	void ckit_window_bind_icon(u32 icon_width_in_pixels, u32 icon_height_in_pixels, const char* resource_path);
-	void ckit_window_bind_cursor(u32 cursor_width_in_pixels, u32 cursor_height_in_pixels, const char* resource_path);
+	void ckit_window_bind_icon(const char* resource_path);
+	void ckit_window_bind_cursor(const char* resource_path);
 	Boolean ckit_window_should_quit(CKIT_Window* window);
 #ifdef __cplusplus
 }
@@ -42,7 +42,7 @@ extern "C" {
 
 			void* bitmap_memory;
 
-			MSG messages;
+			MSG msg;
 		} CKIT_Window;
 
 		HICON icon_handle = NULLPTR;
@@ -169,14 +169,14 @@ extern "C" {
 		}
 
 		Boolean ckit_window_should_quit(CKIT_Window* window) {
-			DWORD message_result = GetMessageA(&window->messages, window->handle, 0, 0);
-			Boolean should_quit = (message_result <= 0);
-			if (should_quit) {
-				return TRUE;
-			}
+			while (PeekMessageA(&window->msg, window->handle, 0, 0, PM_REMOVE)) {
+				if (window->msg.message == WM_QUIT) {
+					return TRUE;
+				}
 
-			TranslateMessage(&window->messages);
-			DispatchMessage(&window->messages);
+				TranslateMessage(&window->msg);
+				DispatchMessage(&window->msg);
+			}
 
 			return FALSE;
 		}
