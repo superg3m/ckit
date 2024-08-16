@@ -15,8 +15,8 @@
 extern "C" {
 #endif
 	CKIT_Window* ckit_window_create(u32 width, u32 height, const char* name);
-	void ckit_window_set_icon(CKIT_Window* window, u32 icon_width_in_pixels, u32 icon_height_in_pixels, const char* resource_path);
-	void ckit_window_set_cursor(CKIT_Window* window, u32 cursor_width_in_pixels, u32 cursor_height_in_pixels, const char* resource_path);
+	void ckit_window_bind_icon(u32 icon_width_in_pixels, u32 icon_height_in_pixels, const char* resource_path);
+	void ckit_window_bind_cursor(u32 cursor_width_in_pixels, u32 cursor_height_in_pixels, const char* resource_path);
 	Boolean ckit_window_should_quit(CKIT_Window* window);
 #ifdef __cplusplus
 }
@@ -28,12 +28,12 @@ extern "C" {
 #if defined(CKIT_IMPL)
 	#include "../../Core/Basic/ckit_memory.h"
 	#include "../../Core/Basic/ckit_logger.h"
+	#include "../../Core/Basic/ckit_os.h"
+
 	#if defined(PLATFORM_WINDOWS)
 		typedef struct CKIT_Window {
 			HINSTANCE instance_handle;
-			HWND window_handle;
-			HICON icon_handle;
-			HCURSOR	cursor_handle;
+			HWND handle;
 			HDC	dc_handle;
 
 			u16 width;
@@ -44,6 +44,10 @@ extern "C" {
 
 			MSG messages;
 		} CKIT_Window;
+
+		HICON icon_handle = NULLPTR;
+		HCURSOR	cursor_handle = NULLPTR;
+
 		
 		LRESULT CALLBACK custom_window_procedure(HWND handle, UINT message, WPARAM wParam, LPARAM lParam) {
 			LRESULT result = 0;
@@ -87,27 +91,21 @@ extern "C" {
 				*/
 				
 				default: {
-				result = DefWindowProc(handle, message, wParam, lParam);
+					result = DefWindowProc(handle, message, wParam, lParam);
 				} break;
 			}
 
 			return result;
 		}
 
-		void ckit_window_set_icon(CKIT_Window* window, u32 icon_width_in_pixels, u32 icon_height_in_pixels, const char* resource_path) {
-			if (!window->icon_handle) {
-				// probably suppose to destroy the previous icon resource
-			}
-
-			window->icon_handle = (HICON)LoadImageA(window->instance_handle, resource_path, IMAGE_ICON, icon_width_in_pixels, icon_height_in_pixels, LR_DEFAULTCOLOR|LR_DEFAULTSIZE|LR_LOADFROMFILE);
+		void ckit_window_bind_icon(const char* resource_path) {
+			ckit_assert(ckit_os_path_exists(resource_path));
+			icon_handle = (HICON)LoadImageA(GetModuleHandle(NULL), resource_path, IMAGE_ICON, 0, 0, LR_LOADFROMFILE|LR_DEFAULTSIZE);
 		}
 
-		void ckit_window_set_cursor(CKIT_Window* window, u32 cursor_width_in_pixels, u32 cursor_height_in_pixels, const char* resource_path) {
-			if (!window->cursor_handle) {
-				// probably suppose to destroy the previous cursor resource
-			}
-
-			window->cursor_handle = (HCURSOR)LoadImageA(window->instance_handle, resource_path, IMAGE_CURSOR, cursor_width_in_pixels, cursor_height_in_pixels, LR_DEFAULTCOLOR|LR_DEFAULTSIZE|LR_LOADFROMFILE);
+		void ckit_window_bind_cursor(const char* resource_path) {
+			ckit_assert(ckit_os_path_exists(resource_path));
+			cursor_handle = (HCURSOR)LoadImageA(GetModuleHandle(NULL), resource_path, IMAGE_CURSOR, 0, 0, LR_LOADFROMFILE|LR_DEFAULTSIZE);
 		}
 
 		void ckit_window_update_bitmap(CKIT_Window* window) {
@@ -152,8 +150,8 @@ extern "C" {
 			window_class.cbClsExtra = 0;
 			window_class.cbWndExtra = 0;
 			window_class.hInstance = ret_window->instance_handle;
-			window_class.hIcon = ret_window->icon_handle;
-			window_class.hCursor = ret_window->cursor_handle;
+			window_class.hIcon = icon_handle;
+			window_class.hCursor = cursor_handle;
 			window_class.hbrBackground = NULLPTR;
 			window_class.lpszMenuName = NULLPTR;
 			window_class.lpszClassName = name;
@@ -164,14 +162,15 @@ extern "C" {
 			// TODO(Jovanni): Extended Window Styles (look into them you can do cool stuff)
 			// WS_EX_ACCEPTFILES 0x00000010L (The window accepts drag-drop files.)
 			DWORD  dwStyle = WS_OVERLAPPEDWINDOW|WS_VISIBLE;
-			ret_window->window_handle = CreateWindowA(name, name, dwStyle, CW_USEDEFAULT, CW_USEDEFAULT, width, height, NULLPTR, NULLPTR, NULLPTR, NULLPTR);
-			ret_window->dc_handle = GetDC(ret_window->window_handle);
+			ret_window->handle = CreateWindowA(name, name, dwStyle, CW_USEDEFAULT, CW_USEDEFAULT, width, height, NULLPTR, NULLPTR, ret_window->instance_handle, NULLPTR);
+			ret_window->dc_handle = GetDC(ret_window->handle);
 
 			return ret_window;
 		}
 
 		Boolean ckit_window_should_quit(CKIT_Window* window) {
-			Boolean should_quit = (GetMessage(&window->messages, NULL, 0, 0) <= 0);
+			DWORD message_result = GetMessageA(&window->messages, window->handle, 0, 0);
+			Boolean should_quit = (message_result <= 0);
 			if (should_quit) {
 				return TRUE;
 			}
