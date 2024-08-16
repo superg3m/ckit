@@ -74,13 +74,16 @@ extern "C" {
       }
 
       void platform_console_init() {
-        AllocConsole();
-        freopen("CONIN$", "r", stdin); 
-        freopen("CONOUT$", "w", stdout); 
-        freopen("CONOUT$", "w", stderr);
+        // AllocConsole();
+        // freopen("CONIN$", "r", stdin);
+        // freopen("CONOUT$", "w", stdout);
+        // freopen("CONOUT$", "w", stderr);
 
         HANDLE console_handle = GetStdHandle(STD_OUTPUT_HANDLE);   
-        SetConsoleDisplayMode(console_handle, CONSOLE_FULLSCREEN_MODE, 0);
+        DWORD dwMode = 0;
+        GetConsoleMode(console_handle, &dwMode);
+        dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+        SetConsoleMode(console_handle, dwMode);
       }
 
       void platform_console_shutdown() {
