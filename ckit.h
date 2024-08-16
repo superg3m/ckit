@@ -23,8 +23,9 @@
 // Modules
 #include "./Include/Modules/Structures/ckit_file_system.h"
 #include "./Include/Modules/Parser_and_Lexer/bmp_parser.h"
-// #include "./Include/Modules/Parser_and_Lexer/ckit_lexer.h"
-//#include "./Include/Modules/Structures/ckit_event_system.h"
+
+#include "./Include/Modules/Graphics/ckit_native_window.h"
+// #include "./Include/Modules/Graphics/ckit_opengl.h"
 
 
 

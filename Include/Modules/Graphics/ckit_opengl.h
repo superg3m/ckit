@@ -3,6 +3,7 @@
 #include "../../../Core/Collections/ckit_vector.h"
 #include "./glad/glad.h"
 #include "./stb_image.h"
+#include <windows.h>
 
 // Textures
 #define TEXTURE_MAX 32
@@ -116,7 +117,7 @@ CKIT_Shader ckit_shader_add_texture(CKIT_Shader* shader) {
 	ckit_vector_push(shader->textures, texture);
 }
 
-CKIT_Shader ckit_shader_bind_texture(CKIT_Shader* shader) {
+CKIT_Shader ckit_shader_bind_textures(CKIT_Shader* shader) {
 	for (u32 i = 0; i < ckit_vector_count(shader->textures); i++) {
 		glActiveTexture(GL_TEXTURE0 + i);
 		glBindTexture(GL_TEXTURE_2D, shader->textures[i]);
@@ -143,6 +144,10 @@ void *GetAnyGLFuncAddress(const char *name)
 }
 */
 
+void ckit_wgl_context_create(HDC dc_handle) {
+	HGLRC opengl_context = wglCreateContext(dc_handle);
+	wglMakeCurrent(dc_handle, opengl_context);
+}
 
 // WGL (wglMakeCurrent())
 

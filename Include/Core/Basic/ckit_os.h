@@ -89,7 +89,7 @@ extern "C" {
 		}
 
 		Boolean ckit_os_path_exists(const char* path) {
-			return PathFileExistsA(path);
+			return (GetFileAttributesA(path) != INVALID_FILE_ATTRIBUTES);
 		}
 		void ckit_os_run_subprocess(); // runs on seperate thread?
 		void ckit_os_get_file_info();

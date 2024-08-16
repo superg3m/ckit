@@ -24,17 +24,28 @@
             "../ckit.c"
         ],
 
-        "additional_libs": ["Shlwapi.lib"]
+        "additional_libs": ["User32.lib"]
     },
 
-    "./Tests/ckit_build_$compiler_type" : {
+    "./Tests/CoreTest/build_$compiler_type" : {
         "output_name" : "test_ckit.exe",
         "compile_time_defines" : [""],
         "include_paths" : [""],
-        "source_files" : ["../ckit/*.c"],
+        "source_files" : ["../*.c"],
 
         "additional_libs" : [
-            "../../ckit_build_$compiler_type/ckit.lib"
+            "../../../ckit_build_$compiler_type/ckit.lib"
+        ]
+    },
+
+    "./Tests/GraphicsTest/build_$compiler_type" : {
+        "output_name" : "test_graphics_ckit.exe",
+        "compile_time_defines" : [""],
+        "include_paths" : [""],
+        "source_files" : ["../*.c"],
+
+        "additional_libs" : [
+            "../../../ckit_build_$compiler_type/ckit.lib"
         ]
     },
 

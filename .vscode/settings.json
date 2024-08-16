@@ -91,7 +91,9 @@
 		"string": "c",
 		"typeinfo": "c",
 		"unordered_map": "c",
-		"xstddef": "c"
+		"xstddef": "c",
+		"*.rh": "cpp",
+		"ckit_native_window.h": "c"
 	},
 	"editor.insertSpaces": false
 }
