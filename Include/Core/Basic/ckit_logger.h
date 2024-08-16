@@ -26,8 +26,6 @@ typedef enum CKIT_LogLevel {
 #ifdef __cplusplus
 extern "C" {
 #endif
-    Boolean logger_init();
-    // void logger_shutdown();
     void MACRO_ckit_log_output(CKIT_LogLevel log_level, const char* message, ...);
 #ifdef __cplusplus
 }
@@ -72,22 +70,6 @@ extern "C" {
         CKG_GREEN,
         CKG_COLOR_RESET,
     };
-
-    Boolean logger_init() {
-        if (!LOGGING_ENABLED) {
-            // The logging system is disabled!
-            return 1;
-        }
-
-        if (logging_is_initialized == FALSE) {
-            logging_is_initialized = TRUE;
-            platform_console_init();
-            return TRUE;
-        } else {
-            LOG_FATAL("The logger system is already initalized!\n");
-            return FALSE;
-        }
-    }
 
     #if defined(PLATFORM_WINDOWS)
         #include <windows.h>
@@ -137,16 +119,6 @@ extern "C" {
         va_start(args_list, message);
         vsnprintf(out_message, CKG_PLATFORM_CHARACTER_LIMIT, message, args_list);
         va_end(args_list);
-
-
-
-        #if (_WIN32)
-            HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-            DWORD dwMode = 0;
-            GetConsoleMode(hOut, &dwMode);
-            dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-            SetConsoleMode(hOut, dwMode);
-        #endif
 
         printf("%s%s%s", log_level_format[log_level], log_level_strings[log_level], CKG_COLOR_RESET);
         

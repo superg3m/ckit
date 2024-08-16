@@ -41,8 +41,6 @@ extern "C" {
 			const char* name;
 
 			void* bitmap_memory;
-
-			MSG msg;
 		} CKIT_Window;
 
 		HICON icon_handle = NULLPTR;
@@ -62,6 +60,18 @@ extern "C" {
 				} break;
 
 				/*
+				case WM_SYSCOMMAND:
+					// Prevent system menu from appearing
+					if (((wParam & 0xFFF0) == SC_MOUSEMENU) || ((wParam & 0xFFF0) == SC_TASKLIST) || ((wParam & 0xFFF0) == SC_KEYMENU)) {
+						LOG_SUCCESS("Window menu created (NOPE)!\n");
+						return 0;
+					}
+
+					return DefWindowProc(handle, message, wParam, lParam);
+				break;
+				*/
+
+				/*
 				case WM_SIZE: { // Resize
 					RECT client_rect;
 					GetClientRect(handle, &client_rect);
@@ -71,7 +81,6 @@ extern "C" {
 					// win32_resize_bitmap(&bitmap, width, height);
 				} break;
 
-		
 				case WM_DESTROY: {
 					// window_is_running = FALSE;
 				} break;
@@ -161,7 +170,7 @@ extern "C" {
 			// Date: May 04, 2024
 			// TODO(Jovanni): Extended Window Styles (look into them you can do cool stuff)
 			// WS_EX_ACCEPTFILES 0x00000010L (The window accepts drag-drop files.)
-			DWORD  dwStyle = WS_OVERLAPPEDWINDOW|WS_VISIBLE;
+			DWORD dwStyle = WS_OVERLAPPEDWINDOW|WS_VISIBLE;
 			ret_window->handle = CreateWindowA(name, name, dwStyle, CW_USEDEFAULT, CW_USEDEFAULT, width, height, NULLPTR, NULLPTR, ret_window->instance_handle, NULLPTR);
 			ret_window->dc_handle = GetDC(ret_window->handle);
 
@@ -169,13 +178,14 @@ extern "C" {
 		}
 
 		Boolean ckit_window_should_quit(CKIT_Window* window) {
-			while (PeekMessageA(&window->msg, window->handle, 0, 0, PM_REMOVE)) {
-				if (window->msg.message == WM_QUIT) {
+			MSG msg;
+			while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+				if (msg.message == WM_QUIT) {
 					return TRUE;
 				}
 
-				TranslateMessage(&window->msg);
-				DispatchMessage(&window->msg);
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
 			}
 
 			return FALSE;
