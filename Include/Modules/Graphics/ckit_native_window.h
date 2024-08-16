@@ -204,7 +204,7 @@ extern "C" {
 
 		Boolean ckit_window_should_quit(CKIT_Window* window) {
 			MSG msg;
-			while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+			while (PeekMessageA(&msg, NULLPTR, 0, 0, PM_REMOVE)) {
 				if (msg.message == WM_QUIT) {
 					return TRUE;
 				}

@@ -15,7 +15,6 @@ int main() {
 	ckit_window_bind_icon("../../../assets/c_original_logo_icon_146611.ico");
 	CKIT_Window* window = ckit_window_create(width, height, "GameEngine");
 
-
 	while (!ckit_window_should_quit(window)) {
 
 	}
