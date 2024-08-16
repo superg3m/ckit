@@ -9,6 +9,9 @@ ckit_printf("%fv\n") // (float vector)
 ckit_printf("%sv\n") // (string vector)
 ckit_printf("%cv\n") // (char vector)
 
+- [ ] I HAVE AND IDEA I'M GOING TO AUTO GENERATE THE ckit.h FILE
+- [ ] USE DLL TO REMOVE A DEPENDENCY TO: Shlwapi.lib
+
 # How to build
 1. ./bootstrap.ps1
 2. ./build.ps1 or ./build.ps1 -debug

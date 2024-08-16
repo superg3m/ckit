@@ -71,7 +71,27 @@
 		"ckit_opengl.h": "c",
 		"stb_image.h": "c",
 		"type_traits": "c",
-		"xtr1common": "c"
+		"xtr1common": "c",
+		"atomic": "c",
+		"bit": "c",
+		"cctype": "c",
+		"concepts": "c",
+		"cstddef": "c",
+		"cstdint": "c",
+		"cstdio": "c",
+		"cstdlib": "c",
+		"cstring": "c",
+		"ctime": "c",
+		"cwchar": "c",
+		"exception": "c",
+		"iosfwd": "c",
+		"limits": "c",
+		"map": "c",
+		"new": "c",
+		"string": "c",
+		"typeinfo": "c",
+		"unordered_map": "c",
+		"xstddef": "c"
 	},
 	"editor.insertSpaces": false
 }

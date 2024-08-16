@@ -8,98 +8,87 @@
 #define TEXTURE_MAX 32
 
 // Shaders
+typedef enum CKIT_ShaderType{
+	CKIT_VERTEX_SHADER,
+	CKIT_FRAGMENT_SHADER
+} CKIT_ShaderType;
+
+typedef struct CKIT_ShaderDescriptor {
+	CKIT_ShaderType type;
+	const char* path; 
+} CKIT_ShaderDescriptor;
+
 typedef struct CKIT_Shader {
 	u32* textures;
 	u32 id;
 } CKIT_Shader;
 
-CKIT_Shader ckit_shader_create() {
-	CKIT_Shader ret = {0};
-
-	ret.id = glCreateProgram();
-	glAttachShader(ret.id, vertex);
-	glAttachShader(ret.id, fragment);
-	glLinkProgram(ret.id);
-	// print linking errors if any
-	glGetProgramiv(ret.id, GL_LINK_STATUS, &success);
-	if(!success)
-	{
-		glGetProgramInfoLog(ret.id, 512, NULL, infoLog);
-		std::cout << "LINKING_FAILED\n" << infoLog << std::endl;
-	}
-
-	// delete the shaders as they're linked into our program now and no longer necessary
-	glDeleteShader(vertex);
-	glDeleteShader(fragment);
-
-	return ret;
-}
-
-void ckit_shader_add_source(CKIT_Shader *) {
-	CKIT_Shader ret = {0};
-
-	ret.id = glCreateProgram();
-	glAttachShader(ret.id, vertex);
-	glAttachShader(ret.id, fragment);
-	glLinkProgram(ret.id);
-	// print linking errors if any
-	glGetProgramiv(ret.id, GL_LINK_STATUS, &success);
-	if(!success)
-	{
-		glGetProgramInfoLog(ret.id, 512, NULL, infoLog);
-		std::cout << "LINKING_FAILED\n" << infoLog << std::endl;
-	}
-
-	// delete the shaders as they're linked into our program now and no longer necessary
-	glDeleteShader(vertex);
-	glDeleteShader(fragment);
-
-	return ret;
-}
-
-CKIT_Shader ckit_shader_create() {
-	CKIT_Shader ret = {0};
-
-	ret.id = glCreateProgram();
-	glAttachShader(ret.id, vertex);
-	glAttachShader(ret.id, fragment);
-	glLinkProgram(ret.id);
-	// print linking errors if any
-	glGetProgramiv(ret.id, GL_LINK_STATUS, &success);
-	if(!success)
-	{
-		glGetProgramInfoLog(ret.id, 512, NULL, infoLog);
-		std::cout << "LINKING_FAILED\n" << infoLog << std::endl;
-	}
-
-	// delete the shaders as they're linked into our program now and no longer necessary
-	glDeleteShader(vertex);
-	glDeleteShader(fragment);
-
-	return ret;
-}
-
-
-void ckit_shader_check_compile_erros(u32 shaderID, const char* type)
-{
+void ckit_shader_check_compile_erros(u32 shaderID, const char* type) {
     int success;
-    char infoLog[1024];
-    if (type != "PROGRAM")
-    {
-		glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-		if (!success)
-		{
-			glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-			std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+    char info_log[1024];
+    if (type != "PROGRAM") {
+		glGetShaderiv(shaderID, GL_COMPILE_STATUS, &success);
+		if (!success) {
+			glGetShaderInfoLog(shaderID, 1024, NULL, info_log);
+			LOG_ERROR("ERROR::SHADER_COMPILATION_ERROR of type: %s\n", type);
+			LOG_ERROR("%s -- --------------------------------------------------- --\n", info_log);
 		}
     } else {
-		glGetProgramiv(shader, GL_LINK_STATUS, &success);
-		if (!success)
-		{
-			glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-			std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+		glGetProgramiv(shaderID, GL_LINK_STATUS, &success);
+		if (!success) {
+			glGetProgramInfoLog(shaderID, 1024, NULL, info_log);
+			LOG_ERROR("ERROR::PROGRAM_LINKING_ERROR of type: %s\n", type);
+			LOG_ERROR("%s -- --------------------------------------------------- --\n", info_log);
 		}
     }
+}
+
+// Date: August 15, 2024
+// NOTE(Jovanni): You might not even need this shader_discriptors
+CKIT_Shader ckit_shader_create(CKIT_ShaderDescriptor* shader_descriptor, u32 shader_descriptor_count) {
+	CKIT_Shader ret = {0};
+	u32* shader_source_ids = NULLPTR; 
+
+	ret.id = glCreateProgram();
+	for (int i = 0; i < shader_descriptor_count; i++) {
+		const char* shader_source = ckit_os_read_entire_file(shader_descriptor[i].path);
+		u32 source_id;
+
+		switch (shader_descriptor[i].type) {
+			case CKIT_VERTEX_SHADER: {
+				source_id = glCreateShader(GL_VERTEX_SHADER);
+				glShaderSource(source_id, 1, &shader_source, NULL);
+        		glCompileShader(source_id);
+        		ckit_shader_check_compile_erros(source_id, "VERTEX");
+				glAttachShader(ret.id, source_id);
+			} break;
+
+			case CKIT_FRAGMENT_SHADER: {
+				source_id = glCreateShader(GL_FRAGMENT_SHADER);
+				glShaderSource(source_id, 1, &shader_source, NULL);
+        		glCompileShader(source_id);
+        		ckit_shader_check_compile_erros(source_id, "FRAGMENT");
+				glAttachShader(ret.id, source_id);
+			} break;
+		}
+
+		ckit_vector_push(shader_source_ids, source_id);
+	}
+	glLinkProgram(ret.id);
+
+	Boolean success = FALSE;
+	glGetProgramiv(ret.id, GL_LINK_STATUS, &success);
+	if (!success) {
+		char info_log[1028] = {0};
+		glGetProgramInfoLog(ret.id, 512, NULL, info_log);
+		LOG_ERROR("LINKING_FAILED\n");
+	}
+
+	for (int i = 0; i < ckit_vector_count(shader_source_ids); i++) {
+		glDeleteShader(shader_source_ids[i]);
+	}
+
+	return ret;
 }
 
 CKIT_Shader ckit_shader_add_texture(CKIT_Shader* shader) {
