@@ -43,9 +43,9 @@ extern "C" {
 			void* bitmap_memory;
 		} CKIT_Window;
 
-		HICON icon_handle = NULLPTR;
-		HCURSOR	cursor_handle = NULLPTR;
-
+		internal HICON icon_handle = NULLPTR;
+		internal HCURSOR cursor_handle = NULLPTR;
+		internal Boolean interacting_with_left_menu = FALSE; 
 		
 		LRESULT CALLBACK custom_window_procedure(HWND handle, UINT message, WPARAM wParam, LPARAM lParam) {
 			LRESULT result = 0;
@@ -58,6 +58,31 @@ extern "C" {
 					LOG_SUCCESS("Window is Closed!\n");
 					PostQuitMessage(0);
 				} break;
+
+				case WM_NCLBUTTONDBLCLK: {
+					// Handle the double-click on the top-left icon
+					if (wParam == HTSYSMENU) {
+						interacting_with_left_menu = TRUE;
+					}
+
+					return DefWindowProc(handle, message, wParam, lParam);
+				} break;
+
+				case WM_SYSCOMMAND: {
+					// Handle the double-click on the top-left icon
+					if ((wParam & 0xFFF0) == SC_MOUSEMENU) {
+						// you can full screen and minimize here like normal behaviour
+						return 0;
+					}
+					
+					if (((wParam & 0xFFF0) == SC_CLOSE) && interacting_with_left_menu) {
+						interacting_with_left_menu = FALSE;
+						return 0;
+					}
+
+					return DefWindowProc(handle, message, wParam, lParam);
+				} break;
+
 
 				/*
 				case WM_SYSCOMMAND:
