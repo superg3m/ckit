@@ -11,6 +11,8 @@ int main() {
 
 	}
 
+	ckit_free(window);
+
 	ckit_cleanup();
 	return 0;
 }

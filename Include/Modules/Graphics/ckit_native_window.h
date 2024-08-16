@@ -27,7 +27,7 @@ extern "C" {
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 #if defined(CKIT_IMPL)
 	#include "../../Core/Basic/ckit_memory.h"
-	
+	#include "../../Core/Basic/ckit_logger.h"
 	#if defined(PLATFORM_WINDOWS)
 		typedef struct CKIT_Window {
 			HINSTANCE instance_handle;
@@ -45,29 +45,49 @@ extern "C" {
 			MSG messages;
 		} CKIT_Window;
 		
-		internal LRESULT custom_window_procedure(HWND window_handle, UINT message, WPARAM wParam, LPARAM lParam) {
+		LRESULT CALLBACK custom_window_procedure(HWND handle, UINT message, WPARAM wParam, LPARAM lParam) {
 			LRESULT result = 0;
 			switch (message) {
-				/*
 				case WM_CREATE: {
-					// Initialize the window.  
+					LOG_SUCCESS("Window Created!\n");
 				} break;
 
-				case WM_PAINT: {
-					// Paint the window's client area.  
+				case WM_CLOSE: {
+					LOG_SUCCESS("Window is Closed!\n");
+					PostQuitMessage(0);
 				} break;
 
-				case WM_SIZE: {
-					// Set the size and position of the window.  
+				/*
+				case WM_SIZE: { // Resize
+					RECT client_rect;
+					GetClientRect(handle, &client_rect);
+					u32 width = client_rect.right - client_rect.left;
+					u32 height = client_rect.bottom - client_rect.top;
+
+					// win32_resize_bitmap(&bitmap, width, height);
 				} break;
 
+		
 				case WM_DESTROY: {
-					// Clean up window-specific data objects.  
+					// window_is_running = FALSE;
+				} break;
+
+				case WM_PAINT: { // Repaint window when its dirty
+				PAINTSTRUCT paint;
+				HDC hdc = BeginPaint(handle, &paint);
+				u32 x = paint.rcPaint.left;
+				u32 y = paint.rcPaint.top;
+
+				RECT ClientRect;
+				GetClientRect(handle, &ClientRect);
+
+				win32_draw_bitmap(hdc, &bitmap, &ClientRect, x, y);
+				EndPaint(handle, &paint);
 				} break;
 				*/
-
+				
 				default: {
-					result = DefWindowProc(window_handle, message, wParam, lParam); 
+				result = DefWindowProc(handle, message, wParam, lParam);
 				} break;
 			}
 
@@ -128,10 +148,10 @@ extern "C" {
 
 			WNDCLASSA window_class = {0};
 			window_class.style = CS_HREDRAW|CS_VREDRAW;
-			window_class.lpfnWndProc = &custom_window_procedure;
+			window_class.lpfnWndProc = custom_window_procedure;
 			window_class.cbClsExtra = 0;
 			window_class.cbWndExtra = 0;
-			window_class.hInstance = GetModuleHandle(NULL);
+			window_class.hInstance = ret_window->instance_handle;
 			window_class.hIcon = ret_window->icon_handle;
 			window_class.hCursor = ret_window->cursor_handle;
 			window_class.hbrBackground = NULLPTR;
@@ -140,7 +160,10 @@ extern "C" {
 
 			RegisterClassA(&window_class);
 
-			DWORD dwStyle = WS_VISIBLE;
+			// Date: May 04, 2024
+			// TODO(Jovanni): Extended Window Styles (look into them you can do cool stuff)
+			// WS_EX_ACCEPTFILES 0x00000010L (The window accepts drag-drop files.)
+			DWORD  dwStyle = WS_OVERLAPPEDWINDOW|WS_VISIBLE;
 			ret_window->window_handle = CreateWindowA(name, name, dwStyle, CW_USEDEFAULT, CW_USEDEFAULT, width, height, NULLPTR, NULLPTR, NULLPTR, NULLPTR);
 			ret_window->dc_handle = GetDC(ret_window->window_handle);
 
