@@ -74,17 +74,24 @@ extern "C" {
       }
 
       void platform_console_init() {
-        // AllocConsole();
-        // freopen("CONIN$", "r", stdin);
-        // freopen("CONOUT$", "w", stdout);
-        // freopen("CONOUT$", "w", stderr);
+        AllocConsole();
 
-        HANDLE console_handle = GetStdHandle(STD_OUTPUT_HANDLE);   
+        HANDLE console_handle = CreateFileA("CONOUT$", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+        if (console_handle == INVALID_HANDLE_VALUE) {
+            // Handle error
+        }
+
         DWORD dwMode = 0;
         GetConsoleMode(console_handle, &dwMode);
         dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
         SetConsoleMode(console_handle, dwMode);
-      }
+
+        // You may also want to set the console as the standard output handle
+        // for your process, so that printf() and other functions work as expected
+        freopen("CONOUT$", "w", stdout);
+        freopen("CONIN$", "r", stdin);
+        freopen("CONOUT$", "w", stderr);
+    }
 
       void platform_console_shutdown() {
         FreeConsole();
