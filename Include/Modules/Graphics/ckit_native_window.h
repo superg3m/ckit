@@ -116,6 +116,8 @@ extern "C" {
 				u32 x = paint.rcPaint.left;
 				u32 y = paint.rcPaint.top;
 
+				// Maybe you will need this but for right now i'm saying you don't need this
+
 				RECT ClientRect;
 				GetClientRect(handle, &ClientRect);
 
@@ -190,6 +192,10 @@ extern "C" {
 		}
 
 		void ckit_window_present_bitmap(CKIT_Window* window) {
+
+		}
+
+		void ckit_window_clear_color(CKIT_Window* window, u32 rgba) {
 
 		}
 
