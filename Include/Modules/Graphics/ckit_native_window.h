@@ -142,6 +142,28 @@ extern "C" {
 			cursor_handle = (HCURSOR)LoadImageA(GetModuleHandle(NULL), resource_path, IMAGE_CURSOR, 0, 0, LR_LOADFROMFILE|LR_DEFAULTSIZE);
 		}
 
+		internal void ckit_window_resize(CKIT_Window* window) {
+			RECT client_rect;
+			GetClientRect(window->handle, &client_rect);
+			u32 width = client_rect.right - client_rect.left;
+			u32 height = client_rect.bottom - client_rect.top;
+
+			BITMAPINFO bitmap_info;
+			bitmap_info.bmiHeader.biSize = NULLPTR;
+        	bitmap_info.bmiHeader.biWidth = NULLPTR;
+        	bitmap_info.bmiHeader.biHeight = NULLPTR;
+        	bitmap_info.bmiHeader.biPlanes = NULLPTR;
+        	bitmap_info.bmiHeader.biBitCount = NULLPTR;
+        	bitmap_info.bmiHeader.biCompression = NULLPTR;
+        	bitmap_info.bmiHeader.biSizeImage = NULLPTR;
+        	bitmap_info.bmiHeader.biXPelsPerMeter = NULLPTR;
+        	bitmap_info.bmiHeader.biYPelsPerMeter = NULLPTR;
+        	bitmap_info.bmiHeader.biClrUsed = NULLPTR;
+        	bitmap_info.bmiHeader.biClrImportant = NULLPTR;
+
+			CreateDIBSection(window->dc_handle, &bitmap_info, 0, &window->bitmap_memory, 0, 0); // not done btw look through this!
+		}
+
 		void ckit_window_update_bitmap(CKIT_Window* window) {
 			/*
 			typedef struct tagBITMAPINFO {
@@ -207,6 +229,10 @@ extern "C" {
 			while (PeekMessageA(&msg, NULLPTR, 0, 0, PM_REMOVE)) {
 				if (msg.message == WM_QUIT) {
 					return TRUE;
+				}
+
+				if (msg.message == WM_SIZE) {
+					ckit_window_resize(window);
 				}
 
 				TranslateMessage(&msg);
