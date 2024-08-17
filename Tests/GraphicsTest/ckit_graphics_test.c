@@ -40,9 +40,10 @@ int main() {
 	u32 y_offset = 0;
 
 	while (!ckit_window_should_quit(window)) {
-		set_bitmap_gradient(window, x_offset, y_offset);
-		ckit_window_draw_quad(window, 100, 100, 128, 128);
-
+		// set_bitmap_gradient(window, x_offset, y_offset);
+		ckit_window_clear_color(window, 0, 0, 0);
+		
+		ckit_window_draw_quad(window, 0, 300, 64, 256);
 
 
 		ckit_window_draw_bitmap(window);

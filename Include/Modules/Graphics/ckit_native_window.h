@@ -35,9 +35,9 @@ extern "C" {
 	void ckit_window_bind_icon(const char* resource_path);
 	void ckit_window_bind_cursor(const char* resource_path);
 	Boolean ckit_window_should_quit(CKIT_Window* window);
-	void ckit_window_clear_color(u8 r, u8 g, u8 b);
-	void ckit_window_draw_bitmap(CKIT_Window* window);
+	void ckit_window_clear_color(CKIT_Window* window, u8 r, u8 g, u8 b);
 	void ckit_window_draw_quad(CKIT_Window* window, u32 start_x, u32 start_y, u32 width, u32 height);
+	void ckit_window_draw_bitmap(CKIT_Window* window);
 #ifdef __cplusplus
 }
 #endif
@@ -138,12 +138,13 @@ extern "C" {
 			const u32 VIEWPORT_HEIGHT = window->bitmap->width;
 
 			u32 left = CLAMP(start_x, 0, VIEWPORT_WIDTH);
-			u32 top = CLAMP(start_y, 0, VIEWPORT_HEIGHT);
 			u32 right = CLAMP(start_x + width, 0, VIEWPORT_WIDTH);
-			u32 bottom = CLAMP(start_y + height, 0, VIEWPORT_HEIGHT);
+
+			u32 bottom = CLAMP(start_y, 0, VIEWPORT_HEIGHT);
+			u32 top = CLAMP(start_y + height, 0, VIEWPORT_HEIGHT);
 
 			u32 true_quad_width = right - left;
-			u32 true_quad_height = bottom - top;
+			u32 true_quad_height = top - bottom;
 
 			Boolean should_draw = (true_quad_width != 0) && (true_quad_height != 0);
 			if (!should_draw) {
@@ -151,19 +152,18 @@ extern "C" {
 			}
 
 			const u32 stride = window->bitmap->width * window->bitmap->bytes_per_pixel;
-			u8* row = window->bitmap->memory + top;
-			for (u32 y = top; y < bottom; y++) {
-				u32* pixel = (u32*)row;
-				for (u32 x = left; x < right; x++) {
-					const u32 red = ((0) << 16);
-					const u32 green = ((0) << 8);
-					const u32 blue = ((0) << 0);
+			u32* dest = (u32*)&window->bitmap->memory[left + (stride * bottom)];
+
+			for (u32 y = 0; y < true_quad_height; y++) {
+				for (u32 x = 0; x < true_quad_width; x++) {
+					const u32 red = ((255) << 16);
+					const u32 green = ((255) << 8);
+					const u32 blue = ((255) << 0);
 					
 					const u32 rgb = red|green|blue;
 
-					*pixel++ = rgb;
+					dest[x + (y * true_quad_width)] = rgb;
 				}
-				row += stride;
 			}
 		}
 		
@@ -252,8 +252,24 @@ extern "C" {
 			cursor_handle = (HCURSOR)LoadImageA(GetModuleHandle(NULL), resource_path, IMAGE_CURSOR, 0, 0, LR_LOADFROMFILE|LR_DEFAULTSIZE);
 		}
 
-		void ckit_window_clear_color(u8 r, u8 g, u8 b) {
+		void ckit_window_clear_color(CKIT_Window* window, u8 r, u8 g, u8 b) {
+			int stride = window->bitmap->width * window->bitmap->bytes_per_pixel;
+			u8* row = window->bitmap->memory;    
+			for(u32 y = 0; y < window->bitmap->height; y++)
+			{
+				u32* pixel = (u32*)row;
+				for(u32 x = 0; x < window->bitmap->width; x++)
+				{
+					const u32 red = ((r) << 16);
+					const u32 green = ((g) << 8);
+					const u32 blue = ((b) << 0);
+					
+					const u32 rgb = red|green|blue;
 
+					*pixel++ = rgb;
+				}
+				row += stride;
+			}
 		}
 
 		CKIT_Window* ckit_window_create(u32 width, u32 height, const char* name) {
