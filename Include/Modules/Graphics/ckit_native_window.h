@@ -118,6 +118,13 @@ extern "C" {
 		}
 
 		void ckit_window_draw_bitmap(CKIT_Window* window) {
+			if (window->hdc) {
+				ReleaseDC(window->handle, window->hdc);
+			}
+
+			// Date: August 17, 2024
+			// NOTE(Jovanni): I'm not sure at all if I have to get a new dc each frame?
+			window->hdc = GetDC(window->handle);
 			StretchDIBits(window->hdc, 
 						  0, 0, window->bitmap->width, window->bitmap->height, 
 			 			  0, 0, window->bitmap->width, window->bitmap->height,
