@@ -370,7 +370,9 @@ int main() {
 	stack_operations();
 	u32 test_overflow = 5;
 	u32 max_value =  10;
-	LOG_SUCCESS("%d\n", CLAMP(65, test_overflow, max_value));
+	LOG_SUCCESS("CLMAP OVERFLOW %d\n", CLAMP(65, test_overflow, max_value));
+
+	LOG_SUCCESS("CLMAP %d\n", CLAMP(5000, 40, 100));
 
 	int test_int_to_str = 5235;
 

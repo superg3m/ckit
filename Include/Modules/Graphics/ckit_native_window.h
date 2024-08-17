@@ -10,7 +10,7 @@
 		u16 width;
 		u16 bytes_per_pixel;
 		// u32 bitmap_memory_size = width * height * bytes_per_pixel
-		void* memory;
+		u8* memory;
 	} CKIT_Bitmap;
 
 	typedef struct CKIT_Window {
@@ -37,6 +37,7 @@ extern "C" {
 	Boolean ckit_window_should_quit(CKIT_Window* window);
 	void ckit_window_clear_color(u8 r, u8 g, u8 b);
 	void ckit_window_draw_bitmap(CKIT_Window* window);
+	void ckit_window_draw_quad(CKIT_Window* window, u32 start_x, u32 start_y, u32 width, u32 height);
 #ifdef __cplusplus
 }
 #endif
@@ -129,6 +130,41 @@ extern "C" {
 						  0, 0, window->bitmap->width, window->bitmap->height, 
 			 			  0, 0, window->bitmap->width, window->bitmap->height,
 						  window->bitmap->memory, &window->bitmap->info, DIB_RGB_COLORS, SRCCOPY);
+		}
+
+		void ckit_window_draw_quad(CKIT_Window* window, u32 start_x, u32 start_y, u32 width, u32 height) {
+
+			const u32 VIEWPORT_WIDTH = window->bitmap->width;
+			const u32 VIEWPORT_HEIGHT = window->bitmap->width;
+
+			u32 left = CLAMP(start_x, 0, VIEWPORT_WIDTH);
+			u32 top = CLAMP(start_y, 0, VIEWPORT_HEIGHT);
+			u32 right = CLAMP(start_x + width, 0, VIEWPORT_WIDTH);
+			u32 bottom = CLAMP(start_y + height, 0, VIEWPORT_HEIGHT);
+
+			u32 true_quad_width = right - left;
+			u32 true_quad_height = bottom - top;
+
+			Boolean should_draw = (true_quad_width != 0) && (true_quad_height != 0);
+			if (!should_draw) {
+				return;
+			}
+
+			const u32 stride = window->bitmap->width * window->bitmap->bytes_per_pixel;
+			u8* row = window->bitmap->memory + top;
+			for (u32 y = top; y < bottom; y++) {
+				u32* pixel = (u32*)row;
+				for (u32 x = left; x < right; x++) {
+					const u32 red = ((0) << 16);
+					const u32 green = ((0) << 8);
+					const u32 blue = ((0) << 0);
+					
+					const u32 rgb = red|green|blue;
+
+					*pixel++ = rgb;
+				}
+				row += stride;
+			}
 		}
 		
 		LRESULT CALLBACK custom_window_procedure(HWND handle, UINT message, WPARAM wParam, LPARAM lParam) {

@@ -3,7 +3,7 @@
 void set_bitmap_gradient(CKIT_Window* window, u32 x_offset, u32 y_offset) {
 	int stride = window->bitmap->width * window->bitmap->bytes_per_pixel;
 
-	u8* row = (u8*)window->bitmap->memory;    
+	u8* row = window->bitmap->memory;    
 	for(u32 y = 0; y < window->bitmap->height; y++)
 	{
 		u32* pixel = (u32*)row;
@@ -41,6 +41,10 @@ int main() {
 
 	while (!ckit_window_should_quit(window)) {
 		set_bitmap_gradient(window, x_offset, y_offset);
+		ckit_window_draw_quad(window, 100, 100, 128, 128);
+
+
+
 		ckit_window_draw_bitmap(window);
 		
 		x_offset++;
