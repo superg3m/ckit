@@ -4,7 +4,24 @@
 //========================== Begin Types ==========================
 #if defined(PLATFORM_WINDOWS)
 	#include <windows.h>
-	typedef struct CKIT_Window CKIT_Window;
+	typedef struct CKIT_Bitmap {
+		BITMAPINFO info;
+		u16 height;
+		u16 width;
+		u16 bytes_per_pixel;
+		// u32 bitmap_memory_size = width * height * bytes_per_pixel
+		void* memory;
+	} CKIT_Bitmap;
+
+	typedef struct CKIT_Window {
+		HINSTANCE instance_handle;
+		HWND handle;
+		HDC	hdc;
+		u16 height;
+		u16 width;
+		const char* name;
+		CKIT_Bitmap* bitmap;
+	} CKIT_Window;
 #elif defined(PLATFORM_LINUX)
 
 #endif
@@ -18,6 +35,8 @@ extern "C" {
 	void ckit_window_bind_icon(const char* resource_path);
 	void ckit_window_bind_cursor(const char* resource_path);
 	Boolean ckit_window_should_quit(CKIT_Window* window);
+	void ckit_window_clear_color(u8 r, u8 g, u8 b);
+	void ckit_window_draw_bitmap(CKIT_Window* window);
 #ifdef __cplusplus
 }
 #endif
@@ -31,21 +50,79 @@ extern "C" {
 	#include "../../Core/Basic/ckit_os.h"
 
 	#if defined(PLATFORM_WINDOWS)
-		typedef struct CKIT_Window {
-			HINSTANCE instance_handle;
-			HWND handle;
-			HDC	dc_handle;
-
-			u16 width;
-			u16 height;
-			const char* name;
-
-			void* bitmap_memory;
-		} CKIT_Window;
+		typedef struct CKIT_WindowEntry {
+			HWND WINAPI_handle;
+			CKIT_Window* ckit_window;
+		} CKIT_WindowEntry;
 
 		internal HICON icon_handle = NULLPTR;
 		internal HCURSOR cursor_handle = NULLPTR;
-		internal Boolean interacting_with_left_menu = FALSE; 
+		internal Boolean interacting_with_left_menu = FALSE;
+		internal CKIT_WindowEntry* registered_windows = NULLPTR;
+
+		internal CKIT_Window* find_ckit_window_by_handle(HWND handle) {
+			if (!registered_windows) {
+				return NULLPTR;
+			}
+
+			for (int i = 0; i < ckit_vector_count(registered_windows); i++) {
+				if (registered_windows[i].WINAPI_handle == handle) {
+					return registered_windows[i].ckit_window;
+				}
+			}
+
+			ckit_assert(FALSE); // SHOULD NEVER GET HERE!
+			return NULLPTR;
+		}
+
+		internal void ckit_window_resize(CKIT_Window* window) {
+			if (!window) {
+				return;
+			}
+
+			RECT windowRect;
+			GetWindowRect(window->handle, &windowRect);
+			window->width = windowRect.right - windowRect.left;
+			window->height = windowRect.bottom - windowRect.top;
+
+			RECT client_rect;
+			GetClientRect(window->handle, &client_rect);
+			window->bitmap->width = client_rect.right - client_rect.left;
+			window->bitmap->height = client_rect.bottom - client_rect.top;
+
+			u32 bits_per_pixel = 32;
+			u32 bytes_per_pixel = bits_per_pixel / 8;
+			window->bitmap->bytes_per_pixel = bytes_per_pixel;
+
+			BITMAPINFO bitmap_info;
+			bitmap_info.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+        	bitmap_info.bmiHeader.biWidth = window->bitmap->width;
+        	bitmap_info.bmiHeader.biHeight = window->bitmap->height;
+        	bitmap_info.bmiHeader.biPlanes = 1;
+        	bitmap_info.bmiHeader.biBitCount = bits_per_pixel;
+        	bitmap_info.bmiHeader.biCompression = BI_RGB;
+        	bitmap_info.bmiHeader.biSizeImage = 0;
+        	bitmap_info.bmiHeader.biXPelsPerMeter = 0;
+        	bitmap_info.bmiHeader.biYPelsPerMeter = 0;
+        	bitmap_info.bmiHeader.biClrUsed = 0;
+        	bitmap_info.bmiHeader.biClrImportant = 0;
+
+			window->bitmap->info = bitmap_info;
+
+			if (window->bitmap->memory) {
+				ckit_free(window->bitmap->memory);
+			}
+
+			size_t memory_size = window->bitmap->bytes_per_pixel * window->bitmap->width * window->bitmap->height;
+    		window->bitmap->memory = ckit_alloc(memory_size);
+		}
+
+		void ckit_window_draw_bitmap(CKIT_Window* window) {
+			StretchDIBits(window->hdc, 
+						  0, 0, window->bitmap->width, window->bitmap->height, 
+			 			  0, 0, window->bitmap->width, window->bitmap->height,
+						  window->bitmap->memory, &window->bitmap->info, DIB_RGB_COLORS, SRCCOPY);
+		}
 		
 		LRESULT CALLBACK custom_window_procedure(HWND handle, UINT message, WPARAM wParam, LPARAM lParam) {
 			LRESULT result = 0;
@@ -54,8 +131,22 @@ extern "C" {
 					LOG_SUCCESS("Window Created!\n");
 				} break;
 
+				case WM_SIZE: { // Resize
+					RECT client_rect;
+					GetClientRect(handle, &client_rect);
+					u32 width = client_rect.right - client_rect.left;
+					u32 height = client_rect.bottom - client_rect.top;
+
+					CKIT_Window* window = find_ckit_window_by_handle(handle);
+					ckit_window_resize(window); // should only do the area/region that need to be repainted ideally for optimization
+				} break;
+
 				case WM_CLOSE: {
 					LOG_SUCCESS("Window is Closed!\n");
+					PostQuitMessage(0);
+				} break;
+
+				case WM_DESTROY: {
 					PostQuitMessage(0);
 				} break;
 
@@ -83,46 +174,20 @@ extern "C" {
 					return DefWindowProc(handle, message, wParam, lParam);
 				} break;
 
-
 				/*
-				case WM_SYSCOMMAND:
-					// Prevent system menu from appearing
-					if (((wParam & 0xFFF0) == SC_MOUSEMENU) || ((wParam & 0xFFF0) == SC_TASKLIST) || ((wParam & 0xFFF0) == SC_KEYMENU)) {
-						LOG_SUCCESS("Window menu created (NOPE)!\n");
-						return 0;
-					}
-
-					return DefWindowProc(handle, message, wParam, lParam);
-				break;
-				*/
-
-				/*
-				case WM_SIZE: { // Resize
-					RECT client_rect;
-					GetClientRect(handle, &client_rect);
-					u32 width = client_rect.right - client_rect.left;
-					u32 height = client_rect.bottom - client_rect.top;
-
-					// win32_resize_bitmap(&bitmap, width, height);
-				} break;
-
-				case WM_DESTROY: {
-					// window_is_running = FALSE;
-				} break;
-
 				case WM_PAINT: { // Repaint window when its dirty
-				PAINTSTRUCT paint;
-				HDC hdc = BeginPaint(handle, &paint);
-				u32 x = paint.rcPaint.left;
-				u32 y = paint.rcPaint.top;
+					PAINTSTRUCT paint;
+					HDC hdc = BeginPaint(handle, &paint);
+					u32 x = paint.rcPaint.left;
+					u32 y = paint.rcPaint.top;
 
-				// Maybe you will need this but for right now i'm saying you don't need this
+					// Maybe you will need this but for right now i'm saying you don't need this
 
-				RECT ClientRect;
-				GetClientRect(handle, &ClientRect);
+					RECT ClientRect;
+					GetClientRect(handle, &ClientRect);
 
-				win32_draw_bitmap(hdc, &bitmap, &ClientRect, x, y);
-				EndPaint(handle, &paint);
+					win32_draw_bitmap(hdc, &bitmap, &ClientRect, x, y);
+					EndPaint(handle, &paint);
 				} break;
 				*/
 				
@@ -144,63 +209,14 @@ extern "C" {
 			cursor_handle = (HCURSOR)LoadImageA(GetModuleHandle(NULL), resource_path, IMAGE_CURSOR, 0, 0, LR_LOADFROMFILE|LR_DEFAULTSIZE);
 		}
 
-		internal void ckit_window_resize(CKIT_Window* window) {
-			RECT client_rect;
-			GetClientRect(window->handle, &client_rect);
-			u32 width = client_rect.right - client_rect.left;
-			u32 height = client_rect.bottom - client_rect.top;
-
-			BITMAPINFO bitmap_info;
-			bitmap_info.bmiHeader.biSize = NULLPTR;
-        	bitmap_info.bmiHeader.biWidth = NULLPTR;
-        	bitmap_info.bmiHeader.biHeight = NULLPTR;
-        	bitmap_info.bmiHeader.biPlanes = NULLPTR;
-        	bitmap_info.bmiHeader.biBitCount = NULLPTR;
-        	bitmap_info.bmiHeader.biCompression = NULLPTR;
-        	bitmap_info.bmiHeader.biSizeImage = NULLPTR;
-        	bitmap_info.bmiHeader.biXPelsPerMeter = NULLPTR;
-        	bitmap_info.bmiHeader.biYPelsPerMeter = NULLPTR;
-        	bitmap_info.bmiHeader.biClrUsed = NULLPTR;
-        	bitmap_info.bmiHeader.biClrImportant = NULLPTR;
-
-			CreateDIBSection(window->dc_handle, &bitmap_info, 0, &window->bitmap_memory, 0, 0); // not done btw look through this!
-		}
-
-		void ckit_window_update_bitmap(CKIT_Window* window) {
-			/*
-			typedef struct tagBITMAPINFO {
-				BITMAPINFOHEADER bmiHeader;
-				RGBQUAD          bmiColors[1];
-			} BITMAPINFO, *LPBITMAPINFO, *PBITMAPINFO;
-
-			int StretchDIBits(
-				[in] HDC              hdc,
-				[in] int              xDest,
-				[in] int              yDest,
-				[in] int              DestWidth,
-				[in] int              DestHeight,
-				[in] int              xSrc,
-				[in] int              ySrc,
-				[in] int              SrcWidth,
-				[in] int              SrcHeight,
-				[in] const VOID       *lpBits,
-				[in] const BITMAPINFO *lpbmi,
-				[in] UINT             iUsage,
-				[in] DWORD            rop
-			);
-			*/
-		}
-
-		void ckit_window_present_bitmap(CKIT_Window* window) {
-
-		}
-
-		void ckit_window_clear_color(CKIT_Window* window, u32 rgba) {
+		void ckit_window_clear_color(u8 r, u8 g, u8 b) {
 
 		}
 
 		CKIT_Window* ckit_window_create(u32 width, u32 height, const char* name) {
 			CKIT_Window* ret_window = ckit_alloc_custom(sizeof(CKIT_Window), TAG_CKIT_EXPECTED_USER_FREE);
+			ret_window->bitmap = ckit_alloc_custom(sizeof(CKIT_Bitmap), TAG_CKIT_EXPECTED_USER_FREE);
+
 			ret_window->instance_handle = GetModuleHandle(NULL);
 			ret_window->width = width;
 			ret_window->height = height;
@@ -225,8 +241,15 @@ extern "C" {
 			// WS_EX_ACCEPTFILES 0x00000010L (The window accepts drag-drop files.)
 			DWORD dwStyle = WS_OVERLAPPEDWINDOW|WS_VISIBLE;
 			ret_window->handle = CreateWindowA(name, name, dwStyle, CW_USEDEFAULT, CW_USEDEFAULT, width, height, NULLPTR, NULLPTR, ret_window->instance_handle, NULLPTR);
-			ret_window->dc_handle = GetDC(ret_window->handle);
+			ret_window->hdc = GetDC(ret_window->handle);
 
+			ckit_window_resize(ret_window);
+
+			CKIT_WindowEntry window_entry = {0};
+			window_entry.WINAPI_handle = ret_window->handle;
+			window_entry.ckit_window = ret_window; 
+
+			ckit_vector_push(registered_windows, window_entry);
 			return ret_window;
 		}
 
@@ -234,17 +257,17 @@ extern "C" {
 			MSG msg;
 			while (PeekMessageA(&msg, NULLPTR, 0, 0, PM_REMOVE)) {
 				if (msg.message == WM_QUIT) {
+					ReleaseDC(window->handle, window->hdc);
+					ckit_free(window->bitmap->memory);
+					ckit_free(window->bitmap);
 					return TRUE;
-				}
-
-				if (msg.message == WM_SIZE) {
-					ckit_window_resize(window);
 				}
 
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
 			}
 
+			// ckit_window_draw_bitmap(window);
 			return FALSE;
 		}
 	#elif defined(PLATFORM_LINUX)
