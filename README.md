@@ -1,3 +1,5 @@
+### --ONLY WORKS ON CL.exe MSVC-- windows only right now because programming is hard lmao
+
 # Ckits's Core Thesis
 - The point of the ckit is to provide a nice library to build c projects with.
 - Ckit is built with the granular api ckit granular [CKG](https://github.com/superg3m/ckg) (OUT DATED FIX THIS!)
