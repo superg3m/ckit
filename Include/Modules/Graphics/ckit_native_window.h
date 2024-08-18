@@ -39,7 +39,16 @@ typedef struct CKIT_Color {
 #ifdef __cplusplus
 extern "C" {
 #endif
+	/**
+	 * @brief Must be freed with ckit_window_free()
+	 * 
+	 * @param width 
+	 * @param height 
+	 * @param name 
+	 * @return CKIT_Window* 
+	 */
 	CKIT_Window* ckit_window_create(u32 width, u32 height, const char* name);
+	void* MACRO_ckit_window_free(CKIT_Window* window);
 	void ckit_window_bind_icon(const char* resource_path);
 	void ckit_window_bind_cursor(const char* resource_path);
 	Boolean ckit_window_should_quit(CKIT_Window* window);
@@ -52,6 +61,7 @@ extern "C" {
 //************************** End Functions **************************
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
+#define ckit_window_free(window) window = MACRO_ckit_window_free(window);
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 #if defined(CKIT_IMPL)
 	#include "../../Core/Basic/ckit_memory.h"
@@ -325,13 +335,29 @@ extern "C" {
 			return ret_window;
 		}
 
+		void* MACRO_ckit_window_free(CKIT_Window* window) {
+			for (int i = 0; i < ckit_vector_count(registered_windows); i++) {
+				if (window == registered_windows[i].ckit_window) {
+ 					ckit_vector_remove_at(registered_windows, i);
+				}
+			}
+
+			if (ckit_vector_count(registered_windows) == 0) {
+				ckit_vector_free(registered_windows);
+			}
+
+			ckit_free(window->bitmap->memory);
+			ckit_free(window->bitmap);
+			ckit_free(window);
+
+			return window;
+		}
+
 		Boolean ckit_window_should_quit(CKIT_Window* window) {
 			MSG msg;
 			while (PeekMessageA(&msg, NULLPTR, 0, 0, PM_REMOVE)) {
 				if (msg.message == WM_QUIT) {
 					ReleaseDC(window->handle, window->hdc);
-					ckit_free(window->bitmap->memory);
-					ckit_free(window->bitmap);
 					return TRUE;
 				}
 

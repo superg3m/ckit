@@ -86,7 +86,7 @@ int main() {
 		y_pos += y_velocity;
 	}
 
-	ckit_free(window);
+	ckit_window_free(window);
 
 	ckit_cleanup();
 	return 0;
