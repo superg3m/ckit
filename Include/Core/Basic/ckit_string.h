@@ -55,6 +55,7 @@ extern "C" {
 	//  }
 	//  ckit_vector_free(string_vector);
 	String* ckit_str_split(const char* string_buffer, const char* delimitor);
+	// String* ckit_str_split_with_char(const char* string_buffer, const char delimitor);
 	Boolean ckit_str_contains(const char* string_buffer, const char* contains);
 	s32 ckit_str_index_of(const char* string_buffer, const char* sub_string);
 	s32 ckit_str_last_index_of(const char* string_buffer, const char* sub_string);
