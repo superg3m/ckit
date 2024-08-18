@@ -36,20 +36,54 @@ int main() {
 	ckit_window_bind_icon("../../../assets/c_original_logo_icon_146611.ico");
 	CKIT_Window* window = ckit_window_create(width, height, "GameEngine");
 
-	u32 x_offset = 0;
-	u32 y_offset = 0;
+	float x_pos = 40;
+	float y_pos = 40;
+
+	float x_velocity = 1.0;
+	float y_velocity = 1.0;
+
+	u32 player_width = 40;
+	u32 player_height = 40;
+	u32 half_player_width = player_width / 2;
+	u32 half_player_height = player_height / 2;
+
+	u32 center_width = 10;
+	u32 center_height = 10;
+	u32 half_center_width = center_width / 2;
+	u32 half_center_height = center_height / 2;
+
 
 	while (!ckit_window_should_quit(window)) {
 		// set_bitmap_gradient(window, x_offset, y_offset);
-		ckit_window_clear_color(window, 0, 0, 0);
+		ckit_window_clear_color(window, (CKIT_Color){0, 0, 0, 255});
 		
-		ckit_window_draw_quad(window, 0, 300, 64, 256);
+		ckit_window_draw_quad(window, 0, height, width, 1, (CKIT_Color){255, 0, 0, 255}); // x axis
+		ckit_window_draw_quad(window, width, 0, 1, height, (CKIT_Color){0, 0, 255, 255}); // y axis
 
+		float offset_to_center_x = ((float)x_pos + (half_player_width)) - half_center_width;
+		float offset_to_center_y = ((float)y_pos + (half_player_height)) - half_center_height;
+
+		ckit_window_draw_quad(window, x_pos, y_pos, player_width, player_height, (CKIT_Color){0, 255, 0, 255});
+		ckit_window_draw_quad(window, offset_to_center_x, offset_to_center_y, center_width, center_height, (CKIT_Color){255, 0, 255, 255});
 
 		ckit_window_draw_bitmap(window);
+
+		Boolean left_check   = x_pos <= 0;
+		Boolean right_check  = (x_pos + player_width) >= width;
+
+		Boolean bottom_check = y_pos <= 0;
+		Boolean top_check    = (y_pos + player_height) >= height;
+
+		if (left_check || right_check) {
+			x_velocity *= -1;
+		}
+
+		if (bottom_check || top_check) {
+			y_velocity *= -1;
+		}
 		
-		x_offset++;
-		// y_offset++;
+		x_pos += x_velocity;
+		y_pos += y_velocity;
 	}
 
 	ckit_free(window);

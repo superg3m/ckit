@@ -2,6 +2,14 @@
 
 #include "../../Core/Basic/ckit_types.h"
 //========================== Begin Types ==========================
+typedef struct CKIT_Color {
+	u8 r;
+	u8 g;
+	u8 b;
+	u8 a;
+} CKIT_Color;
+
+
 #if defined(PLATFORM_WINDOWS)
 	#include <windows.h>
 	typedef struct CKIT_Bitmap {
@@ -35,8 +43,8 @@ extern "C" {
 	void ckit_window_bind_icon(const char* resource_path);
 	void ckit_window_bind_cursor(const char* resource_path);
 	Boolean ckit_window_should_quit(CKIT_Window* window);
-	void ckit_window_clear_color(CKIT_Window* window, u8 r, u8 g, u8 b);
-	void ckit_window_draw_quad(CKIT_Window* window, u32 start_x, u32 start_y, u32 width, u32 height);
+	void ckit_window_clear_color(CKIT_Window* window, CKIT_Color color);
+	void ckit_window_draw_quad(CKIT_Window* window, s32 start_x, s32 start_y, u32 width, u32 height, CKIT_Color color);
 	void ckit_window_draw_bitmap(CKIT_Window* window);
 #ifdef __cplusplus
 }
@@ -132,10 +140,9 @@ extern "C" {
 						  window->bitmap->memory, &window->bitmap->info, DIB_RGB_COLORS, SRCCOPY);
 		}
 
-		void ckit_window_draw_quad(CKIT_Window* window, u32 start_x, u32 start_y, u32 width, u32 height) {
-
+		void ckit_window_draw_quad(CKIT_Window* window, s32 start_x, s32 start_y, u32 width, u32 height, CKIT_Color color) {
 			const u32 VIEWPORT_WIDTH = window->bitmap->width;
-			const u32 VIEWPORT_HEIGHT = window->bitmap->width;
+			const u32 VIEWPORT_HEIGHT = window->bitmap->height;
 
 			u32 left = CLAMP(start_x, 0, VIEWPORT_WIDTH);
 			u32 right = CLAMP(start_x + width, 0, VIEWPORT_WIDTH);
@@ -151,18 +158,19 @@ extern "C" {
 				return;
 			}
 
-			const u32 stride = window->bitmap->width * window->bitmap->bytes_per_pixel;
-			u32* dest = (u32*)&window->bitmap->memory[left + (stride * bottom)];
+			size_t start_index = left + (VIEWPORT_WIDTH * bottom);
+			u32* dest = &((u32*)window->bitmap->memory)[start_index];
 
 			for (u32 y = 0; y < true_quad_height; y++) {
 				for (u32 x = 0; x < true_quad_width; x++) {
-					const u32 red = ((255) << 16);
-					const u32 green = ((255) << 8);
-					const u32 blue = ((255) << 0);
+					const u32 red = ((color.r) << 16);
+					const u32 green = ((color.g) << 8);
+					const u32 blue = ((color.b) << 0);
 					
 					const u32 rgb = red|green|blue;
 
-					dest[x + (y * true_quad_width)] = rgb;
+					size_t final_pixel_index = x + (y * VIEWPORT_WIDTH);
+					dest[final_pixel_index] = rgb;
 				}
 			}
 		}
@@ -252,7 +260,7 @@ extern "C" {
 			cursor_handle = (HCURSOR)LoadImageA(GetModuleHandle(NULL), resource_path, IMAGE_CURSOR, 0, 0, LR_LOADFROMFILE|LR_DEFAULTSIZE);
 		}
 
-		void ckit_window_clear_color(CKIT_Window* window, u8 r, u8 g, u8 b) {
+		void ckit_window_clear_color(CKIT_Window* window, CKIT_Color color) {
 			int stride = window->bitmap->width * window->bitmap->bytes_per_pixel;
 			u8* row = window->bitmap->memory;    
 			for(u32 y = 0; y < window->bitmap->height; y++)
@@ -260,9 +268,9 @@ extern "C" {
 				u32* pixel = (u32*)row;
 				for(u32 x = 0; x < window->bitmap->width; x++)
 				{
-					const u32 red = ((r) << 16);
-					const u32 green = ((g) << 8);
-					const u32 blue = ((b) << 0);
+					const u32 red = ((color.r) << 16);
+					const u32 green = ((color.g) << 8);
+					const u32 blue = ((color.b) << 0);
 					
 					const u32 rgb = red|green|blue;
 
