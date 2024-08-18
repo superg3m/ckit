@@ -13,6 +13,8 @@ ckit_printf("%cv\n") // (char vector)
 
 - [ ] I HAVE AND IDEA I'M GOING TO AUTO GENERATE THE ckit.h FILE
 
+- cloc . --fullpath --not-match-d='.*Modules/Graphics/glad' --not-match-f='.*Modules/Graphics/stb_image.h'
+
 # How to build
 1. ./bootstrap.ps1
 2. ./build.ps1 or ./build.ps1 -debug
