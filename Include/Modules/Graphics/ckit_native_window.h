@@ -118,12 +118,17 @@ extern "C" {
 
 			window->bitmap->info = bitmap_info;
 
-			if (window->bitmap->memory) {
+			size_t memory_size = window->bitmap->bytes_per_pixel * window->bitmap->width * window->bitmap->height;
+			if (window->bitmap->memory && (memory_size != 0)) {
 				ckit_free(window->bitmap->memory);
 			}
 
-			size_t memory_size = window->bitmap->bytes_per_pixel * window->bitmap->width * window->bitmap->height;
-    		window->bitmap->memory = ckit_alloc(memory_size);
+			// Date: August 17, 2024
+			// NOTE(Jovanni): THERE IS A BUG HERE I THINK!
+
+			if (memory_size != 0) {
+    			window->bitmap->memory = ckit_alloc(memory_size);
+			}
 		}
 
 		void ckit_window_draw_bitmap(CKIT_Window* window) {
