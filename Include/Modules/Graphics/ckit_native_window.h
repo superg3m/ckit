@@ -133,9 +133,6 @@ extern "C" {
 				ckit_free(window->bitmap->memory);
 			}
 
-			// Date: August 17, 2024
-			// NOTE(Jovanni): THERE IS A BUG HERE I THINK!
-
 			if (memory_size != 0) {
     			window->bitmap->memory = ckit_alloc(memory_size);
 			}
