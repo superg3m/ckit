@@ -24,7 +24,7 @@
             "../ckit.c"
         ],
 
-        "additional_libs": ["User32.lib", "Gdi32.lib"]
+        "additional_libs": [""]
     },
 
     "./Tests/CoreTest/build_$compiler_type" : {

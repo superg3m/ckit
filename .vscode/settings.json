@@ -93,7 +93,8 @@
 		"unordered_map": "c",
 		"xstddef": "c",
 		"*.rh": "cpp",
-		"ckit_native_window.h": "c"
+		"ckit_native_window.h": "c",
+		"ckit_platform_function_bindings.h": "c"
 	},
 	"editor.insertSpaces": false
 }

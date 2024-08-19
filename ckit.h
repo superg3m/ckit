@@ -11,6 +11,8 @@
 #include "./Include/Core/Basic/ckit_string.h"
 #include "./Include/Core/Basic/ckit_math.h"
 #include "./Include/Core/Basic/ckit_hashing.h"
+
+#include "./Include/Core/Basic/ckit_platform_function_bindings.h"
 #include "./Include/Core/Basic/ckit_os.h"
 #include "./Include/Core/Basic/ckit_platform_services.h"
 
