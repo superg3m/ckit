@@ -86,7 +86,7 @@ int main() {
 		y_pos += y_velocity;
 	}
 
-	ckit_window_free(window);
+	ckit_window_free(window); // hmm how can I make this safer?
 
 	ckit_cleanup();
 	return 0;
