@@ -193,7 +193,7 @@ extern "C" {
 			BITMAPINFO bitmap_info;
 			bitmap_info.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
         	bitmap_info.bmiHeader.biWidth = window->bitmap->width;
-        	bitmap_info.bmiHeader.biHeight = window->bitmap->height;
+        	bitmap_info.bmiHeader.biHeight = -window->bitmap->height;
         	bitmap_info.bmiHeader.biPlanes = 1;
         	bitmap_info.bmiHeader.biBitCount = bits_per_pixel;
         	bitmap_info.bmiHeader.biCompression = BI_RGB;
@@ -500,7 +500,7 @@ extern "C" {
 			// Write to the bitmap
 			for (int y = 0; y < window->memory->bitmap->height; ++y) {
 				for (int x = 0; x < window->memory->bitmap->width; ++x) {
-					XPutPixel(bitmap->memory, x, y, (x ^ y) & 0xff);  // Simple pattern
+					XPutPixel(bitmap->memory, x, y, ckit_color_to_u32(color));  // Simple pattern
 				}
 			}
 		}
