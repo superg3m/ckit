@@ -38,7 +38,7 @@ typedef struct CKIT_Color {
 	typedef struct CKIT_Window {
 		int a;
 	} CKIT_Window;
-#elif (defined(PLATFORM_LINUX) && !defined(WSL))
+#elif defined(PLATFORM_LINUX) && !defined(WSL)
 	// https://www.youtube.com/watch?v=d2E7ryHCK08
 	// https://www.x.org/releases/X11R7.7/doc/libX11/libX11/libX11.html
 	// https://www.youtube.com/watch?v=u2F_Lif4KGA&list=PLyxjkYF62ii8ZgaRBPlj9nVIoOeIaszw-
