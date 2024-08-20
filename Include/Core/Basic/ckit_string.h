@@ -51,7 +51,7 @@ extern "C" {
 	// Caller is required to loop through the vector and free all the strings
 	//
 	//  for (u32 i = 0; i < ckit_vector_count(string_vector); i++) {
-	//     ckit_str_free(string_vector[i]);
+	//     LOG_PRINT("%s\n", string_vector[i]);
 	//  }
 	//  ckit_vector_free(string_vector);
 	String* ckit_str_split(const char* string_buffer, const char* delimitor);
@@ -180,7 +180,8 @@ extern "C" {
 	}
 
 	void ckit_str_recanonicalize_header_length(String str) {
-		ckit_str_header(str)->length = ckit_cstr_length(str);
+		u32 actual_length = ckit_cstr_length(str);
+		ckit_str_header(str)->length = actual_length;
 	}
 
 	void ckit_str_copy(String str1, const char* source) {
@@ -233,7 +234,7 @@ extern "C" {
 	}
 
 	String ckit_substring(const char* string_buffer, u32 start_range, u32 end_range) {
-		String ret_string = ckit_str_create_custom("", (end_range - start_range) + 1);
+		String ret_string = ckit_str_create_custom("", ((end_range + 1) - start_range) + 1);
 		ckg_substring(string_buffer, ret_string, start_range, end_range);
 		ckit_str_recanonicalize_header_length(ret_string);
 
@@ -321,12 +322,10 @@ extern "C" {
 		String ret = ckit_str_create("");
 
 		if (start_delimitor_index == -1 || end_delimitor_index == -1) {
-			ckit_str_free(ret);
 			return NULLPTR;
 		}
 
 		if (start_delimitor_index > end_delimitor_index) {
-			ckit_str_free(ret);
 			return NULLPTR; // The start delimtor is after the end delimitor
 		}
 

@@ -105,7 +105,6 @@ void inital_operations() {
 	ckit_str_append(str, " | FEEL THE WORLD AROUND ME!");
 	LOG_PRINT("String: %s | length: %d | cstrlen: %d\n", str, ckit_str_length(str), ckit_cstr_length(str));
 	LOG_PRINT("\n");
-	ckit_str_free(str);
 
 	int* int_array = (int*)ckit_alloc(sizeof(int) * 5);
 	int* int_array2 = (int*)ckit_alloc(sizeof(int) * 5);
@@ -171,7 +170,6 @@ void middle_ground_opperations() {
 	String* split_strings = ckit_str_split("They said it couldn't be done. They tried to recite the dark magics to me! THEY DON'T KNOW I WAS THERE WHEN THEY WERE WRITTEN!", " ");
 	for (u32 i = 0; i < ckit_vector_count(split_strings); i++) {
 		LOG_SUCCESS("str #%d | %s\n", i, split_strings[i]);
-		ckit_str_free(split_strings[i]);
 	}
 	ckit_vector_free(split_strings);
 }
@@ -370,19 +368,17 @@ int main() {
 	stack_operations();
 	u32 test_overflow = 5;
 	u32 max_value =  10;
-	LOG_SUCCESS("CLMAP OVERFLOW %d\n", CLAMP(65, test_overflow, max_value));
+	LOG_SUCCESS("CLAMP OVERFLOW %d\n", CLAMP(65, test_overflow, max_value));
 
-	LOG_SUCCESS("CLMAP %d\n", CLAMP(5000, 40, 100));
+	LOG_SUCCESS("CLAMP %d\n", CLAMP(5000, 40, 100));
 
 	int test_int_to_str = 5235;
 
 	String str_test = ckit_str_int_to_str(test_int_to_str);
 	LOG_ERROR("AT THE END TEST: %s\n\n", str_test);
-	ckit_str_free(str_test);
 
 	String str_between_test = ckit_str_between_delimiters("WOW - ${Hello!}", "${", "}");
 	LOG_DEBUG("String_Between: %s\n", str_between_test);
-	ckit_str_free(str_between_test);
 
 	LOG_SUCCESS("String: %s\n", "Hello There! EVERYTHING IS GREEN!");
 	LOG_WARN("String ${WILL POWER = %d} TESTING BINGO BONGO: ${%s} HAHHA THIS SHOULD WORK ${RIGHT?}\n", 5, "I'M PURPLE ONLY!");
