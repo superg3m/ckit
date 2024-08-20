@@ -20,7 +20,6 @@ typedef char* String;
 extern "C" {
 #endif
 	String ckit_str_create_custom(const char* c_str, size_t capacity);
-	String MACRO_ckit_str_free(String str);
 	u32 ckit_cstr_length(const char* str);
 	u32 ckit_str_length(const String str);
 	Boolean ckit_str_equal(const char* str1, const char* str2);
@@ -36,14 +35,6 @@ extern "C" {
 	// If you are copying data to the string and need to update the header state specifically for length
 	void ckit_str_recanonicalize_header_length(String str);
 
-	/**
-	 * @brief Must be freed with ckit_str_free
-	 * 
-	 * @param string_buffer 
-	 * @param start_range 
-	 * @param end_range 
-	 * @return String
-	 */
 	String ckit_substring(const char* string_buffer, u32 start_range, u32 end_range);
 
 	// Little bit tricky. This method returns a vector of strings so 
@@ -72,7 +63,6 @@ extern "C" {
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
 #define ckit_str_create(str) ckit_str_create_custom(str, 0)
-#define ckit_str_free(str) str = MACRO_ckit_str_free(str);
 
 #define ckit_str_insert(str, source, index) str = MACRO_ckit_str_insert(str, source, index);
 #define ckit_str_insert_char(str, source, index) str = MACRO_ckit_str_insert_char(str, source, index);
@@ -112,12 +102,6 @@ extern "C" {
 	internal void ckit_str_insert_header(char** str, CKIT_StringHeader header) {
 		ckit_memory_copy(&header, *str,  sizeof(header),  sizeof(header) + header.capacity);
 		*str = ((u8*)*str) + sizeof(header);
-	}
-
-	String MACRO_ckit_str_free(String str) {
-		ckit_str_check_magic(str);
-		str = NULLPTR;
-		return str;
 	}
 
 	internal inline String ckit_str_grow(String str, size_t new_allocation_size) {
