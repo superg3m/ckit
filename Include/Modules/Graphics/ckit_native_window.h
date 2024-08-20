@@ -32,13 +32,68 @@ typedef struct CKIT_Color {
 		CKIT_Bitmap* bitmap;
 	} CKIT_Window;
 #elif defined(PLATFORM_LINUX)
+	// https://www.youtube.com/watch?v=d2E7ryHCK08
+	// https://www.x.org/releases/X11R7.7/doc/libX11/libX11/libX11.html
+	// https://www.youtube.com/watch?v=u2F_Lif4KGA&list=PLyxjkYF62ii8ZgaRBPlj9nVIoOeIaszw-
+	// https://www.youtube.com/watch?v=qZmJwk2xrJ0
+	#include <x11/xlib.h>
+
 	typedef struct CKIT_Bitmap {
 		int a;
 	} CKIT_Bitmap;
 
 	typedef struct CKIT_Window {
-		int a;
+		Display* x11_display;
+		Window* x11_window;
 	} CKIT_Window;
+
+	/*
+	#include <X11/Xlib.h>
+	#include <stdlib.h>
+
+	int main() {
+		Display *display = XOpenDisplay(NULL);
+		if (!display) return 1;
+
+		int screen = DefaultScreen(display);
+		Window root = RootWindow(display, screen);
+		Window win = XCreateSimpleWindow(display, root, 0, 0, 800, 600, 1, BlackPixel(display, screen), WhitePixel(display, screen));
+		XMapWindow(display, win);
+
+		// Bitmap memory setup
+		int width = 800;
+		int height = 600;
+		XImage *ximage = XCreateImage(display, DefaultVisual(display, screen), DefaultDepth(display, screen),
+									ZPixmap, 0, malloc(width * height * 4), width, height, 32, 0);
+
+		// Write to the bitmap
+		for (int y = 0; y < height; ++y) {
+			for (int x = 0; x < width; ++x) {
+				XPutPixel(ximage, x, y, (x ^ y) & 0xff);  // Simple pattern
+			}
+		}
+
+		// Display the image
+		GC gc = XCreateGC(display, win, 0, NULL);
+		XPutImage(display, win, gc, ximage, 0, 0, 0, 0, width, height);
+		XFlush(display);
+
+		// Event loop to keep the window open
+		XEvent event;
+		while (1) {
+			XNextEvent(display, &event);
+			if (event.type == Expose) {
+				XPutImage(display, win, gc, ximage, 0, 0, 0, 0, width, height);
+			}
+		}
+
+		XDestroyImage(ximage);
+		XFreeGC(display, gc);
+		XDestroyWindow(display, win);
+		XCloseDisplay(display);
+		return 0;
+	}
+	*/
 #endif
 //=========================== End Types ===========================
 
@@ -375,7 +430,15 @@ extern "C" {
 		}
 	#elif defined(PLATFORM_LINUX)
 		CKIT_Window* ckit_window_create(u32 width, u32 height, const char* name) {
-			
+			CKIT_Window* ret_window = ckit_alloc(sizeof(CKIT_Window));
+
+			Display* display = XOpenDisplay(NULLPTR);
+			Window window = XCreateSimpleWindow(display, DefaultRootWindow(display), 0, 0 width, height, 1, BlackPixel(display, 0), WhitePixel(display, 0));
+			XMapWindow(display, window);
+			XSelectInput(display, window, ExposureMask);
+
+			ret_window->x11_display = display;
+			ret_window->x11_window = window;
 		}
 
 		void* MACRO_ckit_window_free(CKIT_Window* window) {
@@ -391,7 +454,10 @@ extern "C" {
 		}
 
 		Boolean ckit_window_should_quit(CKIT_Window* window) {
-			
+			XEvent event = {0};
+			while (TRUE) {
+				XNextEvent(window->x11_display, &event);
+			}
 		}
 
 		void ckit_window_clear_color(CKIT_Window* window, CKIT_Color color) {
