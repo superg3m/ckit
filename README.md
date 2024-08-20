@@ -1,4 +1,4 @@
-### --ONLY WORKS ON CL.exe MSVC-- windows only right now because programming is hard lmao
+### -- GRAPHICS MODULE ONLY WORKS ON CL.exe MSVC -- windows only right now because programming is hard lmao
 
 # Ckits's Core Thesis
 - The point of the ckit is to provide a nice library to build c projects with.
