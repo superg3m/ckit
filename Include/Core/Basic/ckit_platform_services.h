@@ -88,6 +88,8 @@ extern "C" {
 				dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
 				SetConsoleMode(console_handle, dwMode);
 
+				ckit_assert(CloseHandle(console_handle));
+
 				freopen("CONOUT$", "w", stdout);
 				freopen("CONIN$", "r", stdin);
 				freopen("CONOUT$", "w", stderr);

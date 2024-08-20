@@ -13,6 +13,7 @@ typedef struct CKIT_SystemObjectInfo {
 typedef struct CKIT_File {
 	char* name;
 	size_t size;
+	size_t cursor;
 } CKIT_File;
 
 typedef struct CKIT_Directory {
@@ -34,13 +35,21 @@ extern "C" {
 	void ckit_os_get_items();
 	void ckit_os_chdir();
 	void ckit_os_mkdir();
-	void ckit_os_create_file(const char* path); // prob just assert if path doesn't exists
+	void ckit_os_create_file(const char* path);
 	Boolean ckit_os_path_exists(const char* path);
 	void ckit_os_run_subprocess();
 	void ckit_os_get_file_info();
 	String ckit_os_path_join(char* path, const char* to_join);
 	void ckit_os_system(const char* command);
 
+	CKIT_File* ckit_os_file_open(const char* path);
+	String ckit_os_file_read_next_line(CKIT_File* file);
+	String ckit_os_file_read_next_integer(CKIT_File* file);
+	String ckit_os_file_read_next_float(CKIT_File* file);
+
+	CKIT_File* ckit_os_file_close(CKIT_File* file);
+
+	CKIT_File* MACRO_ckit_os_close_file(CKIT_File* file);
 	u8* ckit_os_read_entire_file(const char* path);
 
 	void ckit_os_push();
@@ -103,7 +112,8 @@ extern "C" {
 		}
 		void ckit_os_mkdir();
 		void ckit_os_create_file(const char* path) {
-			// ckit_assert(ckit_str_length(cwd + path) > PLATFORM_MAX_PATH);
+			HANDLE file_handle = CreateFileA(path, GENERIC_READ, 0, NULLPTR, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, NULLPTR);
+			ckit_assert(CloseHandle(file_handle));
 		}
 
 		Boolean ckit_os_path_exists(const char* path) {
@@ -114,7 +124,6 @@ extern "C" {
 		u8* ckit_os_read_entire_file(const char* path) {
 			ckit_assert(ckit_os_path_exists(path));
 
-			// THIS IS WINDOWS EXCLUSIVE FOR RIGHT NOW!!!
 			HANDLE file_handle = CreateFileA(path, GENERIC_READ, 0, NULLPTR, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULLPTR);
 			LARGE_INTEGER large_int = {0};
 			BOOL succuess = GetFileSizeEx(file_handle, &large_int);
@@ -123,7 +132,7 @@ extern "C" {
 
 			u8* file_data = ckit_alloc_custom(file_size, TAG_CKIT_EXPECTED_USER_FREE);
 			succuess = ReadFile(file_handle, file_data, file_size, &bytes_read, NULLPTR);
-
+			ckit_assert(CloseHandle(file_handle));
 			return file_data;
 		}
 

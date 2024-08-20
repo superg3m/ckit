@@ -27,18 +27,14 @@ ckit_printf("%cv\n") // (char vector)
 - '[ ]': Haven't started working on it
 
 ### Known issues/bugs
-1. - [x] Queue might not be able to hold more than 8 characters (the sizeof(char*)) easy fix
-2. - [ ] Hashmap is not very robust I should offer a compare funciton hashmap and give default presets for primatives.
+1. - [ ] Hashmap is not very robust I should offer a compare funciton hashmap and give default presets for primatives.
 
 ### Next Steps
-1. - [x] Clean up arenas (Add extendable pages to arenas)
-2. - [x] init pre-exisiting arenas for things like: Strings (might have a bug in it but so far seems to work like a charm)
+1. - [ ] Start writing EventSystem
+2. - [ ] Write a bunch of tests validating and verifying all the utilities and logic.
 
-3. - [ ] Make string stuff a bit more robust I would like to impose a cap on it. (just make the capacity not be able to pass a max)
-4. - [ ] Rewrite all Core utilities using new tracker system, and then Write a bunch of tests validating and verifying all the utilities and logic.
-5. - [ ] Start writing EventSystem
-6. - [ ] Start writing the **GAME ENGINE** you have everything you need in order to succeed
-7. - [ ] Parse the message better so you can intuitively \n something.
+3. - [ ] Start writing the **GAME ENGINE** you have everything you need in order to succeed
+4. - [ ] Parse the message better so you can intuitively \n something.
 
 Thoughts:
 	I need to insentivise arenas way more than I currently do it makes lifetimes siginificantly easier.
@@ -79,22 +75,30 @@ Thoughts:
 
 ### OS
 - [ ] ckit_os.h
-	- [/] ckit_os_get_cwd();
+	- [ ] ckit_os_get_cwd();
 	- [ ] ckit_os_ls();
 	- [ ] ckit_os_get_items();
 	- [/] ckit_os_chdir();
 	- [ ] ckit_os_mkdir();
-	- [ ] ckit_os_create_file();
-	- [x] ckit_os_exists();
-	- [x] ckit_os_read_entire_file();
+	- [x] ckit_os_create_file(path); // prob just assert if path doesn't exists
+	- [x] ckit_os_path_exists(path);
 	- [ ] ckit_os_run_subprocess();
 	- [ ] ckit_os_get_file_info();
-	- [x] ckit_os_system();
-	- [ ] ckit_os_path_join();
+	- [x] ckit_os_path_join(path, to_join);
+	- [x] ckit_os_system(command);
+	- [ ] ckit_os_file_open(path);
+	- [ ] ckit_os_file_read_next_line( file);
+	- [ ] ckit_os_file_read_next_integer(file);
+	- [ ] ckit_os_file_read_next_float(file);
+	- [ ] ckit_os_file_close(file);
+	- [ ] ckit_os_close_file(file);
+	- [x] ckit_os_read_entire_file(path);
 	- [ ] ckit_os_push();
 	- [ ] ckit_os_pop();
 	- [ ] ckit_os_dir_append_subdir(directory, sub_directory);
 	- [ ] ckit_os_dir_append_file(directory, file);
+	- [ ] ckit_os_timer_start()
+	- [ ] ckit_os_timer_end()
 
 ### Collection 
 - [X] ckit_hashmap.h (WANT TO REVISIT THIS BECAUSE I CAN MAKE IT BETTER 100%)
