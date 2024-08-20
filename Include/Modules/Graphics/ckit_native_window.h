@@ -30,7 +30,7 @@ typedef struct CKIT_Color {
 		const char* name;
 		CKIT_Bitmap* bitmap;
 	} CKIT_Window;
-#elif defined(WSL)
+#elif defined(CKIT_WSL)
 	typedef struct CKIT_Bitmap {
 		int a;
 	} CKIT_Bitmap;
