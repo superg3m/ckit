@@ -79,17 +79,17 @@ Thoughts:
 
 ### OS
 - [ ] ckit_os.h
-	- [ ] ckit_os_get_cwd();
+	- [/] ckit_os_get_cwd();
 	- [ ] ckit_os_ls();
 	- [ ] ckit_os_get_items();
-	- [ ] ckit_os_chdir();
+	- [/] ckit_os_chdir();
 	- [ ] ckit_os_mkdir();
 	- [ ] ckit_os_create_file();
 	- [x] ckit_os_exists();
 	- [x] ckit_os_read_entire_file();
 	- [ ] ckit_os_run_subprocess();
 	- [ ] ckit_os_get_file_info();
-	- [ ] ckit_os_system();
+	- [x] ckit_os_system();
 	- [ ] ckit_os_path_join();
 	- [ ] ckit_os_push();
 	- [ ] ckit_os_pop();
