@@ -12,17 +12,13 @@
     "compiler_treat_warnings_as_errors": true,
 
     "project_dependencies": ["ckg"],
-    "disable_specific_warnings": ["4668", "4820"],
+    "disable_specific_warnings": ["5105", "4668", "4820"],
     "inject_as_argument": [""],
 
     "./ckit_build_$compiler_type": {
         "output_name": "ckit.lib",
         "compile_time_defines": [""],
-        "include_paths": [
-            "../Include/Core/Basic", 
-            "../Include/Core/Collections", 
-            "../Include/Modules/Parser_and_Lexer"
-        ],
+        "include_paths": [""],
         "source_files": [
             "../ckg/ckg.c",
             "../ckit.c"
@@ -31,21 +27,27 @@
         "additional_libs": [""]
     },
 
-    "./Tests/ckit_build_$compiler_type" : {
+    "./Tests/CoreTest/build_$compiler_type" : {
         "output_name" : "test_ckit.exe",
         "compile_time_defines" : [""],
-        "include_paths" : [
-            "../../Include/Core/Basic", 
-            "../../Include/Core/Collections", 
-            "../../Include/Modules/Parser_and_Lexer"
-        ],
-        "source_files" : ["../ckit/*.c"],
+        "include_paths" : [""],
+        "source_files" : ["../*.c"],
 
         "additional_libs" : [
-            "../../ckit_build_$compiler_type/ckit.lib",
-            "Shlwapi.lib"
+            "../../../ckit_build_$compiler_type/ckit.lib"
         ]
     },
 
-    "execute": ["test_ckit.exe"]
+    "./Tests/GraphicsTest/build_$compiler_type" : {
+        "output_name" : "test_graphics_ckit.exe",
+        "compile_time_defines" : [""],
+        "include_paths" : [""],
+        "source_files" : ["../*.c"],
+
+        "additional_libs" : [
+            "../../../ckit_build_$compiler_type/ckit.lib"
+        ]
+    },
+
+    "execute": ["test_graphics_ckit.exe"]
 }

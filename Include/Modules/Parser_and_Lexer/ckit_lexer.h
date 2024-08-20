@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ckit_types.h"
+#include "./ckit_types.h"
 #define CKIT_LEXER_SCRATCH_BUFFER_CAPACITY 512
 //========================== Begin Types ==========================
 typedef enum CKIT_Token_Type {
@@ -109,12 +109,14 @@ extern "C" {
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 #if defined(CKIT_IMPL)
-	#include "ckit_char.h"
-	#include "ckit_file_system.h"
-	#include "ckit_memory.h"
-	#include "ckit_vector.h"
-	#include "ckit_hashmap.h"
-	#include "ckit_hashset.h"
+	#include "../../Core/Basic/ckit_char.h"
+	#include "../../Core/Basic/ckit_memory.h"
+	
+	#include "../../Core/Collections/ckit_vector.h"
+	#include "../../Core/Collections/ckit_hashmap.h"
+	#include "../../Core/Collections/ckit_hashset.h"
+
+	#include "../Structures/ckit_file_system.h"
 
 	char* keywords[] = {
 		"if",

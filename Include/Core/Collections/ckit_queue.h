@@ -6,8 +6,8 @@
 // if the write pointer is greater than the next_read pointer then assert
 // if read pointer is on next read pointer and you try to read again assert because you will be ahead of the write pointer
 
-#include "ckit_types.h"
-#include "ckit_memory.h"
+#include "../Basic/ckit_types.h"
+#include "../Basic/ckit_memory.h"
 //========================== Begin Types ==========================
 typedef struct CKIT_Queue {
 	u32 capacity;
@@ -46,7 +46,7 @@ extern "C" {
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 
 #if defined(CKIT_IMPL)
-	#include "ckit_assert.h"
+	#include "../Basic/ckit_assert.h"
 
 	CKIT_Queue* MACRO_ckit_queue_create(u32 inital_capacity, size_t element_size_in_bytes, Boolean is_pointer_type, const char* file, const u32 line, const char* function) {
 		CKIT_Queue* ret = MACRO_ckit_alloc(sizeof(CKIT_Queue), TAG_CKIT_CORE_QUEUE, file, line, function);

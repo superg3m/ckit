@@ -148,7 +148,7 @@ void middle_ground_opperations() {
 	LOG_ERROR("FINAL POINT: (%f, %f)\n", ret.x, ret.y);
 
 
-	FileSystem file_system = file_system_create("../../assets/Learn_About_BMP.bmp");
+	FileSystem file_system = file_system_create("../../../assets/Learn_About_BMP.bmp");
 	file_open(&file_system);
 
 	u32 offset = 0; 
@@ -370,7 +370,9 @@ int main() {
 	stack_operations();
 	u32 test_overflow = 5;
 	u32 max_value =  10;
-	LOG_SUCCESS("%d\n", CLAMP(65, test_overflow, max_value));
+	LOG_SUCCESS("CLMAP OVERFLOW %d\n", CLAMP(65, test_overflow, max_value));
+
+	LOG_SUCCESS("CLMAP %d\n", CLAMP(5000, 40, 100));
 
 	int test_int_to_str = 5235;
 
@@ -385,7 +387,7 @@ int main() {
 	LOG_SUCCESS("String: %s\n", "Hello There! EVERYTHING IS GREEN!");
 	LOG_WARN("String ${WILL POWER = %d} TESTING BINGO BONGO: ${%s} HAHHA THIS SHOULD WORK ${RIGHT?}\n", 5, "I'M PURPLE ONLY!");
 
-	u8* file_data = ckit_os_read_entire_file("../../assets/Learn_About_BMP.bmp");
+	u8* file_data = ckit_os_read_entire_file("../../../assets/Learn_About_BMP.bmp");
 	BmpHeader bmp_header = {0};
 	ckit_memory_copy(file_data, &bmp_header, sizeof(BmpHeader), sizeof(BmpHeader));
 	ckit_free(file_data);

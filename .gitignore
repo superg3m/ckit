@@ -34,12 +34,17 @@
 # Debug Info
 *.pdb
 *.rdi
+*.ilk
 
 # c-build
-ckg_build_cl/
+build_cl/
+/Tests/CoreTest/build_cl
+/Tests/GraphicsTest/build_cl
+
 ckit_build_cl/
 ./ckg/
 c-build/
 *.ps1
 !bootstrap.ps1
 ckg/
+

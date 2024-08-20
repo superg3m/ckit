@@ -1,3 +1,5 @@
+### -- GRAPHICS MODULE ONLY WORKS ON CL.exe MSVC -- windows only right now because programming is hard lmao
+
 # Ckits's Core Thesis
 - The point of the ckit is to provide a nice library to build c projects with.
 - Ckit is built with the granular api ckit granular [CKG](https://github.com/superg3m/ckg) (OUT DATED FIX THIS!)
@@ -8,6 +10,10 @@ ckit_printf("%iv\n") // (int vector)
 ckit_printf("%fv\n") // (float vector)
 ckit_printf("%sv\n") // (string vector)
 ckit_printf("%cv\n") // (char vector)
+
+- [ ] I HAVE AND IDEA I'M GOING TO AUTO GENERATE THE ckit.h FILE
+
+- cloc . --fullpath --not-match-d='.*Modules/Graphics/glad' --not-match-f='.*Modules/Graphics/stb_image.h'
 
 # How to build
 1. ./bootstrap.ps1
@@ -73,17 +79,17 @@ Thoughts:
 
 ### OS
 - [ ] ckit_os.h
-	- [ ] ckit_os_get_cwd();
+	- [/] ckit_os_get_cwd();
 	- [ ] ckit_os_ls();
 	- [ ] ckit_os_get_items();
-	- [ ] ckit_os_chdir();
+	- [/] ckit_os_chdir();
 	- [ ] ckit_os_mkdir();
 	- [ ] ckit_os_create_file();
 	- [x] ckit_os_exists();
 	- [x] ckit_os_read_entire_file();
 	- [ ] ckit_os_run_subprocess();
 	- [ ] ckit_os_get_file_info();
-	- [ ] ckit_os_system();
+	- [x] ckit_os_system();
 	- [ ] ckit_os_path_join();
 	- [ ] ckit_os_push();
 	- [ ] ckit_os_pop();

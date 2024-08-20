@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ckit_types.h"
+#include "./ckit_types.h"
 //========================== Begin Types ==========================
 typedef char* String;
 
@@ -46,8 +46,8 @@ extern "C" {
 	 */
 	String ckit_substring(const char* string_buffer, u32 start_range, u32 end_range);
 
-	// Little bit tricky. This method eturns a vector of strings so 
-	// ckit_vector_count: to get the number of string it returned 
+	// Little bit tricky. This method returns a vector of strings so 
+	// ckit_vector_count: to get the number of strings it returned 
 	// Caller is required to loop through the vector and free all the strings
 	//
 	//  for (u32 i = 0; i < ckit_vector_count(string_vector); i++) {
@@ -55,6 +55,7 @@ extern "C" {
 	//  }
 	//  ckit_vector_free(string_vector);
 	String* ckit_str_split(const char* string_buffer, const char* delimitor);
+	// String* ckit_str_split_with_char(const char* string_buffer, const char delimitor);
 	Boolean ckit_str_contains(const char* string_buffer, const char* contains);
 	s32 ckit_str_index_of(const char* string_buffer, const char* sub_string);
 	s32 ckit_str_last_index_of(const char* string_buffer, const char* sub_string);
@@ -83,9 +84,9 @@ extern "C" {
 #if defined(CKIT_IMPL)
 	#include "../../../ckg/Include/ckg_cstring.h"
 
-	#include "ckit_assert.h"
-	#include "ckit_memory.h"
-	#include "ckit_vector.h"
+	#include "./ckit_assert.h"
+	#include "./ckit_memory.h"
+	#include "../Collections/ckit_vector.h"
 	typedef struct CKIT_StringHeader {
 		u32 length; 
 		size_t capacity;
@@ -95,7 +96,7 @@ extern "C" {
 	#define ckit_str_header(string) ((CKIT_StringHeader*)(string - sizeof(CKIT_StringHeader)))
 	#define CKIT_STR_MAGIC "CKIT_MAGIC_STRING"
 
-	#include "ckit_arena.h"
+	#include "./ckit_arena.h"
 	CKIT_Arena* string_arena;
 
 	void ckit_str_register_arena() {

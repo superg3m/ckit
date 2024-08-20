@@ -4,8 +4,8 @@
  * Date: May 14, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-#include "ckit_types.h"
-#include "ckit_string.h"
+#include "../Basic/ckit_types.h"
+#include "../Basic/ckit_string.h"
 
 #define CKIT_HASHSET_DEFAULT_LOAD_FACTOR 0.75
 //========================== Begin Types ==========================
@@ -40,7 +40,7 @@ Boolean ckit_hashset_has(CKIT_HashSet* hashset, char* key);
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 
 #if defined(CKIT_IMPL)
-	#include "ckit_vector.h"
+	#include "./ckit_vector.h"
 
 	float ckit_hashset_load_factor(CKIT_HashSet* hashset) {
 		return (float)hashset->count / (float)hashset->capacity;

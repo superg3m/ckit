@@ -1,7 +1,7 @@
 #pragma once
 
-#include "ckit_types.h"
-#include "ckit_linked_list.h"
+#include "./ckit_types.h"
+#include "../Collections/ckit_linked_list.h"
 //========================== Begin Types ==========================
 typedef struct CKIT_ArenaPage {
 	void* base_address;
@@ -49,8 +49,8 @@ extern "C" {
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 
 #if defined(CKIT_IMPL)
-	#include "ckit_memory.h"
-	#include "ckit_assert.h"
+	#include "./ckit_memory.h"
+	#include "./ckit_assert.h"
 
 	void ckit_memory_arena_register(CKIT_Arena* arena);
 	void ckit_memory_arena_unregister(CKIT_Arena* arena);
