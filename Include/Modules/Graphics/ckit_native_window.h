@@ -9,7 +9,6 @@ typedef struct CKIT_Color {
 	u8 a;
 } CKIT_Color;
 
-
 #if defined(PLATFORM_WINDOWS)
 	#include <windows.h>
 
@@ -39,14 +38,17 @@ typedef struct CKIT_Color {
 	#include <x11/xlib.h>
 
 	typedef struct CKIT_Bitmap {
-		int a;
+		u16 height;
+		u16 width;
+		u16 bytes_per_pixel;
+		XImage* memory;
+		GC x11_gc;
 	} CKIT_Bitmap;
 
 	typedef struct CKIT_Window {
 		Display* x11_display;
 		Window* x11_window;
-		GC x11_gc;
-		XImage memory;
+		CKIT_Bitmap* bitmap;
 	} CKIT_Window;
 
 	/*
@@ -132,6 +134,16 @@ extern "C" {
 	#include "../../Core/Basic/ckit_logger.h"
 	#include "../../Core/Basic/ckit_os.h"
 	#include "../../Core/Basic/ckit_platform_function_bindings.h"
+
+	u32 ckit_color_to_u32(CKIT_Color color) {
+		const u32 red = ((color.r) << 16);
+		const u32 green = ((color.g) << 8);
+		const u32 blue = ((color.b) << 0);
+						
+		const u32 rgb = red|green|blue;
+
+		return rgb;
+	}
 
 	#if defined(PLATFORM_WINDOWS)
 		typedef struct CKIT_WindowEntry {
@@ -345,13 +357,7 @@ extern "C" {
 				u32* pixel = (u32*)row;
 				for(u32 x = 0; x < window->bitmap->width; x++)
 				{
-					const u32 red = ((color.r) << 16);
-					const u32 green = ((color.g) << 8);
-					const u32 blue = ((color.b) << 0);
-					
-					const u32 rgb = red|green|blue;
-
-					*pixel++ = rgb;
+					*pixel++ = ckit_color_to_u32(color);
 				}
 				row += stride;
 			}
@@ -445,27 +451,26 @@ extern "C" {
 			XMapWindow(display, win);
 
 			// Bitmap memory setup
-			int width = 800;
-			int height = 600;
-			XImage *ximage = XCreateImage(display, DefaultVisual(display, screen), DefaultDepth(display, screen),
-										ZPixmap, 0, ckit_alloc(width * height * 4), width, height, 32, 0);
+			CKIT_Bitmap* bitmap = sizeof(CKIT_Bitmap);
+			bitmap->bytes_per_pixel = 4;
+			bitmap->memory = XCreateImage(display, DefaultVisual(display, screen), DefaultDepth(display, screen),
+										ZPixmap, 0, ckit_alloc(width * height * bytes_per_pixel), width, height, 32, 0);
 
 			// Write to the bitmap
 			for (int y = 0; y < height; ++y) {
 				for (int x = 0; x < width; ++x) {
-					XPutPixel(ximage, x, y, (x ^ y) & 0xff);  // Simple pattern
+					XPutPixel(bitmap->memory, x, y, (x ^ y) & 0xff);  // Simple pattern
 				}
 			}
 
 			// Display the image
-			GC gc = XCreateGC(display, win, 0, NULL);
-			XPutImage(display, win, gc, ximage, 0, 0, 0, 0, width, height);
+			bitmap->gc = XCreateGC(display, win, 0, NULL);
+			XPutImage(display, win, bitmap->gc, bitmap->memory, 0, 0, 0, 0, width, height);
 			XFlush(display);
 
 			ret_window->x11_display = display;
 			ret_window->x11_window = win;
-			ret_window->x11_gc = gc;
-			ret_window->memory = ximage;
+			ret_window->bitmap = bitmap;
 		}
 
 		void* MACRO_ckit_window_free(CKIT_Window* window) {
@@ -492,7 +497,12 @@ extern "C" {
 		}
 
 		void ckit_window_clear_color(CKIT_Window* window, CKIT_Color color) {
-			
+			// Write to the bitmap
+			for (int y = 0; y < window->memory->bitmap->height; ++y) {
+				for (int x = 0; x < window->memory->bitmap->width; ++x) {
+					XPutPixel(bitmap->memory, x, y, (x ^ y) & 0xff);  // Simple pattern
+				}
+			}
 		}
 
 		void ckit_window_draw_quad(CKIT_Window* window, s32 start_x, s32 start_y, u32 width, u32 height, CKIT_Color color) {
