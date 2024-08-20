@@ -147,8 +147,8 @@ extern "C" {
 			cwd = ckit_str_create_custom("", PLATFORM_MAX_PATH);
 		}
 
-		const char* ckit_os_get_cwd() {
-			return cwd;
+		String ckit_os_get_cwd() {
+			// return cwd;
 		}
 
 		void ckit_os_ls();
@@ -156,7 +156,7 @@ extern "C" {
 		void ckit_os_chdir();
 		void ckit_os_mkdir();
 		void ckit_os_create_file(const char* path) {
-			// ckit_assert(ckit_str_length(cwd + path) > PLATFORM_MAX_PATH);
+			
 		}
 
 		Boolean ckit_os_path_exists(const char* path) {
@@ -173,8 +173,8 @@ extern "C" {
 		
 		void ckit_os_run_subprocess(); // runs on seperate thread?
 		void ckit_os_get_file_info();
-		void ckit_os_system();
-		void ckit_os_path_join();
+		void ckit_os_system(const char* command);
+		String ckit_os_path_join(char* path, const char* to_join);
 
 		u8* ckit_os_read_entire_file(const char* path) {
 			ckit_assert(ckit_os_path_exists(path));

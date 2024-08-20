@@ -30,6 +30,14 @@ typedef struct CKIT_Color {
 		const char* name;
 		CKIT_Bitmap* bitmap;
 	} CKIT_Window;
+#elif defined(WSL)
+	typedef struct CKIT_Bitmap {
+		int a
+	} CKIT_Bitmap;
+
+	typedef struct CKIT_Window {
+		int a
+	} CKIT_Window;
 #elif (defined(PLATFORM_LINUX) && !defined(WSL))
 	// https://www.youtube.com/watch?v=d2E7ryHCK08
 	// https://www.x.org/releases/X11R7.7/doc/libX11/libX11/libX11.html
