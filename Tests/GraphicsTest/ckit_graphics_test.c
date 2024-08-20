@@ -1,5 +1,6 @@
 #include "../../ckit.h"
 
+#if defined(PLATFORM_WINDOWS)
 void set_bitmap_gradient(CKIT_Window* window, u32 x_offset, u32 y_offset) {
 	int stride = window->bitmap->width * window->bitmap->bytes_per_pixel;
 
@@ -20,6 +21,11 @@ void set_bitmap_gradient(CKIT_Window* window, u32 x_offset, u32 y_offset) {
 		row += stride;
 	}
 }
+#elif defined(PLATFORM_LINUX)
+	void set_bitmap_gradient(CKIT_Window* window, u32 x_offset, u32 y_offset) {
+		
+	}
+#endif
 
 int main() {
 	ckit_init();
