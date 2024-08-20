@@ -78,7 +78,7 @@ extern "C" {
 	// just asserts because I don't like handling errors
 
 	void ckit_os_system(const char* command) {
-		system(command);
+		ckit_assert(system(command));
 	}
 
 	String ckit_os_path_join(char* path, const char* to_join) {
