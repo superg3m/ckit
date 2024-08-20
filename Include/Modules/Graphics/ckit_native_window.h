@@ -32,11 +32,11 @@ typedef struct CKIT_Color {
 	} CKIT_Window;
 #elif defined(WSL)
 	typedef struct CKIT_Bitmap {
-		int a
+		int a;
 	} CKIT_Bitmap;
 
 	typedef struct CKIT_Window {
-		int a
+		int a;
 	} CKIT_Window;
 #elif (defined(PLATFORM_LINUX) && !defined(WSL))
 	// https://www.youtube.com/watch?v=d2E7ryHCK08
