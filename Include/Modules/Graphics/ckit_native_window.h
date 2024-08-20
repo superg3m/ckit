@@ -32,7 +32,13 @@ typedef struct CKIT_Color {
 		CKIT_Bitmap* bitmap;
 	} CKIT_Window;
 #elif defined(PLATFORM_LINUX)
+	typedef struct CKIT_Bitmap {
+		int a;
+	} CKIT_Bitmap;
 
+	typedef struct CKIT_Window {
+		int a;
+	} CKIT_Window;
 #endif
 //=========================== End Types ===========================
 
@@ -368,7 +374,37 @@ extern "C" {
 			return FALSE;
 		}
 	#elif defined(PLATFORM_LINUX)
+		CKIT_Window* ckit_window_create(u32 width, u32 height, const char* name) {
+			
+		}
 
+		void* MACRO_ckit_window_free(CKIT_Window* window) {
+			
+		}
+
+		void ckit_window_bind_icon(const char* resource_path) {
+			
+		}
+
+		void ckit_window_bind_cursor(const char* resource_path) {
+			
+		}
+
+		Boolean ckit_window_should_quit(CKIT_Window* window) {
+			
+		}
+
+		void ckit_window_clear_color(CKIT_Window* window, CKIT_Color color) {
+			
+		}
+
+		void ckit_window_draw_quad(CKIT_Window* window, s32 start_x, s32 start_y, u32 width, u32 height, CKIT_Color color) {
+			
+		}
+
+		void ckit_window_draw_bitmap(CKIT_Window* window) {
+			
+		}
 	#endif
 #endif // CKG_IMPL
 
