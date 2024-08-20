@@ -80,6 +80,13 @@ extern "C" {
 			FreeLibrary(GDI32_handle);
 		}
 	#elif defined(PLATFORM_LINUX)
+		void ckit_platform_dll_init() {
+
+		}
+
+		void ckit_platform_dll_free() {
+
+		}
 	#endif
 #endif // CKIT_IMPL
 
