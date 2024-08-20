@@ -439,7 +439,7 @@ extern "C" {
 			// ckit_window_draw_bitmap(window);
 			return FALSE;
 		}
-	#elif defined(WSL)
+	#elif defined(CKIT_WSL)
 		CKIT_Window* ckit_window_create(u32 width, u32 height, const char* name) {
 
 		}
