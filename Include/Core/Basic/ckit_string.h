@@ -90,7 +90,7 @@ extern "C" {
 	CKIT_Arena* string_arena;
 
 	void ckit_str_register_arena() {
-		#define STRING_ARENA_DEFAULT_CAPACITY MegaBytes(64)
+		#define STRING_ARENA_DEFAULT_CAPACITY MegaBytes(2)
 		string_arena = ckit_arena_create_custom(STRING_ARENA_DEFAULT_CAPACITY, "String Arena", CKIT_ARENA_FLAG_EXTENDABLE_PAGES, sizeof(char));
 	}
 
@@ -118,12 +118,13 @@ extern "C" {
 	// Of pushing the header then right after pushing the str data I think this worked really well.
 	String ckit_str_create_custom(const char* c_string, size_t capacity) {
 		u32 c_str_length = ckg_cstr_length(c_string);
-		CKIT_StringHeader* header = MACRO_ckit_arena_push(string_arena, sizeof(CKIT_StringHeader));
+		u32 true_capacity = capacity != 0 ? capacity : sizeof(char) * (c_str_length + 1);
+		CKIT_StringHeader* header = MACRO_ckit_arena_push(string_arena, sizeof(CKIT_StringHeader) + true_capacity);
 		header->length = c_str_length;
-		header->capacity = capacity != 0 ? capacity : sizeof(char) * (c_str_length + 1);
+		header->capacity = true_capacity;
 		header->magic = CKIT_STR_MAGIC;
-		
-		String ret = MACRO_ckit_arena_push(string_arena, header->capacity);
+
+		String ret = (u8*)header + sizeof(CKIT_StringHeader);
 
 		ckg_cstr_copy(ret, header->capacity, c_string);
 		return ret;

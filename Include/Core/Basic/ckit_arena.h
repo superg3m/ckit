@@ -86,7 +86,8 @@ extern "C" {
 	CKIT_Arena* MACRO_ckit_arena_free(CKIT_Arena* arena) {
 		ckit_assert(arena);
 
-		for (int i = 0; i < arena->pages->count; i++) {
+		u32 cached_count = arena->pages->count;
+		for (int i = 0; i < cached_count; i++) {
 			CKIT_ArenaPage* page = ckit_linked_list_remove(arena->pages, 0).data;
 			ckit_assert(page->base_address);
 			ckit_free(page->base_address);
