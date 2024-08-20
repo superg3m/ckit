@@ -471,7 +471,7 @@ extern "C" {
 		void ckit_window_draw_bitmap(CKIT_Window* window) {
 
 		}
-	#elif (defined(PLATFORM_LINUX) && !defined(WSL))
+	#elif defined(PLATFORM_LINUX)
 		CKIT_Window* ckit_window_create(u32 width, u32 height, const char* name) {
 			CKIT_Window* ret_window = ckit_alloc(sizeof(CKIT_Window));
 
