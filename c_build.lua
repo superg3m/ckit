@@ -12,16 +12,10 @@ elseif (PLATFORM_LINUX) then
 end()
 
 project_disable_specific_warnings(project, ["5105", "4668", "4820"])
--- or
--- add_disabled_warning(project, "5105")
--- add_disabled_warning(project, "4668")
--- add_disabled_warning(project, "4820")
 project_set_treat_warnings_as_errors(project, true)
 project_set_debug_with_visual_studio(project, true)
 project_set_rebuild_project_dependencies(project, true)
 project_set_project_dependencies(project, ["ckg"])
--- or
--- add_project_dependency(project, "ckg")
 
 -- Do different things depending on the platform
 if (PLATFORM_WINDOW) then
