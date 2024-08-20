@@ -30,7 +30,7 @@ typedef struct CKIT_Color {
 		const char* name;
 		CKIT_Bitmap* bitmap;
 	} CKIT_Window;
-#elif defined(PLATFORM_LINUX)
+#elif (defined(PLATFORM_LINUX) && !defined(WSL))
 	// https://www.youtube.com/watch?v=d2E7ryHCK08
 	// https://www.x.org/releases/X11R7.7/doc/libX11/libX11/libX11.html
 	// https://www.youtube.com/watch?v=u2F_Lif4KGA&list=PLyxjkYF62ii8ZgaRBPlj9nVIoOeIaszw-
@@ -430,7 +430,39 @@ extern "C" {
 			// ckit_window_draw_bitmap(window);
 			return FALSE;
 		}
-	#elif defined(PLATFORM_LINUX)
+	#elif defined(WSL)
+		CKIT_Window* ckit_window_create(u32 width, u32 height, const char* name) {
+
+		}
+
+		void* MACRO_ckit_window_free(CKIT_Window* window) {
+
+		}
+
+		void ckit_window_bind_icon(const char* resource_path) {
+
+		}
+
+		void ckit_window_bind_cursor(const char* resource_path) {
+
+		}
+
+		Boolean ckit_window_should_quit(CKIT_Window* window) {
+
+		}
+
+		void ckit_window_clear_color(CKIT_Window* window, CKIT_Color color) {
+
+		}
+
+		void ckit_window_draw_quad(CKIT_Window* window, s32 start_x, s32 start_y, u32 width, u32 height, CKIT_Color color) {
+
+		}
+
+		void ckit_window_draw_bitmap(CKIT_Window* window) {
+
+		}
+	#elif (defined(PLATFORM_LINUX) && !defined(WSL))
 		CKIT_Window* ckit_window_create(u32 width, u32 height, const char* name) {
 			CKIT_Window* ret_window = ckit_alloc(sizeof(CKIT_Window));
 

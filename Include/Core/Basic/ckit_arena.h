@@ -9,19 +9,19 @@ typedef struct CKIT_ArenaPage {
 	u64 used;
 } CKIT_ArenaPage;
 
-typedef struct CKIT_Arena {
-	const char* name;
-	CKIT_LinkedList* pages;
-	u32 flag;
-	u8 alignment;
-} CKIT_Arena;
-
 typedef enum CKIT_ArenaFlag {
   CKIT_ARENA_FLAG_FIXED,
   CKIT_ARENA_FLAG_CIRCULAR,
   CKIT_ARENA_FLAG_EXTENDABLE_PAGES,
   CKIT_ARENA_FLAG_COUNT
 } CKIT_ArenaFlag;
+
+typedef struct CKIT_Arena {
+	const char* name;
+	CKIT_LinkedList* pages;
+	CKIT_ArenaFlag flag;
+	u8 alignment;
+} CKIT_Arena;
 //=========================== End Types ===========================
 
 //************************* Begin Functions *************************

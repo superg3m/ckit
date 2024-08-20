@@ -78,7 +78,6 @@ extern "C" {
 		u32 capactiy = ckit_vector_capacity(vector);
 
 		if (force_grow || capactiy < count + 1) {
-			size_t old_allocation_size = sizeof(CKIT_VectorHeader) + (capactiy * element_size);
 			u32 new_capactiy = capactiy * 2;
 			size_t new_allocation_size = sizeof(CKIT_VectorHeader) + (new_capactiy * element_size);
 

@@ -101,7 +101,7 @@ extern "C" {
 
 	internal void ckit_str_insert_header(char** str, CKIT_StringHeader header) {
 		ckit_memory_copy(&header, *str,  sizeof(header),  sizeof(header) + header.capacity);
-		*str = ((u8*)*str) + sizeof(header);
+		*str = (char*)(((u8*)(*str)) + sizeof(header));
 	}
 
 	internal inline String ckit_str_grow(String str, size_t new_allocation_size) {
@@ -124,7 +124,7 @@ extern "C" {
 		header->capacity = true_capacity;
 		header->magic = CKIT_STR_MAGIC;
 
-		String ret = (u8*)header + sizeof(CKIT_StringHeader);
+		String ret = (String)((u8*)header + sizeof(CKIT_StringHeader));
 
 		ckg_cstr_copy(ret, header->capacity, c_string);
 		return ret;

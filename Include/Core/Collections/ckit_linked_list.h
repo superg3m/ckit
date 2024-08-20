@@ -200,7 +200,7 @@ extern "C" {
         }
 
         ckit_assert(FALSE); // couldn't match a node to an address
-        return -1; // should never get here
+        return 0; // should never get here
     }
 
     CKIT_Node ckit_linked_list_pop(CKIT_LinkedList* linked_list) {
