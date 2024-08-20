@@ -100,10 +100,6 @@ extern "C" {
 
         special_print_helper(right_side, log_level);
 
-        ckit_str_free(left_side);
-        ckit_str_free(middle_to_color);
-        ckit_str_free(right_side);
-
         return;
     }
 
