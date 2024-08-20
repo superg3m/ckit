@@ -1,4 +1,6 @@
 
+-- Experimental
+
 project = project_create("CKIT")
 project_set_github_root(project, "https://github.com/superg3m")
 project_set_compiler(project, "cl")
