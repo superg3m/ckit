@@ -45,6 +45,8 @@ typedef struct CKIT_Color {
 	typedef struct CKIT_Window {
 		Display* x11_display;
 		Window* x11_window;
+		GC x11_gc;
+		XImage memory;
 	} CKIT_Window;
 
 	/*
@@ -432,17 +434,46 @@ extern "C" {
 		CKIT_Window* ckit_window_create(u32 width, u32 height, const char* name) {
 			CKIT_Window* ret_window = ckit_alloc(sizeof(CKIT_Window));
 
-			Display* display = XOpenDisplay(NULLPTR);
-			Window window = XCreateSimpleWindow(display, DefaultRootWindow(display), 0, 0 width, height, 1, BlackPixel(display, 0), WhitePixel(display, 0));
-			XMapWindow(display, window);
-			XSelectInput(display, window, ExposureMask);
+			Display* display = XOpenDisplay(NULL);
+			if (!display) {
+				return 1;
+			}
+
+			int screen = DefaultScreen(display);
+			Window root = RootWindow(display, screen);
+			Window win = XCreateSimpleWindow(display, root, 0, 0, 800, 600, 1, BlackPixel(display, screen), WhitePixel(display, screen));
+			XMapWindow(display, win);
+
+			// Bitmap memory setup
+			int width = 800;
+			int height = 600;
+			XImage *ximage = XCreateImage(display, DefaultVisual(display, screen), DefaultDepth(display, screen),
+										ZPixmap, 0, ckit_alloc(width * height * 4), width, height, 32, 0);
+
+			// Write to the bitmap
+			for (int y = 0; y < height; ++y) {
+				for (int x = 0; x < width; ++x) {
+					XPutPixel(ximage, x, y, (x ^ y) & 0xff);  // Simple pattern
+				}
+			}
+
+			// Display the image
+			GC gc = XCreateGC(display, win, 0, NULL);
+			XPutImage(display, win, gc, ximage, 0, 0, 0, 0, width, height);
+			XFlush(display);
 
 			ret_window->x11_display = display;
-			ret_window->x11_window = window;
+			ret_window->x11_window = win;
+			ret_window->x11_gc = gc;
+			ret_window->memory = ximage;
 		}
 
 		void* MACRO_ckit_window_free(CKIT_Window* window) {
-			
+			//XDestroyImage(window->bitmap->memory);
+			XDestroyImage(window->bitmap->memory);
+			XFreeGC(window->x11_display, window->x11_gc);
+			XDestroyWindow(window->x11_display, window->x11_window);
+			XCloseDisplay(window->x11_display);
 		}
 
 		void ckit_window_bind_icon(const char* resource_path) {
@@ -454,9 +485,9 @@ extern "C" {
 		}
 
 		Boolean ckit_window_should_quit(CKIT_Window* window) {
-			XEvent event = {0};
-			while (TRUE) {
-				XNextEvent(window->x11_display, &event);
+			XNextEvent(display, &event);
+			if (event.type == Expose) {
+				XPutImage(display, win, gc, ximage, 0, 0, 0, 0, width, height);
 			}
 		}
 
