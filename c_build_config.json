@@ -49,5 +49,5 @@
         ]
     },
 
-    "execute": ["test_graphics_ckit.exe"]
+    "execute": ["test_ckit.exe"]
 }
