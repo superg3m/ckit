@@ -41,13 +41,13 @@ extern "C" {
 #endif
 	int int_abs(int a);
 	double float_abs(double a);
-	double lerp(float a, float b, float t);
-	Vec2 vec2_lerp(Vec2 a, Vec2 b, float t);
-	Vec3 vec3_lerp(Vec3 a, Vec3 b, float t);
-	Vec4 vec4_lerp(Vec4 a, Vec4 b, float t);
+	double lerp(double a, double b, double t);
+	Vec2 vec2_lerp(Vec2 a, Vec2 b, double t);
+	Vec3 vec3_lerp(Vec3 a, Vec3 b, double t);
+	Vec4 vec4_lerp(Vec4 a, Vec4 b, double t);
 
 	void vec2_print(Vec2 point);
-	Vec2 vec2_spline_point(Vec2* spline_points, u32 spline_points_count, float t);
+	Vec2 vec2_spline_point(Vec2* spline_points, u32 spline_points_count, double t);
 
 	Mat2x2 ckit_mat2x2_projection_mat();
 	Mat2x2 ckit_mat2x2_rotation_mat();
@@ -85,18 +85,18 @@ extern "C" {
 		return a < 0 ? (a * -1) : a;
 	}
 
-	double lerp(float a, float b, float t) {
+	double lerp(double a, double b, double t) {
 		return b + ((a - b) * t);
 	}
 
-	Vec2 vec2_lerp(Vec2 a, Vec2 b, float t) {
+	Vec2 vec2_lerp(Vec2 a, Vec2 b, double t) {
 		Vec2 vec_ret = {0};
 		vec_ret.x = lerp(a.x, b.x, t); 
 		vec_ret.y = lerp(a.y, b.y, t); 
 		return vec_ret;
 	}
 
-	Vec3 vec3_lerp(Vec3 a, Vec3 b, float t) {
+	Vec3 vec3_lerp(Vec3 a, Vec3 b, double t) {
 		Vec3 vec_ret = {0};
 		vec_ret.x = lerp(a.x, b.x, t);
 		vec_ret.y = lerp(a.y, b.y, t);
@@ -105,7 +105,7 @@ extern "C" {
 		return vec_ret;
 	}
 
-	Vec4 vec4_lerp(Vec4 a, Vec4 b, float t) {
+	Vec4 vec4_lerp(Vec4 a, Vec4 b, double t) {
 		Vec4 vec_ret = {0};
 		vec_ret.x = lerp(a.x, b.x, t);
 		vec_ret.y = lerp(a.y, b.y, t);
@@ -141,7 +141,7 @@ extern "C" {
 		LOG_PRINT("(%f, %f)\n", point.x, point.y);
 	}
 
-	Vec2 vec2_spline_point(Vec2* spline_points, u32 spline_points_count, float t) {
+	Vec2 vec2_spline_point(Vec2* spline_points, u32 spline_points_count, double t) {
 		if (spline_points_count == 1) {
 			return spline_points[0];
 		}

@@ -28,8 +28,8 @@ typedef enum CKIT_ArenaFlag {
 #ifdef __cplusplus
 extern "C" {
 #endif
-	CKIT_Arena* MACRO_ckit_arena_create(u32 allocation_size, const char* name, CKIT_ArenaFlag flag, u8 alignment);
-	void* MACRO_ckit_arena_push(CKIT_Arena* arena, u32 element_size);	
+	CKIT_Arena* MACRO_ckit_arena_create(size_t allocation_size, const char* name, CKIT_ArenaFlag flag, u8 alignment);
+	void* MACRO_ckit_arena_push(CKIT_Arena* arena, size_t element_size);	
 	
 	CKIT_Arena* MACRO_ckit_arena_free(CKIT_Arena* arena);
 	void ckit_arena_clear(CKIT_Arena* arena);
@@ -61,7 +61,7 @@ extern "C" {
 		return arena->flag == flag;
 	}
 
-	internal CKIT_ArenaPage* ckit_arena_page_create(u32 allocation_size) {
+	internal CKIT_ArenaPage* ckit_arena_page_create(size_t allocation_size) {
 		CKIT_ArenaPage* ret = ckit_alloc_custom(sizeof(CKIT_ArenaPage), TAG_CKIT_CORE_ARENA);
 		ret->used = 0;
 		ret->capacity = allocation_size;
@@ -70,7 +70,7 @@ extern "C" {
 		return ret;
 	}
 
-	CKIT_Arena* MACRO_ckit_arena_create(u32 allocation_size, const char* name, CKIT_ArenaFlag flag, u8 alignment) {
+	CKIT_Arena* MACRO_ckit_arena_create(size_t allocation_size, const char* name, CKIT_ArenaFlag flag, u8 alignment) {
 		CKIT_Arena* arena = ckit_alloc_custom(sizeof(CKIT_Arena), TAG_CKIT_CORE_ARENA);
 		arena->alignment = alignment == 0 ? 8 : alignment;
 		arena->name = name;
@@ -87,7 +87,7 @@ extern "C" {
 		ckit_assert(arena);
 
 		u32 cached_count = arena->pages->count;
-		for (int i = 0; i < cached_count; i++) {
+		for (u32 i = 0; i < cached_count; i++) {
 			CKIT_ArenaPage* page = ckit_linked_list_remove(arena->pages, 0).data;
 			ckit_assert(page->base_address);
 			ckit_free(page->base_address);
@@ -104,7 +104,7 @@ extern "C" {
 	void ckit_arena_clear(CKIT_Arena* arena) {
 		ckit_assert(arena);
 
-		for (int i = 0; i < arena->pages->count; i++) {
+		for (u32 i = 0; i < arena->pages->count; i++) {
 			CKIT_ArenaPage* page = ckit_linked_list_get(arena->pages, i);
 			ckit_assert(page->base_address);
 			ckit_memory_zero(page->base_address, page->used);
@@ -112,7 +112,7 @@ extern "C" {
 		}
 	}
 
-	void* MACRO_ckit_arena_push(CKIT_Arena* arena, u32 element_size) {
+	void* MACRO_ckit_arena_push(CKIT_Arena* arena, size_t element_size) {
 		ckit_assert(arena);
 
 		CKIT_ArenaPage* last_page = ckit_linked_list_peek_tail(arena->pages);

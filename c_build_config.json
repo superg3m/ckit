@@ -4,7 +4,7 @@
     "github_root": "https://github.com/superg3m",
     "compiler_type": "cl",
     "std_version": "c11",
-    "compiler_warning_level": "",
+    "compiler_warning_level": "3",
 
     "compiler_disable_warnings": false,
     "debug_with_visual_studio": false,
@@ -12,7 +12,7 @@
     "compiler_treat_warnings_as_errors": true,
 
     "project_dependencies": ["ckg"],
-    "disable_specific_warnings": ["5105", "4668", "4820"],
+    "disable_specific_warnings": ["5105", "4668", "4820", "4996"],
     "inject_as_argument": [""],
 
     "./ckit_build_$compiler_type": {

@@ -126,13 +126,14 @@ extern "C" {
 
 			HANDLE file_handle = CreateFileA(path, GENERIC_READ, 0, NULLPTR, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULLPTR);
 			LARGE_INTEGER large_int = {0};
-			BOOL succuess = GetFileSizeEx(file_handle, &large_int);
+			BOOL success = GetFileSizeEx(file_handle, &large_int);
+			ckit_assert(success);
 			u64 file_size = large_int.QuadPart;
 			DWORD bytes_read = 0;
 
 			u8* file_data = ckit_alloc_custom(file_size, TAG_CKIT_EXPECTED_USER_FREE);
-			succuess = ReadFile(file_handle, file_data, file_size, &bytes_read, NULLPTR);
-			ckit_assert(CloseHandle(file_handle));
+			success = ReadFile(file_handle, file_data, (DWORD)file_size, &bytes_read, NULLPTR);
+			ckit_assert(success && CloseHandle(file_handle));
 			return file_data;
 		}
 

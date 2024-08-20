@@ -161,7 +161,7 @@ extern "C" {
 				return NULLPTR;
 			}
 
-			for (int i = 0; i < ckit_vector_count(registered_windows); i++) {
+			for (u32 i = 0; i < ckit_vector_count(registered_windows); i++) {
 				if (registered_windows[i].WINAPI_handle == handle) {
 					return registered_windows[i].ckit_window;
 				}
@@ -178,13 +178,13 @@ extern "C" {
 
 			RECT windowRect;
 			ckit_win32_GetWindowRect(window->handle, &windowRect);
-			window->width = windowRect.right - windowRect.left;
-			window->height = windowRect.bottom - windowRect.top;
+			window->width = (u16)(windowRect.right - windowRect.left);
+			window->height = (u16)(windowRect.bottom - windowRect.top);
 
 			RECT client_rect;
 			ckit_win32_GetClientRect(window->handle, &client_rect);
-			window->bitmap->width = client_rect.right - client_rect.left;
-			window->bitmap->height = client_rect.bottom - client_rect.top;
+			window->bitmap->width = (u16)(client_rect.right - client_rect.left);
+			window->bitmap->height = (u16)(client_rect.bottom - client_rect.top);
 
 			u32 bits_per_pixel = 32;
 			u32 bytes_per_pixel = bits_per_pixel / 8;
@@ -230,14 +230,14 @@ extern "C" {
 		}
 
 		void ckit_window_draw_quad(CKIT_Window* window, s32 start_x, s32 start_y, u32 width, u32 height, CKIT_Color color) {
-			const u32 VIEWPORT_WIDTH = window->bitmap->width;
-			const u32 VIEWPORT_HEIGHT = window->bitmap->height;
+			const s32 VIEWPORT_WIDTH = window->bitmap->width;
+			const s32 VIEWPORT_HEIGHT = window->bitmap->height;
 
-			u32 left = CLAMP(start_x, 0, VIEWPORT_WIDTH);
-			u32 right = CLAMP(start_x + width, 0, VIEWPORT_WIDTH);
+			u32 left = (u32)CLAMP(start_x, 0, VIEWPORT_WIDTH);
+			u32 right = (u32)CLAMP(start_x + (s32)width, 0, VIEWPORT_WIDTH);
 
-			u32 bottom = CLAMP(start_y, 0, VIEWPORT_HEIGHT);
-			u32 top = CLAMP(start_y + height, 0, VIEWPORT_HEIGHT);
+			u32 bottom = (u32)CLAMP(start_y, 0, VIEWPORT_HEIGHT);
+			u32 top = (u32)CLAMP(start_y + (s32)height, 0, VIEWPORT_HEIGHT);
 
 			u32 true_quad_width = right - left;
 			u32 true_quad_height = top - bottom;
@@ -398,7 +398,7 @@ extern "C" {
 		}
 
 		void* MACRO_ckit_window_free(CKIT_Window* window) {
-			for (int i = 0; i < ckit_vector_count(registered_windows); i++) {
+			for (u32 i = 0; i < ckit_vector_count(registered_windows); i++) {
 				if (window == registered_windows[i].ckit_window) {
  					ckit_vector_remove_at(registered_windows, i);
 				}

@@ -118,7 +118,7 @@ extern "C" {
 	// Of pushing the header then right after pushing the str data I think this worked really well.
 	String ckit_str_create_custom(const char* c_string, size_t capacity) {
 		u32 c_str_length = ckg_cstr_length(c_string);
-		u32 true_capacity = capacity != 0 ? capacity : sizeof(char) * (c_str_length + 1);
+		size_t true_capacity = capacity != 0 ? capacity : sizeof(char) * (c_str_length + 1);
 		CKIT_StringHeader* header = MACRO_ckit_arena_push(string_arena, sizeof(CKIT_StringHeader) + true_capacity);
 		header->length = c_str_length;
 		header->capacity = true_capacity;
@@ -316,7 +316,7 @@ extern "C" {
 
 		u32 i = start_delimitor_index + start_delimitor_length;
 
-		while (i < end_delimitor_index) {
+		while (i < (u32)end_delimitor_index) {
 			ckit_str_append_char(ret, str[i++]);
 		}
 

@@ -69,8 +69,8 @@ int main() {
 		float offset_to_center_x = ((float)x_pos + (half_player_width)) - half_center_width;
 		float offset_to_center_y = ((float)y_pos + (half_player_height)) - half_center_height;
 
-		ckit_window_draw_quad(window, x_pos, y_pos, player_width, player_height, (CKIT_Color){0, 255, 0, 255});
-		ckit_window_draw_quad(window, offset_to_center_x, offset_to_center_y, center_width, center_height, (CKIT_Color){255, 0, 255, 255});
+		ckit_window_draw_quad(window, (s32)x_pos, (s32)y_pos, player_width, player_height, (CKIT_Color){0, 255, 0, 255});
+		ckit_window_draw_quad(window, (s32)offset_to_center_x, (s32)offset_to_center_y, center_width, center_height, (CKIT_Color){255, 0, 255, 255});
 
 		ckit_window_draw_bitmap(window);
 
