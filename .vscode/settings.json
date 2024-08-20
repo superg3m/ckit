@@ -95,9 +95,6 @@
 		"*.rh": "cpp",
 		"ckit_native_window.h": "c",
 		"ckit_platform_function_bindings.h": "c"
-		"stdarg.h": "c",
-		"type_traits": "c",
-		"xtr1common": "c"
 	},
 	"editor.insertSpaces": false
 }
