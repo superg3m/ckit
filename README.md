@@ -1,4 +1,5 @@
 ### -- GRAPHICS MODULE ONLY WORKS ON CL.exe MSVC -- windows only right now because programming is hard lmao
+### I'm wondering if ckit is getting to expansive and too big, but so far i'm having tons of fun with it
 
 # Ckits's Core Thesis
 - The point of the ckit is to provide a nice library to build c projects with.
