@@ -84,7 +84,9 @@ extern "C" {
     internal void special_print_helper(const char* message, CKIT_LogLevel log_level) {
         String middle_to_color = ckit_str_between_delimiters(message, start_delimitor, end_delimitor);
         if (!middle_to_color) {
-            printf("%s", message);
+            u32 message_length = ckit_cstr_length(message);
+            Boolean found = message[message_length - 1] == '\n';
+            printf("%.*s", message_length - found, message);
             return;
         }
 
@@ -104,8 +106,6 @@ extern "C" {
     }
 
     void MACRO_ckit_log_output(CKIT_LogLevel log_level, const char* message, ...) {
-
-
         Boolean is_fatal = (log_level == 0);
 
         char out_message[CKG_PLATFORM_CHARACTER_LIMIT];
