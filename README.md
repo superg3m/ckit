@@ -172,7 +172,7 @@ Thoughts:
 	- [x] ckit_str_ends_with(str, ends_with)
 	- [x] ckit_str_reverse(str)
 	- [x] ckit_str_int_to_str(int)
-	- [/] ckit_str_between_delimiters(str, str, str) (Not tested really)
+	- [x] ckit_str_between_delimiters(str, str, str)
 
 ### Memory
 - [x] ckit_memory.h
