@@ -89,12 +89,6 @@ int main() {
 		x_pos += x_velocity;
 		y_pos += y_velocity;
 
-		int x = -1;
-		int y = -1;
-		ckit_window_get_mouse_position(window, &x, &y);
-		LOG_DEBUG("(${%d}, ${%d})\n", x, y);
-
-
 		ckit_window_draw_bitmap(window);
 	}
 

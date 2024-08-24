@@ -49,5 +49,16 @@
         ]
     },
 
-    "execute": ["test_graphics_ckit.exe"]
+    "./Tests/PongTest/build_$compiler_type" : {
+        "output_name" : "ckit_pong.exe",
+        "compile_time_defines" : [""],
+        "include_paths" : [""],
+        "source_files" : ["../*.c"],
+
+        "additional_libs" : [
+            "../../../ckit_build_$compiler_type/ckit.lib"
+        ]
+    },
+
+    "execute": ["ckit_pong.exe"]
 }
