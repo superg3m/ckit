@@ -130,6 +130,7 @@ extern "C" {
 	void ckit_window_clear_color(CKIT_Window* window, CKIT_Color color);
 	void ckit_window_draw_quad(CKIT_Window* window, s32 start_x, s32 start_y, u32 width, u32 height, CKIT_Color color);
 	void ckit_window_draw_bitmap(CKIT_Window* window);
+	void ckit_window_get_mouse_position(CKIT_Window* window, int* mouse_x, int* mouse_y);
 #ifdef __cplusplus
 }
 #endif
@@ -438,6 +439,14 @@ extern "C" {
 
 			// ckit_window_draw_bitmap(window);
 			return FALSE;
+		}
+
+		void ckit_window_get_mouse_position(CKIT_Window* window, int* mouse_x, int* mouse_y) {
+			POINT point;
+			ckit_os_get_mouse_position(&point.x, &point.y);
+			ckit_assert(ckit_win32_ScreenToClient(window->handle, &point));
+			*mouse_x = point.x;
+			*mouse_y = point.y;
 		}
 	#elif defined(CKIT_WSL)
 		CKIT_Window* ckit_window_create(u32 width, u32 height, const char* name) {

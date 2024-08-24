@@ -72,8 +72,6 @@ int main() {
 		ckit_window_draw_quad(window, (s32)x_pos, (s32)y_pos, player_width, player_height, (CKIT_Color){0, 255, 0, 255});
 		ckit_window_draw_quad(window, (s32)offset_to_center_x, (s32)offset_to_center_y, center_width, center_height, (CKIT_Color){255, 0, 255, 255});
 
-		ckit_window_draw_bitmap(window);
-
 		Boolean left_check   = x_pos <= 0;
 		Boolean right_check  = (x_pos + player_width) >= width;
 
@@ -90,6 +88,14 @@ int main() {
 		
 		x_pos += x_velocity;
 		y_pos += y_velocity;
+
+		int x = -1;
+		int y = -1;
+		ckit_window_get_mouse_position(window, &x, &y);
+		LOG_DEBUG("(${%d}, ${%d})\n", x, y);
+
+
+		ckit_window_draw_bitmap(window);
 	}
 
 	ckit_window_free(window); // hmm how can I make this safer?

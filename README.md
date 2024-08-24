@@ -34,7 +34,7 @@ ckit_printf("%cv\n") // (char vector)
 1. - [ ] Start writing EventSystem
 2. - [ ] Write a bunch of tests validating and verifying all the utilities and logic.
 
-3. - [ ] Start writing the **GAME ENGINE** you have everything you need in order to succeed
+3. - [ ] Start writing the **GAME ENGINE*you have everything you need in order to succeed
 4. - [ ] Parse the message better so you can intuitively \n something.
 
 Thoughts:
@@ -94,6 +94,7 @@ Thoughts:
 	- [ ] ckit_os_file_close(file);
 	- [ ] ckit_os_close_file(file);
 	- [x] ckit_os_read_entire_file(path);
+	- [x] ckit_os_get_mouse_position(mouse_x, mouse_y)
 	- [ ] ckit_os_push();
 	- [ ] ckit_os_pop();
 	- [ ] ckit_os_dir_append_subdir(directory, sub_directory);
@@ -233,19 +234,28 @@ Thoughts:
 - [ ] ckit_struct_introspection.h
 
 ### Native_Window
-- [ ] ckit_native_window_open()
+- [/] ckit_native_window.h
+	- [x] ckit_window_create(width, height, name);
+	- [x] ckit_window_free(window);
+	- [x] ckit_window_bind_icon(resource_path);
+	- [x] ckit_window_bind_cursor(resource_path);
+	- [x] ckit_window_should_quit(window);
+	- [x] ckit_window_clear_color(window, color);
+	- [x] ckit_window_draw_quad(window, start_x, start_y, width, height, color);
+	- [x] ckit_window_draw_bitmap(window);
+	- [x] ckit_window_get_mouse_position(window, mouse_x, mouse_y);
 
 
 ### Lexer
 - [ ] ckit_lexer.h
-	- [x] void ckit_lexer_load_file_data(lexer, file_path);
-	- [x] void ckit_lexer_load_string(lexer, string);
-	- [x] char* ckit_lexer_token_to_string(token);
+	- [x]  ckit_lexer_load_file_data(lexer, file_path);
+	- [x]  ckit_lexer_load_string(lexer, string);
+	- [x] charckit_lexer_token_to_string(token);
 	- [x] CKIT_Tokens ckit_lexer_generate_next_token(lexer);
-	- [ ] CKIT_Tokens* ckit_lexer_peek_next_token(lexer);
-	- [x] CKIT_Tokens* ckit_lexer_generate_token_stream(lexer);
-	- [ ] CKIT_Tokens* ckit_lexer_consume_token_stream(lexer);
-	- [ ] CKIT_Tokens* ckit_lexer_free(lexer);
+	- [ ] CKIT_Tokensckit_lexer_peek_next_token(lexer);
+	- [x] CKIT_Tokensckit_lexer_generate_token_stream(lexer);
+	- [ ] CKIT_Tokensckit_lexer_consume_token_stream(lexer);
+	- [ ] CKIT_Tokensckit_lexer_free(lexer);
 
 ### Networking
 - [ ] ckit_client.h

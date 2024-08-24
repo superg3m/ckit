@@ -52,6 +52,8 @@ extern "C" {
 	CKIT_File* MACRO_ckit_os_close_file(CKIT_File* file);
 	u8* ckit_os_read_entire_file(const char* path);
 
+	void ckit_os_get_mouse_position(int* mouse_x, int* mouse_y);
+
 	void ckit_os_push();
 	void ckit_os_pop();
 
@@ -137,6 +139,13 @@ extern "C" {
 			return file_data;
 		}
 
+		void ckit_os_get_mouse_position(int* mouse_x, int* mouse_y) {
+			POINT point;
+			ckit_assert(ckit_win32_GetCursorPos(&point));
+			*mouse_x = point.x;
+			*mouse_y = point.y;
+		}
+
 		void ckit_os_push(char* path);
 		void ckit_os_pop();
 
@@ -198,6 +207,10 @@ extern "C" {
 			return file_data;
 		}
 
+		void ckit_os_get_mouse_position(int* mouse_x, int* mouse_y) {
+			ckit_assert_msg(FALSE, "NOT IMPLETMENTED FOR LINUX YET");
+		}
+		
 		void ckit_os_push(char* path);
 		void ckit_os_pop();
 

@@ -17,6 +17,8 @@
 	typedef BOOL (WINAPI GetClientRectFunc)(HWND, LPRECT);
 	typedef BOOL (WINAPI GetWindowRectFunc)(HWND, LPRECT);
 	typedef HANDLE (WINAPI LoadImageAFunc)(HINSTANCE, LPCSTR, UINT, int, int, UINT);
+	typedef BOOL (WINAPI GetCursorPosFunc)(LPPOINT);
+	typedef BOOL (WINAPI ScreenToClientFunc)(HWND, LPPOINT);
 	// ----------------------------------------------------------------------------------------------------------------------------
 	internal StretchDIBitsFunc* ckit_win32_StretchDIBits = NULL;
 	internal TranslateMessageFunc* ckit_win32_TranslateMessage = NULL;
@@ -31,6 +33,8 @@
 	internal GetClientRectFunc* ckit_win32_GetClientRect = NULL;
 	internal GetWindowRectFunc* ckit_win32_GetWindowRect = NULL;
 	internal LoadImageAFunc* ckit_win32_LoadImageA = NULL;
+	internal GetCursorPosFunc* ckit_win32_GetCursorPos = NULL;
+	internal ScreenToClientFunc* ckit_win32_ScreenToClient = NULL;
 #endif
 //=========================== End Types ===========================
 
@@ -67,6 +71,8 @@ extern "C" {
 				ckit_win32_GetClientRect = (GetClientRectFunc*)GetProcAddress(user32_handle, "GetClientRect");
 				ckit_win32_GetWindowRect = (GetWindowRectFunc*)GetProcAddress(user32_handle, "GetWindowRect");
 				ckit_win32_LoadImageA = (LoadImageAFunc*)GetProcAddress(user32_handle, "LoadImageA");
+				ckit_win32_GetCursorPos = (GetCursorPosFunc*)GetProcAddress(user32_handle, "GetCursorPos");
+				ckit_win32_ScreenToClient = (ScreenToClientFunc*)GetProcAddress(user32_handle, "ScreenToClient");
 			}
 
 			GDI32_handle = LoadLibrary("gdi32.dll");
