@@ -1,5 +1,7 @@
 #include "../../ckit.h"
 
+
+
 int main() {
 	ckit_init();
 
@@ -26,11 +28,12 @@ int main() {
 	u32 half_player_width = player_width / 2;
 	u32 half_player_height = player_height / 2;
 
-	u32 ball_x_position = 10;
-	u32 ball_y_position = 10;
+	u32 ball_x_position = width / 2;
+	u32 ball_y_position = height / 2;
 	float ball_x_velocity = 1.0;
 	float ball_y_velocity = 1.0;
-	u32 ball_radius = 30;
+	u32 ball_radius = 20;
+	u32 ball_diameter = ball_radius * 2;
 
 	u32 player_score = 0;
 	u32 ai_score = 0;
@@ -39,30 +42,40 @@ int main() {
 	while (!ckit_window_should_quit(window)) {
 		ckit_window_clear_color(window, (CKIT_Color){0, 0, 0, 255});
 
-		float offset_to_center_x = ((float)x_pos + (half_player_width));
+		float offset_to_center_x = ((float)x_pos - (half_player_width));
 		float offset_to_center_y = ((float)y_pos - (half_player_height));
 
 		ckit_window_draw_quad(window, (s32)offset_to_center_x, (s32)offset_to_center_y, player_width, player_height, (CKIT_Color){255, 255, 255, 255});
-		// ckit_window_draw_circle(window, (s32)ball_x_position, (s32)ball_y_position, ball_radius, TRUE, (CKIT_Color){255, 255, 255, 255});
+		ckit_window_draw_quad(window, (s32)ball_x_position, (s32)ball_y_position, ball_diameter, ball_diameter, (CKIT_Color){255, 255, 255, 255});
+
+		ckit_window_draw_quad(window, 0, height, width, 1, (CKIT_Color){255, 0, 0, 255}); // x axis
+		ckit_window_draw_quad(window, width, 0, 1, height, (CKIT_Color){0, 0, 255, 255}); // y axis
+
+
+		ckit_window_draw_circle(window, (s32)10, (s32)0, ball_radius, TRUE, (CKIT_Color){255, 255, 255, 255});
 		// For some reason the draw circle is not correct it seems like the pixel testing is broken??? Somehow?
 
 		Boolean left_check   = ball_x_position <= 0;
-		Boolean right_check  = (ball_x_velocity + ball_radius) >= width;
+		Boolean right_check  = (ball_x_position + ball_diameter) >= width;
 
-		Boolean bottom_check = ball_y_velocity <= 0;
-		Boolean top_check    = (ball_y_velocity + ball_radius) >= height;
+		Boolean bottom_check = ball_y_position <= 0;
+		Boolean top_check    = (ball_y_position + ball_diameter) >= height;
 
 		if (left_check || right_check) {
 			ball_x_velocity *= -1;
 			ai_score += left_check;
 			player_score += right_check;
-			// LOG_DEBUG("Player Score: %d\n", player_score);
-			// LOG_DEBUG("AI Score: %d\n", ai_score);
+			LOG_DEBUG("Player Score: %d\n", player_score);
+			LOG_DEBUG("AI Score: %d\n", ai_score);
 		}
 
 		if (bottom_check || top_check) {
 			ball_y_velocity *= -1;
 		}
+
+		ball_x_position += ball_x_velocity; 
+		ball_y_position += ball_y_velocity; 
+
 
 		int x, y = -1;
 		ckit_window_get_mouse_position(window, &x, &y);

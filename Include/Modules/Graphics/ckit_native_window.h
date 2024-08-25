@@ -269,14 +269,14 @@ extern "C" {
 			}
 		}
 
-		internal Boolean is_pixel_inside_circle(s32 px, s32 py, s32 center_x, s32 center_y, u32 radius) {
-			u32 radius_squared = radius * radius;
-
-			s32 dx = px - center_x;
-			s32 dy = py - center_y;
-			u32 distance_squared = (dx * dx) + (dy * dy);
-
-			return distance_squared <= radius_squared;
+		internal Boolean is_pixel_inside_circle(s32 test_point_x, s32 test_point_y, s32 center_x, s32 center_y, u32 radius) {
+			double dx = center_x - test_point_x;
+			double dy = center_y - test_point_y;
+			dx *= dx;
+			dy *= dy;
+			double distanceSquared = dx + dy;
+			double radiusSquared = radius * radius;
+			return distanceSquared <= radiusSquared;
 		}
 
 		internal Boolean is_pixel_on_circle_line(s32 px, s32 py, s32 center_x, s32 center_y, u32 radius) {
@@ -290,16 +290,15 @@ extern "C" {
 		}
 
 		void ckit_window_draw_circle(CKIT_Window* window, s32 start_x, s32 start_y, u32 radius, Boolean is_filled, CKIT_Color color) {
-			const s32 VIEWPORT_WIDTH = window->bitmap->width;
-			const s32 VIEWPORT_HEIGHT = window->bitmap->height;
+			const uint32_t VIEWPORT_WIDTH = window->bitmap->width;
+			const uint32_t VIEWPORT_HEIGHT = window->bitmap->height;
 
-			u32 diameter = radius * 2;
+			const u32 diameter = radius * 2;
 
-			u32 left = (u32)CLAMP(start_x, 0, VIEWPORT_WIDTH);
-			u32 right = (u32)CLAMP(start_x + diameter, 0, VIEWPORT_WIDTH);
-
-			u32 top = (u32)CLAMP(start_y, 0, VIEWPORT_HEIGHT);
-			u32 bottom = (u32)CLAMP(start_y + diameter, 0, VIEWPORT_HEIGHT);
+			u32 left = CLAMP(start_x, 0, VIEWPORT_WIDTH);
+			u32 right = CLAMP(start_x + diameter, 0, VIEWPORT_WIDTH);
+			u32 top = CLAMP(start_y, 0, VIEWPORT_HEIGHT);
+			u32 bottom = CLAMP(start_y + diameter, 0, VIEWPORT_HEIGHT);
 
 			u32 true_quad_width = right - left;
 			u32 true_quad_height = bottom - top;
@@ -316,7 +315,7 @@ extern "C" {
 				for (u32 y = 0; y < true_quad_height; y++) {
 					for (u32 x = 0; x < true_quad_width; x++) {
 						if (is_pixel_inside_circle(x, y, start_x + radius, start_y + radius, radius)) {
-							size_t final_pixel_index = x + (y * VIEWPORT_WIDTH);
+							size_t final_pixel_index = start_index + x + (y * VIEWPORT_WIDTH);
 							dest[final_pixel_index] = ckit_color_to_u32(color);
 						}
 					}
@@ -325,7 +324,7 @@ extern "C" {
 				for (u32 y = 0; y < true_quad_height; y++) {
 					for (u32 x = 0; x < true_quad_width; x++) {
 						if (is_pixel_on_circle_line(x, y, start_x + radius, start_y + radius, radius)) {
-							size_t final_pixel_index = x + (y * VIEWPORT_WIDTH);
+							size_t final_pixel_index = start_index + x + (y * VIEWPORT_WIDTH);
 							dest[final_pixel_index] = ckit_color_to_u32(color);
 						}
 					}
