@@ -43,7 +43,8 @@ int main() {
 		float offset_to_center_y = ((float)y_pos - (half_player_height));
 
 		ckit_window_draw_quad(window, (s32)offset_to_center_x, (s32)offset_to_center_y, player_width, player_height, (CKIT_Color){255, 255, 255, 255});
-		ckit_window_draw_circle(window, (s32)ball_x_position, (s32)ball_y_position, ball_radius, TRUE, (CKIT_Color){255, 255, 255, 255});
+		// ckit_window_draw_circle(window, (s32)ball_x_position, (s32)ball_y_position, ball_radius, TRUE, (CKIT_Color){255, 255, 255, 255});
+		// For some reason the draw circle is not correct it seems like the pixel testing is broken??? Somehow?
 
 		Boolean left_check   = ball_x_position <= 0;
 		Boolean right_check  = (ball_x_velocity + ball_radius) >= width;
