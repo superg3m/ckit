@@ -1,13 +1,15 @@
 #pragma once
 
 #include "../../Core/Basic/ckit_types.h"
+#include "./ckit_shapes.h"
 //========================== Begin Types ==========================
-typedef struct CKIT_Color {
-	u8 r;
-	u8 g;
-	u8 b;
-	u8 a;
-} CKIT_Color;
+
+typedef enum CKIT_CursorState {
+	DISABLED,
+	ENABLED,
+	POINTER,
+	GRAB,
+} CKIT_CursorState;
 
 #if defined(PLATFORM_WINDOWS)
 	#include <windows.h>
@@ -132,6 +134,7 @@ extern "C" {
 	void ckit_window_draw_circle(CKIT_Window* window, s32 start_x, s32 start_y, u32 radius, Boolean is_filled, CKIT_Color color);
 	void ckit_window_draw_bitmap(CKIT_Window* window);
 	void ckit_window_get_mouse_position(CKIT_Window* window, int* mouse_x, int* mouse_y);
+	void ckit_window_set_cursor_state(CKIT_Window* window, CKIT_CursorState cursor_state);
 #ifdef __cplusplus
 }
 #endif
@@ -512,6 +515,19 @@ extern "C" {
 			*mouse_x = point.x;
 			*mouse_y = point.y;
 		}
+
+		void ckit_window_set_cursor_state(CKIT_Window* window, CKIT_CursorState cursor_state) {
+			switch (cursor_state) {
+				case ENABLED: {
+					ckit_win32_ShowCursor(TRUE);
+				}
+
+				case DISABLED: {
+					ckit_win32_ShowCursor(FALSE);
+				}
+			}
+		}
+
 	#elif defined(CKIT_WSL)
 		CKIT_Window* ckit_window_create(u32 width, u32 height, const char* name) {
 

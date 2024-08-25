@@ -19,6 +19,7 @@
 	typedef HANDLE (WINAPI LoadImageAFunc)(HINSTANCE, LPCSTR, UINT, int, int, UINT);
 	typedef BOOL (WINAPI GetCursorPosFunc)(LPPOINT);
 	typedef BOOL (WINAPI ScreenToClientFunc)(HWND, LPPOINT);
+	typedef int  (WINAPI ShowCursorFunc)(BOOL);
 	// ----------------------------------------------------------------------------------------------------------------------------
 	internal StretchDIBitsFunc* ckit_win32_StretchDIBits = NULL;
 	internal TranslateMessageFunc* ckit_win32_TranslateMessage = NULL;
@@ -35,6 +36,7 @@
 	internal LoadImageAFunc* ckit_win32_LoadImageA = NULL;
 	internal GetCursorPosFunc* ckit_win32_GetCursorPos = NULL;
 	internal ScreenToClientFunc* ckit_win32_ScreenToClient = NULL;
+	internal ShowCursorFunc* ckit_win32_ShowCursor = NULL;
 #endif
 //=========================== End Types ===========================
 
@@ -73,6 +75,7 @@ extern "C" {
 				ckit_win32_LoadImageA = (LoadImageAFunc*)GetProcAddress(user32_handle, "LoadImageA");
 				ckit_win32_GetCursorPos = (GetCursorPosFunc*)GetProcAddress(user32_handle, "GetCursorPos");
 				ckit_win32_ScreenToClient = (ScreenToClientFunc*)GetProcAddress(user32_handle, "ScreenToClient");
+				ckit_win32_ShowCursor = (ShowCursorFunc*)GetProcAddress(user32_handle, "ShowCursor");
 			}
 
 			GDI32_handle = LoadLibrary("gdi32.dll");
