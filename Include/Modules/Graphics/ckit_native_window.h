@@ -1,7 +1,8 @@
 #pragma once
 
 #include "../../Core/Basic/ckit_types.h"
-#include "./ckit_shapes.h"
+#include "./ckit_graphics_types.h"
+#include "./ckit_graphics_shapes.h"
 //========================== Begin Types ==========================
 
 typedef enum CKIT_CursorState {
@@ -14,15 +15,6 @@ typedef enum CKIT_CursorState {
 #if defined(PLATFORM_WINDOWS)
 	#include <windows.h>
 
-	typedef struct CKIT_Bitmap {
-		BITMAPINFO info;
-		u16 height;
-		u16 width;
-		u16 bytes_per_pixel;
-		// u32 bitmap_memory_size = width * height * bytes_per_pixel
-		u8* memory;
-	} CKIT_Bitmap;
-
 	typedef struct CKIT_Window {
 		HINSTANCE instance_handle;
 		HWND handle;
@@ -30,7 +22,8 @@ typedef enum CKIT_CursorState {
 		u16 height;
 		u16 width;
 		const char* name;
-		CKIT_Bitmap* bitmap;
+		BITMAPINFO bitmap_info;
+		CKIT_Bitmap bitmap;
 	} CKIT_Window;
 #elif defined(CKIT_WSL)
 	typedef struct CKIT_Bitmap {
@@ -59,7 +52,8 @@ typedef enum CKIT_CursorState {
 	typedef struct CKIT_Window {
 		Display* x11_display;
 		Window* x11_window;
-		CKIT_Bitmap* bitmap;
+		XImage* memory;
+		GC x11_gc;
 	} CKIT_Window;
 
 	/*
@@ -130,7 +124,7 @@ extern "C" {
 	void ckit_window_bind_cursor(const char* resource_path);
 	Boolean ckit_window_should_quit(CKIT_Window* window);
 	void ckit_window_clear_color(CKIT_Window* window, CKIT_Color color);
-	void ckit_window_draw_quad(CKIT_Window* window, s32 start_x, s32 start_y, u32 width, u32 height, CKIT_Color color);
+	void ckit_window_draw_quad(CKIT_Window* window, CKIT_Rectangle2D rectangle, CKIT_Color color);
 	void ckit_window_draw_circle(CKIT_Window* window, s32 start_x, s32 start_y, u32 radius, Boolean is_filled, CKIT_Color color);
 	void ckit_window_draw_bitmap(CKIT_Window* window);
 	void ckit_window_get_mouse_position(CKIT_Window* window, int* mouse_x, int* mouse_y);
@@ -141,6 +135,10 @@ extern "C" {
 //************************** End Functions **************************
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
+#define ckit_window_draw_quad_custom(window, start_x, start_y, width, height, color) ckit_window_draw_quad(window, ckit_rectangle_create(start_x, start_y, width, height), color)
+#define ckit_window_free(window) window = MACRO_ckit_window_free(window);
+
+
 #define ckit_window_free(window) window = MACRO_ckit_window_free(window);
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 #if defined(CKIT_IMPL)
@@ -197,17 +195,17 @@ extern "C" {
 
 			RECT client_rect;
 			ckit_win32_GetClientRect(window->handle, &client_rect);
-			window->bitmap->width = (u16)(client_rect.right - client_rect.left);
-			window->bitmap->height = (u16)(client_rect.bottom - client_rect.top);
+			window->bitmap.width = (u16)(client_rect.right - client_rect.left);
+			window->bitmap.height = (u16)(client_rect.bottom - client_rect.top);
 
 			u32 bits_per_pixel = 32;
 			u32 bytes_per_pixel = bits_per_pixel / 8;
-			window->bitmap->bytes_per_pixel = bytes_per_pixel;
+			window->bitmap.bytes_per_pixel = bytes_per_pixel;
 
 			BITMAPINFO bitmap_info;
 			bitmap_info.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-        	bitmap_info.bmiHeader.biWidth = window->bitmap->width;
-        	bitmap_info.bmiHeader.biHeight = -window->bitmap->height;
+        	bitmap_info.bmiHeader.biWidth = window->bitmap.width;
+        	bitmap_info.bmiHeader.biHeight = -window->bitmap.height;
         	bitmap_info.bmiHeader.biPlanes = 1;
         	bitmap_info.bmiHeader.biBitCount = bits_per_pixel;
         	bitmap_info.bmiHeader.biCompression = BI_RGB;
@@ -217,15 +215,15 @@ extern "C" {
         	bitmap_info.bmiHeader.biClrUsed = 0;
         	bitmap_info.bmiHeader.biClrImportant = 0;
 
-			window->bitmap->info = bitmap_info;
+			window->bitmap_info = bitmap_info;
 
-			size_t memory_size = window->bitmap->bytes_per_pixel * window->bitmap->width * window->bitmap->height;
-			if (window->bitmap->memory && (memory_size != 0)) {
-				ckit_free(window->bitmap->memory);
+			size_t memory_size = window->bitmap.bytes_per_pixel * window->bitmap.width * window->bitmap.height;
+			if (window->bitmap.memory && (memory_size != 0)) {
+				ckit_free(window->bitmap.memory);
 			}
 
 			if (memory_size != 0) {
-    			window->bitmap->memory = ckit_alloc(memory_size);
+    			window->bitmap.memory = ckit_alloc(memory_size);
 			}
 		}
 
@@ -238,20 +236,20 @@ extern "C" {
 			// NOTE(Jovanni): I'm not sure at all if I have to get a new dc each frame?
 			window->hdc = ckit_win32_GetDC(window->handle);
 			ckit_win32_StretchDIBits(window->hdc, 
-						  0, 0, window->bitmap->width, window->bitmap->height, 
-			 			  0, 0, window->bitmap->width, window->bitmap->height,
-						  window->bitmap->memory, &window->bitmap->info, DIB_RGB_COLORS, SRCCOPY);
+						  0, 0, window->bitmap.width, window->bitmap.height, 
+			 			  0, 0, window->bitmap.width, window->bitmap.height,
+						  window->bitmap.memory, &window->bitmap_info, DIB_RGB_COLORS, SRCCOPY);
 		}
 
-		void ckit_window_draw_quad(CKIT_Window* window, s32 start_x, s32 start_y, u32 width, u32 height, CKIT_Color color) {
-			const s32 VIEWPORT_WIDTH = window->bitmap->width;
-			const s32 VIEWPORT_HEIGHT = window->bitmap->height;
+		void ckit_window_draw_quad(CKIT_Window* window, CKIT_Rectangle2D rectangle, CKIT_Color color) {
+			const s32 VIEWPORT_WIDTH = window->bitmap.width;
+			const s32 VIEWPORT_HEIGHT = window->bitmap.height;
 
-			u32 left = (u32)CLAMP(start_x, 0, VIEWPORT_WIDTH);
-			u32 right = (u32)CLAMP(start_x + (s32)width, 0, VIEWPORT_WIDTH);
+			u32 left = (u32)CLAMP(rectangle.x, 0, VIEWPORT_WIDTH);
+			u32 right = (u32)CLAMP(rectangle.x + (s32)rectangle.width, 0, VIEWPORT_WIDTH);
 
-			u32 top = (u32)CLAMP(start_y, 0, VIEWPORT_HEIGHT);
-			u32 bottom = (u32)CLAMP(start_y + (s32)height, 0, VIEWPORT_HEIGHT);
+			u32 top = (u32)CLAMP(rectangle.y, 0, VIEWPORT_HEIGHT);
+			u32 bottom = (u32)CLAMP(rectangle.y + (s32)rectangle.height, 0, VIEWPORT_HEIGHT);
 
 			u32 true_quad_width = right - left;
 			u32 true_quad_height = bottom - top;
@@ -262,7 +260,7 @@ extern "C" {
 			}
 
 			size_t start_index = left + (top * VIEWPORT_WIDTH);
-			u32* dest = &((u32*)window->bitmap->memory)[start_index];
+			u32* dest = &((u32*)window->bitmap.memory)[start_index];
 
 			for (u32 y = 0; y < true_quad_height; y++) {
 				for (u32 x = 0; x < true_quad_width; x++) {
@@ -293,8 +291,8 @@ extern "C" {
 		}
 
 		void ckit_window_draw_circle(CKIT_Window* window, s32 start_x, s32 start_y, u32 radius, Boolean is_filled, CKIT_Color color) {
-			const uint32_t VIEWPORT_WIDTH = window->bitmap->width;
-			const uint32_t VIEWPORT_HEIGHT = window->bitmap->height;
+			const uint32_t VIEWPORT_WIDTH = window->bitmap.width;
+			const uint32_t VIEWPORT_HEIGHT = window->bitmap.height;
 
 			const u32 diameter = radius * 2;
 
@@ -312,7 +310,7 @@ extern "C" {
 			}
 
 			size_t start_index = left + (top * VIEWPORT_WIDTH);
-			u32* dest = &((u32*)window->bitmap->memory)[start_index];
+			u32* dest = &((u32*)window->bitmap.memory)[start_index];
 
 			if (is_filled) {
 				for (u32 y = 0; y < true_quad_height; y++) {
@@ -421,12 +419,12 @@ extern "C" {
 		}
 
 		void ckit_window_clear_color(CKIT_Window* window, CKIT_Color color) {
-			int stride = window->bitmap->width * window->bitmap->bytes_per_pixel;
-			u8* row = window->bitmap->memory;    
-			for(u32 y = 0; y < window->bitmap->height; y++)
+			int stride = window->bitmap.width * window->bitmap.bytes_per_pixel;
+			u8* row = window->bitmap.memory;    
+			for(u32 y = 0; y < window->bitmap.height; y++)
 			{
 				u32* pixel = (u32*)row;
-				for(u32 x = 0; x < window->bitmap->width; x++)
+				for(u32 x = 0; x < window->bitmap.width; x++)
 				{
 					*pixel++ = ckit_color_to_u32(color);
 				}
@@ -436,7 +434,6 @@ extern "C" {
 
 		CKIT_Window* ckit_window_create(u32 width, u32 height, const char* name) {
 			CKIT_Window* ret_window = ckit_alloc_custom(sizeof(CKIT_Window), TAG_CKIT_EXPECTED_USER_FREE);
-			ret_window->bitmap = ckit_alloc_custom(sizeof(CKIT_Bitmap), TAG_CKIT_EXPECTED_USER_FREE);
 
 			ret_window->instance_handle = GetModuleHandle(NULL);
 			ret_window->width = width;
@@ -485,8 +482,7 @@ extern "C" {
 				ckit_vector_free(registered_windows);
 			}
 
-			ckit_free(window->bitmap->memory);
-			ckit_free(window->bitmap);
+			ckit_free(window->bitmap.memory);
 			ckit_free(window);
 
 			return window;

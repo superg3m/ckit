@@ -2,13 +2,13 @@
 
 #if defined(PLATFORM_WINDOWS)
 	void set_bitmap_gradient(CKIT_Window* window, u32 x_offset, u32 y_offset) {
-		int stride = window->bitmap->width * window->bitmap->bytes_per_pixel;
+		int stride = window->bitmap.width * window->bitmap.bytes_per_pixel;
 
-		u8* row = window->bitmap->memory;    
-		for(u32 y = 0; y < window->bitmap->height; y++)
+		u8* row = window->bitmap.memory;    
+		for(u32 y = 0; y < window->bitmap.height; y++)
 		{
 			u32* pixel = (u32*)row;
-			for(u32 x = 0; x < window->bitmap->width; x++)
+			for(u32 x = 0; x < window->bitmap.width; x++)
 			{
 				const u32 red = ((100 + x + x_offset) << 16);
 				const u32 green = (10 << 8);
@@ -59,18 +59,19 @@ int main() {
 	u32 half_center_height = center_height / 2;
 
 
+
 	while (!ckit_window_should_quit(window)) {
 		// set_bitmap_gradient(window, x_offset, y_offset);
 		ckit_window_clear_color(window, (CKIT_Color){0, 0, 0, 255});
 		
-		ckit_window_draw_quad(window, 0, height, width, 1, (CKIT_Color){255, 0, 0, 255}); // x axis
-		ckit_window_draw_quad(window, width, 0, 1, height, (CKIT_Color){0, 0, 255, 255}); // y axis
+		ckit_window_draw_quad_custom(window, 0, height, width, 1, CKIT_COLOR_RED); // x axis
+		ckit_window_draw_quad_custom(window, width, 0, 1, height, CKIT_COLOR_BLUE); // y axis
 
 		float offset_to_center_x = ((float)x_pos + (half_player_width)) - half_center_width;
 		float offset_to_center_y = ((float)y_pos + (half_player_height)) - half_center_height;
 
-		ckit_window_draw_quad(window, (s32)x_pos, (s32)y_pos, player_width, player_height, (CKIT_Color){0, 255, 0, 255});
-		ckit_window_draw_quad(window, (s32)offset_to_center_x, (s32)offset_to_center_y, center_width, center_height, (CKIT_Color){255, 0, 255, 255});
+		ckit_window_draw_quad_custom(window, (s32)x_pos, (s32)y_pos, player_width, player_height, CKIT_COLOR_GREEN);
+		ckit_window_draw_quad_custom(window, (s32)offset_to_center_x, (s32)offset_to_center_y, center_width, center_height, CKIT_COLOR_PURPLE);
 
 		Boolean left_check   = x_pos <= 0;
 		Boolean right_check  = (x_pos + player_width) >= width;
