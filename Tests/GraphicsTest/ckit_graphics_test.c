@@ -30,8 +30,12 @@
 int main() {
 	ckit_init();
 
-	u32 width = 800;
-	u32 height = 600;
+	u32 width = 1200;
+	u32 height = 800;
+	u32 width_padding = 18;
+	u32 height_padding = 42;
+	u32 width_with_padding = width - width_padding;
+	u32 height_with_padding = height - height_padding;
 
 	LOG_FATAL("TESTING\n");
 	LOG_ERROR("TESTING\n");
@@ -45,8 +49,8 @@ int main() {
 	float x_pos = 40;
 	float y_pos = 40;
 
-	float x_velocity = 1.0;
-	float y_velocity = 1.0;
+	float x_velocity = 2.0;
+	float y_velocity = 2.0;
 
 	u32 player_width = 40;
 	u32 player_height = 40;
@@ -58,14 +62,19 @@ int main() {
 	u32 half_center_width = center_width / 2;
 	u32 half_center_height = center_height / 2;
 
+	u32 border_size = 5; 
 
+	u32 close_factor = 0; 
 
 	while (!ckit_window_should_quit(window)) {
 		// set_bitmap_gradient(window, x_offset, y_offset);
 		ckit_window_clear_color(window, (CKIT_Color){0, 0, 0, 255});
+
 		
-		ckit_window_draw_quad_custom(window, 0, height, width, 1, CKIT_COLOR_RED); // x axis
-		ckit_window_draw_quad_custom(window, width, 0, 1, height, CKIT_COLOR_BLUE); // y axis
+		ckit_window_draw_quad_custom(window, 0 + close_factor, 0 + close_factor, border_size, height_with_padding - close_factor, CKIT_COLOR_GREEN); // left
+		ckit_window_draw_quad_custom(window, 0 + close_factor, 0 + close_factor, width_with_padding - close_factor, border_size, CKIT_COLOR_PURPLE); // top
+		ckit_window_draw_quad_custom(window, 0, height_with_padding - close_factor, width_with_padding - close_factor, border_size, CKIT_COLOR_RED); // bottom
+		ckit_window_draw_quad_custom(window, width_with_padding - close_factor, 0, border_size, height_with_padding - close_factor, CKIT_COLOR_BLUE); // right
 
 		float offset_to_center_x = ((float)x_pos + (half_player_width)) - half_center_width;
 		float offset_to_center_y = ((float)y_pos + (half_player_height)) - half_center_height;
@@ -73,18 +82,20 @@ int main() {
 		ckit_window_draw_quad_custom(window, (s32)x_pos, (s32)y_pos, player_width, player_height, CKIT_COLOR_GREEN);
 		ckit_window_draw_quad_custom(window, (s32)offset_to_center_x, (s32)offset_to_center_y, center_width, center_height, CKIT_COLOR_PURPLE);
 
-		Boolean left_check   = x_pos <= 0;
-		Boolean right_check  = (x_pos + player_width) >= width;
+		Boolean left_check   = x_pos <= 0 + close_factor;
+		Boolean right_check  = (x_pos + player_width) >= width_with_padding - close_factor;
 
-		Boolean bottom_check = y_pos <= 0;
-		Boolean top_check    = (y_pos + player_height) >= height;
+		Boolean bottom_check = y_pos <= 0 + close_factor;
+		Boolean top_check    = (y_pos + player_height) >= height_with_padding - close_factor;
 
 		if (left_check || right_check) {
 			x_velocity *= -1;
+			close_factor += 5;
 		}
 
 		if (bottom_check || top_check) {
 			y_velocity *= -1;
+			close_factor += 5;
 		}
 		
 		x_pos += x_velocity;

@@ -251,10 +251,15 @@ extern "C" {
 			u32 top = (u32)CLAMP(rectangle.y, 0, VIEWPORT_HEIGHT);
 			u32 bottom = (u32)CLAMP(rectangle.y + (s32)rectangle.height, 0, VIEWPORT_HEIGHT);
 
+			Boolean should_draw = (left < right) && (top < bottom);
+			if (!should_draw) {
+				return;
+			}
+			
 			u32 true_quad_width = right - left;
 			u32 true_quad_height = bottom - top;
 
-			Boolean should_draw = (true_quad_width != 0) && (true_quad_height != 0);
+			should_draw = (true_quad_width != 0) && (true_quad_height != 0);
 			if (!should_draw) {
 				return;
 			}
