@@ -113,9 +113,6 @@ extern "C" {
 		return ret;
 	}
 
-	// Date: May 23, 2024
-	// TODO(Jovanni): I need to eventually go back to using an arena I liked the idea
-	// Of pushing the header then right after pushing the str data I think this worked really well.
 	String ckit_str_create_custom(const char* c_string, size_t capacity) {
 		u32 c_str_length = ckg_cstr_length(c_string);
 		size_t true_capacity = capacity != 0 ? capacity : sizeof(char) * (c_str_length + 1);
@@ -219,6 +216,8 @@ extern "C" {
 	}
 
 	String ckit_substring(const char* string_buffer, u32 start_range, u32 end_range) {
+		ckit_assert(string_buffer);
+
 		String ret_string = ckit_str_create_custom("", ((end_range + 1) - start_range) + 1);
 		ckg_substring(string_buffer, ret_string, start_range, end_range);
 		ckit_str_recanonicalize_header_length(ret_string);
@@ -248,26 +247,41 @@ extern "C" {
 	}
 
 	Boolean kit_cstr_contains(const char* string_buffer, const char* contains) {
+		ckit_assert(string_buffer);
+		ckit_assert(contains);
 		return ckg_cstr_contains(string_buffer, contains);
 	}
 
 	s32 ckit_str_index_of(const char* string_buffer, const char* sub_string) {
+		ckit_assert(string_buffer);
+		ckit_assert(sub_string);
 		return ckg_cstr_index_of(string_buffer, sub_string);
 	}
 
 	s32 ckit_str_last_index_of(const char* string_buffer, const char* sub_string) {
+		ckit_assert(string_buffer);
+		ckit_assert(sub_string);
 		return ckg_cstr_last_index_of(string_buffer, sub_string);
 	}
 
 	Boolean ckit_str_starts_with(const char* string_buffer, const char* starts_with) {
+		ckit_assert(string_buffer);
+		ckit_assert(starts_with);
+
 		return ckg_cstr_starts_with(string_buffer, starts_with);
 	}
 
 	Boolean ckit_str_ends_with(const char* string_buffer, const char* ends_with) {
+		ckit_assert(string_buffer);
+		ckit_assert(ends_with);
+
+
 		return ckg_cstr_ends_with(string_buffer, ends_with);
 	}
 
 	String ckit_str_reverse(const char* string_buffer) {
+		ckit_assert(string_buffer);
+
 		size_t reversed_string_buffer_capacity = ckit_cstr_length(string_buffer) + 1;
 		String reversed_string_buffer = ckit_str_create_custom("", reversed_string_buffer_capacity);
 		ckg_cstr_reverse(string_buffer, reversed_string_buffer, reversed_string_buffer_capacity);
@@ -288,6 +302,8 @@ extern "C" {
 	}
 
 	int ckit_str_to_int(const char* ascii_number) {
+		ckit_assert(ascii_number);
+
 		return atoi(ascii_number);
 	}
 

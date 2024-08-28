@@ -30,7 +30,7 @@
 int main() {
 	ckit_init();
 
-	u32 width = 1200;
+	u32 width = 800;
 	u32 height = 800;
 	u32 width_padding = 18;
 	u32 height_padding = 42;
@@ -68,40 +68,53 @@ int main() {
 
 	while (!ckit_window_should_quit(window)) {
 		// set_bitmap_gradient(window, x_offset, y_offset);
-		ckit_window_clear_color(window, (CKIT_Color){0, 0, 0, 255});
 
-		
-		ckit_window_draw_quad_custom(window, 0 + close_factor, 0 + close_factor, border_size, height_with_padding - close_factor, CKIT_COLOR_GREEN); // left
-		ckit_window_draw_quad_custom(window, 0 + close_factor, 0 + close_factor, width_with_padding - close_factor, border_size, CKIT_COLOR_PURPLE); // top
-		ckit_window_draw_quad_custom(window, 0, height_with_padding - close_factor, width_with_padding - close_factor, border_size, CKIT_COLOR_RED); // bottom
-		ckit_window_draw_quad_custom(window, width_with_padding - close_factor, 0, border_size, height_with_padding - close_factor, CKIT_COLOR_BLUE); // right
+		{ // UPDATE
+			s32 left_threshold   = 0 + close_factor;
+			s32 right_threshold  = width_with_padding - close_factor;
+			s32 top_threshold    =  0 + close_factor;
+			s32 bottom_threshold = height_with_padding - close_factor;
 
-		float offset_to_center_x = ((float)x_pos + (half_player_width)) - half_center_width;
-		float offset_to_center_y = ((float)y_pos + (half_player_height)) - half_center_height;
+			Boolean left_check   = x_pos < left_threshold - 1;
+			Boolean right_check  = (x_pos + player_width) > right_threshold + 1;
+			Boolean top_check    = (y_pos) < top_threshold - 1;
+			Boolean bottom_check = (y_pos + player_height) > bottom_threshold + 1;
 
-		ckit_window_draw_quad_custom(window, (s32)x_pos, (s32)y_pos, player_width, player_height, CKIT_COLOR_GREEN);
-		ckit_window_draw_quad_custom(window, (s32)offset_to_center_x, (s32)offset_to_center_y, center_width, center_height, CKIT_COLOR_PURPLE);
 
-		Boolean left_check   = x_pos <= 0 + close_factor;
-		Boolean right_check  = (x_pos + player_width) >= width_with_padding - close_factor;
+			if (left_check || right_check) {
+				x_velocity *= -1;
+				close_factor += 2;
+				x_pos += x_velocity * 5;
+			}
 
-		Boolean bottom_check = y_pos <= 0 + close_factor;
-		Boolean top_check    = (y_pos + player_height) >= height_with_padding - close_factor;
+			if (bottom_check || top_check) {
+				y_velocity *= -1;
+				close_factor += 2;
+				y_pos += y_velocity * 5;
+			}
 
-		if (left_check || right_check) {
-			x_velocity *= -1;
-			close_factor += 5;
+			x_pos += x_velocity;
+			y_pos += y_velocity;
 		}
 
-		if (bottom_check || top_check) {
-			y_velocity *= -1;
-			close_factor += 5;
-		}
-		
-		x_pos += x_velocity;
-		y_pos += y_velocity;
 
-		ckit_window_draw_bitmap(window);
+		{ // RENDER
+			ckit_window_clear_color(window, (CKIT_Color){0, 0, 0, 255});
+
+			ckit_window_draw_quad_custom(window, 0 + close_factor, 0 + close_factor, border_size, height_with_padding - (close_factor * 2), CKIT_COLOR_GREEN); // left
+			ckit_window_draw_quad_custom(window, 0 + close_factor, 0 + close_factor, width_with_padding - (close_factor * 2), border_size, CKIT_COLOR_PURPLE); // top
+			ckit_window_draw_quad_custom(window, 0 + close_factor, height_with_padding - close_factor, width_with_padding - (close_factor * 2), border_size, CKIT_COLOR_RED); // bottom
+			ckit_window_draw_quad_custom(window, width_with_padding - close_factor, 0 + close_factor, border_size, height_with_padding - (close_factor * 2), CKIT_COLOR_BLUE); // right
+
+			float offset_to_center_x = ((float)x_pos + (half_player_width)) - half_center_width;
+			float offset_to_center_y = ((float)y_pos + (half_player_height)) - half_center_height;
+
+			ckit_window_draw_quad_custom(window, (s32)x_pos, (s32)y_pos, player_width, player_height, CKIT_COLOR_GREEN);
+			ckit_window_draw_quad_custom(window, (s32)offset_to_center_x, (s32)offset_to_center_y, center_width, center_height, CKIT_COLOR_PURPLE);
+
+
+			ckit_window_draw_bitmap(window);
+		}
 	}
 
 	ckit_window_free(window); // hmm how can I make this safer?
