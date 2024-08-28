@@ -49,8 +49,8 @@ int main() {
 	float x_pos = 40;
 	float y_pos = 40;
 
-	float x_velocity = 2.0;
-	float y_velocity = 2.0;
+	float x_velocity = 1.0;
+	float y_velocity = 1.0;
 
 	u32 player_width = 40;
 	u32 player_height = 40;
