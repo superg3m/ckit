@@ -304,12 +304,19 @@ extern "C" {
 			// Scaling factor (16x scaling in this case)
 			const u32 scale_factor = 16;
 
-			u32* start_bmp = &(((u32*)window->bitmap.memory)[(bitmap.height - 1)* bitmap.width]);
+			u32* start_bmp = (u32*)bitmap.memory + ((bitmap.height - 1) * bitmap.width);
+			if (x < 0) {
+				start_bmp = start_bmp - x;
+			}
+
+			if (y < 0) {
+				start_bmp = start_bmp - (s64)(y * (s64)bitmap.width);
+			}
 
 			for (u32 y = 0; y < true_quad_height; y++) {
 				for (u32 x = 0; x < true_quad_width; x++) {
-					size_t color_index = (((bitmap.height - 1) - y) * bitmap.width) + x;
-					u32 color = ((u32*)bitmap.memory)[color_index];
+					s64 color_index = x + -((s64)(bitmap.width * y));
+					u32 color = start_bmp[color_index];
 
 					// Draw scaled pixels
 					for (u32 dy = 0; dy < scale_factor; ++dy) {

@@ -66,7 +66,7 @@ int main() {
 	u32 close_factor = 0;
 
 	size_t file_size = 0;
-	u8* ckit_sword_bmp_data = ckit_os_read_entire_file("../../../assets/Sword.bmp", &file_size);
+	u8* ckit_sword_bmp_data = ckit_os_read_entire_file("../../../assets/Learn_About_BMP.bmp", &file_size);
 	CKIT_Bitmap sword_bitmap = ckit_graphics_load_bmp(ckit_sword_bmp_data, file_size);
 
 	while (!ckit_window_should_quit(window)) {
@@ -104,7 +104,7 @@ int main() {
 		{ // RENDER
 			ckit_window_clear_color(window, (CKIT_Color){0, 0, 0, 255});
 
-			ckit_window_draw_bitmap(window, 0, 0, sword_bitmap);
+			ckit_window_draw_bitmap(window, 10, 0, sword_bitmap);
 
 			ckit_window_draw_quad_custom(window, 0 + close_factor, 0 + close_factor, border_size, height_with_padding - (close_factor * 2), CKIT_COLOR_GREEN); // left
 			ckit_window_draw_quad_custom(window, 0 + close_factor, 0 + close_factor, width_with_padding - (close_factor * 2), border_size, CKIT_COLOR_PURPLE); // top
