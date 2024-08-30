@@ -24,6 +24,17 @@ extern "C" {
 	CKIT_Bitmap ckit_graphics_load_bmp(u8* bmp_file_data, size_t file_size);
 	u32 ckit_color_to_u32(CKIT_Color color);
 	CKIT_Color ckit_color_from_u32(u32 color);
+	CKIT_Color ckit_color_alpha_blend(CKIT_Color front_color, CKIT_Color back_color);
+	CKIT_Color ckit_color_u32_blend_alpha(u32 front_color_u32, u32 back_color_u32);
+
+	/**
+	 * @brief value from 0.0 to 1.0
+	 * 
+	 * @param color 
+	 * @param value 
+	 * @return CKIT_Color 
+	 */
+	CKIT_Color ckit_color_multiply(CKIT_Color color, float value);
 #ifdef __cplusplus
 }
 #endif
@@ -65,7 +76,7 @@ extern "C" {
 		const u32 green = ((color.g) << 8);
 		const u32 blue = ((color.b) << 0);
 						
-		const u32 rgba = red|green|blue;
+		const u32 rgba = alpha|red|green|blue;
 
 		return rgba;
 	}
@@ -81,30 +92,42 @@ extern "C" {
 		return ret;
 	}
 
-	CKIT_Color ckit_color_blend_alpha(CKIT_Color color1, CKIT_Color color2) {
+	CKIT_Color ckit_color_multiply(CKIT_Color color, float value) {
 		CKIT_Color ret = {0};
-
-		ret.a = color1.a + color2.a * (255 - color1.a) / 255;
-
-		if (ret.a > 0) {
-			ret.r = (color1.r * color1.a + color2.r * color2.a * (255 - color1.a) / 255) / ret.a * 255;
-			ret.g = (color1.g * color1.a + color2.g * color2.a * (255 - color1.a) / 255) / ret.a * 255;
-			ret.b = (color1.b * color1.a + color2.b * color2.a * (255 - color1.a) / 255) / ret.a * 255;
-		}
+		ret.a = color.a * value;
+		ret.r = color.r * value;
+		ret.g = color.g * value;
+		ret.b = color.b * value;
 
 		return ret;
 	}
 
-	CKIT_Color ckit_color_u32_blend_alpha(u32 color) {
-		ckit_assert_msg(FALSE, "NOT IMPLEMENTED YET\n");
-
+	CKIT_Color ckit_color_alpha_blend(CKIT_Color front_color, CKIT_Color back_color) {
 		CKIT_Color ret = {0};
 
-		ret.b = ((color >> 0) & 0xFF); 
-		ret.g = ((color >> 8) & 0xFF); 
-		ret.r = ((color >> 16) & 0xFF); 
-		ret.a = ((color >> 24) & 0xFF); 
-					
+		float normalized_back_alpha = back_color.a / 255;
+
+		ret.a = back_color.a;
+		ret.r = back_color.r + (front_color.r * (1 - normalized_back_alpha));
+		ret.g = back_color.g + (front_color.g * (1 - normalized_back_alpha));
+		ret.b = back_color.b + (front_color.b * (1 - normalized_back_alpha));
+
 		return ret;
+	}
+
+	CKIT_Color ckit_color_u32_blend_alpha(u32 front_color_u32, u32 back_color_u32) {
+		CKIT_Color front_color = {0};
+		front_color.a = (u8)((front_color_u32 >> 24) & 0xFF);
+		front_color.r = (u8)((front_color_u32 >> 16) & 0xFF);
+		front_color.g = (u8)((front_color_u32 >> 8) & 0xFF);
+		front_color.b = (u8)((front_color_u32 >> 0) & 0xFF);
+
+		CKIT_Color back_color = {0};
+		back_color.a = (u8)((back_color_u32 >> 24) & 0xFF);
+		back_color.r = (u8)((back_color_u32 >> 16) & 0xFF);
+		back_color.g = (u8)((back_color_u32 >> 8) & 0xFF);
+		back_color.b = (u8)((back_color_u32 >> 0) & 0xFF);
+					
+		return ckit_color_alpha_blend(front_color, back_color);
 	}
 #endif // CKIT_IMPL

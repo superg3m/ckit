@@ -179,6 +179,12 @@ extern "C" {
 				return;
 			}
 
+			if (window->hdc) {
+				ReleaseDC(window->handle, window->hdc);
+				window->hdc = NULLPTR;
+			}
+			window->hdc = GetDC(window->handle);
+
 			RECT windowRect;
 			ckit_win32_GetWindowRect(window->handle, &windowRect);
 			window->width = (u16)(windowRect.right - windowRect.left);
@@ -219,21 +225,43 @@ extern "C" {
 		}
 
 		void ckit_window_swap_buffers(CKIT_Window* window) {
-			if (window->hdc) {
-				ckit_win32_ReleaseDC(window->handle, window->hdc);
-			}
-
-			// Date: August 17, 2024
-			// NOTE(Jovanni): I'm not sure at all if I have to get a new dc each frame?
-			window->hdc = ckit_win32_GetDC(window->handle);
 			ckit_win32_StretchDIBits(window->hdc, 
 						  0, 0, window->bitmap.width, window->bitmap.height, 
 			 			  0, 0, window->bitmap.width, window->bitmap.height,
 						  window->bitmap.memory, &window->bitmap_info, DIB_RGB_COLORS, SRCCOPY);
-			
-			// Date: August 30, 2024
-			// NOTE(Jovanni): Might have to free the dc too
 		}
+
+		internal void apply_alpha_blend(CKIT_Window* window, u32 x, u32 y, u32 width, u32 height, u8 alpha) {
+			if (!window || !window->bitmap.memory || alpha == 255) {
+				return;
+			}
+
+			HDC hdc = window->hdc;
+			BITMAPINFO bitmap_info = window->bitmap_info;
+
+			u32* front_buffer = (u32*)ckit_alloc(window->bitmap.width * window->bitmap.height * window->bitmap.bytes_per_pixel);
+			u32* front_buffer_dest = &front_buffer[x + (y * window->bitmap.width)];
+
+			GetDIBits(hdc, GetCurrentObject(hdc, OBJ_BITMAP), 0, height, front_buffer, &bitmap_info, DIB_RGB_COLORS);
+
+			u32* back_buffer = (u32*)window->bitmap.memory;
+			u32* back_buffer_dest = &back_buffer[x + (y * window->bitmap.width)];
+			for (u32 check_y = 0; check_y < height; check_y++) {
+				for (u32 check_x = 0; check_x < width; check_x++) {
+					size_t final_pixel_index = check_x + (check_y * width);
+
+					u32 front_buffer_current_pixel = front_buffer_dest[final_pixel_index];
+					u32 back_buffer_current_pixel = back_buffer_dest[final_pixel_index];
+
+					CKIT_Color new_back_buffer_color = ckit_color_u32_blend_alpha(front_buffer_current_pixel, back_buffer_current_pixel);
+
+					back_buffer_dest[final_pixel_index] = ckit_color_to_u32(new_back_buffer_color);
+				}
+			}
+
+			ckit_free(front_buffer);
+		}
+
 
 		void ckit_window_draw_quad(CKIT_Window* window, CKIT_Rectangle2D rectangle, CKIT_Color color) {
 			const s32 VIEWPORT_WIDTH = window->bitmap.width;
@@ -267,6 +295,8 @@ extern "C" {
 					dest[final_pixel_index] = ckit_color_to_u32(color);
 				}
 			}
+
+			apply_alpha_blend(window, left, top, true_quad_width, true_quad_height, color.a);
 		}
 
 		// Date: August 30, 2024
@@ -557,6 +587,7 @@ extern "C" {
 			while (ckit_win32_PeekMessageA(&msg, NULLPTR, 0, 0, PM_REMOVE)) {
 				if (msg.message == WM_QUIT) {
 					ckit_win32_ReleaseDC(window->handle, window->hdc);
+					window->hdc = NULLPTR;
 					return TRUE;
 				}
 
