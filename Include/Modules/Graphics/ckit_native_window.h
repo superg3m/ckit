@@ -230,6 +230,9 @@ extern "C" {
 						  0, 0, window->bitmap.width, window->bitmap.height, 
 			 			  0, 0, window->bitmap.width, window->bitmap.height,
 						  window->bitmap.memory, &window->bitmap_info, DIB_RGB_COLORS, SRCCOPY);
+			
+			// Date: August 30, 2024
+			// NOTE(Jovanni): Might have to free the dc too
 		}
 
 		void ckit_window_draw_quad(CKIT_Window* window, CKIT_Rectangle2D rectangle, CKIT_Color color) {
@@ -266,6 +269,10 @@ extern "C" {
 			}
 		}
 
+		// Date: August 30, 2024
+		// TODO(Jovanni): REWRITE THIS SHIT BECAUSE ITS WAY TO COMPLICATED LOGIC WISE FOR WHAT IT SHOULD BE!!!
+		// TODO(Jovanni): REWRITE THIS SHIT BECAUSE ITS WAY TO COMPLICATED LOGIC WISE FOR WHAT IT SHOULD BE!!!
+		// TODO(Jovanni): REWRITE THIS SHIT BECAUSE ITS WAY TO COMPLICATED LOGIC WISE FOR WHAT IT SHOULD BE!!!
 		void ckit_window_draw_bitmap(CKIT_Window* window, s32 x, s32 y, CKIT_Bitmap bitmap) {
 			const s32 VIEWPORT_WIDTH = window->bitmap.width;
 			const s32 VIEWPORT_HEIGHT = window->bitmap.height;

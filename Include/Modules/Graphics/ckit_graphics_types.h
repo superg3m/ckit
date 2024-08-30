@@ -58,12 +58,17 @@ extern "C" {
 	}
 
 	u32 ckit_color_to_u32(CKIT_Color color) {
-		const u32 red = ((color.a) << 24);
-		const u32 red = ((color.r) << 16);
-		const u32 green = ((color.g) << 8);
-		const u32 blue = ((color.b) << 0);
-						
-		const u32 rgba = red|green|blue;
+		// Pre-multiply RGB components by the alpha value
+		u32 red = (color.r * color.a) / 255;
+		u32 green = (color.g * color.a) / 255;
+		u32 blue = (color.b * color.a) / 255;
+
+		u32 alpha = ((color.a) << 24);
+		red = (red << 16);
+		green = (green << 8);
+		blue = (blue << 0);
+
+		u32 rgba = alpha|red|green|blue;
 
 		return rgba;
 	}
@@ -103,6 +108,6 @@ extern "C" {
 		ret.r = ((color >> 16) & 0xFF); 
 		ret.a = ((color >> 24) & 0xFF); 
 					
-		return rgb;
+		return ret;
 	}
 #endif // CKIT_IMPL
