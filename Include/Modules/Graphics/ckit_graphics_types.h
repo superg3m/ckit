@@ -22,6 +22,8 @@ typedef struct CKIT_Bitmap {
 extern "C" {
 #endif
 	CKIT_Bitmap ckit_graphics_load_bmp(u8* bmp_file_data, size_t file_size);
+	u32 ckit_color_to_u32(CKIT_Color color);
+	CKIT_Color ckit_color_from_u32(u32 color);
 #ifdef __cplusplus
 }
 #endif
@@ -58,17 +60,12 @@ extern "C" {
 	}
 
 	u32 ckit_color_to_u32(CKIT_Color color) {
-		// Pre-multiply RGB components by the alpha value
-		u32 red = (color.r * color.a) / 255;
-		u32 green = (color.g * color.a) / 255;
-		u32 blue = (color.b * color.a) / 255;
-
-		u32 alpha = ((color.a) << 24);
-		red = (red << 16);
-		green = (green << 8);
-		blue = (blue << 0);
-
-		u32 rgba = alpha|red|green|blue;
+		const u32 alpha = ((color.a) << 24);
+		const u32 red = ((color.r) << 16);
+		const u32 green = ((color.g) << 8);
+		const u32 blue = ((color.b) << 0);
+						
+		const u32 rgba = red|green|blue;
 
 		return rgba;
 	}
