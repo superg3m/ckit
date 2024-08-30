@@ -108,9 +108,9 @@ extern "C" {
 		float normalized_back_alpha = back_color.a / 255;
 
 		ret.a = back_color.a;
-		ret.r = back_color.r + (front_color.r * (1 - normalized_back_alpha));
-		ret.g = back_color.g + (front_color.g * (1 - normalized_back_alpha));
-		ret.b = back_color.b + (front_color.b * (1 - normalized_back_alpha));
+		ret.r = (back_color.r * normalized_back_alpha) + (front_color.r * (1 - normalized_back_alpha));
+		ret.g = (back_color.g * normalized_back_alpha) + (front_color.g * (1 - normalized_back_alpha));
+		ret.b = (back_color.b * normalized_back_alpha) + (front_color.b * (1 - normalized_back_alpha));
 
 		return ret;
 	}
