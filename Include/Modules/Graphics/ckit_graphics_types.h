@@ -56,4 +56,53 @@ extern "C" {
 		
 		return ret;
 	}
+
+	u32 ckit_color_to_u32(CKIT_Color color) {
+		const u32 red = ((color.a) << 24);
+		const u32 red = ((color.r) << 16);
+		const u32 green = ((color.g) << 8);
+		const u32 blue = ((color.b) << 0);
+						
+		const u32 rgba = red|green|blue;
+
+		return rgba;
+	}
+
+	CKIT_Color ckit_color_from_u32(u32 color) {
+		CKIT_Color ret = {0};
+
+		ret.b = ((color >> 0) & 0xFF); 
+		ret.g = ((color >> 8) & 0xFF); 
+		ret.r = ((color >> 16) & 0xFF); 
+		ret.a = ((color >> 24) & 0xFF); 
+					
+		return ret;
+	}
+
+	CKIT_Color ckit_color_blend_alpha(CKIT_Color color1, CKIT_Color color2) {
+		CKIT_Color ret = {0};
+
+		ret.a = color1.a + color2.a * (255 - color1.a) / 255;
+
+		if (ret.a > 0) {
+			ret.r = (color1.r * color1.a + color2.r * color2.a * (255 - color1.a) / 255) / ret.a * 255;
+			ret.g = (color1.g * color1.a + color2.g * color2.a * (255 - color1.a) / 255) / ret.a * 255;
+			ret.b = (color1.b * color1.a + color2.b * color2.a * (255 - color1.a) / 255) / ret.a * 255;
+		}
+
+		return ret;
+	}
+
+	CKIT_Color ckit_color_u32_blend_alpha(u32 color) {
+		ckit_assert_msg(FALSE, "NOT IMPLEMENTED YET\n");
+
+		CKIT_Color ret = {0};
+
+		ret.b = ((color >> 0) & 0xFF); 
+		ret.g = ((color >> 8) & 0xFF); 
+		ret.r = ((color >> 16) & 0xFF); 
+		ret.a = ((color >> 24) & 0xFF); 
+					
+		return rgb;
+	}
 #endif // CKIT_IMPL

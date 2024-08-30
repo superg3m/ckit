@@ -148,16 +148,6 @@ extern "C" {
 	#include "../../Core/Basic/ckit_os.h"
 	#include "../../Core/Basic/ckit_platform_function_bindings.h"
 
-	u32 ckit_color_to_u32(CKIT_Color color) {
-		const u32 red = ((color.r) << 16);
-		const u32 green = ((color.g) << 8);
-		const u32 blue = ((color.b) << 0);
-						
-		const u32 rgb = red|green|blue;
-
-		return rgb;
-	}
-
 	#if defined(PLATFORM_WINDOWS)
 		typedef struct CKIT_WindowEntry {
 			HWND WINAPI_handle;
