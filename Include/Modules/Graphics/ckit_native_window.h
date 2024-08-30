@@ -240,9 +240,8 @@ extern "C" {
 			BITMAPINFO bitmap_info = window->bitmap_info;
 
 			u32* front_buffer = (u32*)ckit_alloc(window->bitmap.width * window->bitmap.height * window->bitmap.bytes_per_pixel);
+			GetDIBits(hdc, GetCurrentObject(hdc, OBJ_BITMAP), 0, window->bitmap.height, front_buffer, &bitmap_info, DIB_RGB_COLORS);
 			u32* front_buffer_dest = &front_buffer[x + (y * window->bitmap.width)];
-
-			GetDIBits(hdc, GetCurrentObject(hdc, OBJ_BITMAP), 0, height, front_buffer, &bitmap_info, DIB_RGB_COLORS);
 
 			u32* back_buffer = (u32*)window->bitmap.memory;
 			u32* back_buffer_dest = &back_buffer[x + (y * window->bitmap.width)];
@@ -296,7 +295,7 @@ extern "C" {
 				}
 			}
 
-			apply_alpha_blend(window, left, top, true_quad_width, true_quad_height, color.a);
+			// apply_alpha_blend(window, left, top, true_quad_width, true_quad_height, color.a);
 		}
 
 		// Date: August 30, 2024
