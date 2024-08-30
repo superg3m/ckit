@@ -126,7 +126,8 @@ extern "C" {
 	void ckit_window_clear_color(CKIT_Window* window, CKIT_Color color);
 	void ckit_window_draw_quad(CKIT_Window* window, CKIT_Rectangle2D rectangle, CKIT_Color color);
 	void ckit_window_draw_circle(CKIT_Window* window, s32 start_x, s32 start_y, u32 radius, Boolean is_filled, CKIT_Color color);
-	void ckit_window_draw_bitmap(CKIT_Window* window);
+	void ckit_window_draw_bitmap(CKIT_Window* window, s32 x, s32 y, CKIT_Bitmap bitmap);
+	void ckit_window_swap_buffers(CKIT_Window* window);
 	void ckit_window_get_mouse_position(CKIT_Window* window, int* mouse_x, int* mouse_y);
 	void ckit_window_set_cursor_state(CKIT_Window* window, CKIT_CursorState cursor_state);
 #ifdef __cplusplus
@@ -227,7 +228,7 @@ extern "C" {
 			}
 		}
 
-		void ckit_window_draw_bitmap(CKIT_Window* window) {
+		void ckit_window_swap_buffers(CKIT_Window* window) {
 			if (window->hdc) {
 				ckit_win32_ReleaseDC(window->handle, window->hdc);
 			}
@@ -265,7 +266,7 @@ extern "C" {
 			}
 
 			size_t start_index = left + (top * VIEWPORT_WIDTH);
-			u32* dest = &((u32*)window->bitmap.memory)[start_index];
+			u32* dest = &(((u32*)window->bitmap.memory)[start_index]);
 
 			for (u32 y = 0; y < true_quad_height; y++) {
 				for (u32 x = 0; x < true_quad_width; x++) {
@@ -274,6 +275,60 @@ extern "C" {
 				}
 			}
 		}
+
+		void ckit_window_draw_bitmap(CKIT_Window* window, s32 x, s32 y, CKIT_Bitmap bitmap) {
+			const s32 VIEWPORT_WIDTH = window->bitmap.width;
+			const s32 VIEWPORT_HEIGHT = window->bitmap.height;
+
+			u32 left = (u32)CLAMP(x, 0, VIEWPORT_WIDTH);
+			u32 right = (u32)CLAMP(x + (s32)bitmap.width, 0, VIEWPORT_WIDTH);
+			u32 top = (u32)CLAMP(y, 0, VIEWPORT_HEIGHT);
+			u32 bottom = (u32)CLAMP(y + (s32)bitmap.height, 0, VIEWPORT_HEIGHT);
+
+			Boolean should_draw = (left < right) && (top < bottom);
+			if (!should_draw) {
+				return;
+			}
+
+			u32 true_quad_width = right - left;
+			u32 true_quad_height = bottom - top;
+
+			should_draw = (true_quad_width != 0) && (true_quad_height != 0);
+			if (!should_draw) {
+				return;
+			}
+
+			size_t start_index = left + (top * VIEWPORT_WIDTH);
+			u32* dest = &(((u32*)window->bitmap.memory)[start_index]);
+
+			// Scaling factor (16x scaling in this case)
+			const u32 scale_factor = 16;
+
+			u32* start_bmp = &(((u32*)window->bitmap.memory)[(bitmap.height - 1)* bitmap.width]);
+
+			for (u32 y = 0; y < true_quad_height; y++) {
+				for (u32 x = 0; x < true_quad_width; x++) {
+					size_t color_index = (((bitmap.height - 1) - y) * bitmap.width) + x;
+					u32 color = ((u32*)bitmap.memory)[color_index];
+
+					// Draw scaled pixels
+					for (u32 dy = 0; dy < scale_factor; ++dy) {
+						for (u32 dx = 0; dx < scale_factor; ++dx) {
+							u32 dest_x = x * scale_factor + dx;
+							u32 dest_y = y * scale_factor + dy;
+
+							if (dest_x >= VIEWPORT_WIDTH || dest_y >= VIEWPORT_HEIGHT) {
+								continue;
+							}
+
+							size_t final_pixel_index = dest_x + (dest_y * VIEWPORT_WIDTH);
+							dest[final_pixel_index] = color;
+						}
+					}
+				}
+			}
+		}
+
 
 		internal Boolean is_pixel_inside_circle(s32 test_point_x, s32 test_point_y, s32 center_x, s32 center_y, u32 radius) {
 			double dx = center_x - test_point_x;
@@ -656,6 +711,10 @@ extern "C" {
 		}
 
 		void ckit_window_draw_bitmap(CKIT_Window* window) {
+			
+		}
+
+		void ckit_window_swap_buffers(CKIT_Window* window) {
 			
 		}
 	#endif

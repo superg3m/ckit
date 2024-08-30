@@ -141,7 +141,7 @@ int main() {
 			// ckit_window_draw_circle(window, (s32)10, (s32)0, ball_radius, TRUE, (CKIT_Color){255, 255, 255, 255});
 			// For some reason the draw circle is not correct it seems like the pixel testing is broken??? Somehow?
 
-			ckit_window_draw_bitmap(window);
+			ckit_window_swap_buffers(window);
 		}
 	}
 

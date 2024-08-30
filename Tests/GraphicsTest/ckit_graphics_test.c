@@ -63,8 +63,11 @@ int main() {
 	u32 half_center_height = center_height / 2;
 
 	u32 border_size = 5; 
+	u32 close_factor = 0;
 
-	u32 close_factor = 0; 
+	size_t file_size = 0;
+	u8* ckit_sword_bmp_data = ckit_os_read_entire_file("../../../assets/Sword.bmp", &file_size);
+	CKIT_Bitmap sword_bitmap = ckit_graphics_load_bmp(ckit_sword_bmp_data, file_size);
 
 	while (!ckit_window_should_quit(window)) {
 		// set_bitmap_gradient(window, x_offset, y_offset);
@@ -101,6 +104,8 @@ int main() {
 		{ // RENDER
 			ckit_window_clear_color(window, (CKIT_Color){0, 0, 0, 255});
 
+			ckit_window_draw_bitmap(window, 0, 0, sword_bitmap);
+
 			ckit_window_draw_quad_custom(window, 0 + close_factor, 0 + close_factor, border_size, height_with_padding - (close_factor * 2), CKIT_COLOR_GREEN); // left
 			ckit_window_draw_quad_custom(window, 0 + close_factor, 0 + close_factor, width_with_padding - (close_factor * 2), border_size, CKIT_COLOR_PURPLE); // top
 			ckit_window_draw_quad_custom(window, 0 + close_factor, height_with_padding - close_factor, width_with_padding - (close_factor * 2), border_size, CKIT_COLOR_RED); // bottom
@@ -113,11 +118,12 @@ int main() {
 			ckit_window_draw_quad_custom(window, (s32)offset_to_center_x, (s32)offset_to_center_y, center_width, center_height, CKIT_COLOR_PURPLE);
 
 
-			ckit_window_draw_bitmap(window);
+			ckit_window_swap_buffers(window);
 		}
 	}
 
 	ckit_window_free(window); // hmm how can I make this safer?
+	ckit_free(ckit_sword_bmp_data);
 
 	ckit_cleanup();
 	return 0;

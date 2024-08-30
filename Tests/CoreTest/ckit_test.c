@@ -336,12 +336,10 @@ void stack_operations() {
 int main() {
 	ckit_init();
 
-
 	test_vector_operations();
 
 	LOG_PRINT("\n");
 	inital_operations();
-
 
 	LOG_PRINT("\n");
 	middle_ground_opperations();
@@ -383,7 +381,8 @@ int main() {
 	LOG_SUCCESS("String: %s\n", "Hello There! EVERYTHING IS GREEN!");
 	LOG_WARN("String ${WILL POWER = %d} TESTING BINGO BONGO: ${%s} HAHHA THIS SHOULD WORK ${RIGHT?}\n", 5, "I'M PURPLE ONLY!");
 
-	u8* file_data = ckit_os_read_entire_file("../../../assets/Learn_About_BMP.bmp");
+	size_t file_size = 0; 
+	u8* file_data = ckit_os_read_entire_file("../../../assets/Learn_About_BMP.bmp", &file_size);
 	BmpHeader bmp_header = {0};
 	ckit_memory_copy(file_data, &bmp_header, sizeof(BmpHeader), sizeof(BmpHeader));
 	ckit_free(file_data);

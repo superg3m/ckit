@@ -50,7 +50,7 @@ extern "C" {
 	CKIT_File* ckit_os_file_close(CKIT_File* file);
 
 	CKIT_File* MACRO_ckit_os_close_file(CKIT_File* file);
-	u8* ckit_os_read_entire_file(const char* path);
+	u8* ckit_os_read_entire_file(const char* path, size_t* returned_file_size);
 
 	void ckit_os_get_mouse_position(int* mouse_x, int* mouse_y);
 
@@ -123,19 +123,22 @@ extern "C" {
 		}
 		void ckit_os_run_subprocess(); // runs on seperate thread?
 		void ckit_os_get_file_info();
-		u8* ckit_os_read_entire_file(const char* path) {
+		u8* ckit_os_read_entire_file(const char* path, size_t* returned_file_size) {
 			ckit_assert(ckit_os_path_exists(path));
 
 			HANDLE file_handle = CreateFileA(path, GENERIC_READ, 0, NULLPTR, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULLPTR);
 			LARGE_INTEGER large_int = {0};
 			BOOL success = GetFileSizeEx(file_handle, &large_int);
 			ckit_assert(success);
-			u64 file_size = large_int.QuadPart;
+			size_t file_size = large_int.QuadPart;
 			DWORD bytes_read = 0;
 
 			u8* file_data = ckit_alloc_custom(file_size, TAG_CKIT_EXPECTED_USER_FREE);
 			success = ReadFile(file_handle, file_data, (DWORD)file_size, &bytes_read, NULLPTR);
 			ckit_assert(success && CloseHandle(file_handle));
+
+			*returned_file_size = file_size;
+
 			return file_data;
 		}
 
@@ -185,7 +188,7 @@ extern "C" {
 		void ckit_os_system(const char* command);
 		String ckit_os_path_join(char* path, const char* to_join);
 
-		u8* ckit_os_read_entire_file(const char* path) {
+		u8* ckit_os_read_entire_file(const char* path, size_t* returned_file_size) {
 			ckit_assert(ckit_os_path_exists(path));
 
 			FILE* file_handle = fopen(path, "r");
@@ -203,6 +206,7 @@ extern "C" {
 			rewind(file_handle);
 
 			fclose(file_handle);
+			*returned_file_size = file_size;
 
 			return file_data;
 		}
