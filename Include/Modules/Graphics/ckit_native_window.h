@@ -326,6 +326,11 @@ extern "C" {
 		// TODO(Jovanni): REWRITE THIS SHIT BECAUSE ITS WAY TO COMPLICATED LOGIC WISE FOR WHAT IT SHOULD BE!!!
 		// TODO(Jovanni): REWRITE THIS SHIT BECAUSE ITS WAY TO COMPLICATED LOGIC WISE FOR WHAT IT SHOULD BE!!!
 		// TODO(Jovanni): REWRITE THIS SHIT BECAUSE ITS WAY TO COMPLICATED LOGIC WISE FOR WHAT IT SHOULD BE!!!
+
+		// Date: August 31, 2024
+		// TODO(Jovanni): SIMD for optimizations
+		// TODO(Jovanni): SIMD for optimizations
+		// TODO(Jovanni): SIMD for optimizations
 		void ckit_window_draw_bitmap(CKIT_Window* window, s32 x, s32 y, CKIT_Bitmap bitmap) {
 			const s32 VIEWPORT_WIDTH = window->bitmap.width;
 			const s32 VIEWPORT_HEIGHT = window->bitmap.height;
@@ -363,7 +368,9 @@ extern "C" {
 				start_bmp = start_bmp - (s64)(y * (s64)bitmap.width);
 			}
 
-			for (u32 y = 0; y < true_quad_height; y++) {
+			// Date: August 31, 2024
+			// TODO(Jovanni): SIMD for optimizations
+			for (u32 y = 0; y < true_quad_height; y++) { 
 				for (u32 x = 0; x < true_quad_width; x++) {
 					s64 color_index = x + -((s64)(bitmap.width * y));
 					u32 color = start_bmp[color_index];
