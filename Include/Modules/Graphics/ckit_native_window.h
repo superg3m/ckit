@@ -3,6 +3,7 @@
 #include "../../Core/Basic/ckit_types.h"
 #include "./ckit_graphics_types.h"
 #include "./ckit_graphics_shapes.h"
+#include "../../Core/Basic/ckit_math.h"
 //========================== Begin Types ==========================
 
 typedef enum CKIT_CursorState {
@@ -127,6 +128,7 @@ extern "C" {
 	Boolean ckit_window_should_quit(CKIT_Window* window);
 	void ckit_window_clear_color(CKIT_Window* window, CKIT_Color color);
 	void ckit_window_draw_quad(CKIT_Window* window, CKIT_Rectangle2D rectangle, CKIT_Color color);
+	void ckit_window_draw_line(CKIT_Window* window, CKIT_Vector3 p1, CKIT_Vector3 p2);
 	void ckit_window_draw_circle(CKIT_Window* window, s32 start_x, s32 start_y, u32 radius, Boolean is_filled, CKIT_Color color);
 	void ckit_window_draw_bitmap(CKIT_Window* window, s32 x, s32 y, CKIT_Bitmap bitmap);
 	void ckit_window_swap_buffers(CKIT_Window* window);
@@ -286,6 +288,14 @@ extern "C" {
 		}
 
 
+		// Date: August 31, 2024
+		// TODO(Jovanni): REWRITE THIS PLEASE FOR THE LOVE OF GOD!
+
+		
+		// Date: August 31, 2024
+		// TODO(Jovanni): SIMD for optimizations
+		// TODO(Jovanni): SIMD for optimizations
+		// TODO(Jovanni): SIMD for optimizations
 		void ckit_window_draw_quad(CKIT_Window* window, CKIT_Rectangle2D rectangle, CKIT_Color color) {
 			const s32 VIEWPORT_WIDTH = window->bitmap.width;
 			const s32 VIEWPORT_HEIGHT = window->bitmap.height;
@@ -320,6 +330,14 @@ extern "C" {
 					dest[final_pixel_index] = ckit_color_to_u32(new_back_buffer_color);
 				}
 			}
+		}
+
+		void ckit_window_draw_line(CKIT_Window* window, CKIT_Vector3 p1, CKIT_Vector3 p2) {
+			// Brensenhams line algorithm 
+			// - https://www.youtube.com/watch?v=bfvmPa9eWew
+			// - https://www.youtube.com/watch?v=IDFB5CDpLDE
+
+			// - https://www.youtube.com/watch?v=CceepU1vIKo&t=12s
 		}
 
 		// Date: August 30, 2024
