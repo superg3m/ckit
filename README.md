@@ -244,6 +244,7 @@ Thoughts:
 	- [x] ckit_window_draw_quad(window, start_x, start_y, width, height, color);
 	- [x] ckit_window_draw_bitmap(window);
 	- [x] ckit_window_get_mouse_position(window, mouse_x, mouse_y);
+	- [x] ALPHA BLENDING FOR DRAW OPPERATIONS!
 
 
 ### Lexer
