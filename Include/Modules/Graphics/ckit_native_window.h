@@ -24,6 +24,8 @@ typedef enum CKIT_CursorState {
 		const char* name;
 		BITMAPINFO bitmap_info;
 		CKIT_Bitmap bitmap;
+
+		u32* front_buffer;
 	} CKIT_Window;
 #elif defined(CKIT_WSL)
 	typedef struct CKIT_Bitmap {
@@ -217,10 +219,12 @@ extern "C" {
 			size_t memory_size = window->bitmap.bytes_per_pixel * window->bitmap.width * window->bitmap.height;
 			if (window->bitmap.memory && (memory_size != 0)) {
 				ckit_free(window->bitmap.memory);
+				ckit_free(window->front_buffer);
 			}
 
 			if (memory_size != 0) {
     			window->bitmap.memory = ckit_alloc(memory_size);
+    			window->front_buffer = ckit_alloc(memory_size);
 			}
 		}
 
@@ -229,6 +233,14 @@ extern "C" {
 						  0, 0, window->bitmap.width, window->bitmap.height, 
 			 			  0, 0, window->bitmap.width, window->bitmap.height,
 						  window->bitmap.memory, &window->bitmap_info, DIB_RGB_COLORS, SRCCOPY);
+
+			int result = GetDIBits(window->hdc, GetCurrentObject(window->hdc, OBJ_BITMAP), 0, window->bitmap.height, window->front_buffer, &window->bitmap_info, DIB_RGB_COLORS);
+			
+			if (result == 0) {
+				DWORD error = GetLastError();
+				ckit_assert_msg(FALSE, "%d\n", error);
+				// Handle the error, possibly logging or outputting the error code
+			}
 		}
 
 		internal void apply_alpha_blend(CKIT_Window* window, u32 x, u32 y, u32 width, u32 height, u8 alpha) {
@@ -237,17 +249,18 @@ extern "C" {
 			}
 
 			HDC hdc = window->hdc;
-			BITMAPINFO bitmap_info = window->bitmap_info;
 
-			u32* front_buffer = (u32*)ckit_alloc(window->bitmap.width * window->bitmap.height * window->bitmap.bytes_per_pixel);
-			GetDIBits(hdc, GetCurrentObject(hdc, OBJ_BITMAP), 0, window->bitmap.height, front_buffer, &bitmap_info, DIB_RGB_COLORS);
-			u32* front_buffer_dest = &front_buffer[x + (y * window->bitmap.width)];
+			const s32 VIEWPORT_WIDTH = window->bitmap.width;
+			const s32 VIEWPORT_HEIGHT = window->bitmap.height;
+
+			u32* front_buffer_dest = &window->front_buffer[x + (y * VIEWPORT_WIDTH)];
 
 			u32* back_buffer = (u32*)window->bitmap.memory;
-			u32* back_buffer_dest = &back_buffer[x + (y * window->bitmap.width)];
+			u32* back_buffer_dest = &back_buffer[x + (y * VIEWPORT_WIDTH)];
+
 			for (u32 check_y = 0; check_y < height; check_y++) {
 				for (u32 check_x = 0; check_x < width; check_x++) {
-					size_t final_pixel_index = check_x + (check_y * width);
+					size_t final_pixel_index = check_x + (check_y * VIEWPORT_WIDTH);
 
 					u32 front_buffer_current_pixel = front_buffer_dest[final_pixel_index];
 					u32 back_buffer_current_pixel = back_buffer_dest[final_pixel_index];
@@ -257,8 +270,6 @@ extern "C" {
 					back_buffer_dest[final_pixel_index] = ckit_color_to_u32(new_back_buffer_color);
 				}
 			}
-
-			ckit_free(front_buffer);
 		}
 
 
@@ -295,7 +306,7 @@ extern "C" {
 				}
 			}
 
-			// apply_alpha_blend(window, left, top, true_quad_width, true_quad_height, color.a);
+			apply_alpha_blend(window, left, top, true_quad_width, true_quad_height, color.a);
 		}
 
 		// Date: August 30, 2024
@@ -576,6 +587,7 @@ extern "C" {
 			}
 
 			ckit_free(window->bitmap.memory);
+			ckit_free(window->front_buffer);
 			ckit_free(window);
 
 			return window;
