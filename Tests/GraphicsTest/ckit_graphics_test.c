@@ -201,7 +201,9 @@ int main() {
 	size_t file_size = 0;
 	u8* ckit_sword_bmp_data = ckit_os_read_entire_file("../../../assets/Learn_About_BMP.bmp", &file_size);
 	CKIT_Bitmap sword_bitmap = ckit_graphics_load_bmp(ckit_sword_bmp_data, file_size);
-
+	
+	int mouse_x = 0;
+	int mouse_y = 0;
 	while (!ckit_window_should_quit(window)) {
 		// set_bitmap_gradient(window, x_offset, y_offset);
 
@@ -231,6 +233,8 @@ int main() {
 
 			x_pos += x_velocity;
 			y_pos += y_velocity;
+
+			ckit_window_get_mouse_position(window, &mouse_x, &mouse_y);
 		}
 
 
@@ -247,10 +251,10 @@ int main() {
 			float offset_to_center_x = ((float)x_pos + (half_player_width)) - half_center_width;
 			float offset_to_center_y = ((float)y_pos + (half_player_height)) - half_center_height;
 
-			ckit_window_draw_quad_custom(window, (s32)width / 4, (s32)height / 4, 400, 200, ((CKIT_Color){20, 20, 20, 155}));
-			ckit_window_draw_quad_custom(window, (s32)x_pos, (s32)y_pos, player_width, player_height, ((CKIT_Color){0, 255, 0, 20}));
+			ckit_window_draw_quad_custom(window, (s32)width / 4, (s32)height / 4, 400, 200, ((CKIT_Color){20, 20, 20, 255}));
+			ckit_window_draw_quad_custom(window, (s32)x_pos, (s32)y_pos, player_width, player_height, ((CKIT_Color){0, 255, 0, 10}));
 
-			// ckit_window_draw_quad_custom(window, (s32)0, (s32)0, player_width, player_height, ((CKIT_Color){0, 255, 0, 50}));
+			//ckit_window_draw_quad_custom(window, (s32)mouse_x, (s32)mouse_y, player_width, player_height, ((CKIT_Color){0, 255, 0, 10}));
 
 			ckit_window_draw_quad_custom(window, (s32)offset_to_center_x, (s32)offset_to_center_y, center_width, center_height, CKIT_COLOR_PURPLE);
 

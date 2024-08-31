@@ -315,9 +315,9 @@ extern "C" {
 			for (u32 y = 0; y < true_quad_height; y++) {
 				for (u32 x = 0; x < true_quad_width; x++) {
 					size_t final_pixel_index = x + (y * VIEWPORT_WIDTH);
-					dest[final_pixel_index] = ckit_color_to_u32(color);
-					// Date: August 30, 2024
-					// TODO(Jovanni): Do alpha blending here problably
+
+					CKIT_Color new_back_buffer_color = ckit_color_u32_blend_alpha(dest[final_pixel_index], ckit_color_to_u32(color));
+					dest[final_pixel_index] = ckit_color_to_u32(new_back_buffer_color);
 				}
 			}
 
