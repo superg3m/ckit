@@ -225,16 +225,28 @@ extern "C" {
 			if (memory_size != 0) {
     			window->bitmap.memory = ckit_alloc(memory_size);
     			window->front_buffer = ckit_alloc(memory_size);
+			int result = GetDIBits(window->hdc, GetCurrentObject(window->hdc, OBJ_BITMAP), 0, window->bitmap_info.bmiHeader.biHeight, window->front_buffer, &window->bitmap_info, DIB_RGB_COLORS);
+				
+				if (result == 0) {
+					DWORD error = GetLastError();
+					ckit_assert_msg(FALSE, "%d\n", error);
+					// Handle the error, possibly logging or outputting the error code
+				}
 			}
 		}
 
 		void ckit_window_swap_buffers(CKIT_Window* window) {
+			if (window->bitmap.width == 0|| window->bitmap.height == 0) {
+				return;
+			}
+
 			ckit_win32_StretchDIBits(window->hdc, 
 						  0, 0, window->bitmap.width, window->bitmap.height, 
 			 			  0, 0, window->bitmap.width, window->bitmap.height,
 						  window->bitmap.memory, &window->bitmap_info, DIB_RGB_COLORS, SRCCOPY);
 
-			int result = GetDIBits(window->hdc, GetCurrentObject(window->hdc, OBJ_BITMAP), 0, window->bitmap.height, window->front_buffer, &window->bitmap_info, DIB_RGB_COLORS);
+
+			int result = GetDIBits(window->hdc, GetCurrentObject(window->hdc, OBJ_BITMAP), 0, window->bitmap_info.bmiHeader.biHeight, window->front_buffer, &window->bitmap_info, DIB_RGB_COLORS);
 			
 			if (result == 0) {
 				DWORD error = GetLastError();
@@ -266,6 +278,7 @@ extern "C" {
 					u32 back_buffer_current_pixel = back_buffer_dest[final_pixel_index];
 
 					CKIT_Color new_back_buffer_color = ckit_color_u32_blend_alpha(front_buffer_current_pixel, back_buffer_current_pixel);
+					// CKIT_Color new_back_buffer_color = {255, 0, 0, 255};
 
 					back_buffer_dest[final_pixel_index] = ckit_color_to_u32(new_back_buffer_color);
 				}
@@ -303,10 +316,12 @@ extern "C" {
 				for (u32 x = 0; x < true_quad_width; x++) {
 					size_t final_pixel_index = x + (y * VIEWPORT_WIDTH);
 					dest[final_pixel_index] = ckit_color_to_u32(color);
+					// Date: August 30, 2024
+					// TODO(Jovanni): Do alpha blending here problably
 				}
 			}
 
-			apply_alpha_blend(window, left, top, true_quad_width, true_quad_height, color.a);
+			// apply_alpha_blend(window, left, top, true_quad_width, true_quad_height, color.a);
 		}
 
 		// Date: August 30, 2024
@@ -525,8 +540,7 @@ extern "C" {
 		void ckit_window_clear_color(CKIT_Window* window, CKIT_Color color) {
 			int stride = window->bitmap.width * window->bitmap.bytes_per_pixel;
 			u8* row = window->bitmap.memory;    
-			for(u32 y = 0; y < window->bitmap.height; y++)
-			{
+			for(u32 y = 0; y < window->bitmap.height; y++) {
 				u32* pixel = (u32*)row;
 				for(u32 x = 0; x < window->bitmap.width; x++)
 				{
@@ -606,7 +620,6 @@ extern "C" {
 				ckit_win32_DispatchMessageA(&msg);
 			}
 
-			// ckit_window_draw_bitmap(window);
 			return FALSE;
 		}
 

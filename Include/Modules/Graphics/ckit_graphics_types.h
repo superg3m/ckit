@@ -105,7 +105,7 @@ extern "C" {
 	CKIT_Color ckit_color_alpha_blend(CKIT_Color front_color, CKIT_Color back_color) {
 		CKIT_Color ret = {0};
 
-		float normalized_back_alpha = back_color.a / 255;
+		float normalized_back_alpha = (float)back_color.a / 255.0;
 
 		ret.a = back_color.a;
 		ret.r = (back_color.r * normalized_back_alpha) + (front_color.r * (1 - normalized_back_alpha));
