@@ -1,18 +1,11 @@
 ### -- GRAPHICS MODULE ONLY WORKS ON CL.exe MSVC -- windows only right now because programming is hard lmao
-### I'm wondering if ckit is getting to expansive and too big, but so far i'm having tons of fun with it
+### I'm wondering if ckit is getting too big, but so far i'm having tons of fun with it
 
 # Ckits's Core Thesis
 - The point of the ckit is to provide a nice library to build c projects with.
 - Ckit is built with the granular api ckit granular [CKG](https://github.com/superg3m/ckg) (OUT DATED FIX THIS!)
 - This library will be completly cross-platform (Will be windows exclusive for a while ngl)
 - Collection of tools, data structures, and algorithms that I find useful
-
-- [ ] ckit_printf("%iv\n") // (int vector)
-- [ ] ckit_printf("%fv\n") // (float vector)
-- [ ] ckit_printf("%sv\n") // (string vector)
-- [ ] ckit_printf("%cv\n") // (char vector)
-
-- [ ] I HAVE AND IDEA I'M GOING TO AUTO GENERATE THE ckit.h FILE
 
 - cloc . --fullpath --not-match-d='.*Modules/Graphics/glad' --not-match-f='.*Modules/Graphics/stb_image.h'
 
@@ -36,16 +29,28 @@
 2. - [ ] Formalize the software rendering frontend (usage code)
 3. - [ ] Formalize the software rendering backend
 	- [ ] Write the useage code so you can see what needs to happen in a perfect world
-
 4. - [ ] Optimize the software rendering backend using SIMD
 5. - [ ] Text rendering
 6. - [ ] Input processing
 
-7. - [ ] Start writing EventSystem
-8. - [ ] Write a bunch of tests validating and verifying all the utilities and logic.
+7. - [ ] Standardize the coordinate system
 
-9. - [ ] Start writing the **GAME ENGINE*you have everything you need in order to succeed
+8. - [ ] Start writing EventSystem
+9. - [ ] Networking module make pvp pong
+10. - [ ] IMGUI
+	- [ ] Button
+	- [ ] Slider
+	- [ ] Panel
+		- [ ] RenderGroup 
 
+11. - [ ] Write a bunch of tests validating and verifying all the utilities and logic.
+		- [ ] ckit_printf("%iv\n") // (int vector)
+		- [ ] ckit_printf("%fv\n") // (float vector)
+		- [ ] ckit_printf("%sv\n") // (string vector)
+		- [ ] ckit_printf("%cv\n") // (char vector)
+		- [ ] I HAVE AND IDEA I'M GOING TO AUTO GENERATE THE ckit.h FILE
+
+12. - [ ] Start writing the **GAME ENGINE*you have everything you need in order to succeed
 
 Thoughts:
 	But in regards to dangling pointers maybe I can just give back a index indead of a pointer (Handles are the better pointers)
@@ -236,7 +241,7 @@ Thoughts:
 ### Introspection
 - [ ] ckit_struct_introspection.h
 
-### Native_Window
+### Native_Window (Only really works for windows os right now)
 - [/] ckit_native_window.h
 	- [x] ckit_window_create(width, height, name);
 	- [x] ckit_window_free(window);
