@@ -7,10 +7,10 @@
 - This library will be completly cross-platform (Will be windows exclusive for a while ngl)
 - Collection of tools, data structures, and algorithms that I find useful
 
-ckit_printf("%iv\n") // (int vector)
-ckit_printf("%fv\n") // (float vector)
-ckit_printf("%sv\n") // (string vector)
-ckit_printf("%cv\n") // (char vector)
+- [ ] ckit_printf("%iv\n") // (int vector)
+- [ ] ckit_printf("%fv\n") // (float vector)
+- [ ] ckit_printf("%sv\n") // (string vector)
+- [ ] ckit_printf("%cv\n") // (char vector)
 
 - [ ] I HAVE AND IDEA I'M GOING TO AUTO GENERATE THE ckit.h FILE
 
@@ -29,22 +29,20 @@ ckit_printf("%cv\n") // (char vector)
 
 ### Known issues/bugs
 1. - [ ] Hashmap is not very robust I should offer a compare funciton hashmap and give default presets for primatives.
+2. - [ ] Parse the message better so you can intuitively \n something. (Maybe add some string in the beginning of a message ot ommit the <WARN:> for example)
 
 ### Next Steps
-1. - [ ] Start writing EventSystem
-2. - [ ] Write a bunch of tests validating and verifying all the utilities and logic.
+1. - [ ] QueryPerformanceCounter (fps)
+2. - [ ] Text rendering
+3. - [ ] Input processing
 
-3. - [ ] Start writing the **GAME ENGINE*you have everything you need in order to succeed
-4. - [ ] Parse the message better so you can intuitively \n something.
+4. - [ ] Start writing EventSystem
+5. - [ ] Write a bunch of tests validating and verifying all the utilities and logic.
+
+6. - [ ] Start writing the **GAME ENGINE*you have everything you need in order to succeed
+
 
 Thoughts:
-	I need to insentivise arenas way more than I currently do it makes lifetimes siginificantly easier.
-
-	Also almost certainly there is problems with puting pointers in arenas or dynamic allocated memory because you might just lose those. Thankfully for
-	the most part because of the tagging system I can catch all of these. One thing I need to do is really go through the entire lifetime of some data
-	and see if there is any possible way for it to not get picked up by the tag system I think not I think its literally impossible for that to be the case.
-	So if I have no memeory leaks according to the tag system then I can be reasonably confident that there are no memory bugs.
-
 	But in regards to dangling pointers maybe I can just give back a index indead of a pointer (Handles are the better pointers)
 	Another Thought I should give some credence to Zii (Zero is Initalization)
 

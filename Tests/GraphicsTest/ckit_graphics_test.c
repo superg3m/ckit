@@ -182,11 +182,11 @@ int main() {
 	float x_pos = 40;
 	float y_pos = 40;
 
-	float x_velocity = 1.0;
-	float y_velocity = 1.0;
+	float x_velocity = 2.0;
+	float y_velocity = 1.5;
 
-	u32 player_width = 40;
-	u32 player_height = 40;
+	u32 player_width = 64;
+	u32 player_height = 64;
 	u32 half_player_width = player_width / 2;
 	u32 half_player_height = player_height / 2;
 
@@ -220,13 +220,13 @@ int main() {
 
 
 			if (left_check || right_check) {
-				x_velocity *= -1;
+				x_velocity *= -1.025;
 				close_factor += 2;
 				x_pos += x_velocity * 5;
 			}
 
 			if (bottom_check || top_check) {
-				y_velocity *= -1;
+				y_velocity *= -1.025;
 				close_factor += 2;
 				y_pos += y_velocity * 5;
 			}
@@ -251,8 +251,8 @@ int main() {
 			float offset_to_center_x = ((float)x_pos + (half_player_width)) - half_center_width;
 			float offset_to_center_y = ((float)y_pos + (half_player_height)) - half_center_height;
 
-			ckit_window_draw_quad_custom(window, (s32)width / 4, (s32)height / 4, 400, 200, ((CKIT_Color){20, 20, 20, 255}));
-			ckit_window_draw_quad_custom(window, (s32)x_pos, (s32)y_pos, player_width, player_height, ((CKIT_Color){0, 255, 0, 25}));
+			ckit_window_draw_quad_custom(window, (s32)width / 4, (s32)height / 4, 400, 200, ((CKIT_Color){20, 20, 20, 150}));
+			ckit_window_draw_quad_custom(window, (s32)x_pos, (s32)y_pos, player_width, player_height, ((CKIT_Color){0, 255, 0, 50}));
 
 			//ckit_window_draw_quad_custom(window, (s32)mouse_x, (s32)mouse_y, player_width, player_height, ((CKIT_Color){0, 255, 0, 10}));
 
