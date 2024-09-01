@@ -33,13 +33,18 @@
 
 ### Next Steps
 1. - [ ] QueryPerformanceCounter (fps)
-2. - [ ] Text rendering
-3. - [ ] Input processing
+2. - [ ] Formalize the software rendering frontend (usage code)
+3. - [ ] Formalize the software rendering backend
+	- [ ] Write the useage code so you can see what needs to happen in a perfect world
 
-4. - [ ] Start writing EventSystem
-5. - [ ] Write a bunch of tests validating and verifying all the utilities and logic.
+4. - [ ] Optimize the software rendering backend using SIMD
+5. - [ ] Text rendering
+6. - [ ] Input processing
 
-6. - [ ] Start writing the **GAME ENGINE*you have everything you need in order to succeed
+7. - [ ] Start writing EventSystem
+8. - [ ] Write a bunch of tests validating and verifying all the utilities and logic.
+
+9. - [ ] Start writing the **GAME ENGINE*you have everything you need in order to succeed
 
 
 Thoughts:
