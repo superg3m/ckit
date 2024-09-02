@@ -50,7 +50,7 @@ int main() {
 	LOG_SUCCESS("TESTING\n");
 
 	ckit_window_bind_icon("../../../assets/c_original_logo_icon_146611.ico");
-	CKIT_Window* window = ckit_window_create(width, height, "GameEngine");
+	CKIT_Window* window = ckit_window_create(width, height, "CKIT Pong");
 
 	CKIT_Rectangle2D player_rect = create_player();
 	CKIT_Rectangle2D ball_rect = create_ball(width, height);
