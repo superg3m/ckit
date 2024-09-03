@@ -60,5 +60,5 @@
         ]
     },
 
-    "execute": ["ckit_pong.exe", "test_graphics_ckit.exe"]
+    "execute": ["test_graphics_ckit.exe"]
 }
