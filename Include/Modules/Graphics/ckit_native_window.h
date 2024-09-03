@@ -16,6 +16,10 @@ typedef enum CKIT_CursorState {
 #if defined(PLATFORM_WINDOWS)
 	#include <windows.h>
 
+	#pragma comment(lib, "User32.lib")
+	#pragma comment(lib, "GDI32.lib")
+	#pragma comment(lib, "Msimg32.lib")
+
 	typedef struct CKIT_Window {
 		HINSTANCE instance_handle;
 		HWND handle;
@@ -150,8 +154,7 @@ extern "C" {
 	#include "../../Core/Basic/ckit_memory.h"
 	#include "../../Core/Basic/ckit_logger.h"
 	#include "../../Core/Basic/ckit_os.h"
-	#include "../../Core/Basic/ckit_platform_function_bindings.h"
-
+	
 	#if defined(PLATFORM_WINDOWS)
 		typedef struct CKIT_WindowEntry {
 			HWND WINAPI_handle;
@@ -190,12 +193,12 @@ extern "C" {
 			window->hdc = GetDC(window->handle);
 
 			RECT windowRect;
-			ckit_win32_GetWindowRect(window->handle, &windowRect);
+			GetWindowRect(window->handle, &windowRect);
 			window->width = (u16)(windowRect.right - windowRect.left);
 			window->height = (u16)(windowRect.bottom - windowRect.top);
 
 			RECT client_rect;
-			ckit_win32_GetClientRect(window->handle, &client_rect);
+			GetClientRect(window->handle, &client_rect);
 			window->bitmap.width = (u16)(client_rect.right - client_rect.left);
 			window->bitmap.height = (u16)(client_rect.bottom - client_rect.top);
 
@@ -242,7 +245,7 @@ extern "C" {
 				return;
 			}
 
-			ckit_win32_StretchDIBits(window->hdc, 
+			StretchDIBits(window->hdc, 
 						  0, 0, window->bitmap.width, window->bitmap.height, 
 			 			  0, 0, window->bitmap.width, window->bitmap.height,
 						  window->bitmap.memory, &window->bitmap_info, DIB_RGB_COLORS, SRCCOPY);
@@ -484,7 +487,7 @@ extern "C" {
 
 				case WM_SIZE: { // Resize
 					RECT client_rect;
-					ckit_win32_GetClientRect(handle, &client_rect);
+					GetClientRect(handle, &client_rect);
 					u32 width = client_rect.right - client_rect.left;
 					u32 height = client_rect.bottom - client_rect.top;
 
@@ -494,11 +497,11 @@ extern "C" {
 
 				case WM_CLOSE: {
 					LOG_SUCCESS("Window is Closed!\n");
-					ckit_win32_PostQuitMessage(0);
+					PostQuitMessage(0);
 				} break;
 
 				case WM_DESTROY: {
-					ckit_win32_PostQuitMessage(0);
+					PostQuitMessage(0);
 				} break;
 
 				case WM_NCLBUTTONDBLCLK: {
@@ -507,7 +510,7 @@ extern "C" {
 						interacting_with_left_menu = TRUE;
 					}
 
-					return ckit_win32_DefWindowProcA(handle, message, wParam, lParam);
+					return DefWindowProcA(handle, message, wParam, lParam);
 				} break;
 
 				case WM_SYSCOMMAND: {
@@ -522,7 +525,7 @@ extern "C" {
 						return 0;
 					}
 
-					return ckit_win32_DefWindowProcA(handle, message, wParam, lParam);
+					return DefWindowProcA(handle, message, wParam, lParam);
 				} break;
 
 				/*
@@ -543,7 +546,7 @@ extern "C" {
 				*/
 				
 				default: {
-					result = ckit_win32_DefWindowProcA(handle, message, wParam, lParam);
+					result = DefWindowProcA(handle, message, wParam, lParam);
 				} break;
 			}
 
@@ -552,12 +555,12 @@ extern "C" {
 
 		void ckit_window_bind_icon(const char* resource_path) {
 			ckit_assert(ckit_os_path_exists(resource_path));
-			icon_handle = (HICON)ckit_win32_LoadImageA(GetModuleHandle(NULL), resource_path, IMAGE_ICON, 0, 0, LR_LOADFROMFILE|LR_DEFAULTSIZE);
+			icon_handle = (HICON)LoadImageA(GetModuleHandle(NULL), resource_path, IMAGE_ICON, 0, 0, LR_LOADFROMFILE|LR_DEFAULTSIZE);
 		}
 
 		void ckit_window_bind_cursor(const char* resource_path) {
 			ckit_assert(ckit_os_path_exists(resource_path));
-			cursor_handle = (HCURSOR)ckit_win32_LoadImageA(GetModuleHandle(NULL), resource_path, IMAGE_CURSOR, 0, 0, LR_LOADFROMFILE|LR_DEFAULTSIZE);
+			cursor_handle = (HCURSOR)LoadImageA(GetModuleHandle(NULL), resource_path, IMAGE_CURSOR, 0, 0, LR_LOADFROMFILE|LR_DEFAULTSIZE);
 		}
 
 		void ckit_window_clear_color(CKIT_Window* window, CKIT_Color color) {
@@ -593,14 +596,14 @@ extern "C" {
 			window_class.lpszMenuName = NULLPTR;
 			window_class.lpszClassName = name;
 
-			ckit_win32_RegisterClassA(&window_class);
+			RegisterClassA(&window_class);
 
 			// Date: May 04, 2024
 			// TODO(Jovanni): Extended Window Styles (look into them you can do cool stuff)
 			// WS_EX_ACCEPTFILES 0x00000010L (The window accepts drag-drop files.)
 			DWORD dwStyle = WS_OVERLAPPEDWINDOW|WS_VISIBLE;
-			ret_window->handle = ckit_win32_CreateWindowExA(0, name, name, dwStyle, CW_USEDEFAULT, CW_USEDEFAULT, width, height, NULLPTR, NULLPTR, ret_window->instance_handle, NULLPTR);
-			ret_window->hdc = ckit_win32_GetDC(ret_window->handle);
+			ret_window->handle = CreateWindowExA(0, name, name, dwStyle, CW_USEDEFAULT, CW_USEDEFAULT, width, height, NULLPTR, NULLPTR, ret_window->instance_handle, NULLPTR);
+			ret_window->hdc = GetDC(ret_window->handle);
 
 			ckit_window_resize(ret_window);
 
@@ -632,15 +635,15 @@ extern "C" {
 
 		Boolean ckit_window_should_quit(CKIT_Window* window) {
 			MSG msg;
-			while (ckit_win32_PeekMessageA(&msg, NULLPTR, 0, 0, PM_REMOVE)) {
+			while (PeekMessageA(&msg, NULLPTR, 0, 0, PM_REMOVE)) {
 				if (msg.message == WM_QUIT) {
-					ckit_win32_ReleaseDC(window->handle, window->hdc);
+					ReleaseDC(window->handle, window->hdc);
 					window->hdc = NULLPTR;
 					return TRUE;
 				}
 
-				ckit_win32_TranslateMessage(&msg);
-				ckit_win32_DispatchMessageA(&msg);
+				TranslateMessage(&msg);
+				DispatchMessageA(&msg);
 			}
 
 			return FALSE;
@@ -649,7 +652,7 @@ extern "C" {
 		void ckit_window_get_mouse_position(CKIT_Window* window, int* mouse_x, int* mouse_y) {
 			POINT point;
 			ckit_os_get_mouse_position(&point.x, &point.y);
-			ckit_assert(ckit_win32_ScreenToClient(window->handle, &point));
+			ckit_assert(ScreenToClient(window->handle, &point));
 			*mouse_x = point.x;
 			*mouse_y = point.y;
 		}
@@ -657,11 +660,11 @@ extern "C" {
 		void ckit_window_set_cursor_state(CKIT_Window* window, CKIT_CursorState cursor_state) {
 			switch (cursor_state) {
 				case ENABLED: {
-					ckit_win32_ShowCursor(TRUE);
+					ShowCursor(TRUE);
 				}
 
 				case DISABLED: {
-					ckit_win32_ShowCursor(FALSE);
+					ShowCursor(FALSE);
 				}
 			}
 		}

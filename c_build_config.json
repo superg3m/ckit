@@ -24,7 +24,7 @@
             "../ckit.c"
         ],
 
-        "additional_libs": ["User32.lib", "GDI32.lib", "Msimg32.lib"]
+        "additional_libs": [""]
     },
 
     "./Tests/CoreTest/build_$compiler_type" : {
@@ -60,5 +60,5 @@
         ]
     },
 
-    "execute": ["ckit_pong.exe"]
+    "execute": ["ckit_pong.exe", "test_graphics_ckit.exe"]
 }

@@ -144,7 +144,7 @@ extern "C" {
 
 		void ckit_os_get_mouse_position(int* mouse_x, int* mouse_y) {
 			POINT point;
-			ckit_assert(ckit_win32_GetCursorPos(&point));
+			ckit_assert(GetCursorPos(&point));
 			*mouse_x = point.x;
 			*mouse_y = point.y;
 		}
