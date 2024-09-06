@@ -427,7 +427,7 @@ extern "C" {
 			dy *= dy;
 			double distanceSquared = dx + dy;
 			double radiusSquared = radius * radius;
-			return distanceSquared <= radiusSquared;
+			return distanceSquared < radiusSquared;
 		}
 
 		internal Boolean is_pixel_on_circle_line(s32 px, s32 py, s32 center_x, s32 center_y, u32 radius) {
@@ -447,9 +447,9 @@ extern "C" {
 			const u32 diameter = radius * 2;
 
 			u32 left = CLAMP(start_x, 0, VIEWPORT_WIDTH);
-			u32 right = CLAMP(start_x + diameter, 0, VIEWPORT_WIDTH);
+			u32 right = CLAMP(start_x + diameter, 0, VIEWPORT_WIDTH); // add one so there is a real center point in the circle
 			u32 top = CLAMP(start_y, 0, VIEWPORT_HEIGHT);
-			u32 bottom = CLAMP(start_y + diameter, 0, VIEWPORT_HEIGHT);
+			u32 bottom = CLAMP(start_y + diameter, 0, VIEWPORT_HEIGHT); // kyle wuz here skool sux
 
 			u32 true_quad_width = right - left;
 			u32 true_quad_height = bottom - top;
@@ -466,22 +466,20 @@ extern "C" {
 				for (u32 y = 0; y < true_quad_height; y++) {
 					for (u32 x = 0; x < true_quad_width; x++) {
 						size_t final_pixel_index = x + (y * VIEWPORT_WIDTH);
-						if (is_pixel_inside_circle(x, y, start_x + radius, start_y + radius, radius)) {
+						if (is_pixel_inside_circle(x + left, y + top, left + radius, top + radius, radius)) {
 							dest[final_pixel_index] = ckit_color_to_u32(color);
-						} else {
-							dest[final_pixel_index] = ckit_color_to_u32(CKIT_COLOR_RED);
 						}
 					}
 				}
 			} else {
-				for (u32 y = 0; y < true_quad_height; y++) {
-					for (u32 x = 0; x < true_quad_width; x++) {
-						if (is_pixel_on_circle_line(x, y, start_x + radius, start_y + radius, radius)) {
-							size_t final_pixel_index = x + (y * VIEWPORT_WIDTH);
-							dest[final_pixel_index] = ckit_color_to_u32(color);
-						}
-					}
-				}
+				// for (u32 y = 0; y < true_quad_height; y++) {
+				// 	for (u32 x = 0; x < true_quad_width; x++) {
+				// 		if (is_pixel_on_circle_line(x, y, start_x + radius, start_y + radius, radius)) {
+				// 			size_t final_pixel_index = x + (y * VIEWPORT_WIDTH);
+				// 			dest[final_pixel_index] = ckit_color_to_u32(color);
+				// 		}
+				// 	}
+				// }
 			}
 		}
 		

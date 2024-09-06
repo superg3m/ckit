@@ -1,15 +1,18 @@
 #include "../../ckit.h"
 
+u32 half_player_width = 0;
+u32 half_player_height = 0;
+
 CKIT_Rectangle2D create_player() {
 	const s32 player_x_pos = 100;
 	const s32 player_y_pos = 200;
 	const u32 player_width = 12;
 	const u32 player_height = 50;
 
-	const u32 half_player_width = player_width / 2;
-	const u32 half_player_height = player_height / 2;
+	half_player_width = player_width / 2;
+	half_player_height = player_height / 2;
 
-	return ckit_rectangle_create(player_x_pos, player_y_pos, player_width, player_height);
+	return ckit_rectangle_create(player_x_pos + half_player_width, player_y_pos - half_player_height, player_width, player_height);
 }
 
 CKIT_Rectangle2D create_ball(u32 window_width, u32 window_height) {
@@ -68,7 +71,7 @@ int main() {
 	CKIT_Color ai_color = CKIT_COLOR_RED;
 	CKIT_Color default_color = CKIT_COLOR_WHITE;
 
-	ckit_window_set_cursor_state(window, DISABLED);
+	// ckit_window_set_cursor_state(window, DISABLED);
 
 	const CKIT_Rectangle2D x_axis_rect = ckit_rectangle_create(0, height_with_padding, width_with_padding, 1);
 	const CKIT_Rectangle2D y_axis_rect = ckit_rectangle_create(width_with_padding, 0, 1, height_with_padding);
@@ -113,7 +116,7 @@ int main() {
 			ball_rect.y += ball_y_velocity;
 
 			ckit_window_get_mouse_position(window, &mouse_x, &mouse_y);
-			player_rect.y = mouse_y;
+			player_rect.y = mouse_y - half_player_height;
 		}
 
 
@@ -124,6 +127,8 @@ int main() {
 			ckit_window_draw_quad(window, y_axis_rect, CKIT_COLOR_BLUE); // y axis
 
 			// s32 player_center_y = ((float)player_rect.y - (half_player_height));
+
+			ckit_window_draw_quad(window, player_rect, player_color); // ACTUAL PLAYER_PADDLE
 
 			ckit_window_draw_quad(window, player_rect, player_color); // ACTUAL PLAYER_PADDLE
 
