@@ -24,6 +24,11 @@
 1. - [ ] Hashmap is not very robust I should offer a compare funciton hashmap and give default presets for primatives.
 2. - [ ] Parse the message better so you can intuitively \n something. (Maybe add some string in the beginning of a message ot ommit the <WARN:> for example)
 
+### THE REAL NEXT STEP
+1. - [ ] Draw quads in a more intelligent way
+		- [ ] Seperate canonnical coordiantes and computational coordiates
+2. - [ ] Switch all drawing from top left to center
+
 ### Next Steps
 1. - [ ] QueryPerformanceCounter (fps)
 2. - [ ] Formalize the software rendering frontend (usage code)
