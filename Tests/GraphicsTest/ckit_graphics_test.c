@@ -110,7 +110,7 @@ int main() {
 
 			ckit_window_draw_bitmap(window, 10, 0, sword_bitmap);
 
-			ckit_window_draw_circle(window, mouse_x, mouse_y, 25, TRUE, (CKIT_Color){0, 0, 255, 255}); // partially wroks
+			ckit_window_draw_circle(window, 0, -20, 25, TRUE, (CKIT_Color){0, 0, 255, 255}); // partially wroks
 			// ckit_window_draw_quad_custom(window, 10, 0, 50, 50, ((CKIT_Color){0, 255, 0, 105}));
 
 

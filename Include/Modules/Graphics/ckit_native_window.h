@@ -440,11 +440,17 @@ extern "C" {
 			return (distance_squared + 1 == radius_squared) || (distance_squared - 1 == radius_squared);
 		}
 
+
+		// Date: September 06, 2024
+		// TODO(Jovanni): PLEASE FOR THE LOVE OF GOD RETHINK HW YOU DO QUADS THIS IS FUCKING TERRIBLE
 		void ckit_window_draw_circle(CKIT_Window* window, s32 start_x, s32 start_y, u32 radius, Boolean is_filled, CKIT_Color color) {
 			const uint32_t VIEWPORT_WIDTH = window->bitmap.width;
 			const uint32_t VIEWPORT_HEIGHT = window->bitmap.height;
 
 			const u32 diameter = radius * 2;
+
+			s32 underflow_offset_x = MIN(start_x, 0);
+			s32 underflow_offset_y = MIN(start_y, 0);
 
 			u32 left = CLAMP(start_x, 0, VIEWPORT_WIDTH);
 			u32 right = CLAMP(start_x + diameter, 0, VIEWPORT_WIDTH); // add one so there is a real center point in the circle
@@ -463,12 +469,13 @@ extern "C" {
 			u32* dest = &((u32*)window->bitmap.memory)[start_index];
 
 			if (is_filled) {
-				for (u32 y = 0; y < true_quad_height; y++) {
-					for (u32 x = 0; x < true_quad_width; x++) {
+				for (s32 y = 0; y < true_quad_height; y++) { // this can't start at 0 it needs to start at the correct offset if the offset is less than zero off the screen
+					for (s32 x = 0; x < true_quad_width; x++) {  // this can't start at 0 it needs to start at the correct offset if the offset is less than zero off the screen
 						size_t final_pixel_index = x + (y * VIEWPORT_WIDTH);
 						if (is_pixel_inside_circle(x + left, y + top, left + radius, top + radius, radius)) {
-							dest[final_pixel_index] = ckit_color_to_u32(color);
+							
 						}
+						dest[final_pixel_index] = ckit_color_to_u32(color);
 					}
 				}
 			} else {
