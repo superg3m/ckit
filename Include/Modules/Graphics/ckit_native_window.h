@@ -466,7 +466,7 @@ extern "C" {
 				for (u32 y = 0; y < true_quad_height; y++) {
 					for (u32 x = 0; x < true_quad_width; x++) {
 						size_t final_pixel_index = x + (y * VIEWPORT_WIDTH);
-						if (is_pixel_inside_circle(x, y, start_x, start_y, radius)) {
+						if (is_pixel_inside_circle(x, y, start_x + radius, start_y + radius, radius)) {
 							dest[final_pixel_index] = ckit_color_to_u32(color);
 						} else {
 							dest[final_pixel_index] = ckit_color_to_u32(CKIT_COLOR_RED);
