@@ -407,7 +407,12 @@ extern "C" {
 							}
 
 							size_t final_pixel_index = dest_x + (dest_y * VIEWPORT_WIDTH);
-							dest[final_pixel_index] = color;
+
+							u8 alpha = (color >> 24);
+							if (alpha != 0) {
+								dest[final_pixel_index] = color;
+							}
+							
 						}
 					}
 				}
