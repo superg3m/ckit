@@ -489,6 +489,24 @@ extern "C" {
 				// }
 			}
 		}
+
+		/* THIS IS A USAGE CODE TEST
+
+		void ckit_window_draw_circle(CKIT_Window* window, s32 start_x, s32 start_y, u32 radius, Boolean is_filled, CKIT_Color color) {\
+				u32 diameter = radius*2;
+				for (s32 y = start_y; y < diameter + start_y; y++) {
+					for (s32 x = start_x; x < diameter + start_x; x++) {
+						size_t final_pixel_index = x + (y * VIEWPORT_WIDTH);
+						center_x = start_x + radius;
+						center_y = start_y + radius;
+						if (is_pixel_inside_circle(x, y, center_x, center_y, radius)) {
+							dest[final_pixel_index] = ckit_color_to_u32(color);
+						}
+					}
+				}
+		}
+
+		*/
 		
 		LRESULT CALLBACK custom_window_procedure(HWND handle, UINT message, WPARAM wParam, LPARAM lParam) {
 			LRESULT result = 0;
