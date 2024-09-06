@@ -1,5 +1,8 @@
 #pragma once
 
+// Date: September 06, 2024
+// TODO(Jovanni): In need to make the drawing from the center not top left
+
 #include "../../Core/Basic/ckit_types.h"
 #include "./ckit_graphics_types.h"
 #include "./ckit_graphics_shapes.h"
@@ -133,10 +136,10 @@ extern "C" {
 	void ckit_window_clear_color(CKIT_Window* window, CKIT_Color color);
 	void ckit_window_draw_quad(CKIT_Window* window, CKIT_Rectangle2D rectangle, CKIT_Color color);
 	void ckit_window_draw_line(CKIT_Window* window, CKIT_Vector3 p1, CKIT_Vector3 p2);
-	void ckit_window_draw_circle(CKIT_Window* window, s32 start_x, s32 start_y, u32 radius, Boolean is_filled, CKIT_Color color);
+	void ckit_window_draw_circle(CKIT_Window* window, s32 start_x, s32 start_y, s32 radius, Boolean is_filled, CKIT_Color color);
 	void ckit_window_draw_bitmap(CKIT_Window* window, s32 x, s32 y, CKIT_Bitmap bitmap);
 	void ckit_window_swap_buffers(CKIT_Window* window);
-	void ckit_window_get_mouse_position(CKIT_Window* window, int* mouse_x, int* mouse_y);
+	void ckit_window_get_mouse_position(CKIT_Window* window, s32* mouse_x, s32* mouse_y);
 	void ckit_window_set_cursor_state(CKIT_Window* window, CKIT_CursorState cursor_state);
 #ifdef __cplusplus
 }
@@ -443,7 +446,7 @@ extern "C" {
 
 		// Date: September 06, 2024
 		// TODO(Jovanni): PLEASE FOR THE LOVE OF GOD RETHINK HW YOU DO QUADS THIS IS FUCKING TERRIBLE
-		void ckit_window_draw_circle(CKIT_Window* window, s32 start_x, s32 start_y, u32 radius, Boolean is_filled, CKIT_Color color) {
+		void ckit_window_draw_circle(CKIT_Window* window, s32 start_x, s32 start_y, s32 radius, Boolean is_filled, CKIT_Color color) {
 			const uint32_t VIEWPORT_WIDTH = window->bitmap.width;
 			const uint32_t VIEWPORT_HEIGHT = window->bitmap.height;
 
@@ -460,7 +463,7 @@ extern "C" {
 			u32 true_quad_width = right - left;
 			u32 true_quad_height = bottom - top;
 
-			Boolean should_draw = (true_quad_width != 0) && (true_quad_height != 0);
+			Boolean should_draw = (true_quad_width != 0) && (true_quad_height != 0) && (radius > 0);
 			if (!should_draw) {
 				return;
 			}
@@ -472,10 +475,15 @@ extern "C" {
 				for (s32 y = 0; y < true_quad_height; y++) { // this can't start at 0 it needs to start at the correct offset if the offset is less than zero off the screen
 					for (s32 x = 0; x < true_quad_width; x++) {  // this can't start at 0 it needs to start at the correct offset if the offset is less than zero off the screen
 						size_t final_pixel_index = x + (y * VIEWPORT_WIDTH);
-						if (is_pixel_inside_circle(x + left, y + top, left + radius, top + radius, radius)) {
-							
+
+						u32 start_circle_x = x + abs(underflow_offset_x) + left;
+						u32 start_circle_y = y + abs(underflow_offset_y) + top;
+						u32 center_x = left + radius;
+						u32 center_y = top + radius;
+
+						if (is_pixel_inside_circle(start_circle_x, start_circle_y, center_x, center_y, radius)) {
+							dest[final_pixel_index] = ckit_color_to_u32(color);
 						}
-						dest[final_pixel_index] = ckit_color_to_u32(color);
 					}
 				}
 			} else {
@@ -679,7 +687,7 @@ extern "C" {
 			return FALSE;
 		}
 
-		void ckit_window_get_mouse_position(CKIT_Window* window, int* mouse_x, int* mouse_y) {
+		void ckit_window_get_mouse_position(CKIT_Window* window, s32* mouse_x, s32* mouse_y) {
 			POINT point;
 			ckit_os_get_mouse_position(&point.x, &point.y);
 			ckit_assert(ScreenToClient(window->handle, &point));

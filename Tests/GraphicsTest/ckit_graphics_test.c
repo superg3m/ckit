@@ -69,8 +69,8 @@ int main() {
 	u8* ckit_sword_bmp_data = ckit_os_read_entire_file("../../../assets/Sword.bmp", &file_size);
 	CKIT_Bitmap sword_bitmap = ckit_graphics_load_bmp(ckit_sword_bmp_data, file_size);
 	
-	int mouse_x = 0;
-	int mouse_y = 0;
+	s32 mouse_x = 0;
+	s32 mouse_y = 0;
 	while (!ckit_window_should_quit(window)) {
 		// set_bitmap_gradient(window, x_offset, y_offset);
 
@@ -104,15 +104,11 @@ int main() {
 			ckit_window_get_mouse_position(window, &mouse_x, &mouse_y);
 		}
 
-
 		{ // RENDER
 			ckit_window_clear_color(window, (CKIT_Color){55, 55, 55, 255});
 
 			ckit_window_draw_bitmap(window, 10, 0, sword_bitmap);
-
-			ckit_window_draw_circle(window, 0, -20, 25, TRUE, (CKIT_Color){0, 0, 255, 255}); // partially wroks
 			// ckit_window_draw_quad_custom(window, 10, 0, 50, 50, ((CKIT_Color){0, 255, 0, 105}));
-
 
 			ckit_window_draw_quad_custom(window, 0 + close_factor, 0 + close_factor, border_size, height_with_padding - (close_factor * 2), CKIT_COLOR_GREEN); // left
 			ckit_window_draw_quad_custom(window, 0 + close_factor, 0 + close_factor, width_with_padding - (close_factor * 2), border_size, CKIT_COLOR_PURPLE); // top
