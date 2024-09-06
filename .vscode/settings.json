@@ -96,7 +96,8 @@
 		"ckit_native_window.h": "c",
 		"ckit_platform_function_bindings.h": "c",
 		"ckit_shapes.h": "c",
-		"xiosbase": "c"
+		"xiosbase": "c",
+		"ios": "c"
 	},
 	"editor.insertSpaces": false
 }

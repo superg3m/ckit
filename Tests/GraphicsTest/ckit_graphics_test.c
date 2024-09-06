@@ -110,6 +110,8 @@ int main() {
 
 			ckit_window_draw_bitmap(window, 10, 0, sword_bitmap);
 
+			ckit_window_draw_circle(window, 10, 0, 25, TRUE, (CKIT_Color){255, 0, 0, 255});
+
 			ckit_window_draw_quad_custom(window, 0 + close_factor, 0 + close_factor, border_size, height_with_padding - (close_factor * 2), CKIT_COLOR_GREEN); // left
 			ckit_window_draw_quad_custom(window, 0 + close_factor, 0 + close_factor, width_with_padding - (close_factor * 2), border_size, CKIT_COLOR_PURPLE); // top
 			ckit_window_draw_quad_custom(window, 0 + close_factor, height_with_padding - close_factor, width_with_padding - (close_factor * 2), border_size, CKIT_COLOR_RED); // bottom
