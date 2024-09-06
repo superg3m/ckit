@@ -465,9 +465,11 @@ extern "C" {
 			if (is_filled) {
 				for (u32 y = 0; y < true_quad_height; y++) {
 					for (u32 x = 0; x < true_quad_width; x++) {
-						if (is_pixel_inside_circle(x, y, start_x + radius, start_y + radius, radius)) {
-							size_t final_pixel_index = start_index + x + (y * VIEWPORT_WIDTH);
+						size_t final_pixel_index = x + (y * VIEWPORT_WIDTH);
+						if (is_pixel_inside_circle(x, y, start_x, start_y, radius)) {
 							dest[final_pixel_index] = ckit_color_to_u32(color);
+						} else {
+							dest[final_pixel_index] = ckit_color_to_u32(CKIT_COLOR_RED);
 						}
 					}
 				}
@@ -475,7 +477,7 @@ extern "C" {
 				for (u32 y = 0; y < true_quad_height; y++) {
 					for (u32 x = 0; x < true_quad_width; x++) {
 						if (is_pixel_on_circle_line(x, y, start_x + radius, start_y + radius, radius)) {
-							size_t final_pixel_index = start_index + x + (y * VIEWPORT_WIDTH);
+							size_t final_pixel_index = x + (y * VIEWPORT_WIDTH);
 							dest[final_pixel_index] = ckit_color_to_u32(color);
 						}
 					}
