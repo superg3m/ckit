@@ -25,8 +25,7 @@
 2. - [ ] Parse the message better so you can intuitively \n something. (Maybe add some string in the beginning of a message ot ommit the <WARN:> for example)
 
 ### THE REAL NEXT STEP
-1. - [ ] Draw quads in a more intelligent way
-		- [ ] Seperate canonnical coordiantes and computational coordiates
+1. - [x] Draw quads in a more intelligent way
 2. - [ ] Switch all drawing from top left to center
 
 ### Next Steps
