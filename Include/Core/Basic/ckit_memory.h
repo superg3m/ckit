@@ -297,8 +297,6 @@ extern "C" {
         global_total_pool_memory_internal -= sizeof(CKIT_MemoryHeader);
         global_total_pool_memory_used -= sizeof(CKIT_MemoryHeader) + header->tag.allocation_info.allocation_size;
         
-        // Date: July 23, 2024
-        // TODO(Jovanni): DETERMINE IF THIS IS A POINTER TYPE BECAUSE IF IT IS NOT YOUR ARE EXPECT TO FREE THE MEMORY, BY CHANGE IT NOT TO BE A POINTER TYPE;
         u32 index = ckg_linked_list_node_to_index(global_memory_tag_pool_vector[tag_pool_index].allocated_headers,  header->linked_list_address);
         ckg_linked_list_remove(global_memory_tag_pool_vector[tag_pool_index].allocated_headers, index); 
     }

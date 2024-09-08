@@ -263,44 +263,7 @@ extern "C" {
 			}
 		}
 
-		internal void apply_alpha_blend(CKIT_Window* window, u32 x, u32 y, u32 width, u32 height, u8 alpha) {
-			if (!window || !window->bitmap.memory || alpha == 255) {
-				return;
-			}
-
-			HDC hdc = window->hdc;
-
-			const s32 VIEWPORT_WIDTH = window->bitmap.width;
-			const s32 VIEWPORT_HEIGHT = window->bitmap.height;
-
-			u32* front_buffer_dest = &window->front_buffer[x + (y * VIEWPORT_WIDTH)];
-
-			u32* back_buffer = (u32*)window->bitmap.memory;
-			u32* back_buffer_dest = &back_buffer[x + (y * VIEWPORT_WIDTH)];
-
-			for (u32 check_y = 0; check_y < height; check_y++) {
-				for (u32 check_x = 0; check_x < width; check_x++) {
-					size_t final_pixel_index = check_x + (check_y * VIEWPORT_WIDTH);
-
-					u32 front_buffer_current_pixel = front_buffer_dest[final_pixel_index];
-					u32 back_buffer_current_pixel = back_buffer_dest[final_pixel_index];
-
-					CKIT_Color new_back_buffer_color = ckit_color_u32_blend_alpha(front_buffer_current_pixel, back_buffer_current_pixel);
-					// CKIT_Color new_back_buffer_color = {255, 0, 0, 255};
-
-					back_buffer_dest[final_pixel_index] = ckit_color_to_u32(new_back_buffer_color);
-				}
-			}
-		}
-
-
 		// Date: August 31, 2024
-		// TODO(Jovanni): REWRITE THIS PLEASE FOR THE LOVE OF GOD!
-
-		
-		// Date: August 31, 2024
-		// TODO(Jovanni): SIMD for optimizations
-		// TODO(Jovanni): SIMD for optimizations
 		// TODO(Jovanni): SIMD for optimizations
 		void ckit_window_draw_quad(CKIT_Window* window, CKIT_Rectangle2D rectangle, CKIT_Color color) {
 			const s32 VIEWPORT_WIDTH = window->bitmap.width;
@@ -312,24 +275,10 @@ extern "C" {
 			u32 top = (u32)CLAMP(rectangle.y, 0, VIEWPORT_HEIGHT);
 			u32 bottom = (u32)CLAMP(rectangle.y + (s32)rectangle.height, 0, VIEWPORT_HEIGHT);
 
-			Boolean should_draw = (left < right) && (top < bottom);
-			if (!should_draw) {
-				return;
-			}
-			
-			u32 true_quad_width = right - left;
-			u32 true_quad_height = bottom - top;
+			u32* dest = (u32*)window->bitmap.memory;
 
-			should_draw = (true_quad_width != 0) && (true_quad_height != 0);
-			if (!should_draw) {
-				return;
-			}
-
-			size_t start_index = left + (top * VIEWPORT_WIDTH);
-			u32* dest = &(((u32*)window->bitmap.memory)[start_index]);
-
-			for (u32 y = 0; y < true_quad_height; y++) {
-				for (u32 x = 0; x < true_quad_width; x++) {
+			for (u32 y = top; y < bottom; y++) {
+				for (u32 x = left; x < right; x++) {
 					size_t final_pixel_index = x + (y * VIEWPORT_WIDTH);
 
 					CKIT_Color new_back_buffer_color = ckit_color_u32_blend_alpha(dest[final_pixel_index], ckit_color_to_u32(color)); // alpha blending
@@ -346,60 +295,33 @@ extern "C" {
 			// - https://www.youtube.com/watch?v=CceepU1vIKo&t=12s
 		}
 
-		// Date: August 30, 2024
-		// TODO(Jovanni): REWRITE THIS SHIT BECAUSE ITS WAY TO COMPLICATED LOGIC WISE FOR WHAT IT SHOULD BE!!!
-		// TODO(Jovanni): REWRITE THIS SHIT BECAUSE ITS WAY TO COMPLICATED LOGIC WISE FOR WHAT IT SHOULD BE!!!
-		// TODO(Jovanni): REWRITE THIS SHIT BECAUSE ITS WAY TO COMPLICATED LOGIC WISE FOR WHAT IT SHOULD BE!!!
-
 		// Date: August 31, 2024
 		// TODO(Jovanni): SIMD for optimizations
-		// TODO(Jovanni): SIMD for optimizations
-		// TODO(Jovanni): SIMD for optimizations
-		void ckit_window_draw_bitmap(CKIT_Window* window, s32 x, s32 y, CKIT_Bitmap bitmap) {
+		void ckit_window_draw_bitmap(CKIT_Window* window, s32 start_x, s32 start_y, CKIT_Bitmap bitmap) {
 			const s32 VIEWPORT_WIDTH = window->bitmap.width;
 			const s32 VIEWPORT_HEIGHT = window->bitmap.height;
 
-			u32 left = (u32)CLAMP(x, 0, VIEWPORT_WIDTH);
-			u32 right = (u32)CLAMP(x + (s32)bitmap.width, 0, VIEWPORT_WIDTH);
-			u32 top = (u32)CLAMP(y, 0, VIEWPORT_HEIGHT);
-			u32 bottom = (u32)CLAMP(y + (s32)bitmap.height, 0, VIEWPORT_HEIGHT);
+			u32 left = (u32)CLAMP(start_x, 0, VIEWPORT_WIDTH);
+			u32 right = (u32)CLAMP(start_x + (s32)bitmap.width, 0, VIEWPORT_WIDTH);
+			u32 top = (u32)CLAMP(start_y, 0, VIEWPORT_HEIGHT);
+			u32 bottom = (u32)CLAMP(start_y + (s32)bitmap.height, 0, VIEWPORT_HEIGHT);
 
-			Boolean should_draw = (left < right) && (top < bottom);
-			if (!should_draw) {
-				return;
-			}
+			u32* dest = (u32*)window->bitmap.memory;
+			u32* bmp_memory = (u32*)bitmap.memory + ((bitmap.height - 1) * bitmap.width);
 
-			u32 true_quad_width = right - left;
-			u32 true_quad_height = bottom - top;
-
-			should_draw = (true_quad_width != 0) && (true_quad_height != 0);
-			if (!should_draw) {
-				return;
-			}
-
-			size_t start_index = left + (top * VIEWPORT_WIDTH);
-			u32* dest = &(((u32*)window->bitmap.memory)[start_index]);
-
-			// Scaling factor (16x scaling in this case)
-			const u32 scale_factor = 16;
-
-			u32* start_bmp = (u32*)bitmap.memory + ((bitmap.height - 1) * bitmap.width);
-			if (x < 0) {
-				start_bmp = start_bmp - x;
-			}
-
-			if (y < 0) {
-				start_bmp = start_bmp - (s64)(y * (s64)bitmap.width);
-			}
+			const u32 scale_factor = 8;
 
 			// Date: August 31, 2024
 			// TODO(Jovanni): SIMD for optimizations
-			for (u32 y = 0; y < true_quad_height; y++) { 
-				for (u32 x = 0; x < true_quad_width; x++) {
-					s64 color_index = x + -((s64)(bitmap.width * y));
-					u32 color = start_bmp[color_index];
+			for (u32 y = top; y < bottom; y++) { 
+				for (u32 x = left; x < right; x++) {
+					s64 color_index = (s64)(x - start_x) - ((s64)(y - start_y) * bitmap.width);
+					u32 color = bmp_memory[color_index];
+					u8 alpha = (color >> 24);
+					if (alpha == 0) {
+						continue;
+					}
 
-					// Draw scaled pixels
 					for (u32 dy = 0; dy < scale_factor; ++dy) {
 						for (u32 dx = 0; dx < scale_factor; ++dx) {
 							u32 dest_x = x * scale_factor + dx;
@@ -410,12 +332,7 @@ extern "C" {
 							}
 
 							size_t final_pixel_index = dest_x + (dest_y * VIEWPORT_WIDTH);
-
-							u8 alpha = (color >> 24);
-							if (alpha != 0) {
-								dest[final_pixel_index] = color;
-							}
-							
+							dest[final_pixel_index] = color;
 						}
 					}
 				}
@@ -443,78 +360,47 @@ extern "C" {
 			return (distance_squared + 1 == radius_squared) || (distance_squared - 1 == radius_squared);
 		}
 
-
-		// Date: September 06, 2024
-		// TODO(Jovanni): PLEASE FOR THE LOVE OF GOD RETHINK HW YOU DO QUADS THIS IS FUCKING TERRIBLE
 		void ckit_window_draw_circle(CKIT_Window* window, s32 start_x, s32 start_y, s32 radius, Boolean is_filled, CKIT_Color color) {
 			const uint32_t VIEWPORT_WIDTH = window->bitmap.width;
 			const uint32_t VIEWPORT_HEIGHT = window->bitmap.height;
 
 			const u32 diameter = radius * 2;
 
-			s32 underflow_offset_x = MIN(start_x, 0);
-			s32 underflow_offset_y = MIN(start_y, 0);
-
 			u32 left = CLAMP(start_x, 0, VIEWPORT_WIDTH);
 			u32 right = CLAMP(start_x + diameter, 0, VIEWPORT_WIDTH); // add one so there is a real center point in the circle
 			u32 top = CLAMP(start_y, 0, VIEWPORT_HEIGHT);
 			u32 bottom = CLAMP(start_y + diameter, 0, VIEWPORT_HEIGHT); // kyle wuz here skool sux
 
-			u32 true_quad_width = right - left;
-			u32 true_quad_height = bottom - top;
-
-			Boolean should_draw = (true_quad_width != 0) && (true_quad_height != 0) && (radius > 0);
-			if (!should_draw) {
-				return;
-			}
-
-			size_t start_index = left + (top * VIEWPORT_WIDTH);
-			u32* dest = &((u32*)window->bitmap.memory)[start_index];
+			u32* dest = (u32*)window->bitmap.memory;
 
 			if (is_filled) {
-				for (s32 y = 0; y < true_quad_height; y++) { // this can't start at 0 it needs to start at the correct offset if the offset is less than zero off the screen
-					for (s32 x = 0; x < true_quad_width; x++) {  // this can't start at 0 it needs to start at the correct offset if the offset is less than zero off the screen
+				for (s32 y = top; y < bottom; y++) { // this can't start at 0 it needs to start at the correct offset if the offset is less than zero off the screen
+					for (s32 x = left; x < right; x++) {  // this can't start at 0 it needs to start at the correct offset if the offset is less than zero off the screen
 						size_t final_pixel_index = x + (y * VIEWPORT_WIDTH);
+						u32 center_x = start_x + radius;
+						u32 center_y = start_y + radius;
 
-						u32 start_circle_x = x + abs(underflow_offset_x) + left;
-						u32 start_circle_y = y + abs(underflow_offset_y) + top;
-						u32 center_x = left + radius;
-						u32 center_y = top + radius;
-
-						if (is_pixel_inside_circle(start_circle_x, start_circle_y, center_x, center_y, radius)) {
-							dest[final_pixel_index] = ckit_color_to_u32(color);
+						if (is_pixel_inside_circle(x, y, center_x, center_y, radius)) {
+							CKIT_Color new_back_buffer_color = ckit_color_u32_blend_alpha(dest[final_pixel_index], ckit_color_to_u32(color)); // alpha blending
+							dest[final_pixel_index] = ckit_color_to_u32(new_back_buffer_color);
 						}
 					}
 				}
 			} else {
-				// for (u32 y = 0; y < true_quad_height; y++) {
-				// 	for (u32 x = 0; x < true_quad_width; x++) {
-				// 		if (is_pixel_on_circle_line(x, y, start_x + radius, start_y + radius, radius)) {
-				// 			size_t final_pixel_index = x + (y * VIEWPORT_WIDTH);
-				// 			dest[final_pixel_index] = ckit_color_to_u32(color);
-				// 		}
-				// 	}
-				// }
+				//for (s32 y = top; y < bottom; y++) {
+				//	for (s32 x = left; x < right; x++) {
+				//		size_t final_pixel_index = x + (y * VIEWPORT_WIDTH);
+				//		u32 center_x = start_x + radius;
+				//		u32 center_y = start_y + radius;
+
+				//		if (is_pixel_on_circle(x, y, center_x, center_y, radius)) {
+				//			CKIT_Color new_back_buffer_color = ckit_color_u32_blend_alpha(dest[final_pixel_index], ckit_color_to_u32(color)); // alpha blending
+				//			dest[final_pixel_index] = ckit_color_to_u32(new_back_buffer_color);
+				//		}
+				//	}
+				//}
 			}
 		}
-
-		/* THIS IS A USAGE CODE TEST
-
-		void ckit_window_draw_circle(CKIT_Window* window, s32 start_x, s32 start_y, u32 radius, Boolean is_filled, CKIT_Color color) {\
-				u32 diameter = radius*2;
-				for (s32 y = start_y; y < diameter + start_y; y++) {
-					for (s32 x = start_x; x < diameter + start_x; x++) {
-						size_t final_pixel_index = x + (y * VIEWPORT_WIDTH);
-						center_x = start_x + radius;
-						center_y = start_y + radius;
-						if (is_pixel_inside_circle(x, y, center_x, center_y, radius)) {
-							dest[final_pixel_index] = ckit_color_to_u32(color);
-						}
-					}
-				}
-		}
-
-		*/
 		
 		LRESULT CALLBACK custom_window_procedure(HWND handle, UINT message, WPARAM wParam, LPARAM lParam) {
 			LRESULT result = 0;

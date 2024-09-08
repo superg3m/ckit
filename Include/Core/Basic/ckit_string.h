@@ -3,16 +3,6 @@
 #include "./ckit_types.h"
 //========================== Begin Types ==========================
 typedef char* String;
-
-// Date: July 13, 2024
-// TODO(Jovanni): ONE THGING THATS IMPORTANT I DON"T WANT TO HAVE TO FREE ANY OF THESE IT SHOULD JUST BE AND ARENA
-// TODO(Jovanni): ONE THGING THATS IMPORTANT I DON"T WANT TO HAVE TO FREE ANY OF THESE IT SHOULD JUST BE AND ARENA
-// TODO(Jovanni): ONE THGING THATS IMPORTANT I DON"T WANT TO HAVE TO FREE ANY OF THESE IT SHOULD JUST BE AND ARENA
-
-// Date: August 11, 2024
-// NOTE(Jovanni): Just so we are clear this is fucking dogshit right now it takes an unholy amount of memory syscalls for this to be ok
-// The arena idea might make this plausible tho! Maybe?
-
 //=========================== End Types ===========================
 
 //************************* Begin Functions *************************

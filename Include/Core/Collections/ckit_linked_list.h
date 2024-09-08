@@ -147,9 +147,6 @@ extern "C" {
             return new_node_to_insert;
         }
 
-        // Date: July 19, 2024
-        // TODO(Jovanni): check if index is closer to count or not then reverse the loop if approaching from the tail end.
-        // as opposed to the head end.
         CKIT_Node* current_node = linked_list->head; 
         for (u32 i = 0; i < index; i++) {
             current_node = current_node->next;

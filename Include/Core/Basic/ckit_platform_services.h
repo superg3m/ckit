@@ -55,8 +55,6 @@ extern "C" {
 		#if defined(PLATFORM_WINDOWS)
 			#include <windows.h>
 			void* platform_allocate(size_t number_of_bytes) {
-				// Date: July 07, 2024
-				// TODO(Jovanni): I'm thinking you can put the memory tracker in here 
 				return VirtualAlloc(NULL, number_of_bytes, MEM_COMMIT, PAGE_READWRITE); 
 			}
 
@@ -164,8 +162,6 @@ extern "C" {
 
 			}
 			
-			// Date: April 13, 2024
-			// TODO(Jovanni): Fix this to use linux's platfomr specific std console out
 			void platform_console_write(const char* message, unsigned char color) {
 				const char* color_strings[] = {COLOR_RESET, BLU, GRN, RED, MAG, WHT, BLKB, GRNB, REDB};
 				printf("\033[%sm%s\033[0m", color_strings[translate_color(color)], message);
