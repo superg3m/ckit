@@ -343,14 +343,14 @@ extern "C" {
 			return distanceSquared < radiusSquared;
 		}
 
-		internal Boolean is_pixel_on_circle_line(s32 px, s32 py, s32 center_x, s32 center_y, u32 radius) {
-			u32 radius_squared = radius * radius;
-
-			s32 dx = px - center_x;
-			s32 dy = py - center_y;
-			u32 distance_squared = (dx * dx) + (dy * dy);
-
-			return (distance_squared + 1 == radius_squared) || (distance_squared - 1 == radius_squared);
+		internal Boolean is_pixel_on_circle_line(s32 test_point_x, s32 test_point_y, s32 center_x, s32 center_y, u32 radius) {
+			double dx = center_x - test_point_x;
+			double dy = center_y - test_point_y;
+			dx *= dx;
+			dy *= dy;
+			double distanceSquared = dx + dy;
+			double radiusSquared = radius * radius;
+			return distanceSquared == radiusSquared;
 		}
 
 		void ckit_window_draw_circle(CKIT_Window* window, s32 start_x, s32 start_y, s32 radius, Boolean is_filled, CKIT_Color color) {
@@ -380,18 +380,18 @@ extern "C" {
 					}
 				}
 			} else {
-				//for (s32 y = top; y < bottom; y++) {
-				//	for (s32 x = left; x < right; x++) {
-				//		size_t final_pixel_index = x + (y * VIEWPORT_WIDTH);
-				//		u32 center_x = start_x + radius;
-				//		u32 center_y = start_y + radius;
+				for (s32 y = top; y < bottom; y++) {
+					for (s32 x = left; x < right; x++) {
+						size_t final_pixel_index = x + (y * VIEWPORT_WIDTH);
+						u32 center_x = start_x + radius;
+						u32 center_y = start_y + radius;
 
-				//		if (is_pixel_on_circle(x, y, center_x, center_y, radius)) {
-				//			CKIT_Color new_back_buffer_color = ckit_color_u32_blend_alpha(dest[final_pixel_index], ckit_color_to_u32(color)); // alpha blending
-				//			dest[final_pixel_index] = ckit_color_to_u32(new_back_buffer_color);
-				//		}
-				//	}
-				//}
+						if (is_pixel_on_circle_line(x, y, center_x, center_y, radius)) {
+							CKIT_Color new_back_buffer_color = ckit_color_u32_blend_alpha(dest[final_pixel_index], ckit_color_to_u32(color)); // alpha blending
+							dest[final_pixel_index] = ckit_color_to_u32(new_back_buffer_color);
+						}
+					}
+				}
 			}
 		}
 		
