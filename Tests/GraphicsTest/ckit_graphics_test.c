@@ -43,7 +43,7 @@ int main() {
 	LOG_DEBUG("TESTING\n");
 	LOG_SUCCESS("TESTING\n");
 
-	ckit_window_bind_icon("../../../assets/c_original_logo_icon_146611.ico");
+	ckit_window_bind_icon("./assets/c_original_logo_icon_146611.ico");
 	CKIT_Window* window = ckit_window_create(width, height, "GameEngine");
 
 	float x_pos = 40;
@@ -66,7 +66,7 @@ int main() {
 	u32 close_factor = 0;
 
 	size_t file_size = 0;
-	u8* ckit_sword_bmp_data = ckit_os_read_entire_file("../../../assets/Sword.bmp", &file_size);
+	u8* ckit_sword_bmp_data = ckit_os_read_entire_file("./assets/Sword.bmp", &file_size);
 	CKIT_Bitmap sword_bitmap = ckit_graphics_load_bmp(ckit_sword_bmp_data, file_size);
 	
 	s32 mouse_x = 0;
@@ -107,10 +107,10 @@ int main() {
 		{ // RENDER
 			ckit_window_clear_color(window, (CKIT_Color){55, 55, 55, 255});
 
-			ckit_window_draw_bitmap(window, 0, 0, sword_bitmap);
+			ckit_window_draw_bitmap(window, 0, 0, (mouse_x / 16), sword_bitmap);
 			// ckit_window_draw_quad_custom(window, 10, 0, 50, 50, ((CKIT_Color){0, 255, 0, 105}));
 
-			// ckit_window_draw_circle(window, mouse_x, mouse_y, mouse_x, TRUE, ((CKIT_Color){255, 0, 0, 105}));
+			ckit_window_draw_circle(window, mouse_x - (mouse_x / 4), mouse_y - (mouse_x / 4), (mouse_x / 4), TRUE, ((CKIT_Color){255, 0, 0, 105}));
 
 			ckit_window_draw_quad_custom(window, 0 + close_factor, 0 + close_factor, border_size, height_with_padding - (close_factor * 2), CKIT_COLOR_GREEN); // left
 			ckit_window_draw_quad_custom(window, 0 + close_factor, 0 + close_factor, width_with_padding - (close_factor * 2), border_size, CKIT_COLOR_PURPLE); // top

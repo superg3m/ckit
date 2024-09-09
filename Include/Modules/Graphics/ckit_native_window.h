@@ -137,7 +137,7 @@ extern "C" {
 	void ckit_window_draw_quad(CKIT_Window* window, CKIT_Rectangle2D rectangle, CKIT_Color color);
 	void ckit_window_draw_line(CKIT_Window* window, CKIT_Vector3 p1, CKIT_Vector3 p2);
 	void ckit_window_draw_circle(CKIT_Window* window, s32 start_x, s32 start_y, s32 radius, Boolean is_filled, CKIT_Color color);
-	void ckit_window_draw_bitmap(CKIT_Window* window, s32 x, s32 y, CKIT_Bitmap bitmap);
+	void ckit_window_draw_bitmap(CKIT_Window* window, s32 start_x, s32 start_y, u32 scale_factor, CKIT_Bitmap bitmap);
 	void ckit_window_swap_buffers(CKIT_Window* window);
 	void ckit_window_get_mouse_position(CKIT_Window* window, s32* mouse_x, s32* mouse_y);
 	void ckit_window_set_cursor_state(CKIT_Window* window, CKIT_CursorState cursor_state);
@@ -297,11 +297,9 @@ extern "C" {
 
 		// Date: August 31, 2024
 		// TODO(Jovanni): SIMD for optimizations
-		void ckit_window_draw_bitmap(CKIT_Window* window, s32 start_x, s32 start_y, CKIT_Bitmap bitmap) {
+		void ckit_window_draw_bitmap(CKIT_Window* window, s32 start_x, s32 start_y, u32 scale_factor, CKIT_Bitmap bitmap) {
 			const s32 VIEWPORT_WIDTH = window->bitmap.width;
 			const s32 VIEWPORT_HEIGHT = window->bitmap.height;
-
-			const u32 scale_factor = 8;
 
 			const s32 scaled_bmp_width = bitmap.width * scale_factor;
 			const s32 scaled_bmp_height = bitmap.height * scale_factor;
