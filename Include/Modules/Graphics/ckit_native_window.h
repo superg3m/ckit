@@ -301,40 +301,35 @@ extern "C" {
 			const s32 VIEWPORT_WIDTH = window->bitmap.width;
 			const s32 VIEWPORT_HEIGHT = window->bitmap.height;
 
+			const u32 scale_factor = 8;
+
+			const s32 scaled_bmp_width = bitmap.width * scale_factor;
+			const s32 scaled_bmp_height = bitmap.height * scale_factor;
+
 			u32 left = (u32)CLAMP(start_x, 0, VIEWPORT_WIDTH);
-			u32 right = (u32)CLAMP(start_x + (s32)bitmap.width, 0, VIEWPORT_WIDTH);
+			u32 right = (u32)CLAMP(start_x + (s32)scaled_bmp_width, 0, VIEWPORT_WIDTH);
 			u32 top = (u32)CLAMP(start_y, 0, VIEWPORT_HEIGHT);
-			u32 bottom = (u32)CLAMP(start_y + (s32)bitmap.height, 0, VIEWPORT_HEIGHT);
+			u32 bottom = (u32)CLAMP(start_y + (s32)scaled_bmp_height, 0, VIEWPORT_HEIGHT);
 
 			u32* dest = (u32*)window->bitmap.memory;
 			u32* bmp_memory = (u32*)bitmap.memory + ((bitmap.height - 1) * bitmap.width);
-
-			const u32 scale_factor = 8;
 
 			// Date: August 31, 2024
 			// TODO(Jovanni): SIMD for optimizations
 			for (u32 y = top; y < bottom; y++) { 
 				for (u32 x = left; x < right; x++) {
-					s64 color_index = (s64)(x - start_x) - ((s64)(y - start_y) * bitmap.width);
+					const s64 bmp_x = (x - start_x) / scale_factor;
+					const s64 bmp_y = (y - start_y) / scale_factor;
+
+					s64 color_index = bmp_x - (bmp_y * bitmap.width);
 					u32 color = bmp_memory[color_index];
 					u8 alpha = (color >> 24);
 					if (alpha == 0) {
 						continue;
 					}
 
-					for (u32 dy = 0; dy < scale_factor; ++dy) {
-						for (u32 dx = 0; dx < scale_factor; ++dx) {
-							u32 dest_x = x * scale_factor + dx;
-							u32 dest_y = y * scale_factor + dy;
-
-							if (dest_x >= VIEWPORT_WIDTH || dest_y >= VIEWPORT_HEIGHT) {
-								continue;
-							}
-
-							size_t final_pixel_index = dest_x + (dest_y * VIEWPORT_WIDTH);
-							dest[final_pixel_index] = color;
-						}
-					}
+					size_t final_pixel_index = x + (y * VIEWPORT_WIDTH);
+					dest[final_pixel_index] = color;
 				}
 			}
 		}
