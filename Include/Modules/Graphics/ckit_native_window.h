@@ -353,6 +353,11 @@ extern "C" {
 			return distanceSquared == radiusSquared;
 		}
 
+		// Date: September 09, 2024
+		// TODO(Jovanni): Switch to the midpoint circle algo because its just better
+		// - https://en.wikipedia.org/wiki/Midpoint_circle_algorithm
+		// - https://noobtomaster.com/computer-graphics/circle-drawing-algorithms-midpoint-algorithm/
+		// - https://www.thecrazyprogrammer.com/2016/12/bresenhams-midpoint-circle-algorithm-c-c.html
 		void ckit_window_draw_circle(CKIT_Window* window, s32 start_x, s32 start_y, s32 radius, Boolean is_filled, CKIT_Color color) {
 			const uint32_t VIEWPORT_WIDTH = window->bitmap.width;
 			const uint32_t VIEWPORT_HEIGHT = window->bitmap.height;
@@ -367,8 +372,8 @@ extern "C" {
 			u32* dest = (u32*)window->bitmap.memory;
 
 			if (is_filled) {
-				for (s32 y = top; y < bottom; y++) { // this can't start at 0 it needs to start at the correct offset if the offset is less than zero off the screen
-					for (s32 x = left; x < right; x++) {  // this can't start at 0 it needs to start at the correct offset if the offset is less than zero off the screen
+				for (s32 y = top; y < bottom; y++) {
+					for (s32 x = left; x < right; x++) {
 						size_t final_pixel_index = x + (y * VIEWPORT_WIDTH);
 						u32 center_x = start_x + radius;
 						u32 center_y = start_y + radius;
@@ -380,6 +385,7 @@ extern "C" {
 					}
 				}
 			} else {
+				ckit_assert_msg(FALSE, "Not implemented yet!");
 				for (s32 y = top; y < bottom; y++) {
 					for (s32 x = left; x < right; x++) {
 						size_t final_pixel_index = x + (y * VIEWPORT_WIDTH);

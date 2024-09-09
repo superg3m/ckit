@@ -31,7 +31,6 @@ typedef struct CKG_LinkedList CKG_LinkedList;
 typedef struct CKG_Node CKG_Node;
 
 typedef struct CKIT_AllocationInfo {
-    // allocation_site
     const char* file_name;
     s64 line;
     const char* function_name;

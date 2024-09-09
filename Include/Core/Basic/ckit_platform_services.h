@@ -148,8 +148,6 @@ extern "C" {
 				}
 			}
 
-			// Date: May 24, 2024
-			// NOTE(Jovanni): This doesn't clear to zero so its gonna be a problem
 			void* platform_allocate(size_t  number_of_bytes) {
 				return malloc(number_of_bytes);
 			}

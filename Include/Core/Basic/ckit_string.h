@@ -28,15 +28,16 @@ extern "C" {
 	String ckit_substring(const char* string_buffer, u32 start_range, u32 end_range);
 
 	// Little bit tricky. This method returns a vector of strings so 
-	// ckit_vector_count: to get the number of strings it returned 
-	// Caller is required to loop through the vector and free all the strings
+	// ckit_vector_count(): to get the number of strings it returned
 	//
 	//  for (u32 i = 0; i < ckit_vector_count(string_vector); i++) {
 	//     LOG_PRINT("%s\n", string_vector[i]);
 	//  }
 	//  ckit_vector_free(string_vector);
 	String* ckit_str_split(const char* string_buffer, const char* delimitor);
-	// String* ckit_str_split_with_char(const char* string_buffer, const char delimitor);
+	// Date: September 09, 2024
+	// TODO(Jovanni): String* ckit_str_split_with_char(const char* string_buffer, const char delimitor);
+
 	Boolean ckit_str_contains(const char* string_buffer, const char* contains);
 	s32 ckit_str_index_of(const char* string_buffer, const char* sub_string);
 	s32 ckit_str_last_index_of(const char* string_buffer, const char* sub_string);
