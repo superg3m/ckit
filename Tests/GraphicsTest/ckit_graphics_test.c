@@ -31,7 +31,7 @@ int main() {
 	ckit_init();
 
 	u32 width = 800;
-	u32 height = 600;
+	u32 height = 800;
 	u32 width_padding = 18;
 	u32 height_padding = 42;
 	u32 width_with_padding = width - width_padding;
