@@ -113,7 +113,7 @@ int main() {
 
 			// ckit_window_draw_circle(window, mouse_x, mouse_y, (mouse_x / 4), TRUE, ((CKIT_Color){255, 0, 0, 105}));
 
-			float pixel_offset_from_the_top = border_size;
+			float pixel_offset_from_the_top = (border_size / 2);
 			float center_x = width_with_padding / 2;
 			float center_y = (height_with_padding / 2) + pixel_offset_from_the_top;
 			float adjusted_width = (width_with_padding + border_size) - (close_factor * 2);
