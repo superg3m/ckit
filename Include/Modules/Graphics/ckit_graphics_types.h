@@ -131,7 +131,38 @@ extern "C" {
 		return ckit_color_alpha_blend(front_color, back_color);
 	}
 
-	void ckit_graphics_draw_quad(u32* memory, s32 start_x, s32 stary_y, u32 width, u32 height, u32 color) {
+	void ckit_graphics_draw_quad(u32* memory, u32 memory_width, u32 memory_height, s32 start_x, s32 stary_y, u32 width, u32 height, u32 color) {
+		const s32 VIEWPORT_WIDTH = memory_width;
+		const s32 VIEWPORT_HEIGHT = memory_height;
+
+		s32 true_x = start_x - (width / 2); 
+		s32 true_y = start_y - (height / 2); 
+
+		u32 left = (u32)CLAMP(true_x, 0, VIEWPORT_WIDTH);
+		u32 right = (u32)CLAMP(true_x + width, 0, VIEWPORT_WIDTH);
+
+		u32 top = (u32)CLAMP(true_y, 0, VIEWPORT_HEIGHT);
+		u32 bottom = (u32)CLAMP(true_y + height, 0, VIEWPORT_HEIGHT);
+
+		for (u32 y = top; y < bottom; y++) {
+			for (u32 x = left; x < right; x++) {
+				size_t final_pixel_index = x + (y * VIEWPORT_WIDTH);
+
+				CKIT_Color new_back_buffer_color = ckit_color_u32_blend_alpha(dest[final_pixel_index], ckit_color_to_u32(color)); // alpha blending
+				memory[final_pixel_index] = ckit_color_to_u32(new_back_buffer_color);
+			}
+		}
+	}
+
+	void ckit_graphics_draw_line(u32* memory, u32 memory_width, u32 memory_height, s32 start_x, s32 stary_y, u32 width, u32 height, u32 color) {
+
+	}
+
+	void ckit_graphics_draw_bitmap(u32* memory, u32 memory_width, u32 memory_height, s32 start_x, s32 stary_y, u32 width, u32 height, u32 color) {
+
+	}
+
+	void ckit_graphics_draw_circle(u32* memory, u32 memory_width, u32 memory_height, s32 start_x, s32 stary_y, u32 width, u32 height, u32 color) {
 
 	}
 #endif // CKIT_IMPL
