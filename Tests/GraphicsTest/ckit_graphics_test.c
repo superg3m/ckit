@@ -115,8 +115,8 @@ int main() {
 		{ // RENDER
 			ckit_window_clear_color(window, (CKIT_Color){55, 55, 55, 255});
 
-			ckit_window_draw_bitmap(window, sword_bitmap.width * (mouse_x / 16), sword_bitmap.height * (mouse_x / 16), (mouse_x / 16), sword_bitmap);
-			ckit_window_draw_circle(window, mouse_x, mouse_y, (mouse_x / 4), TRUE, ((CKIT_Color){255, 0, 0, 105}));
+			ckit_window_draw_bitmap(window, sword_bitmap.width * (mouse_x / 16), sword_bitmap.height * (mouse_x / 32), (mouse_x / 16), sword_bitmap);
+			ckit_window_draw_circle(window, mouse_x, mouse_y, (mouse_x / 2), TRUE, ((CKIT_Color){255, 0, 0, 105}));
 
 			float pixel_offset_from_the_top = (border_size / 2);
 			float center_x = width_with_padding / 2;
