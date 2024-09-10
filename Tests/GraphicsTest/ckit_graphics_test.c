@@ -71,9 +71,16 @@ int main() {
 	
 	s32 mouse_x = 0;
 	s32 mouse_y = 0;
-	while (!ckit_window_should_quit(window)) {
-		// set_bitmap_gradient(window, x_offset, y_offset);
 
+
+	LARGE_INTEGER performance_counter_frequency;
+	QueryPerformanceFrequency(&performance_counter_frequency);
+
+	LARGE_INTEGER start_counter;
+	QueryPerformanceCounter(&start_counter);
+
+
+	while (!ckit_window_should_quit(window)) {
 		{ // UPDATE
 			s32 left_threshold   = close_factor + (player_width / 2);
 			s32 right_threshold  = (width_with_padding - close_factor) + (player_width / 2);
@@ -108,10 +115,8 @@ int main() {
 		{ // RENDER
 			ckit_window_clear_color(window, (CKIT_Color){55, 55, 55, 255});
 
-			// ckit_window_draw_bitmap(window, sword_bitmap.width * (mouse_x / 16), sword_bitmap.height * (mouse_x / 16), (mouse_x / 16), sword_bitmap);
-			// ckit_window_draw_quad_custom(window, 10, 0, 50, 50, ((CKIT_Color){0, 255, 0, 105}));
-
-			// ckit_window_draw_circle(window, mouse_x, mouse_y, (mouse_x / 4), TRUE, ((CKIT_Color){255, 0, 0, 105}));
+			ckit_window_draw_bitmap(window, sword_bitmap.width * (mouse_x / 16), sword_bitmap.height * (mouse_x / 16), (mouse_x / 16), sword_bitmap);
+			ckit_window_draw_circle(window, mouse_x, mouse_y, (mouse_x / 4), TRUE, ((CKIT_Color){255, 0, 0, 105}));
 
 			float pixel_offset_from_the_top = (border_size / 2);
 			float center_x = width_with_padding / 2;
@@ -135,6 +140,16 @@ int main() {
 
 			ckit_window_swap_buffers(window);
 		}
+
+		LARGE_INTEGER end_counter;
+		QueryPerformanceCounter(&end_counter);
+		u64 counter_elapsed = (end_counter.QuadPart - start_counter.QuadPart);
+		double milliseconds_elapsed = ((double)(counter_elapsed * 1000) / (double)performance_counter_frequency.QuadPart);
+		u64 fps = (1.0 / (double)milliseconds_elapsed * 1000);
+
+		LOG_SUCCESS("%llfms / FPS: %d\n", milliseconds_elapsed, fps);
+
+		start_counter = end_counter;
 	}
 
 	ckit_window_free(window); // hmm how can I make this safer?
