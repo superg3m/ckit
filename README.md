@@ -25,7 +25,11 @@
 2. - [ ] Parse the message better so you can intuitively \n something. (Maybe add some string in the beginning of a message ot ommit the <WARN:> for example)
 
 ### THE REAL NEXT STEP
-1. - [ ] QueryPerformanceCounter (fps)
+1. - [/] QueryPerformanceCounter (fps)
+	- [ ] ckit_os_start_performance_counter()
+	- [ ] ckit_os_end_performance_counter()
+	- [ ] ckit_os_end_performance_counter()
+	- [ ] CKIT_Time struct to easily read the time passed in milliseconds, microseconds, seconds
 2. - [ ] Hot Reloading
 
 3. - [ ] Finish C_Build Rewrite
