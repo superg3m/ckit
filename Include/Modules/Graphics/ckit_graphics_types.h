@@ -130,4 +130,8 @@ extern "C" {
 					
 		return ckit_color_alpha_blend(front_color, back_color);
 	}
+
+	void ckit_graphics_draw_quad(u32* memory, s32 start_x, s32 stary_y, u32 width, u32 height, u32 color) {
+
+	}
 #endif // CKIT_IMPL
