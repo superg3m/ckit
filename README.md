@@ -25,43 +25,40 @@
 2. - [ ] Parse the message better so you can intuitively \n something. (Maybe add some string in the beginning of a message ot ommit the <WARN:> for example)
 
 ### THE REAL NEXT STEP
-1. - [x] Draw quads in a more intelligent way
-2. - [x] Switch all drawing from top left to center
-3. - [x] Switch all drawing from top left to center
+1. - [ ] QueryPerformanceCounter (fps)
+2. - [ ] Hot Reloading
+
+3. - [ ] Finish C_Build Rewrite
 
 ### Next Steps
-1. - [ ] QueryPerformanceCounter (fps)
-2. - [ ] Resolution independent bitmap
+1. - [ ] Resolution independent bitmap
 
-3. - [ ] Standardize the coordinate system (normalized coordinates -1 to 1)
+2. - [ ] Standardize the coordinate system (normalized coordinates -1 to 1)
 		- [ ] ckit_window_normalized_to_pixel_coordinates(float xt, float yt) 
 			- // inbetween -1 and 1 
 			- // gives back width * xt and height * yt
 
-4. - [ ] Optimize the software rendering backend using SIMD
-5. - [ ] Text rendering
+3. - [ ] Optimize the software rendering backend using SIMD
+4. - [ ] Text rendering
 
-6. - [ ] EventSystem
-7. - [ ] Input System
-
-8. - [ ] IMGUI
+5. - [ ] EventSystem
+6. - [ ] Input System
+7. - [ ] IMGUI
 		- [ ] Button
 		- [ ] Slider
 		- [ ] Panel
 			- [ ] RenderGroup 
 
-
-9. - [ ] Networking module make pvp pong
-10. - [ ] Write a bunch of tests validating and verifying all the utilities and logic.
+8. - [ ] Networking module make pvp pong
+9. - [ ] Write a bunch of tests validating and verifying all the utilities and logic.
 		- [ ] ckit_printf("%iv\n") // (int vector)
 		- [ ] ckit_printf("%fv\n") // (float vector)
 		- [ ] ckit_printf("%sv\n") // (string vector)
 		- [ ] ckit_printf("%cv\n") // (char vector)
 		
-
-11. - [ ] OpenGL Module
-12. - [ ] I HAVE AND IDEA I'M GOING TO AUTO GENERATE THE ckit.h FILE
-13. - [ ] Start writing the *GAME ENGINE* you have everything you need in order to succeed
+10. - [ ] OpenGL Module
+11. - [ ] I HAVE AND IDEA I'M GOING TO AUTO GENERATE THE ckit.h FILE
+12. - [ ] Start writing the *GAME ENGINE* you have everything you need in order to succeed
 
 Thoughts:
 	But in regards to dangling pointers maybe I can just give back a index indead of a pointer (Handles are the better pointers)
