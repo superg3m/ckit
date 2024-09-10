@@ -30,31 +30,39 @@
 
 ### Next Steps
 1. - [ ] QueryPerformanceCounter (fps)
-2. - [ ] Formalize the software rendering frontend (usage code)
-3. - [ ] Formalize the software rendering backend
-	- [ ] Write the useage code so you can see what needs to happen in a perfect world
+2. - [ ] Resolution independent bitmap
+
+3. - [ ] Standardize the coordinate system (normalized coordinates -1 to 1)
+ - [ ] ckit_window_normalized_to_pixel_coordinates(float xt, float yt) 
+	- // inbetween -1 and 1 
+	- // gives back width * xt and height * yt
+
 4. - [ ] Optimize the software rendering backend using SIMD
 5. - [ ] Text rendering
-6. - [ ] Input processing
 
-7. - [ ] Standardize the coordinate system
+6. - [ ] EventSystem
+7. - [ ] Input System
 
-8. - [ ] Start writing EventSystem
+
+
+8. - [ ] IMGUI
+		- [ ] Button
+		- [ ] Slider
+		- [ ] Panel
+			- [ ] RenderGroup 
+
+
 9. - [ ] Networking module make pvp pong
-10. - [ ] IMGUI
-	- [ ] Button
-	- [ ] Slider
-	- [ ] Panel
-		- [ ] RenderGroup 
-
-11. - [ ] Write a bunch of tests validating and verifying all the utilities and logic.
+10. - [ ] Write a bunch of tests validating and verifying all the utilities and logic.
 		- [ ] ckit_printf("%iv\n") // (int vector)
 		- [ ] ckit_printf("%fv\n") // (float vector)
 		- [ ] ckit_printf("%sv\n") // (string vector)
 		- [ ] ckit_printf("%cv\n") // (char vector)
-		- [ ] I HAVE AND IDEA I'M GOING TO AUTO GENERATE THE ckit.h FILE
+		
 
-12. - [ ] Start writing the **GAME ENGINE*you have everything you need in order to succeed
+11. - [ ] OpenGL Module
+12. - [ ] I HAVE AND IDEA I'M GOING TO AUTO GENERATE THE ckit.h FILE
+13. - [ ] Start writing the *GAME ENGINE* you have everything you need in order to succeed
 
 Thoughts:
 	But in regards to dangling pointers maybe I can just give back a index indead of a pointer (Handles are the better pointers)
