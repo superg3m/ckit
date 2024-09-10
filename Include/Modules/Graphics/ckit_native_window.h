@@ -265,6 +265,9 @@ extern "C" {
 
 		// Date: August 31, 2024
 		// TODO(Jovanni): SIMD for optimizations
+
+		// Date: September 10, 2024
+		// TODO(Jovanni): Investigate the top left issue
 		void ckit_window_draw_quad(CKIT_Window* window, CKIT_Rectangle2D rectangle, CKIT_Color color) {
 			const s32 VIEWPORT_WIDTH = window->bitmap.width;
 			const s32 VIEWPORT_HEIGHT = window->bitmap.height;
@@ -273,10 +276,9 @@ extern "C" {
 			s32 true_y = rectangle.y - (rectangle.height / 2); 
 
 			u32 left = (u32)CLAMP(true_x, 0, VIEWPORT_WIDTH);
-			u32 right = (u32)CLAMP(true_x + rectangle.width, 0, VIEWPORT_WIDTH);
-
+			u32 right = (u32)CLAMP(true_x + (s32)rectangle.width, 0, VIEWPORT_WIDTH);
 			u32 top = (u32)CLAMP(true_y, 0, VIEWPORT_HEIGHT);
-			u32 bottom = (u32)CLAMP(true_y + rectangle.height, 0, VIEWPORT_HEIGHT);
+			u32 bottom = (u32)CLAMP(true_y + (s32)rectangle.height, 0, VIEWPORT_HEIGHT);
 
 			u32* dest = (u32*)window->bitmap.memory;
 
@@ -365,6 +367,10 @@ extern "C" {
 		// - https://noobtomaster.com/computer-graphics/circle-drawing-algorithms-midpoint-algorithm/
 		// - https://www.thecrazyprogrammer.com/2016/12/bresenhams-midpoint-circle-algorithm-c-c.html
 		void ckit_window_draw_circle(CKIT_Window* window, s32 start_x, s32 start_y, s32 radius, Boolean is_filled, CKIT_Color color) {
+			if (radius <= 0) {
+				return;
+			}
+
 			const uint32_t VIEWPORT_WIDTH = window->bitmap.width;
 			const uint32_t VIEWPORT_HEIGHT = window->bitmap.height;
 
@@ -374,9 +380,9 @@ extern "C" {
 			s32 true_y = start_y - (radius);
 
 			u32 left = CLAMP(true_x, 0, VIEWPORT_WIDTH);
-			u32 right = CLAMP(true_x + diameter, 0, VIEWPORT_WIDTH); // add one so there is a real center point in the circle
+			u32 right = CLAMP(true_x + (s32)diameter, 0, VIEWPORT_WIDTH); // add one so there is a real center point in the circle
 			u32 top = CLAMP(true_y, 0, VIEWPORT_HEIGHT);
-			u32 bottom = CLAMP(true_y + diameter, 0, VIEWPORT_HEIGHT); // kyle wuz here skool sux
+			u32 bottom = CLAMP(true_y + (s32)diameter, 0, VIEWPORT_HEIGHT); // kyle wuz here skool sux
 
 			u32* dest = (u32*)window->bitmap.memory;
 
