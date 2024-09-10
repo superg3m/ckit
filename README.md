@@ -7,7 +7,7 @@
 - This library will be completly cross-platform (Will be windows exclusive for a while ngl)
 - Collection of tools, data structures, and algorithms that I find useful
 
-- cloc . --fullpath --not-match-d='.*Modules/Graphics/glad' --not-match-f='.*Modules/Graphics/stb_image.h'
+- cloc . --fullpath --not-match-d='.*External_Libraries.*'
 
 # How to build
 1. ./bootstrap.ps1
@@ -33,9 +33,9 @@
 2. - [ ] Resolution independent bitmap
 
 3. - [ ] Standardize the coordinate system (normalized coordinates -1 to 1)
- - [ ] ckit_window_normalized_to_pixel_coordinates(float xt, float yt) 
-	- // inbetween -1 and 1 
-	- // gives back width * xt and height * yt
+		- [ ] ckit_window_normalized_to_pixel_coordinates(float xt, float yt) 
+			- // inbetween -1 and 1 
+			- // gives back width * xt and height * yt
 
 4. - [ ] Optimize the software rendering backend using SIMD
 5. - [ ] Text rendering
@@ -106,7 +106,7 @@ Thoughts:
 	- [x] ckit_os_path_join(path, to_join);
 	- [x] ckit_os_system(command);
 	- [ ] ckit_os_file_open(path);
-	- [ ] ckit_os_file_read_next_line( file);
+	- [ ] ckit_os_file_read_next_line(file);
 	- [ ] ckit_os_file_read_next_integer(file);
 	- [ ] ckit_os_file_read_next_float(file);
 	- [ ] ckit_os_file_close(file);
@@ -260,6 +260,7 @@ Thoughts:
 	- [x] ckit_window_should_quit(window);
 	- [x] ckit_window_clear_color(window, color);
 	- [x] ckit_window_draw_quad(window, start_x, start_y, width, height, color);
+	- [/] ckit_window_draw_circle(window, start_x, start_y, radius, is_filled, color);
 	- [x] ckit_window_draw_bitmap(window);
 	- [x] ckit_window_get_mouse_position(window, mouse_x, mouse_y);
 	- [x] ALPHA BLENDING FOR DRAW OPPERATIONS!
@@ -267,14 +268,14 @@ Thoughts:
 
 ### Lexer
 - [ ] ckit_lexer.h
-	- [x]  ckit_lexer_load_file_data(lexer, file_path);
-	- [x]  ckit_lexer_load_string(lexer, string);
-	- [x] charckit_lexer_token_to_string(token);
-	- [x] CKIT_Tokens ckit_lexer_generate_next_token(lexer);
-	- [ ] CKIT_Tokensckit_lexer_peek_next_token(lexer);
-	- [x] CKIT_Tokensckit_lexer_generate_token_stream(lexer);
-	- [ ] CKIT_Tokensckit_lexer_consume_token_stream(lexer);
-	- [ ] CKIT_Tokensckit_lexer_free(lexer);
+	- [x] ckit_lexer_load_file_data(lexer, file_path);
+	- [x] ckit_lexer_load_string(lexer, string);
+	- [x] ckit_lexer_token_to_string(token);
+	- [x] ckit_lexer_generate_next_token(lexer);
+	- [ ] ckit_lexer_peek_next_token(lexer);
+	- [x] ckit_lexer_generate_token_stream(lexer);
+	- [ ] ckit_lexer_consume_token_stream(lexer);
+	- [ ] ckit_lexer_free(lexer);
 
 ### Networking
 - [ ] ckit_client.h
