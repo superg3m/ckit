@@ -104,6 +104,7 @@ int main() {
 			ckit_window_get_mouse_position(window, &mouse_x, &mouse_y);
 		}
 
+		/*
 		{ // RENDER
 			ckit_window_clear_color(window, (CKIT_Color){55, 55, 55, 255});
 
@@ -126,6 +127,15 @@ int main() {
 			//ckit_window_draw_quad_custom(window, (s32)mouse_x, (s32)mouse_y, player_width, player_height, ((CKIT_Color){0, 255, 0, 10}));
 
 			ckit_window_draw_quad_custom(window, (s32)offset_to_center_x, (s32)offset_to_center_y, center_width, center_height, CKIT_COLOR_PURPLE);
+
+			ckit_window_swap_buffers(window);
+		}
+		*/
+
+		{ // RENDER
+			ckit_window_clear_color(window, (CKIT_Color){55, 55, 55, 255});
+
+			ckit_window_draw_circle(window, mouse_x, mouse_y, 32, FALSE, CKIT_COLOR_RED); // left
 
 			ckit_window_swap_buffers(window);
 		}

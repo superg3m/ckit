@@ -26,7 +26,8 @@
 
 ### THE REAL NEXT STEP
 1. - [x] Draw quads in a more intelligent way
-2. - [ ] Switch all drawing from top left to center
+2. - [x] Switch all drawing from top left to center
+3. - [x] Switch all drawing from top left to center
 
 ### Next Steps
 1. - [ ] QueryPerformanceCounter (fps)

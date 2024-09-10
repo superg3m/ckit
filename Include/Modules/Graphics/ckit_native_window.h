@@ -269,11 +269,14 @@ extern "C" {
 			const s32 VIEWPORT_WIDTH = window->bitmap.width;
 			const s32 VIEWPORT_HEIGHT = window->bitmap.height;
 
-			u32 left = (u32)CLAMP(rectangle.x, 0, VIEWPORT_WIDTH);
-			u32 right = (u32)CLAMP(rectangle.x + (s32)rectangle.width, 0, VIEWPORT_WIDTH);
+			s32 true_x = rectangle.x - (rectangle.width / 2); 
+			s32 true_y = rectangle.y - (rectangle.height / 2); 
 
-			u32 top = (u32)CLAMP(rectangle.y, 0, VIEWPORT_HEIGHT);
-			u32 bottom = (u32)CLAMP(rectangle.y + (s32)rectangle.height, 0, VIEWPORT_HEIGHT);
+			u32 left = (u32)CLAMP(true_x, 0, VIEWPORT_WIDTH);
+			u32 right = (u32)CLAMP(true_x + rectangle.width, 0, VIEWPORT_WIDTH);
+
+			u32 top = (u32)CLAMP(true_y, 0, VIEWPORT_HEIGHT);
+			u32 bottom = (u32)CLAMP(true_y + rectangle.height, 0, VIEWPORT_HEIGHT);
 
 			u32* dest = (u32*)window->bitmap.memory;
 
@@ -304,10 +307,13 @@ extern "C" {
 			const s32 scaled_bmp_width = bitmap.width * scale_factor;
 			const s32 scaled_bmp_height = bitmap.height * scale_factor;
 
-			u32 left = (u32)CLAMP(start_x, 0, VIEWPORT_WIDTH);
-			u32 right = (u32)CLAMP(start_x + scaled_bmp_width, 0, VIEWPORT_WIDTH);
-			u32 top = (u32)CLAMP(start_y, 0, VIEWPORT_HEIGHT);
-			u32 bottom = (u32)CLAMP(start_y + scaled_bmp_height, 0, VIEWPORT_HEIGHT);
+			s32 true_x = start_x - (scaled_bmp_width / 2);
+			s32 true_y = start_y - (scaled_bmp_height / 2);
+
+			u32 left = (u32)CLAMP(true_x, 0, VIEWPORT_WIDTH);
+			u32 right = (u32)CLAMP(true_x + scaled_bmp_width, 0, VIEWPORT_WIDTH);
+			u32 top = (u32)CLAMP(true_y, 0, VIEWPORT_HEIGHT);
+			u32 bottom = (u32)CLAMP(true_y + scaled_bmp_height, 0, VIEWPORT_HEIGHT);
 
 			u32* dest = (u32*)window->bitmap.memory;
 			u32* bmp_memory = (u32*)bitmap.memory + ((bitmap.height - 1) * bitmap.width);
@@ -316,8 +322,8 @@ extern "C" {
 			// TODO(Jovanni): SIMD for optimizations
 			for (u32 y = top; y < bottom; y++) { 
 				for (u32 x = left; x < right; x++) {
-					const s64 bmp_x = (x - start_x) / scale_factor;
-					const s64 bmp_y = (y - start_y) / scale_factor;
+					const s64 bmp_x = (x - true_x) / scale_factor;
+					const s64 bmp_y = (y - true_y) / scale_factor;
 
 					s64 color_index = bmp_x - (bmp_y * bitmap.width);
 					u32 color = bmp_memory[color_index];
@@ -364,10 +370,13 @@ extern "C" {
 
 			const u32 diameter = radius * 2;
 
-			u32 left = CLAMP(start_x, 0, VIEWPORT_WIDTH);
-			u32 right = CLAMP(start_x + diameter, 0, VIEWPORT_WIDTH); // add one so there is a real center point in the circle
-			u32 top = CLAMP(start_y, 0, VIEWPORT_HEIGHT);
-			u32 bottom = CLAMP(start_y + diameter, 0, VIEWPORT_HEIGHT); // kyle wuz here skool sux
+			s32 true_x = start_x - (radius);
+			s32 true_y = start_y - (radius);
+
+			u32 left = CLAMP(true_x, 0, VIEWPORT_WIDTH);
+			u32 right = CLAMP(true_x + diameter, 0, VIEWPORT_WIDTH); // add one so there is a real center point in the circle
+			u32 top = CLAMP(true_y, 0, VIEWPORT_HEIGHT);
+			u32 bottom = CLAMP(true_y + diameter, 0, VIEWPORT_HEIGHT); // kyle wuz here skool sux
 
 			u32* dest = (u32*)window->bitmap.memory;
 
@@ -375,8 +384,8 @@ extern "C" {
 				for (s32 y = top; y < bottom; y++) {
 					for (s32 x = left; x < right; x++) {
 						size_t final_pixel_index = x + (y * VIEWPORT_WIDTH);
-						u32 center_x = start_x + radius;
-						u32 center_y = start_y + radius;
+						u32 center_x = true_x + radius;
+						u32 center_y = true_y + radius;
 
 						if (is_pixel_inside_circle(x, y, center_x, center_y, radius)) {
 							CKIT_Color new_back_buffer_color = ckit_color_u32_blend_alpha(dest[final_pixel_index], ckit_color_to_u32(color)); // alpha blending
@@ -385,7 +394,7 @@ extern "C" {
 					}
 				}
 			} else {
-				ckit_assert_msg(FALSE, "Not implemented yet!");
+				ckit_assert_msg(FALSE, "Non-filled circle is not implemented yet!");
 				for (s32 y = top; y < bottom; y++) {
 					for (s32 x = left; x < right; x++) {
 						size_t final_pixel_index = x + (y * VIEWPORT_WIDTH);
