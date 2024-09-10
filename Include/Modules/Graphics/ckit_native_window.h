@@ -305,9 +305,9 @@ extern "C" {
 			const s32 scaled_bmp_height = bitmap.height * scale_factor;
 
 			u32 left = (u32)CLAMP(start_x, 0, VIEWPORT_WIDTH);
-			u32 right = (u32)CLAMP(start_x + (s32)scaled_bmp_width, 0, VIEWPORT_WIDTH);
+			u32 right = (u32)CLAMP(start_x + scaled_bmp_width, 0, VIEWPORT_WIDTH);
 			u32 top = (u32)CLAMP(start_y, 0, VIEWPORT_HEIGHT);
-			u32 bottom = (u32)CLAMP(start_y + (s32)scaled_bmp_height, 0, VIEWPORT_HEIGHT);
+			u32 bottom = (u32)CLAMP(start_y + scaled_bmp_height, 0, VIEWPORT_HEIGHT);
 
 			u32* dest = (u32*)window->bitmap.memory;
 			u32* bmp_memory = (u32*)bitmap.memory + ((bitmap.height - 1) * bitmap.width);
