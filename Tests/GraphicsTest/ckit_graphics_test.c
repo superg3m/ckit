@@ -31,7 +31,7 @@ int main() {
 	ckit_init();
 
 	u32 width = 800;
-	u32 height = 800;
+	u32 height = 600;
 	u32 width_padding = 18;
 	u32 height_padding = 42;
 	u32 width_with_padding = width - width_padding;
@@ -75,10 +75,11 @@ int main() {
 		// set_bitmap_gradient(window, x_offset, y_offset);
 
 		{ // UPDATE
-			s32 left_threshold   = 0 + close_factor;
-			s32 right_threshold  = width_with_padding - close_factor;
-			s32 top_threshold    =  0 + close_factor;
-			s32 bottom_threshold = height_with_padding - close_factor;
+			s32 left_threshold   = close_factor + (player_width / 2);
+			s32 right_threshold  = (width_with_padding - close_factor) + (player_width / 2);
+
+			s32 top_threshold    = close_factor + (player_height / 2);
+			s32 bottom_threshold = (height_with_padding - close_factor) + (player_height / 2);
 
 			Boolean left_check   = x_pos < left_threshold - 1;
 			Boolean right_check  = (x_pos + player_width) > right_threshold + 1;
@@ -104,38 +105,33 @@ int main() {
 			ckit_window_get_mouse_position(window, &mouse_x, &mouse_y);
 		}
 
-		/*
 		{ // RENDER
 			ckit_window_clear_color(window, (CKIT_Color){55, 55, 55, 255});
 
-			ckit_window_draw_bitmap(window, 0, 0, (mouse_x / 16), sword_bitmap);
+			// ckit_window_draw_bitmap(window, sword_bitmap.width * (mouse_x / 16), sword_bitmap.height * (mouse_x / 16), (mouse_x / 16), sword_bitmap);
 			// ckit_window_draw_quad_custom(window, 10, 0, 50, 50, ((CKIT_Color){0, 255, 0, 105}));
 
-			ckit_window_draw_circle(window, mouse_x - (mouse_x / 4), mouse_y - (mouse_x / 4), (mouse_x / 4), TRUE, ((CKIT_Color){255, 0, 0, 105}));
+			// ckit_window_draw_circle(window, mouse_x, mouse_y, (mouse_x / 4), TRUE, ((CKIT_Color){255, 0, 0, 105}));
 
-			ckit_window_draw_quad_custom(window, 0 + close_factor, 0 + close_factor, border_size, height_with_padding - (close_factor * 2), CKIT_COLOR_GREEN); // left
-			ckit_window_draw_quad_custom(window, 0 + close_factor, 0 + close_factor, width_with_padding - (close_factor * 2), border_size, CKIT_COLOR_PURPLE); // top
-			ckit_window_draw_quad_custom(window, 0 + close_factor, height_with_padding - close_factor, width_with_padding - (close_factor * 2), border_size, CKIT_COLOR_RED); // bottom
-			ckit_window_draw_quad_custom(window, width_with_padding - close_factor, 0 + close_factor, border_size, height_with_padding - (close_factor * 2), CKIT_COLOR_BLUE); // right
+			float pixel_offset_from_the_top = border_size;
+			float center_x = width_with_padding / 2;
+			float center_y = (height_with_padding / 2) + pixel_offset_from_the_top;
+			float adjusted_width = (width_with_padding + border_size) - (close_factor * 2);
+			float adjusted_height = (height_with_padding + border_size) - (close_factor * 2);
 
-			float offset_to_center_x = ((float)x_pos + (half_player_width)) - half_center_width;
-			float offset_to_center_y = ((float)y_pos + (half_player_height)) - half_center_height;
+			float right_x = width_with_padding - close_factor;
+			float top_y = close_factor + pixel_offset_from_the_top;
+			float bottom_y = height_with_padding - close_factor + pixel_offset_from_the_top;
 
-			ckit_window_draw_quad_custom(window, (s32)width / 4, (s32)height / 4, 400, 200, ((CKIT_Color){20, 20, 20, 150}));
+			ckit_window_draw_quad_custom(window, close_factor, center_y, border_size, adjusted_height, CKIT_COLOR_GREEN); // left
+			ckit_window_draw_quad_custom(window, right_x, center_y, border_size, adjusted_height, CKIT_COLOR_BLUE); // right
+			ckit_window_draw_quad_custom(window, center_x, top_y, adjusted_width, border_size, CKIT_COLOR_PURPLE); // top
+			ckit_window_draw_quad_custom(window, center_x, bottom_y, adjusted_width, border_size, CKIT_COLOR_RED); // bottom
+
+
+			ckit_window_draw_quad_custom(window, (s32)width / 2, (s32)height / 2, 400, 200, ((CKIT_Color){20, 20, 20, 150}));
 			ckit_window_draw_quad_custom(window, (s32)x_pos, (s32)y_pos, player_width, player_height, ((CKIT_Color){0, 255, 0, 75}));
-
-			//ckit_window_draw_quad_custom(window, (s32)mouse_x, (s32)mouse_y, player_width, player_height, ((CKIT_Color){0, 255, 0, 10}));
-
-			ckit_window_draw_quad_custom(window, (s32)offset_to_center_x, (s32)offset_to_center_y, center_width, center_height, CKIT_COLOR_PURPLE);
-
-			ckit_window_swap_buffers(window);
-		}
-		*/
-
-		{ // RENDER
-			ckit_window_clear_color(window, (CKIT_Color){55, 55, 55, 255});
-
-			ckit_window_draw_circle(window, mouse_x, mouse_y, 32, FALSE, CKIT_COLOR_RED); // left
+			ckit_window_draw_quad_custom(window, (s32)x_pos, (s32)y_pos, center_width, center_height, CKIT_COLOR_PURPLE);
 
 			ckit_window_swap_buffers(window);
 		}
