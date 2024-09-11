@@ -25,13 +25,9 @@
 2. - [ ] Parse the message better so you can intuitively \n something. (Maybe add some string in the beginning of a message ot ommit the <WARN:> for example)
 
 ### THE REAL NEXT STEP
-1. - [/] QueryPerformanceCounter (fps)
-	- [ ] ckit_os_query_performance_counter() // Gives back number of counts / millisecond
-	- [ ] CKIT_Time struct to easily read the time passed in milliseconds, microseconds, seconds
+1. - [ ] Finish C_Build Rewrite
 2. - [ ] Hot Reloading
-
 3. - [ ] SIMD optimization on the render
-4. - [ ] Finish C_Build Rewrite
 
 ### Next Steps
 1. - [ ] Resolution independent bitmap
@@ -106,6 +102,7 @@ Thoughts:
 	- [ ] ckit_os_get_file_info();
 	- [x] ckit_os_path_join(path, to_join);
 	- [x] ckit_os_system(command);
+	- [x] ckit_os_query_performance_counter();
 	- [ ] ckit_os_file_open(path);
 	- [ ] ckit_os_file_read_next_line(file);
 	- [ ] ckit_os_file_read_next_integer(file);
