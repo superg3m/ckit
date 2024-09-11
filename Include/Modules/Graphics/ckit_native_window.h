@@ -212,7 +212,7 @@ extern "C" {
 			BITMAPINFO bitmap_info;
 			bitmap_info.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
         	bitmap_info.bmiHeader.biWidth = window->bitmap.width;
-        	bitmap_info.bmiHeader.biHeight = -window->bitmap.height;
+        	bitmap_info.bmiHeader.biHeight = -((s32)window->bitmap.height);
         	bitmap_info.bmiHeader.biPlanes = 1;
         	bitmap_info.bmiHeader.biBitCount = bits_per_pixel;
         	bitmap_info.bmiHeader.biCompression = BI_RGB;
