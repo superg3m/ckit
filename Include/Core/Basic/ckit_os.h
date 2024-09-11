@@ -42,6 +42,21 @@ extern "C" {
 	String ckit_os_path_join(char* path, const char* to_join);
 	void ckit_os_system(const char* command);
 
+	/**
+	 * @brief returns the number of counts in a millisecond
+	 * double start_counter = ckit_os_query_performance_counter();
+	 * 
+	 * ... do some work
+	 * 
+	 * double end_counter = ckit_os_query_performance_counter();
+	 * double milliseconds_per_frame = end_counter - start_counter
+	 * double seconds_per_frame = milliseconds_per_frame / 1000.0
+	 * u64 fps = 1.0 / seconds_per_frame;
+	 * 
+	 * @return double 
+	 */
+	double ckit_os_query_performance_counter();
+
 	CKIT_File* ckit_os_file_open(const char* path);
 	String ckit_os_file_read_next_line(CKIT_File* file);
 	String ckit_os_file_read_next_integer(CKIT_File* file);
@@ -81,6 +96,17 @@ extern "C" {
 
 	void ckit_os_system(const char* command) {
 		ckit_assert(system(command));
+	}
+
+	double ckit_os_query_performance_counter() {
+		LARGE_INTEGER performance_counter_frequency;
+		QueryPerformanceFrequency(&performance_counter_frequency);
+
+		LARGE_INTEGER counter;
+		QueryPerformanceCounter(&counter);
+		double milliseconds_elapsed = ((double)(counter.QuadPart * 1000.0) / (double)performance_counter_frequency.QuadPart);
+
+		return milliseconds_elapsed;
 	}
 
 	String ckit_os_path_join(char* path, const char* to_join) {

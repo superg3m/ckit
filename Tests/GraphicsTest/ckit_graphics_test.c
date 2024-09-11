@@ -72,13 +72,7 @@ int main() {
 	s32 mouse_x = 0;
 	s32 mouse_y = 0;
 
-
-	LARGE_INTEGER performance_counter_frequency;
-	QueryPerformanceFrequency(&performance_counter_frequency);
-
-	LARGE_INTEGER start_counter;
-	QueryPerformanceCounter(&start_counter);
-
+	double start_counter = ckit_os_query_performance_counter();
 
 	while (!ckit_window_should_quit(window)) {
 		{ // UPDATE
@@ -141,13 +135,12 @@ int main() {
 			ckit_window_swap_buffers(window);
 		}
 
-		LARGE_INTEGER end_counter;
-		QueryPerformanceCounter(&end_counter);
-		u64 counter_elapsed = (end_counter.QuadPart - start_counter.QuadPart);
-		double milliseconds_elapsed = ((double)(counter_elapsed * 1000) / (double)performance_counter_frequency.QuadPart);
-		u64 fps = (1.0 / (double)milliseconds_elapsed * 1000);
+		double end_counter = ckit_os_query_performance_counter();
+		double milliseconds_per_frame = end_counter - start_counter;
+		double seconds_per_frame = milliseconds_per_frame / 1000.0;
+		u64 fps = 1.0 / seconds_per_frame;
 
-		LOG_SUCCESS("%llfms / FPS: %d\n", milliseconds_elapsed, fps);
+		LOG_SUCCESS("%llfms / FPS: %d\n", milliseconds_per_frame, fps);
 
 		start_counter = end_counter;
 	}

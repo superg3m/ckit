@@ -26,12 +26,12 @@
 
 ### THE REAL NEXT STEP
 1. - [/] QueryPerformanceCounter (fps)
-	- [ ] ckit_os_start_performance_counter()
-	- [ ] ckit_os_end_performance_counter()
+	- [ ] ckit_os_query_performance_counter() // Gives back number of counts / millisecond
 	- [ ] CKIT_Time struct to easily read the time passed in milliseconds, microseconds, seconds
 2. - [ ] Hot Reloading
 
-3. - [ ] Finish C_Build Rewrite
+3. - [ ] SIMD optimization on the render
+4. - [ ] Finish C_Build Rewrite
 
 ### Next Steps
 1. - [ ] Resolution independent bitmap
