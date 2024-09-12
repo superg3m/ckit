@@ -23,7 +23,7 @@ if COMPILER == "cl":
 	project.set_compiler_warning_level("1")
 	project.disable_specific_warnings(["5105", "4668", "4820"])
 elif COMPILER in ["gcc", "cc", "clang"]:
-	project.set_compiler_warning_level("all")
+	project.set_compiler_warning_level("")
 
 project.set_treat_warnings_as_errors(True)
 project.set_debug_with_visual_studio(True)
@@ -37,8 +37,12 @@ ckg_lib_procedure = project.add_procedure(f"./build_{COMPILER}")
 ckg_lib_procedure.set_output_name("ckit.lib")
 ckg_lib_procedure.set_compile_time_defines([""])
 ckg_lib_procedure.set_include_paths([""])
-ckg_lib_procedure.set_source_files(["../ckit.c"])
-ckg_lib_procedure.set_additional_libs([f"../ckg/build_{COMPILER}/ckg.lib"])
+ckg_lib_procedure.set_source_files(["../ckg/ckg.c", "../ckit.c"])
+
+if COMPILER == "cl":
+	ckg_lib_procedure.set_additional_libs([])
+elif COMPILER in ["gcc", "cc", "clang"]:
+	ckg_lib_procedure.set_additional_libs(["-lUser32", "-lGDI32"])
 # -------------------------------------------------------------------------------------
 ckg_test_procedure = project.add_procedure(f"./Tests/CoreTest/build_{COMPILER}")
 ckg_test_procedure.set_output_name("ckit_test.exe")
@@ -52,14 +56,14 @@ ckg_graphics_test_procedure.set_output_name("ckit_graphics_test.exe")
 ckg_graphics_test_procedure.set_compile_time_defines([""])
 ckg_graphics_test_procedure.set_include_paths([""])
 ckg_graphics_test_procedure.set_source_files(["../*.c"])
-ckg_graphics_test_procedure.set_additional_libs([f"../../../build_{COMPILER}/ckit.lib"])
+ckg_graphics_test_procedure.set_additional_libs(["User32.lib", "GDI32.lib", f"../../../build_{COMPILER}/ckit.lib"])
 # -------------------------------------------------------------------------------------
 ckg_pong_procedure = project.add_procedure(f"./Tests/PongTest/build_{COMPILER}")
 ckg_pong_procedure.set_output_name("ckit_pong.exe")
 ckg_pong_procedure.set_compile_time_defines([""])
 ckg_pong_procedure.set_include_paths([""])
 ckg_pong_procedure.set_source_files(["../*.c"])
-ckg_pong_procedure.set_additional_libs([f"../../../build_{COMPILER}/ckit.lib"])
+ckg_pong_procedure.set_additional_libs([f"User32.lib", "GDI32.lib", "../../../build_{COMPILER}/ckit.lib", ])
 # -------------------------------------------------------------------------------------
 project.set_executables_to_run(["ckit_test.exe"])
 project.build(build_type)

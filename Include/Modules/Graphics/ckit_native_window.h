@@ -589,7 +589,9 @@ extern "C" {
 
 		void ckit_window_get_mouse_position(CKIT_Window* window, s32* mouse_x, s32* mouse_y) {
 			POINT point;
-			ckit_os_get_mouse_position(&point.x, &point.y);
+			ckit_os_get_mouse_position(mouse_x, mouse_y);
+			point.x = *mouse_x;
+			point.y = *mouse_y;
 			ckit_assert(ScreenToClient(window->handle, &point));
 			*mouse_x = point.x;
 			*mouse_y = point.y;
