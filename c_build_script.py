@@ -37,7 +37,7 @@ ckg_lib_procedure.set_output_name("ckit.lib")
 ckg_lib_procedure.set_compile_time_defines([""])
 ckg_lib_procedure.set_include_paths([""])
 ckg_lib_procedure.set_source_files(["../ckit.c"])
-ckg_lib_procedure.set_additional_libs([f"../../ckg/build_{COMPILER}/ckg.lib"])
+ckg_lib_procedure.set_additional_libs([f"../ckg/build_{COMPILER}/ckg.lib"])
 # -------------------------------------------------------------------------------------
 ckg_test_procedure = project.add_procedure(f"./Tests/CoreTest/build_{COMPILER}")
 ckg_test_procedure.set_output_name("ckit_test.exe")
