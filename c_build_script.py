@@ -28,42 +28,55 @@ elif COMPILER in ["gcc", "cc", "clang"]:
 project.set_treat_warnings_as_errors(True)
 project.set_debug_with_visual_studio(True)
 project.set_rebuild_project_dependencies(True)
-# If project.set_rebuild_project_dependencies is set to (False)
-# then by default it will look at the source files and check if they have been modified since the cache
 
 project.set_project_dependencies(["ckg"])
 # -------------------------------------------------------------------------------------
-ckg_lib_procedure = project.add_procedure(f"./build_{COMPILER}")
-ckg_lib_procedure.set_output_name("ckit.lib")
-ckg_lib_procedure.set_compile_time_defines([""])
-ckg_lib_procedure.set_include_paths([""])
-ckg_lib_procedure.set_source_files(["../ckg/ckg.c", "../ckit.c"])
 
-if COMPILER == "cl":
-	ckg_lib_procedure.set_additional_libs([])
-elif COMPILER in ["gcc", "cc", "clang"]:
-	ckg_lib_procedure.set_additional_libs(["-lUser32", "-lGDI32"])
-# -------------------------------------------------------------------------------------
-ckg_test_procedure = project.add_procedure(f"./Tests/CoreTest/build_{COMPILER}")
-ckg_test_procedure.set_output_name("ckit_test.exe")
-ckg_test_procedure.set_compile_time_defines([""])
-ckg_test_procedure.set_include_paths([""])
-ckg_test_procedure.set_source_files(["../*.c"])
-ckg_test_procedure.set_additional_libs([f"../../../build_{COMPILER}/ckit.lib"])
-# -------------------------------------------------------------------------------------
-ckg_graphics_test_procedure = project.add_procedure(f"./Tests/GraphicsTest/build_{COMPILER}")
-ckg_graphics_test_procedure.set_output_name("ckit_graphics_test.exe")
-ckg_graphics_test_procedure.set_compile_time_defines([""])
-ckg_graphics_test_procedure.set_include_paths([""])
-ckg_graphics_test_procedure.set_source_files(["../*.c"])
-ckg_graphics_test_procedure.set_additional_libs(["User32.lib", "GDI32.lib", f"../../../build_{COMPILER}/ckit.lib"])
-# -------------------------------------------------------------------------------------
-ckg_pong_procedure = project.add_procedure(f"./Tests/PongTest/build_{COMPILER}")
-ckg_pong_procedure.set_output_name("ckit_pong.exe")
-ckg_pong_procedure.set_compile_time_defines([""])
-ckg_pong_procedure.set_include_paths([""])
-ckg_pong_procedure.set_source_files(["../*.c"])
-ckg_pong_procedure.set_additional_libs([f"User32.lib", "GDI32.lib", "../../../build_{COMPILER}/ckit.lib", ])
+executable_procedure_libs = [f"../../../build_{COMPILER}/ckit.lib" if COMPILER == "cl" else f"../../../build_{COMPILER}/libckit.a"] + (["User32.lib", "Gdi32.lib"] if COMPILER == "cl" else ["-lUser32", "-lGdi32"])
+
+procedures = {
+    "ckit_lib": {
+        "build_directory": f"./build_{COMPILER}",
+        "output_name": "ckit.lib" if COMPILER == "cl" else "libckit.a",
+        "source_files": ["../ckg/ckg.c", "../ckit.c"],
+        "additional_libs": [],
+        "compile_time_defines": [],
+        "include_paths": [],
+    },
+    "ckit_core_test": {
+        "build_directory": f"./Tests/CoreTest/build_{COMPILER}",
+        "output_name": "ckit_test.exe",
+        "source_files": ["../*.c"],
+        "additional_libs": executable_procedure_libs,
+        "compile_time_defines": [],
+        "include_paths": [],
+    },
+	"ckit_graphics_test": {
+        "build_directory": f"./Tests/GraphicsTest/build_{COMPILER}",
+        "output_name": "ckit_graphics_test.exe",
+        "source_files": ["../*.c"],
+        "additional_libs": executable_procedure_libs,
+		"compile_time_defines": [],
+        "include_paths": [],
+    },
+    "ckg_pong": {
+        "build_directory": f"./Tests/PongTest/build_{COMPILER}",
+        "output_name": "ckit_pong.exe",
+        "source_files": ["../*.c"],
+        "additional_libs": executable_procedure_libs,
+        "compile_time_defines": [],
+        "include_paths": [],
+    },
+}
+
+for procedure_name, procedure_data in procedures.items():
+	procedure = project.add_procedure(procedure_data["build_directory"])
+	procedure.set_output_name(procedure_data["output_name"])
+	procedure.set_source_files(procedure_data["source_files"])
+	procedure.set_include_paths(procedure_data["include_paths"])
+	procedure.set_compile_time_defines(procedure_data["compile_time_defines"])
+	procedure.set_additional_libs(procedure_data["additional_libs"])
 # -------------------------------------------------------------------------------------
 project.set_executables_to_run(["ckit_test.exe"])
+
 project.build(build_type)
