@@ -41,9 +41,9 @@ build_cl/
 /Tests/CoreTest/build_cl
 /Tests/GraphicsTest/build_cl
 
-ckit_build_cl/
+build_cl/
 ./ckg/
-c-build/
+c_build/
 *.ps1
 !bootstrap.ps1
 ckg/
