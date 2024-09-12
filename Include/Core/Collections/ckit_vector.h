@@ -36,8 +36,8 @@ extern "C" {
 #define ckit_vector_push(vector, element) vector = ckit_vector_grow(vector, sizeof(element), FALSE, __FILE__, __LINE__, __func__); vector[ckit_vector_base(vector)->count++] = element
 #define ckit_vector_reserve(capactiy, type) (type*)MACRO_ckit_vector_reserve(sizeof(type), capactiy, __FILE__, __LINE__, __func__)
 #define ckit_vector_pop(vector) vector[--ckit_vector_base(vector)->count]
-#define ckit_vector_remove_at(vector, index) ckit_vector_base(vector)->count--; ckit_memory_delete_index(vector, ckit_vector_capacity(vector), index)
-#define ckit_vector_insert_at(vector, element, index) ckit_vector_base(vector)->count++; ckit_memory_insert_index(vector, ckit_vector_capacity(vector), element, index)
+#define ckit_vector_remove_at(vector, index) ckit_vector_base(vector)->count--; ckit_memory_delete_index(vector, ckit_vector_count(vector), ckit_vector_capacity(vector), index)
+#define ckit_vector_insert_at(vector, element, index) ckit_vector_base(vector)->count++; ckit_memory_insert_index(vector, ckit_vector_count(vector), ckit_vector_capacity(vector), element, index)
 #define ckit_vector_free(vector) vector = MACRO_ckit_vector_free(vector)
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 

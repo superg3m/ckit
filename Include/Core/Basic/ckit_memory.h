@@ -97,8 +97,8 @@ extern "C" {
     void ckit_memory_move(const void* source, void* destination, size_t source_payload_size);
     void ckit_memory_zero(void* data, size_t data_size_in_bytes);
 
-    void MACRO_ckit_memory_delete_index(void* data, u32 data_capacity, size_t element_size_in_bytes, u32 index);
-    void MACRO_ckit_memory_insert_index(void* data, u32 data_capacity, size_t element_size_in_bytes, u32 index);
+    void MACRO_ckit_memory_delete_index(void* data, u32 number_of_elements, u32 data_capacity, size_t element_size_in_bytes, u32 index);
+    void MACRO_ckit_memory_insert_index(void* data, u32 number_of_elements, u32 data_capacity, size_t element_size_in_bytes, u32 index);
 
 
 #ifdef __cplusplus
@@ -112,8 +112,8 @@ extern "C" {
 #define ckit_realloc(data, new_allocation_size) MACRO_ckit_realloc(data, new_allocation_size, __FILE__, __LINE__, __func__)
 #define ckit_free(data) data = MACRO_ckit_free(data)
 
-#define ckit_memory_delete_index(data, data_capacity, index) MACRO_ckit_memory_delete_index(data, data_capacity, sizeof(data[0]), index)
-#define ckit_memory_insert_index(data, data_capacity, element, index) MACRO_ckit_memory_delete_index(data, data_capacity, sizeof(data[0]), index); data[index] = element;
+#define ckit_memory_delete_index(data, number_of_elements, data_capacity, index) MACRO_ckit_memory_delete_index(data, number_of_elements, data_capacity, sizeof(data[0]), index)
+#define ckit_memory_insert_index(data, number_of_elements, data_capacity, element, index) MACRO_ckit_memory_delete_index(data, number_of_elements, data_capacity, sizeof(data[0]), index); data[index] = element;
 
 #define ckit_tracker_insert_header(data, header) data = MACRO_ckit_tracker_insert_header(data, header)
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
@@ -423,12 +423,12 @@ extern "C" {
         ckg_memory_zero(data, data_size_in_bytes);
     }
 
-    void MACRO_ckit_memory_delete_index(void* data, u32 data_capacity, size_t element_size_in_bytes, u32 index) {
-        MACRO_ckg_memory_delete_index(data, data_capacity, element_size_in_bytes, index);
+    void MACRO_ckit_memory_delete_index(void* data, u32 number_of_elements, u32 data_capacity, size_t element_size_in_bytes, u32 index) {
+        MACRO_ckg_memory_delete_index(data, number_of_elements, data_capacity, element_size_in_bytes, index);
     }
 
-    void MACRO_ckit_memory_insert_index(void* data, u32 data_capacity, size_t element_size_in_bytes, u32 index) {
-        MACRO_ckg_memory_insert_index(data, data_capacity, element_size_in_bytes, index);
+    void MACRO_ckit_memory_insert_index(void* data, u32 number_of_elements, u32 data_capacity, size_t element_size_in_bytes, u32 index) {
+        MACRO_ckg_memory_insert_index(data, number_of_elements, data_capacity, element_size_in_bytes, index);
     }
 
     void ckit_memory_report(CKIT_LogLevel log_level) {
