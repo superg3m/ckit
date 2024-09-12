@@ -3,6 +3,7 @@ import os
 import argparse
 from c_build.new_stuff.globals import *
 from c_build.new_stuff.new_project import *
+
 parser = argparse.ArgumentParser(description='c_build_script')
 parser.add_argument('--compiler', type=str, help='Compiler to use (e.g. gcc, clang)')
 parser.add_argument('--build_type', type=str, help='Build type (e.g. debug, release)')
@@ -10,8 +11,8 @@ args = parser.parse_args()
 build_type = args.build_type
 
 if 'level' in os.environ:
-	level = int(os.environ["level"])
-	print(level)
+	SET_LEVEL(int(os.environ["level"]))
+	print(f"level: {GET_LEVEL()}")
 # --------------------------------------------------------------------------------------
 
 COMPILER = args.compiler or "cl"
