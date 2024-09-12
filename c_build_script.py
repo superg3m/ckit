@@ -6,12 +6,12 @@ from c_build.new_stuff.new_project import *
 parser = argparse.ArgumentParser(description='c_build_script')
 parser.add_argument('--compiler', type=str, help='Compiler to use (e.g. gcc, clang)')
 parser.add_argument('--build_type', type=str, required=True, help='Build type (e.g. debug, release)')
-parser.add_argument('--depth', type=str, help='depth (e.g. 1, 2, 4)')
+parser.add_argument('--level', type=str, help='level (e.g. 1, 2, 4)')
 args = parser.parse_args()
 build_type = args.build_type
 
-if args.depth:
-	SET_LEVEL(args.depth)
+if args.level:
+	SET_LEVEL(args.level)
 # --------------------------------------------------------------------------------------
 
 COMPILER = args.compiler or "cl"
