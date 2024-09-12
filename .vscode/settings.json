@@ -98,7 +98,8 @@
 		"ckit_shapes.h": "c",
 		"xiosbase": "c",
 		"ios": "c",
-		"xlocale": "c"
+		"xlocale": "c",
+		"ckit_graphics_types.h": "c"
 	},
 	"editor.insertSpaces": false
 }

@@ -19,10 +19,6 @@ typedef enum CKIT_CursorState {
 #if defined(PLATFORM_WINDOWS)
 	#include <windows.h>
 
-	#pragma comment(lib, "User32.lib")
-	#pragma comment(lib, "GDI32.lib")
-	#pragma comment(lib, "Msimg32.lib")
-
 	typedef struct CKIT_Window {
 		HINSTANCE instance_handle;
 		HWND handle;
