@@ -35,7 +35,11 @@ project.set_rebuild_project_dependencies(True)
 project.set_project_dependencies(["ckg"])
 # -------------------------------------------------------------------------------------
 
-executable_procedure_libs = [f"../../../build_{COMPILER}/ckit.lib" if COMPILER == "cl" else f"../../../build_{COMPILER}/libckit.a"] + (["User32.lib", "Gdi32.lib"] if COMPILER == "cl" else ["-lUser32", "-lGdi32"])
+executable_procedure_libs = [f"../../../build_{COMPILER}/ckit.lib" if COMPILER == "cl" else f"../../../build_{COMPILER}/libckit.a"]
+
+if os.name == "nt":
+	windows_libs = ["User32.lib", "Gdi32.lib"] if COMPILER == "cl" else ["-lUser32", "-lGdi32"]
+	executable_procedure_libs += windows_libs
 
 procedures = {
     "ckit_lib": {
