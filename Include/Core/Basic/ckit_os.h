@@ -187,6 +187,7 @@ extern "C" {
 
 		String ckit_os_get_cwd() {
 			// return cwd;
+			return "";
 		}
 
 		void ckit_os_ls();
