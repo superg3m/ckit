@@ -110,42 +110,45 @@ extern "C" {
 
 			int translate_color(unsigned char color) {
 				switch (color) {
-				case 0x0000: { // text color default clear.
-					return 0;
-				} break;
+					case 0x0000: { // text color default clear.
+						return 0;
+					} break;
 
-				case 0x0001: { // text color contains blue.
-					return 1;
-				} break;
+					case 0x0001: { // text color contains blue.
+						return 1;
+					} break;
 
-				case 0x0002: { // text color contains green.
-					return 2;
-				} break;
+					case 0x0002: { // text color contains green.
+						return 2;
+					} break;
 
-				case 0x0004: { // text color contains red.
-					return 3;
-				} break;
+					case 0x0004: { // text color contains red.
+						return 3;
+					} break;
 
-				case (0x0001|0x0004): { // background color contains purple.
-					return 4;
-				} break;
+					case (0x0001|0x0004): { // background color contains purple.
+						return 4;
+					} break;
 
-				case (0x0001|0x0002|0x0004): { // background color contains red.
-					return 5;
-				} break;
+					case (0x0001|0x0002|0x0004): { // background color contains red.
+						return 5;
+					} break;
 
-				case 0x0010: { // background color contains blue.
-					return 6;
-				} break;
+					case 0x0010: { // background color contains blue.
+						return 6;
+					} break;
 
-				case 0x0020: { // background color contains green.
-					return 7;
-				} break;
+					case 0x0020: { // background color contains green.
+						return 7;
+					} break;
 
-				case 0x0040: { // background color contains red.
-					return 8;
-				} break;
+					case 0x0040: { // background color contains red.
+						return 8;
+					} break;
 				}
+
+				ckit_assert(FALSE);
+				return -1
 			}
 
 			void* platform_allocate(size_t number_of_bytes) {
