@@ -69,7 +69,7 @@ extern "C" {
 
 	void ckit_os_get_mouse_position(int* mouse_x, int* mouse_y);
 
-	void ckit_os_push();
+	void ckit_os_push(char* path);
 	void ckit_os_pop();
 
 	void ckit_os_dir_append_subdir(CKIT_Directory* directory, CKIT_Directory* sub_directory);
@@ -267,10 +267,10 @@ extern "C" {
 		}
 
 		void ckit_os_dir_append_subdir(CKIT_Directory* directory, CKIT_Directory* sub_directory) {
-			
+
 		}
 		void ckit_os_dir_append_file(CKIT_Directory* directory, CKIT_File* file) {
-			
+
 		}
 	#endif
 #endif // CKIT_IMPL
