@@ -98,17 +98,6 @@ extern "C" {
 		ckit_assert(system(command));
 	}
 
-	double ckit_os_query_performance_counter() {
-		LARGE_INTEGER performance_counter_frequency;
-		QueryPerformanceFrequency(&performance_counter_frequency);
-
-		LARGE_INTEGER counter;
-		QueryPerformanceCounter(&counter);
-		double milliseconds_elapsed = ((double)(counter.QuadPart * 1000.0) / (double)performance_counter_frequency.QuadPart);
-
-		return milliseconds_elapsed;
-	}
-
 	String ckit_os_path_join(char* path, const char* to_join) {
 		String ret = ckit_str_create(path);
 		ckit_str_append_char(ret, OS_DELIMITER);
@@ -130,6 +119,17 @@ extern "C" {
 			String ret = ckit_str_create(buffer);
 
 			return ret;
+		}
+
+		double ckit_os_query_performance_counter() {
+			LARGE_INTEGER performance_counter_frequency;
+			QueryPerformanceFrequency(&performance_counter_frequency);
+
+			LARGE_INTEGER counter;
+			QueryPerformanceCounter(&counter);
+			double milliseconds_elapsed = ((double)(counter.QuadPart * 1000.0) / (double)performance_counter_frequency.QuadPart);
+
+			return milliseconds_elapsed;
 		}
 
 		void ckit_os_ls();
@@ -207,6 +207,11 @@ extern "C" {
 			fclose(fptr);
 
 			return TRUE;
+		}
+
+		double ckit_os_query_performance_counter() {
+			ckit_assert_msg(FALSE, "NOT IMPLEMENTED YET!");
+			return 0.0
 		}
 		
 		void ckit_os_run_subprocess(); // runs on seperate thread?
