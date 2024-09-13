@@ -29,6 +29,9 @@ extern "C" {
 // Date: July 13, 2024
 // NOTE(Jovanni): This doesn't have very good checking if the vector is NULLPTR
 // Attemptying to get the length/cap/pop of a NULLPTR will result in a uncontrolled crash
+
+// Date: September 12, 2024
+// TODO(Jovanni): MAKE SURE YOU TEST ckit_vector_remove_at() and ckit_vector_insert_at()
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
 #define ckit_vector_base(vector) ((CKIT_VectorHeader*)(((u8*)vector) - sizeof(CKIT_VectorHeader)))
 #define ckit_vector_count(vector) (*ckit_vector_base(vector)).count
@@ -36,8 +39,8 @@ extern "C" {
 #define ckit_vector_push(vector, element) vector = ckit_vector_grow(vector, sizeof(element), FALSE, __FILE__, __LINE__, __func__); vector[ckit_vector_base(vector)->count++] = element
 #define ckit_vector_reserve(capactiy, type) (type*)MACRO_ckit_vector_reserve(sizeof(type), capactiy, __FILE__, __LINE__, __func__)
 #define ckit_vector_pop(vector) vector[--ckit_vector_base(vector)->count]
-#define ckit_vector_remove_at(vector, index) ckit_vector_base(vector)->count--; ckit_memory_delete_index(vector, ckit_vector_count(vector), ckit_vector_capacity(vector), index)
-#define ckit_vector_insert_at(vector, element, index) ckit_vector_base(vector)->count++; ckit_memory_insert_index(vector, ckit_vector_count(vector), ckit_vector_capacity(vector), element, index)
+#define ckit_vector_remove_at(vector, index) ckit_memory_delete_index(vector, ckit_vector_count(vector), ckit_vector_capacity(vector), index); ckit_vector_base(vector)->count--
+#define ckit_vector_insert_at(vector, element, index) ckit_memory_insert_index(vector, ckit_vector_count(vector), ckit_vector_capacity(vector), element, index); ckit_vector_base(vector)->count++
 #define ckit_vector_free(vector) vector = MACRO_ckit_vector_free(vector)
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
 

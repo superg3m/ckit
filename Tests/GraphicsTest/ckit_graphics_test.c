@@ -43,7 +43,7 @@ int main() {
 	LOG_DEBUG("TESTING\n");
 	LOG_SUCCESS("TESTING\n");
 
-	ckit_window_bind_icon("./assets/c_original_logo_icon_146611.ico");
+	ckit_window_bind_icon("../../../assets/c_original_logo_icon_146611.ico");
 	CKIT_Window* window = ckit_window_create(width, height, "GameEngine");
 
 	float x_pos = 40;
@@ -66,7 +66,7 @@ int main() {
 	u32 close_factor = 0;
 
 	size_t file_size = 0;
-	u8* ckit_sword_bmp_data = ckit_os_read_entire_file("./assets/Sword.bmp", &file_size);
+	u8* ckit_sword_bmp_data = ckit_os_read_entire_file("../../../assets/Sword.bmp", &file_size);
 	CKIT_Bitmap sword_bitmap = ckit_graphics_load_bmp(ckit_sword_bmp_data, file_size);
 	
 	s32 mouse_x = 0;
