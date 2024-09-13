@@ -211,7 +211,7 @@ extern "C" {
 
 		double ckit_os_query_performance_counter() {
 			ckit_assert_msg(FALSE, "NOT IMPLEMENTED YET!");
-			return 0.0
+			return 0.0;
 		}
 		
 		void ckit_os_run_subprocess(); // runs on seperate thread?
