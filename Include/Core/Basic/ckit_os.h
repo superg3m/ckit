@@ -215,13 +215,29 @@ extern "C" {
 			return 0.0;
 		}
 
-		void ckit_os_push(char* path);
-		void ckit_os_pop();
+		void ckit_os_push(char* path) {
+
+		}
+
+		void ckit_os_pop() {
+
+		}
 		
-		void ckit_os_run_subprocess(); // runs on seperate thread?
-		void ckit_os_get_file_info();
-		void ckit_os_system(const char* command);
-		String ckit_os_path_join(char* path, const char* to_join);
+		void ckit_os_run_subprocess() {
+
+		}
+
+		void ckit_os_get_file_info() {
+
+		}
+
+		void ckit_os_system(const char* command) {
+
+		}
+
+		String ckit_os_path_join(char* path, const char* to_join) {
+			return "";
+		}
 
 		u8* ckit_os_read_entire_file(const char* path, size_t* returned_file_size) {
 			ckit_assert(ckit_os_path_exists(path));
@@ -249,11 +265,12 @@ extern "C" {
 		void ckit_os_get_mouse_position(int* mouse_x, int* mouse_y) {
 			ckit_assert_msg(FALSE, "NOT IMPLETMENTED FOR LINUX YET");
 		}
-		
-		void ckit_os_push(char* path);
-		void ckit_os_pop();
 
-		void ckit_os_dir_append_subdir(CKIT_Directory* directory, CKIT_Directory* sub_directory);
-		void ckit_os_dir_append_file(CKIT_Directory* directory, CKIT_File* file);
+		void ckit_os_dir_append_subdir(CKIT_Directory* directory, CKIT_Directory* sub_directory) {
+			
+		}
+		void ckit_os_dir_append_file(CKIT_Directory* directory, CKIT_File* file) {
+			
+		}
 	#endif
 #endif // CKIT_IMPL
