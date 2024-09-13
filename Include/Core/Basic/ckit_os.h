@@ -214,6 +214,9 @@ extern "C" {
 			ckit_assert_msg(FALSE, "NOT IMPLEMENTED YET!");
 			return 0.0;
 		}
+
+		void ckit_os_push(char* path);
+		void ckit_os_pop();
 		
 		void ckit_os_run_subprocess(); // runs on seperate thread?
 		void ckit_os_get_file_info();
