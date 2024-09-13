@@ -148,7 +148,7 @@ extern "C" {
 				}
 
 				ckit_assert(FALSE);
-				return -1
+				return -1;
 			}
 
 			void* platform_allocate(size_t number_of_bytes) {
