@@ -97,7 +97,7 @@ extern "C" {
 				FreeConsole();
 			}
 
-		#elif defined(PLATFORM_MACOS)
+		#else
 			#define COLOR_RESET "\033[0"
 			#define BLU "\033[34"
 			#define GRN "\033[32"
@@ -165,7 +165,6 @@ extern "C" {
 				const char* color_strings[] = {COLOR_RESET, BLU, GRN, RED, MAG, WHT, BLKB, GRNB, REDB};
 				printf("\033[%sm%s\033[0m", color_strings[translate_color(color)], message);
 			}
-		#elif defined(PLATFORM_MACOS)
 		#endif
 	#endif
 #endif // CKIT_IMPL
