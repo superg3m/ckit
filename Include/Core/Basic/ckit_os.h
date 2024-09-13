@@ -231,10 +231,6 @@ extern "C" {
 
 		}
 
-		String ckit_os_path_join(char* path, const char* to_join) {
-			return "";
-		}
-
 		u8* ckit_os_read_entire_file(const char* path, size_t* returned_file_size) {
 			ckit_assert(ckit_os_path_exists(path));
 
