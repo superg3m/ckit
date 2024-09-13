@@ -18,5 +18,5 @@ void ckit_cleanup() {
 	ckit_memory_arena_unregister_all();
 	//platform_console_shutdown();
 
-	ckit_memory_report(CKG_LOG_LEVEL_WARN);
+	ckit_memory_report(LOG_LEVEL_WARN);
 }
