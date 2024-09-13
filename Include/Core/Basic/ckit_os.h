@@ -231,10 +231,6 @@ extern "C" {
 
 		}
 
-		void ckit_os_system(const char* command) {
-
-		}
-
 		String ckit_os_path_join(char* path, const char* to_join) {
 			return "";
 		}
