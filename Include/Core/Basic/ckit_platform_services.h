@@ -148,7 +148,8 @@ extern "C" {
 				}
 			}
 
-			void* platform_allocate(size_t  number_of_bytes) {
+			void* platform_allocate(size_t number_of_bytes) {
+				ckit_assert(number_of_bytes != 0);
 				return malloc(number_of_bytes);
 			}
 
