@@ -116,7 +116,7 @@ int main() {
 			ball_rect.y += ball_y_velocity;
 
 			ckit_window_get_mouse_position(window, &mouse_x, &mouse_y);
-			player_rect.y = mouse_y - half_player_height;
+			player_rect.y = mouse_y;
 		}
 
 
