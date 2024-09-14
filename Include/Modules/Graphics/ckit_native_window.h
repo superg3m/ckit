@@ -366,6 +366,7 @@ extern "C" {
 		// - https://en.wikipedia.org/wiki/Midpoint_circle_algorithm
 		// - https://noobtomaster.com/computer-graphics/circle-drawing-algorithms-midpoint-algorithm/
 		// - https://www.thecrazyprogrammer.com/2016/12/bresenhams-midpoint-circle-algorithm-c-c.html
+		// - https://www.youtube.com/watch?v=hpiILbMkF9w
 		void ckit_window_draw_circle(CKIT_Window* window, s32 start_x, s32 start_y, s32 radius, Boolean is_filled, CKIT_Color color) {
 			if (radius <= 0) {
 				return;
