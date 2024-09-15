@@ -4,22 +4,16 @@ from c_build.new_stuff.globals import *
 from c_build.new_stuff.new_project import *
 
 parser = argparse.ArgumentParser(description='c_build_script')
-parser.add_argument('--compiler', type=str, help='Compiler to use (e.g. gcc, clang)')
 parser.add_argument('--build_type', type=str, required=True, help='Build type (e.g. debug, release)')
-parser.add_argument('--level', type=int, help='level (e.g. 1, 2, 4)')
-parser.add_argument('--is_dependency', type=bool, default=False, help='is_dependency (e.g. True, False)')
 args = parser.parse_args()
 build_type = args.build_type
-
-if args.level:
-	SET_LEVEL(args.level)
 # --------------------------------------------------------------------------------------
 
-COMPILER = args.compiler or "cl"
+COMPILER = "cl"
 if os.name != "nt":
     COMPILER = "gcc"
 	
-project = Project("ckit", COMPILER, is_dependency = args.is_dependency)
+project = Project("ckit", COMPILER)
 
 # Do different things depending on the platform
 if COMPILER == "cl":
