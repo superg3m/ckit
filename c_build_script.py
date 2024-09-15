@@ -49,7 +49,7 @@ procedures = {
         "output_name": "ckit_test.exe",
         "source_files": ["../*.c"],
         "additional_libs": executable_procedure_libs,
-        "compile_time_defines": [],
+        "compile_time_defines": ["CKIT_WSL"],
         "include_paths": [],
     },
 	"ckit_graphics_test": {
@@ -57,7 +57,7 @@ procedures = {
         "output_name": "ckit_graphics_test.exe",
         "source_files": ["../*.c"],
         "additional_libs": executable_procedure_libs,
-		"compile_time_defines": [],
+		"compile_time_defines": ["CKIT_WSL"],
         "include_paths": [],
     },
     "ckg_pong": {
@@ -65,7 +65,7 @@ procedures = {
         "output_name": "ckit_pong.exe",
         "source_files": ["../*.c"],
         "additional_libs": executable_procedure_libs,
-        "compile_time_defines": [],
+        "compile_time_defines": ["CKIT_WSL"],
         "include_paths": [],
     },
 }
