@@ -41,10 +41,9 @@ int main() {
 
 	u32 width = 1200;
 	u32 height = 800;
-	u32 width_padding = 18;
-	u32 height_padding = 42;
-	u32 width_with_padding = width - width_padding;
-	u32 height_with_padding = height - height_padding;
+	u32 width_padding = 2;
+	u32 height_padding = 2;
+
 
 	LOG_FATAL("TESTING\n");
 	LOG_ERROR("TESTING\n");
@@ -54,6 +53,9 @@ int main() {
 
 	ckit_window_bind_icon("../../../assets/c_original_logo_icon_146611.ico");
 	CKIT_Window* window = ckit_window_create(width, height, "CKIT Pong");
+
+	u32 width_with_padding = window->bitmap.width - width_padding;
+	u32 height_with_padding = window->bitmap.height - height_padding;
 
 	CKIT_Rectangle2D player_rect = create_player();
 	CKIT_Rectangle2D ball_rect = create_ball(width, height);
@@ -73,8 +75,8 @@ int main() {
 
 	// ckit_window_set_cursor_state(window, DISABLED);
 
-	const CKIT_Rectangle2D x_axis_rect = ckit_rectangle_create(0, height_with_padding, width_with_padding, 1);
-	const CKIT_Rectangle2D y_axis_rect = ckit_rectangle_create(width_with_padding, 0, 1, height_with_padding);
+	const CKIT_Rectangle2D x_axis_rect = ckit_rectangle_create(window->bitmap.width/2, height_with_padding, window->bitmap.width, 1);
+	const CKIT_Rectangle2D y_axis_rect = ckit_rectangle_create(width_with_padding, window->bitmap.height/2, 1, window->bitmap.height);
 
 
 	int mouse_x, mouse_y = 0;
@@ -126,8 +128,6 @@ int main() {
 			ckit_window_draw_quad(window, x_axis_rect, CKIT_COLOR_RED); // x axis
 			ckit_window_draw_quad(window, y_axis_rect, CKIT_COLOR_BLUE); // y axis
 
-			// s32 player_center_y = ((float)player_rect.y - (half_player_height));
-
 			ckit_window_draw_quad(window, player_rect, player_color); // ACTUAL PLAYER_PADDLE
 
 			ckit_window_draw_quad(window, player_rect, player_color); // ACTUAL PLAYER_PADDLE
@@ -142,9 +142,6 @@ int main() {
 
 			ckit_window_draw_quad(window, ball_rect, ball_color); // ball
 			ckit_window_draw_quad(window, ai_rect, ai_color); // ai_paddle
-
-			// ckit_window_draw_circle(window, (s32)10, (s32)0, ball_radius, TRUE, (CKIT_Color){255, 255, 255, 255});
-			// For some reason the draw circle is not correct it seems like the pixel testing is broken??? Somehow?
 
 			ckit_window_swap_buffers(window);
 		}
