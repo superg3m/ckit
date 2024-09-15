@@ -41,7 +41,7 @@ procedures = {
         "output_name": "ckit.lib" if COMPILER == "cl" else "libckit.a",
         "source_files": ["../ckg/ckg.c", "../ckit.c"],
         "additional_libs": [],
-        "compile_time_defines": [],
+        "compile_time_defines": ["CKIT_WSL"],
         "include_paths": [],
     },
     "ckit_core_test": {
