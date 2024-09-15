@@ -32,10 +32,6 @@ typedef enum CKIT_CursorState {
 		u32* front_buffer;
 	} CKIT_Window;
 #elif defined(CKIT_WSL)
-	typedef struct CKIT_Bitmap {
-		int a;
-	} CKIT_Bitmap;
-
 	typedef struct CKIT_Window {
 		int a;
 	} CKIT_Window;
