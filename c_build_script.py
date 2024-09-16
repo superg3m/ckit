@@ -9,7 +9,7 @@ args = parser.parse_args()
 build_type = args.build_type
 # --------------------------------------------------------------------------------------
 
-COMPILER = os.getenv("COMPILER", "cl")
+COMPILER = os.getenv("COMPILER", "gcc")
 if os.name != "nt":
     COMPILER = "gcc"
 	

@@ -99,7 +99,9 @@
 		"xiosbase": "c",
 		"ios": "c",
 		"xlocale": "c",
-		"ckit_graphics_types.h": "c"
+		"ckit_graphics_types.h": "c",
+		"ckit_graphics_win32_native_window.h": "c",
+		"ckit_graphics_linux_native_window.h": "c"
 	},
 	"editor.insertSpaces": false
 }
