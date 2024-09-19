@@ -26,7 +26,7 @@
 #include "./Include/Modules/Structures/ckit_file_system.h"
 #include "./Include/Modules/Parser_and_Lexer/bmp_parser.h"
 #include "./Include/Modules/Graphics/ckit_graphics_types.h"
-#include "./Include/Modules/Graphics/ckit_native_window.h"
+#include "./Include/Modules/Graphics/Native_Window/ckit_native_window.h"
 // #include "./Include/Modules/Graphics/ckit_opengl.h"
 
 

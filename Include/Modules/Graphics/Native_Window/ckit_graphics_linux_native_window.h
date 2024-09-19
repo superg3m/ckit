@@ -30,10 +30,6 @@ typedef struct CKIT_Window {
 	GC x11_gc;
 } CKIT_Window;
 
-
-
-
-
 	/*
 	#include <X11/Xlib.h>
 	#include <stdlib.h>
