@@ -303,3 +303,13 @@ make vector operations easier
 - [ ] test_arena_functions()
 - [ ] test_vector_functions()
 - [ ] test_string_functions()
+
+
+Kyle gave me a great idea modules are actually going to be stand alone repos that works as a plugin for ckit.
+Application (that opens a window does graphics and uses the networking functionality, this all should just work!)
+	- ckit.lib
+	- ckit_graphics.lib
+	- ckit_networking.lib
+
+ckit_externs.h (has all the extern function you can encounter with ckit, I can auto generate this programmatically)
+ckit.h (This should be auto generated as well...)
