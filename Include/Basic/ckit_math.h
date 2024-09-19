@@ -5,21 +5,47 @@
 #include "./ckit_types.h"
 //========================== Begin Types ==========================
 typedef struct CKIT_Vector2 {
-	double x;
-	double y;
+	union {
+		struct {
+			double x;
+			double y;
+		};
+		double v[2];
+	};
 } CKIT_Vector2;
 
 typedef struct CKIT_Vector3 {
-	double x;
-	double y;
-	double z;
+	union {
+		struct {
+			double x;
+			double y;
+			double z;
+		};
+		struct {
+			double r;
+			double g;
+			double b;
+		};
+		double v[3];
+	};
 } CKIT_Vector3;
 
 typedef struct CKIT_Vector4 {
-	double x;
-	double y;
-	double z;
-	double w;
+	union {
+		struct {
+			double x;
+			double y;
+			double z;
+			double w;
+		};
+		struct {
+			double r;
+			double g;
+			double b;
+			double a;
+		};
+		double v[4];
+	};
 } CKIT_Vector4;
 
 typedef struct Mat2x2 {
@@ -33,6 +59,45 @@ typedef struct Mat3x3 {
 typedef struct Mat4x4 {
 	CKIT_Vector4 data[4];
 } Mat4x4;
+
+//========================== Begin Types ==========================
+typedef struct CKIT_Rectangle2D {
+	CKIT_Vector2 position;
+	u32 width;
+	u32 height;
+} CKIT_Rectangle2D;
+
+typedef struct CKIT_Rectangle3D {
+	CKIT_Vector3 position;
+	u32 length;
+	u32 width;
+	u32 height;
+} CKIT_Rectangle3D;
+//=========================== End Types ===========================
+
+//************************* Begin Functions *************************
+#ifdef __cplusplus
+extern "C" {
+#endif
+	CKIT_Rectangle2D ckit_rectangle_create(s32 x, s32 y, u32 width, u32 height);
+
+#ifdef __cplusplus
+}
+#endif
+//************************** End Functions **************************
+
+//+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
+
+CKIT_Rectangle2D ckit_rectangle_create(s32 x, s32 y, u32 width, u32 height) {
+	CKIT_Rectangle2D ret = {0};
+	ret.position.x = x;
+	ret.position.y = y;
+	ret.width = width;
+	ret.height = height;
+
+	return ret;
+}
 //=========================== End Types ===========================
 
 //************************* Begin Functions *************************
