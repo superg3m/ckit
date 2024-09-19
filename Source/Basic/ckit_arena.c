@@ -1,11 +1,12 @@
 #pragma once
 
-#include "../../Include/Basic/ckit_types.h"
+#include "../../Include/Basic/ckit_arena.h"
+
 #include "../../Include/Basic/ckit_memory.h"
 #include "../../Include/Basic/ckit_assert.h"
-
-#include "../../Include/Basic/ckit_arena.h"
 #include "../../Include/Collections/ckit_linked_list.h"
+
+#define ARENA_DEFAULT_ALLOCATION_SIZE MegaBytes(1)
 
 //========================== Begin Types ==========================
 typedef struct CKIT_ArenaPage {
@@ -22,12 +23,8 @@ typedef struct CKIT_Arena {
 } CKIT_Arena;
 //=========================== End Types ===========================
 
-
-
 void ckit_memory_arena_register(CKIT_Arena* arena);
 void ckit_memory_arena_unregister(CKIT_Arena* arena);
-
-#define ARENA_DEFAULT_ALLOCATION_SIZE MegaBytes(1)
 
 Boolean ckit_CKIT_ARENA_FLAG_is_set(CKIT_Arena* arena, CKIT_ArenaFlag flag) {
 	return arena->flag == flag;

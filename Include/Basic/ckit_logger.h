@@ -4,7 +4,7 @@
  * Date: May 11, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-#include "./ckit_types.h"
+#include "../ckit_types.h"
 //========================== Begin Types ==========================
 #define LOGGING_ENABLED TRUE
 #define LOG_LEVEL_CHARACTER_LIMIT 11

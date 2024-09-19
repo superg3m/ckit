@@ -1,6 +1,6 @@
 #pragma once
 
-#include "./ckit_types.h"
+#include "../ckit_types.h"
 //========================== Begin Types ==========================
 typedef enum CKIT_MemoryTagID { // Reserved tags
     TAG_USER_UNKNOWN,

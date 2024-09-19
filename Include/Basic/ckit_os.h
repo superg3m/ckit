@@ -1,7 +1,7 @@
 #pragma once
 
 // This is going to be windows only for a bit
-#include "./ckit_types.h"
+#include "../ckit_types.h"
 
 //========================== Begin Types ==========================
 typedef struct CKIT_SystemObjectInfo {

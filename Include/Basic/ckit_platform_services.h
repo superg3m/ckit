@@ -5,7 +5,7 @@
  * Creator: Jovanni Djonaj
 ===========================================================*/
 
-#include "./ckit_types.h"
+#include "../ckit_types.h"
 //========================== Begin Types ==========================
 #define TEXT_CLEAR     0x0000 // text color default clear
 #define TEXT_BLUE      0x0001 // text color contains blue.
