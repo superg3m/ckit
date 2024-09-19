@@ -104,7 +104,8 @@
 		"ckit_graphics_linux_native_window.h": "c",
 		"ckit_graphics_shapes.h": "c",
 		"system_error": "cpp",
-		"xlocnum": "cpp"
+		"xlocnum": "cpp",
+		"ckit_bmp_parser.h": "c"
 	},
 	"editor.insertSpaces": false
 }

@@ -1,5 +1,8 @@
-#include "../../Core/Basic/ckit_types.h"
+#pragma once
 
+#include "../ckit_types.h"
+#include "../../Include/Basic/ckit_asset_types.h"
+//========================== Begin Types ==========================
 #pragma pack(push, 1)
 typedef struct BmpHeader { 	// total 40 bytes
 	char signature[2]; 			// 2 bytes
@@ -20,6 +23,14 @@ typedef struct BmpHeader { 	// total 40 bytes
 	u32 important_colors;		// 4 bytes // Number of important colors
 } BmpHeader;
 #pragma pack(pop)
+//=========================== End Types ===========================
 
-// THEN:
-// Pixel Data | SIZE: (InfoHeader.ImageSize bytes)
+//************************* Begin Functions *************************
+#ifdef __cplusplus
+extern "C" {
+#endif
+	CKIT_BitmapAsset ckit_parser_load_bmp(u8* bmp_file_data, size_t file_size);
+#ifdef __cplusplus
+}
+#endif
+//************************** End Functions **************************

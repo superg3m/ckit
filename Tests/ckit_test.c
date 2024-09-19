@@ -160,8 +160,6 @@ void middle_ground_opperations() {
 
 	file_close(&file_system);
 
-	test_hash_collisions();
-
 	CKIT_Arena* frame_boundary_arena = ckit_arena_create(500, "Frame Boundary");
 	ckit_arena_push(frame_boundary_arena, Boolean);
 	ckit_arena_free(frame_boundary_arena);

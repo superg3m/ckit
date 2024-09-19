@@ -1,7 +1,6 @@
 #pragma once
 
-#include "./ckit_types.h"
-#include "../Collections/ckit_linked_list.h"
+#include "../ckit_types.h"
 //========================== Begin Types ==========================
 typedef enum CKIT_ArenaFlag {
   CKIT_ARENA_FLAG_FIXED,

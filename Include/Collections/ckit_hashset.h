@@ -4,7 +4,7 @@
  * Date: May 14, 2024
  * Creator: Jovanni Djonaj
 ===========================================================*/
-#include "../Basic/ckit_types.h"
+#include "../ckit_types.h"
 #include "../Basic/ckit_string.h"
 
 #define CKIT_HASHSET_DEFAULT_LOAD_FACTOR 0.75

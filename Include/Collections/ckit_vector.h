@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Basic/ckit_types.h"
+#include "../ckit_types.h"
 #include "../Basic/ckit_assert.h"
 #include "../Basic/ckit_memory.h"
 //========================== Begin Types ==========================

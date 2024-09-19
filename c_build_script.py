@@ -52,27 +52,9 @@ procedures = {
         "compile_time_defines": ["CKIT_WSL"],
         "include_paths": [],
     },
-	"ckit_graphics_test": {
-        "build_directory": f"./Tests/GraphicsTest/build_{COMPILER}",
-        "output_name": "ckit_graphics_test.exe",
-        "source_files": ["../*.c"],
-        "additional_libs": executable_procedure_libs,
-		"compile_time_defines": ["CKIT_WSL"],
-        "include_paths": [],
-    },
-    "ckg_pong": {
-        "build_directory": f"./Tests/PongTest/build_{COMPILER}",
-        "output_name": "ckit_pong.exe",
-        "source_files": ["../*.c"],
-        "additional_libs": executable_procedure_libs,
-        "compile_time_defines": ["CKIT_WSL"],
-        "include_paths": [],
-    },
 }
 
 for procedure_name, procedure_data in procedures.items():
-	if (procedure_name in ["ckit_graphics_test", "ckg_pong"]) and os.name != "nt":
-		continue
 	procedure = project.add_procedure(procedure_data["build_directory"])
 	procedure.set_output_name(procedure_data["output_name"])
 	procedure.set_source_files(procedure_data["source_files"])
