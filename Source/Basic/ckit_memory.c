@@ -12,9 +12,9 @@
 // 
 // Memory Tracker
 //
-#include "../../../ckg/Include/ckg_linked_list.h"
-#include "../../../ckg/Include/ckg_vector.h"
-#include "../../../ckg/Include/ckg_cstring.h"
+#include "../../ckg/Include/ckg_linked_list.h"
+#include "../../ckg/Include/ckg_vector.h"
+#include "../../ckg/Include/ckg_cstring.h"
 CKIT_MemoryTagID reserved_tags[] = {
     TAG_USER_UNKNOWN,
 
