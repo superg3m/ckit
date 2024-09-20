@@ -93,7 +93,7 @@ extern "C" {
 		void platform_console_shutdown() {
 			FreeConsole();
 		}
-	#elif defined(PLATFORM_LINUX) || defined(PLATFORM_MACOS)
+	#elif defined(PLATFORM_LINUX) || defined(PLATFORM_APPLE)
 		#define COLOR_RESET "\033[0"
 		#define BLU "\033[34"
 		#define GRN "\033[32"
