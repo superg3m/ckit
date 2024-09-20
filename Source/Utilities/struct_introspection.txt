@@ -1,0 +1,67 @@
+#include "stdio.h"
+#include "stdlib.h"
+#include "../../core/ckit_types.h"
+
+typedef struct CKIT_StructMemberInfo {
+	char* struct_parent_name;
+	char* name;
+	size_t offset_in_bytes;
+} CKIT_StructMemberInfo;
+
+typedef struct CKIT_StructInfo {
+	void* base_address;
+	char* struct_type_name; // this will be ckit string
+	char* struct_instance_name; // this will be ckit string
+	StructMemberInfo* members_info; // this will be a vector
+} CKIT_StructInfo;
+
+typedef struct CKIT_Example {
+	int ark;
+	char* name; // this will be ckit string
+	char boom;
+	short monster;
+} CKIT_Example;
+
+
+StructInfo MACRO_Introspection_Create_Struct_Info(void* base_address, char* struct_type_name, char* struct_instance_name) {
+	StructInfo ret;
+	StructMemberInfo* members_info = NULLPTR;
+	hashmap_get(registered_structs, struct_type_name, members_info); //hashmap_get(hashmap, key, value_back)
+
+	ret.base_address = base_address;
+	ret.struct_type_name = struct_type_name;
+	ret.struct_instance_name = struct_instance_name;
+	ret.members_info = members_info;
+
+	return ret;
+}
+
+#define Introspection_Create_Struct_Info(type, instance) MACRO_Introspection_Create_Struct_Info(&instance, stringify(type), stringify(instance))
+
+Introspect_Update_Member(StructInfo struct_info, char* memeber_name, void* value) {
+	for (u32 i = 0; i < ckit_vector_count(struct_info.members_info); i++) {
+		StructMemberInfo current_member = struct_info.members_info[i];
+		if (ckit_str_equal(current_member.name, memeber_name)) {
+			void* base_address_ptr = struct_info.base_address;
+						// this is the hard part I need to know the type of the member
+			type_of_memeber* member_ptr = (type_of_memeber*)((u8*)struct_info.base_address + current_member.offset_in_bytes);
+
+			member_ptr = (type_of_memeber*)new_value;
+		}
+	}
+}
+
+// :/struct type/instance name
+// :/CKIT_Example/example_instance_1
+
+int main() {
+	// Basically some hashmap that checks if this struct has been registered yet;
+	CKIT_Introspection_Register_Struct(CKIT_Example, ark);
+	CKIT_Introspection_Register_Struct(CKIT_Example, name);
+	CKIT_Introspection_Register_Struct(CKIT_Example, boom);
+	CKIT_Introspection_Register_Struct(CKIT_Example, monster);
+
+	CKIT_Example example_instance_1;
+
+	CKIT_IntrospectRegisterInstance(CKIT_Example, example_instance_1);
+}
