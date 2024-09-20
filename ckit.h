@@ -23,6 +23,7 @@
 
 // Utilities
 #include "./Include/Utilities/ckit_file_system.h"
+#include "./Include/Utilities/ckit_color.h"
 
 // Parser_and_Lexer
 #include "./Include/Parser_and_Lexer/ckit_bmp_parser.h"

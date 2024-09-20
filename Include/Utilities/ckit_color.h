@@ -1,7 +1,7 @@
 #pragma once
 
-#include "./ckit_types.h"
-#include "./ckit_math.h"
+#include "../ckit_types.h"
+#include "../Basic/ckit_math.h"
 //========================== Begin Types ==========================
 typedef CKIT_Vector4 CKIT_Color;
 
@@ -17,7 +17,6 @@ typedef struct CKIT_Bitmap {
 #ifdef __cplusplus
 extern "C" {
 #endif
-	CKIT_Bitmap ckit_graphics_load_bmp(u8* bmp_file_data, size_t file_size);
 	u32 ckit_color_to_u32(CKIT_Color color);
 	CKIT_Color ckit_color_from_u32(u32 color);
 	CKIT_Color ckit_color_alpha_blend(CKIT_Color front_color, CKIT_Color back_color);

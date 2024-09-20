@@ -9,7 +9,6 @@
 #define LOGGING_ENABLED TRUE
 #define LOG_LEVEL_CHARACTER_LIMIT 11
 
-
 typedef enum CKIT_LogLevel {
     LOG_LEVEL_FATAL,
     LOG_LEVEL_ERROR,

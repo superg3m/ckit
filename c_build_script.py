@@ -9,7 +9,7 @@ args = parser.parse_args()
 build_type = args.build_type
 # --------------------------------------------------------------------------------------
 
-COMPILER = os.getenv("COMPILER", "gcc")
+COMPILER = os.getenv("COMPILER", "cl")
 if os.name != "nt":
     COMPILER = "gcc"
 	
@@ -24,7 +24,7 @@ elif COMPILER in ["gcc", "cc", "clang"]:
 
 project.set_treat_warnings_as_errors(True)
 project.set_debug_with_visual_studio(True)
-project.set_rebuild_project_dependencies(True)
+project.set_rebuild_project_dependencies(False)
 
 project.set_project_dependencies(["ckg"])
 # -------------------------------------------------------------------------------------
