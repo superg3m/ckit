@@ -40,5 +40,4 @@ extern "C" {
 #define CKIT_COLOR_CYAN ((CKIT_Color){0, 255, 255, 255})
 #define CKIT_COLOR_PURPLE ((CKIT_Color){128, 0, 128, 255})
 #define CKIT_COLOR_YELLOW ((CKIT_Color){255, 255, 0, 255})
-
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
