@@ -1,6 +1,6 @@
 #include "../../Include/Parser_and_Lexer/ckit_bmp_parser.h"
 
-CKIT_Bitmap ckit_graphics_load_bmp(u8* bmp_file_data, size_t file_size) {
+CKIT_Bitmap ckit_parser_load_bmp(u8* bmp_file_data, size_t file_size) {
 	CKIT_Bitmap ret = {0};
 
 	BmpHeader bmp_header;
