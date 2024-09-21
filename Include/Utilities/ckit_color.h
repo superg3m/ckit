@@ -20,7 +20,7 @@ extern "C" {
 	u32 ckit_color_to_u32(CKIT_Color color);
 	CKIT_Color ckit_color_from_u32(u32 color);
 	CKIT_Color ckit_color_alpha_blend(CKIT_Color front_color, CKIT_Color back_color);
-	CKIT_Color ckit_color_u32_blend_alpha(u32 front_color_u32, u32 back_color_u32);
+	CKIT_Color ckit_color_u32_alpha_blend(u32 front_color_u32, u32 back_color_u32);
 
 	/**
 	 * @brief value from 0.0 to 1.0
