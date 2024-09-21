@@ -30,14 +30,14 @@ extern "C" {
 //************************** End Functions **************************
 
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
-#define CKIT_COLOR_BLACK (CKIT_Color){0, 0, 0, 255}
-#define CKIT_COLOR_RED (CKIT_Color){255, 0, 0, 255}
-#define CKIT_COLOR_BLUE (CKIT_Color){0, 0, 255, 255}
-#define CKIT_COLOR_GREEN (CKIT_Color){0, 255, 0, 255}
-#define CKIT_COLOR_WHITE (CKIT_Color){255, 255, 255, 255}
-#define CKIT_COLOR_PINK (CKIT_Color){255, 105, 180, 255}
-#define CKIT_COLOR_LIME (CKIT_Color){0, 255, 128, 255}
-#define CKIT_COLOR_CYAN (CKIT_Color){0, 255, 255, 255}
-#define CKIT_COLOR_PURPLE (CKIT_Color){128, 0, 128, 255}
-#define CKIT_COLOR_YELLOW (CKIT_Color){255, 255, 0, 255}
+#define CKIT_COLOR_BLACK ((CKIT_Color){0, 0, 0, 255})
+#define CKIT_COLOR_RED ((CKIT_Color){255, 0, 0, 255})
+#define CKIT_COLOR_BLUE ((CKIT_Color){0, 0, 255, 255})
+#define CKIT_COLOR_GREEN ((CKIT_Color){0, 255, 0, 255})
+#define CKIT_COLOR_WHITE ((CKIT_Color){255, 255, 255, 255})
+#define CKIT_COLOR_PINK ((CKIT_Color){255, 105, 180, 255})
+#define CKIT_COLOR_LIME ((CKIT_Color){0, 255, 128, 255})
+#define CKIT_COLOR_CYAN ((CKIT_Color){0, 255, 255, 255})
+#define CKIT_COLOR_PURPLE ((CKIT_Color){128, 0, 128, 255})
+#define CKIT_COLOR_YELLOW ((CKIT_Color){255, 255, 0, 255})
 //++++++++++++++++++++++++++++ End Macros +++++++++++++++++++++++++++
