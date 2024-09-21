@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../ckit_types.h"
-#include "../../Include/Basic/ckit_asset_types.h"
 //========================== Begin Types ==========================
 #pragma pack(push, 1)
 typedef struct BmpHeader { 	// total 40 bytes
@@ -29,7 +28,7 @@ typedef struct BmpHeader { 	// total 40 bytes
 #ifdef __cplusplus
 extern "C" {
 #endif
-	CKIT_BitmapAsset ckit_parser_load_bmp(u8* bmp_file_data, size_t file_size);
+	CKIT_Bitmap ckit_parser_load_bmp(u8* bmp_file_data, size_t file_size);
 #ifdef __cplusplus
 }
 #endif

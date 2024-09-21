@@ -5,12 +5,6 @@
 //========================== Begin Types ==========================
 typedef CKIT_Vector4 CKIT_Color;
 
-typedef struct CKIT_Bitmap {
-	u32 height;
-	u32 width;
-	u8 bytes_per_pixel;
-	u8* memory;
-} CKIT_Bitmap;
 //=========================== End Types ===========================
 
 //************************* Begin Functions *************************

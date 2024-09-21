@@ -5,6 +5,14 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include "../ckg/Include/ckg_types.h"
+//========================== Begin Types ==========================
+typedef struct CKIT_Bitmap {
+	u32 height;
+	u32 width;
+	u8 bytes_per_pixel;
+	u8* memory;
+} CKIT_Bitmap;
+//=========================== End Types ===========================
 
 #define MEMORY_TAG_CHARACTER_LIMIT 16
 
