@@ -1,4 +1,3 @@
-### -- GRAPHICS MODULE ONLY WORKS ON CL.exe MSVC -- windows only right now because programming is hard lmao
 ### I'm wondering if ckit is getting too big, but so far i'm having tons of fun with it
 
 # Ckits's Core Thesis
@@ -26,38 +25,10 @@
 
 ### THE REAL NEXT STEP
 1. - [ ] Finish C_Build Rewrite
-2. - [ ] Hot Reloading
-3. - [ ] SIMD optimization on the render
 
 ### Next Steps
-1. - [ ] Resolution independent bitmap
-
-2. - [ ] Standardize the coordinate system (normalized coordinates -1 to 1)
-		- [ ] ckit_window_normalized_to_pixel_coordinates(float xt, float yt) 
-			- // inbetween -1 and 1 
-			- // gives back width * xt and height * yt
-
-3. - [ ] Optimize the software rendering backend using SIMD
-4. - [ ] Text rendering
-
-5. - [ ] EventSystem
-6. - [ ] Input System
-7. - [ ] IMGUI
-		- [ ] Button
-		- [ ] Slider
-		- [ ] Panel
-			- [ ] RenderGroup 
-
-8. - [ ] Networking module make pvp pong
-9. - [ ] Write a bunch of tests validating and verifying all the utilities and logic.
-		- [ ] ckit_printf("%iv\n") // (int vector)
-		- [ ] ckit_printf("%fv\n") // (float vector)
-		- [ ] ckit_printf("%sv\n") // (string vector)
-		- [ ] ckit_printf("%cv\n") // (char vector)
-		
-10. - [ ] OpenGL Module
-11. - [ ] I HAVE AND IDEA I'M GOING TO AUTO GENERATE THE ckit.h FILE
-12. - [ ] Start writing the *GAME ENGINE* you have everything you need in order to succeed
+1. - [ ] I HAVE AND IDEA I'M GOING TO AUTO GENERATE THE ckit.h FILE
+2. - [ ] Hot_Reloading.h
 
 Thoughts:
 	But in regards to dangling pointers maybe I can just give back a index indead of a pointer (Handles are the better pointers)
@@ -68,7 +39,6 @@ Thoughts:
     2. Short lived + well defined lifetime. Memory allocated "per frame". 					 (Arena)
     3. Long lived + well defined owner. Uniquely owned by a subsystem.    					 (Arena)
     4. Long lived + unclear owner. Heavily shared, unknown when it may be accessed or freed. (Malloc)
-
 
 # Goals
 
