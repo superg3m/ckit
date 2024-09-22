@@ -27,7 +27,7 @@ String file_get_next_line(FileSystem* file_system) {
 	String line = ckit_str_create("");
 	char c;
 	do {
-		c = fgetc(file_system->handle);
+		c = (char)fgetc(file_system->handle);
 		if (c != '\n' && c != EOF) {
 		ckit_str_append_char(line, c);
 		}
@@ -39,7 +39,7 @@ String file_get_next_line(FileSystem* file_system) {
 }
 
 char file_get_next_char(FileSystem* file_system) {
-	return fgetc(file_system->handle);
+	return (char)fgetc(file_system->handle);
 }
 
 void file_close(FileSystem* file_system) { 

@@ -102,7 +102,7 @@ internal u64 ckit_tracker_get_tag_pool_index(CKIT_MemoryTagID tag_id) {
     }
     
     ckit_assert(FALSE); // don't query a not registed tag_id
-    return -1; // never gets here
+    return 0; // never gets here
 }
 
 internal Boolean ckit_tracker_tag_pool_exists(CKIT_MemoryTagID tag_id, const char* name) {

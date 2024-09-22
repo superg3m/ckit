@@ -220,7 +220,6 @@ String ckit_str_reverse(const char* string_buffer) {
 }
 
 String ckit_str_int_to_str(int number) {
-	int length_of_number = 0;
 	String ret = ckit_str_create("");
 
 	while (number != 0) {
@@ -244,10 +243,7 @@ String ckit_str_between_delimiters(const char* str, const char* start_delimitor,
 	ckit_assert(end_delimitor);
 	ckit_assert(!ckit_str_equal(start_delimitor, end_delimitor));
 
-	u32 str_length = ckit_cstr_length(str);
 	u32 start_delimitor_length = ckit_cstr_length(start_delimitor);
-	u32 end_delimitor_length = ckit_cstr_length(end_delimitor);
-
 	s32 start_delimitor_index = ckit_str_index_of(str, start_delimitor); 
 	s32 end_delimitor_index = ckit_str_index_of(str, end_delimitor);
 

@@ -9,7 +9,7 @@ args = parser.parse_args()
 build_type = args.build_type
 # --------------------------------------------------------------------------------------
 
-COMPILER = os.getenv("COMPILER", "cl")
+COMPILER = os.getenv("COMPILER", "gcc")
 if os.name != "nt":
     COMPILER = "gcc"
 	
@@ -17,8 +17,8 @@ project = Project("ckit", COMPILER)
 
 # Do different things depending on the platform
 if COMPILER == "cl":
-	project.set_compiler_warning_level("2")
-	project.disable_specific_warnings(["5105", "4668", "4820"])
+	project.set_compiler_warning_level("4")
+	project.disable_specific_warnings(["5105", "4668", "4820", "4996"])
 elif COMPILER in ["gcc", "cc", "clang"]:
 	project.disable_specific_warnings(["deprecated", "pointer-sign", "parentheses"])
 

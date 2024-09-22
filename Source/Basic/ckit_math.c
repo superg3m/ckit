@@ -48,21 +48,22 @@ CKIT_Vector4 CKIT_Vector4_lerp(CKIT_Vector4 a, CKIT_Vector4 b, double t) {
 
 CKIT_Vector2 CKIT_Vector2_projection(CKIT_Vector2 a, CKIT_Vector2 b) {
 	CKIT_Vector2 vec_ret = {0};
-	(void)vec_ret;
+	(void)a;
+	(void)b;
 
 	return vec_ret;
 }
 
 CKIT_Vector2 CKIT_Vector2_noramlize(CKIT_Vector2 a) {
 	CKIT_Vector2 vec_ret = {0};
-	(void)vec_ret;
+	(void)a;
 
 	return vec_ret;
 }
 
 CKIT_Vector2 CKIT_Vector2_perpendicular(CKIT_Vector2 a) {
 	CKIT_Vector2 vec_ret = {0};
-	(void)vec_ret;
+	(void)a;
 
 	return vec_ret;
 }
@@ -120,6 +121,9 @@ Boolean ckit_rectangle_check_aabb_collision(CKIT_Rectangle2D rect1, CKIT_Rectang
 
 CKIT_Rectangle2D ckit_rectangle_get_aabb_collision(CKIT_Rectangle2D rect1, CKIT_Rectangle2D rect2) {
 	CKIT_Rectangle2D ret = {0};
+	(void)rect1;
+	(void)rect2;
+	
 	return ret;
 }
 

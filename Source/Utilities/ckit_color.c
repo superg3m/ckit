@@ -35,7 +35,6 @@ CKIT_Color ckit_color_multiply(CKIT_Color color, float value) {
 }
 
 u32 ckit_color_u32_multiply(u32 color, float value) {
-	CKIT_Color ret = {0};
 	u8 b = (u8)(((color >> 0) & 0xFF)  * value);
 	u8 g = (u8)(((color >> 8) & 0xFF)  * value);
 	u8 r = (u8)(((color >> 16) & 0xFF) * value);
@@ -49,7 +48,7 @@ u32 ckit_color_u32_multiply(u32 color, float value) {
 CKIT_Color ckit_color_alpha_blend(CKIT_Color front_color, CKIT_Color back_color) {
 	CKIT_Color ret = {0};
 
-	float normalized_back_alpha = (float)back_color.a / 255.0;
+	float normalized_back_alpha = (float)back_color.a / 255.0f;
 
 	ret.a = back_color.a;
 	ret.r = (back_color.r * normalized_back_alpha) + ((u32)front_color.r * (1 - normalized_back_alpha));

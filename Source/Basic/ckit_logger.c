@@ -8,8 +8,8 @@
 #include "../../Include/Basic/ckit_string.h"
 
 internal Boolean logging_is_initialized = FALSE;
-internal const char* start_delimitor = "${";
-internal const char* end_delimitor = "}";
+internal const char* logger_start_delimitor = "${";
+internal const char* logger_end_delimitor = "}";
 
 internal char log_level_strings[LOG_LEVEL_COUNT][CKG_LOG_LEVEL_CHARACTER_LIMIT] = {
     "[FATAL]  : ",
@@ -34,13 +34,13 @@ internal char* log_level_format[LOG_LEVEL_COUNT] = {
 #endif
 
 Boolean message_has_special_delmitor(const char* message) {
-    s32 start_delimitor_index = ckit_str_index_of(message, start_delimitor);
-    s32 end_delimitor_index = ckit_str_index_of(message, end_delimitor);
+    s32 start_delimitor_index = ckit_str_index_of(message, logger_start_delimitor);
+    s32 end_delimitor_index = ckit_str_index_of(message, logger_end_delimitor);
     return start_delimitor_index != -1 && end_delimitor_index != -1;
 }
 
 internal void special_print_helper(const char* message, CKIT_LogLevel log_level) {
-    String middle_to_color = ckit_str_between_delimiters(message, start_delimitor, end_delimitor);
+    String middle_to_color = ckit_str_between_delimiters(message, logger_start_delimitor, logger_end_delimitor);
     if (!middle_to_color) {
         u32 message_length = ckit_cstr_length(message);
         Boolean found = message[message_length - 1] == '\n';
@@ -48,13 +48,11 @@ internal void special_print_helper(const char* message, CKIT_LogLevel log_level)
         return;
     }
 
-    u32 message_length = ckit_cstr_length(message);
-
-    u32 start_delimitor_index = ckit_str_index_of(message, start_delimitor);
-    u32 end_delimitor_index = ckit_str_index_of(message, end_delimitor);
+    u32 start_delimitor_index = ckit_str_index_of(message, logger_start_delimitor);
+    u32 end_delimitor_index = ckit_str_index_of(message, logger_end_delimitor);
 
     String left_side = ckit_substring(message, 0, start_delimitor_index - 1);
-    String right_side = ckit_substring(message, end_delimitor_index + ckit_cstr_length(end_delimitor), ckit_cstr_length(message) - 1);
+    String right_side = ckit_substring(message, end_delimitor_index + ckit_cstr_length(logger_end_delimitor), ckit_cstr_length(message) - 1);
 
     printf("%s%s%s%s", left_side, log_level_format[log_level], middle_to_color, CKG_COLOR_RESET);
 
@@ -64,8 +62,6 @@ internal void special_print_helper(const char* message, CKIT_LogLevel log_level)
 }
 
 void MACRO_ckit_log_output(CKIT_LogLevel log_level, const char* message, ...) {
-    Boolean is_fatal = (log_level == 0);
-
     char out_message[CKG_PLATFORM_CHARACTER_LIMIT];
     ckit_memory_zero(out_message, sizeof(out_message));
     

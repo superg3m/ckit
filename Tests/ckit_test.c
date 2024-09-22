@@ -57,18 +57,10 @@ void test_vector_operations() {
 	}
 
 	// Test pop
-	for (u32 i = 0; i < ckit_vector_count(intVector); i++) {
-		int element = intVector[i];
-	}
-
 	int before_popped_int = intVector[ckit_vector_count(intVector) - 1];
 	int after_popped_int = ckit_vector_pop(intVector);
 	int element_to_push_for_int = 10;
 	ckit_vector_push(intVector, element_to_push_for_int);
-
-	for (u32 i = 0; i < ckit_vector_count(intVector); i++) {
-		int element = intVector[i];
-	}
 
 	ckit_assert_msg(before_popped_int == after_popped_int, "Error: popped expected: %d | got %d\n", before_popped_int, after_popped_int);
 
@@ -150,14 +142,8 @@ void middle_ground_opperations() {
 	FileSystem file_system = file_system_create("../../assets/Learn_About_BMP.bmp");
 	file_open(&file_system);
 
-	u32 offset = 0; 
-
-	BmpHeader bmp_header;
+	BmpHeader bmp_header = {0};
 	ckit_memory_copy(file_system.data, &bmp_header, sizeof(bmp_header), file_system.file_size);
-	const u32 bytes_per_pixel = 4;
-	size_t bitmap_size = (bmp_header.width * bmp_header.height) * bytes_per_pixel;
-	u8* bitmap_data = file_system.data + bmp_header.data_offset;
-
 	file_close(&file_system);
 
 	CKIT_Arena* frame_boundary_arena = ckit_arena_create(500, "Frame Boundary");
@@ -217,7 +203,7 @@ void queue_operations() {
 	}
 
 	for (size_t i = 1; i < 4; i++) {
-		char* current_value = NULLPTR;
+		current_value = NULLPTR;
 		current_value = ckit_dequeue(queue);
 		LOG_DEBUG("value: %s\n", current_value);
 	}
