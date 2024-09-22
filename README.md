@@ -27,14 +27,32 @@
 2. - [ ] Parse the message better so you can intuitively \n something. (Maybe add some string in the beginning of a message ot ommit the <WARN:> for example)
 
 ### Next Steps
-1. - [ ] I need to have a public API for ckit and a private API for ckit.
+1. More umbrela files
+	- [ ] ckit_types.h
+		common types and defines you always want to be able to talk about
+
+	- [ ] ckit_utility.h
+		- math
+		- threading
+		- intrinsics
+	- [ ] ckit_collections.h
+		- [ ] ckit_vector
+		- [ ] hashmap and so on
+	- [ ] ckit_os.h
+		- [ ] ckit_platform_services
+		- [ ] ckit_io
+
+
+
+
+2. - [ ] I need to have a public API for ckit and a private API for ckit.
 	- [ ] forward declare types to avoid redefs
 		- [ ] enums
 		- [ ] defines
 		- [ ] structs
 	 - [ ] extern prototypes
 	 
-2. - [ ] Hot_Reloading.h
+3. - [ ] Hot_Reloading.h
 
 Thoughts:
 	But in regards to dangling pointers maybe I can just give back a index indead of a pointer (Handles are the better pointers)
