@@ -26,11 +26,14 @@
 1. - [ ] Hashmap is not very robust I should offer a compare funciton hashmap and give default presets for primatives.
 2. - [ ] Parse the message better so you can intuitively \n something. (Maybe add some string in the beginning of a message ot ommit the <WARN:> for example)
 
-### THE REAL NEXT STEP
-1. - [ ] Finish C_Build Rewrite
-
 ### Next Steps
-1. - [ ] I HAVE AND IDEA I'M GOING TO AUTO GENERATE THE ckit.h FILE
+1. - [ ] I need to have a public API for ckit and a private API for ckit.
+	- [ ] forward declare types to avoid redefs
+		- [ ] enums
+		- [ ] defines
+		- [ ] structs
+	 - [ ] extern prototypes
+	 
 2. - [ ] Hot_Reloading.h
 
 Thoughts:

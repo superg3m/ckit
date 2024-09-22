@@ -11,7 +11,7 @@ internal Boolean logging_is_initialized = FALSE;
 internal const char* start_delimitor = "${";
 internal const char* end_delimitor = "}";
 
-internal char log_level_strings[CKG_LOG_LEVEL_COUNT][CKG_LOG_LEVEL_CHARACTER_LIMIT] = {
+internal char log_level_strings[LOG_LEVEL_COUNT][CKG_LOG_LEVEL_CHARACTER_LIMIT] = {
     "[FATAL]  : ",
     "[ERROR]  : ",
     "[WARN]   : ",
@@ -20,7 +20,7 @@ internal char log_level_strings[CKG_LOG_LEVEL_COUNT][CKG_LOG_LEVEL_CHARACTER_LIM
     "",
 };
 
-internal char* log_level_format[CKG_LOG_LEVEL_COUNT] = {
+internal char* log_level_format[LOG_LEVEL_COUNT] = {
     CKG_RED_BACKGROUND,
     CKG_RED,
     CKG_PURPLE,

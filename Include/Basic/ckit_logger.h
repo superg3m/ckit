@@ -9,16 +9,15 @@
 #define LOGGING_ENABLED TRUE
 #define LOG_LEVEL_CHARACTER_LIMIT 11
 
-typedef enum CKIT_LogLevel {
-    LOG_LEVEL_FATAL,
-    LOG_LEVEL_ERROR,
-    LOG_LEVEL_WARN,
-    LOG_LEVEL_DEBUG,
-    LOG_LEVEL_SUCCESS,
-    LOG_LEVEL_PRINT,
-    LOG_LEVEL_COUNT
-} CKIT_LogLevel;
-
+// Log Levels
+#define LOG_LEVEL_FATAL 0
+#define LOG_LEVEL_ERROR 1
+#define LOG_LEVEL_WARN 2
+#define LOG_LEVEL_DEBUG 3
+#define LOG_LEVEL_SUCCESS 4
+#define LOG_LEVEL_PRINT 5
+#define LOG_LEVEL_COUNT 6
+typedef u8 CKIT_LogLevel;
 //=========================== End Types ===========================
 
 //************************* Begin Functions *************************

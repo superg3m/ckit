@@ -36,10 +36,10 @@ CKIT_Color ckit_color_multiply(CKIT_Color color, float value) {
 
 u32 ckit_color_u32_multiply(u32 color, float value) {
 	CKIT_Color ret = {0};
-	u8 b = ((color >> 0) & 0xFF)  * value;
-	u8 g = ((color >> 8) & 0xFF)  * value;
-	u8 r = ((color >> 16) & 0xFF) * value;
-	u8 a = ((color >> 24) & 0xFF) * value;
+	u8 b = (u8)(((color >> 0) & 0xFF)  * value);
+	u8 g = (u8)(((color >> 8) & 0xFF)  * value);
+	u8 r = (u8)(((color >> 16) & 0xFF) * value);
+	u8 a = (u8)(((color >> 24) & 0xFF) * value);
 
 	color = r|g|b|a;
 
