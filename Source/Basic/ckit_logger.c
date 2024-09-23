@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../Include/Basic/ckit_logger.h"
+#include "../../ckg/ckg.h"
 
 #include "../../Include/Basic/ckit_memory.h"
 #include "../../Include/Basic/ckit_platform_services.h"
@@ -11,7 +12,7 @@ internal Boolean logging_is_initialized = FALSE;
 internal const char* logger_start_delimitor = "${";
 internal const char* logger_end_delimitor = "}";
 
-internal char log_level_strings[LOG_LEVEL_COUNT][CKG_LOG_LEVEL_CHARACTER_LIMIT] = {
+internal char log_level_strings[LOG_LEVEL_COUNT][LOG_LEVEL_CHARACTER_LIMIT] = {
     "[FATAL]  : ",
     "[ERROR]  : ",
     "[WARN]   : ",

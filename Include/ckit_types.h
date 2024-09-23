@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
-#include "../ckg/Include/ckg_types.h"
+#include "../ckg/ckg.h"
 //========================== Begin Types ==========================
 typedef struct CKIT_Bitmap {
 	u32 height;

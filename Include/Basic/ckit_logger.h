@@ -7,7 +7,7 @@
 #include "../ckit_types.h"
 //========================== Begin Types ==========================
 #define LOGGING_ENABLED TRUE
-#define LOG_LEVEL_CHARACTER_LIMIT 11
+#define LOG_LEVEL_CHARACTER_LIMIT 12
 
 // Log Levels
 #define LOG_LEVEL_FATAL 0

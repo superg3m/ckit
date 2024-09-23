@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../Include/Basic/ckit_memory.h"
-#include "../../ckg/Include/ckg_memory.h"
+#include "../../ckg/ckg.h"
 #include "../../Include/Basic/ckit_arena.h"
 
 
@@ -12,9 +12,9 @@
 // 
 // Memory Tracker
 //
-#include "../../ckg/Include/ckg_linked_list.h"
-#include "../../ckg/Include/ckg_vector.h"
-#include "../../ckg/Include/ckg_cstring.h"
+#include "../../ckg/ckg.h"
+#include "../../ckg/ckg.h"
+#include "../../ckg/ckg.h"
 CKIT_MemoryTagID reserved_tags[] = {
     TAG_USER_UNKNOWN,
 

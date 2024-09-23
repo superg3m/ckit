@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../Include/Basic/ckit_string.h"
-#include "../../ckg/Include/ckg_cstring.h"
+#include "../../ckg/ckg.h"
 
 #include "../../Include/Basic/ckit_assert.h"
 #include "../../Include/Basic/ckit_memory.h"

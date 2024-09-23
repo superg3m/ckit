@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../ckg/Include/ckg_assert.h"
+#include "../../ckg/ckg.h"
 //+++++++++++++++++++++++++++ Begin Macros ++++++++++++++++++++++++++
 #define CKIT_ASSERT_ENABLED TRUE
 
