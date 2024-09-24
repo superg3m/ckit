@@ -105,7 +105,8 @@
 		"ckit_graphics_shapes.h": "c",
 		"system_error": "cpp",
 		"xlocnum": "cpp",
-		"ckit_bmp_parser.h": "c"
+		"ckit_bmp_parser.h": "c",
+		"ckit_color.h": "c"
 	},
 	"editor.insertSpaces": false
 }
