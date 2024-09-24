@@ -656,10 +656,69 @@ CKIT_API void ckit_cleanup();
 #endif
 
 #if defined(CKIT_INCLUDE_UTILITIES)
-    #include "./Include/Utilities/ckit_file_system.h"
-    #include "./Include/Utilities/ckit_color.h"
+    //
+    // ========== Start FileSystem ==========
+    //
+    typedef struct FileSystem {
+        String file_name;
+        FILE* handle;
+        u8* data;
+        size_t file_size;
+        Boolean reachedEOF;
+    } FileSystem;
+
+    CKIT_API FileSystem file_system_create(String file_name);
+    CKIT_API void file_open(FileSystem* file_system);
+    CKIT_API void file_close(FileSystem* file_system);
+    CKIT_API size_t file_size(FileSystem* file_system);
+    CKIT_API String file_get_next_line(FileSystem* file_system);
+    CKIT_API char file_get_next_char(FileSystem* file_system);
+    //
+    // ========== End FileSystem ==========
+    //
+
+
+    //
+    // ========== Start CKIT_Color ==========
+    //
+    typedef CKIT_Vector4 CKIT_Color;
+
+	CKIT_API u32 ckit_color_to_u32(CKIT_Color color);
+	CKIT_API CKIT_Color ckit_color_from_u32(u32 color);
+	CKIT_API CKIT_Color ckit_color_alpha_blend(CKIT_Color front_color, CKIT_Color back_color);
+	CKIT_API CKIT_Color ckit_color_u32_alpha_blend(u32 front_color_u32, u32 back_color_u32);
+
+	/**
+	 * @brief value from 0.0 to 1.0
+	 * 
+	 * @param color 
+	 * @param value 
+	 * @return CKIT_Color 
+	 */
+	CKIT_API CKIT_Color ckit_color_multiply(CKIT_Color color, float value);
+
+    #define CKIT_COLOR_BLACK ((CKIT_Color){0, 0, 0, 255})
+    #define CKIT_COLOR_RED ((CKIT_Color){255, 0, 0, 255})
+    #define CKIT_COLOR_BLUE ((CKIT_Color){0, 0, 255, 255})
+    #define CKIT_COLOR_GREEN ((CKIT_Color){0, 255, 0, 255})
+    #define CKIT_COLOR_WHITE ((CKIT_Color){255, 255, 255, 255})
+    #define CKIT_COLOR_PINK ((CKIT_Color){255, 105, 180, 255})
+    #define CKIT_COLOR_LIME ((CKIT_Color){0, 255, 128, 255})
+    #define CKIT_COLOR_CYAN ((CKIT_Color){0, 255, 255, 255})
+    #define CKIT_COLOR_PURPLE ((CKIT_Color){128, 0, 128, 255})
+    #define CKIT_COLOR_YELLOW ((CKIT_Color){255, 255, 0, 255})
+    //
+    // ========== End CKIT_Color ==========
+    //
 #endif
 
 // Date: September 24, 2024
 // TODO(Jovanni): Make this a module
-#include "./Include/Parser_and_Lexer/ckit_bmp_parser.h"
+#if defined(CKIT_INCLUDE_PARSER)
+    #include "./Include/Parser_and_Lexer/ckit_bmp_parser.h"
+#endif 
+
+//
+// ===================================================== CKG_IMPL =====================================================
+//
+
