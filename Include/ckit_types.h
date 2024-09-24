@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
+#define CKG_EXTERN
 #include "../ckg/ckg.h"
 //========================== Begin Types ==========================
 typedef struct CKIT_Bitmap {
