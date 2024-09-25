@@ -18,6 +18,11 @@
     #define CKIT_IMPL_COLLECTIONS
     #define CKIT_IMPL_OS
 	#define CKIT_IMPL_UTILITIES
+
+    // Date: September 25, 2024
+    // TODO(Jovanni): CKIT_IMPL_THREADING
+    // TODO(Jovanni): CKIT_IMPL_SIMD
+    // TODO(Jovanni): CKIT_IMPL_CUDA
 #endif
 
 #define CKIT_INCLUDE_TYPES
