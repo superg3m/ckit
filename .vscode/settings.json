@@ -119,7 +119,9 @@
 		"ckit_linked_list.c": "c",
 		"ckit_hashmap.c": "c",
 		"ckit_vector.c": "c",
-		"ckit_hashset.c": "c"
+		"ckit_hashset.c": "c",
+		"ckit_file_system.c": "cpp",
+		"ckit_color.c": "cpp"
 	},
 	"editor.insertSpaces": false
 }
