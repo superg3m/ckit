@@ -37,7 +37,7 @@ CKIT_API void ckit_cleanup();
 
 #if defined(CKIT_INCLUDE_TYPES)
 	#define CKG_EXTERN
-	#include "../ckg/ckg.h"
+	#include "./ckg/ckg.h"
 
 	typedef struct CKIT_Bitmap {
 		u32 height;
