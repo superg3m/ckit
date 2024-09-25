@@ -353,12 +353,12 @@ CKIT_API void ckit_cleanup();
     CKIT_API int int_abs(int a);
     CKIT_API double float_abs(double a);
     CKIT_API double lerp(double a, double b, double t);
-    CKIT_API CKIT_Vector2 CKIT_Vector2_lerp(CKIT_Vector2 a, CKIT_Vector2 b, double t);
-    CKIT_API CKIT_Vector3 CKIT_Vector3_lerp(CKIT_Vector3 a, CKIT_Vector3 b, double t);
-    CKIT_API CKIT_Vector4 CKIT_Vector4_lerp(CKIT_Vector4 a, CKIT_Vector4 b, double t);
-    CKIT_API void CKIT_Vector2_print(CKIT_Vector2 point);
+    CKIT_API CKIT_Vector2 ckit_vector2_lerp(CKIT_Vector2 a, CKIT_Vector2 b, double t);
+    CKIT_API CKIT_Vector3 ckit_vector3_lerp(CKIT_Vector3 a, CKIT_Vector3 b, double t);
+    CKIT_API CKIT_Vector4 ckit_vector4_lerp(CKIT_Vector4 a, CKIT_Vector4 b, double t);
+    CKIT_API void ckit_vector2_print(CKIT_Vector2 point);
 
-    CKIT_API CKIT_Vector2 CKIT_Vector2_spline_point(CKIT_Vector2* spline_points, u32 spline_points_count, double t);
+    CKIT_API CKIT_Vector2 ckit_vector2_spline_point(CKIT_Vector2* spline_points, u32 spline_points_count, double t);
 
     CKIT_API Mat2x2 ckit_mat2x2_projection_mat();
     CKIT_API Mat2x2 ckit_mat2x2_rotation_mat();
@@ -511,8 +511,6 @@ CKIT_API void ckit_cleanup();
     //
     // ========== Start CKIT_HashMap ==========
     //
-    #define CKIT_HASHMAP_DEFAULT_LOAD_FACTOR 0.75     // TODO(Jovanni): Move this to IMPL
-
     typedef struct CKIT_HashMapEntry {
         String key;
         void* value;
@@ -544,8 +542,6 @@ CKIT_API void ckit_cleanup();
     //
     // ========== Start CKIT_HashSet ==========
     //
-    #define CKIT_HASHSET_DEFAULT_LOAD_FACTOR 0.75 // TODO(Jovanni): MOVE THIS TO IMPL
-
     typedef struct CKIT_HashSet {
         // CKIT_HashFunction* hash_func;
         u32 capacity;
@@ -1516,14 +1512,14 @@ CKIT_API void ckit_cleanup();
         return b + ((a - b) * t);
     }
 
-    CKIT_Vector2 CKIT_Vector2_lerp(CKIT_Vector2 a, CKIT_Vector2 b, double t) {
+    CKIT_Vector2 ckit_vector2_lerp(CKIT_Vector2 a, CKIT_Vector2 b, double t) {
         CKIT_Vector2 vec_ret = {0};
         vec_ret.x = lerp(a.x, b.x, t); 
         vec_ret.y = lerp(a.y, b.y, t); 
         return vec_ret;
     }
 
-    CKIT_Vector3 CKIT_Vector3_lerp(CKIT_Vector3 a, CKIT_Vector3 b, double t) {
+    CKIT_Vector3 ckit_vector3_lerp(CKIT_Vector3 a, CKIT_Vector3 b, double t) {
         CKIT_Vector3 vec_ret = {0};
         vec_ret.x = lerp(a.x, b.x, t);
         vec_ret.y = lerp(a.y, b.y, t);
@@ -1532,7 +1528,7 @@ CKIT_API void ckit_cleanup();
         return vec_ret;
     }
 
-    CKIT_Vector4 CKIT_Vector4_lerp(CKIT_Vector4 a, CKIT_Vector4 b, double t) {
+    CKIT_Vector4 ckit_vector4_lerp(CKIT_Vector4 a, CKIT_Vector4 b, double t) {
         CKIT_Vector4 vec_ret = {0};
         vec_ret.x = lerp(a.x, b.x, t);
         vec_ret.y = lerp(a.y, b.y, t);
@@ -1543,7 +1539,7 @@ CKIT_API void ckit_cleanup();
     }
 
 
-    CKIT_Vector2 CKIT_Vector2_projection(CKIT_Vector2 a, CKIT_Vector2 b) {
+    CKIT_Vector2 ckit_vector2_projection(CKIT_Vector2 a, CKIT_Vector2 b) {
         CKIT_Vector2 vec_ret = {0};
         (void)a;
         (void)b;
@@ -1551,36 +1547,36 @@ CKIT_API void ckit_cleanup();
         return vec_ret;
     }
 
-    CKIT_Vector2 CKIT_Vector2_noramlize(CKIT_Vector2 a) {
+    CKIT_Vector2 ckit_vector2_noramlize(CKIT_Vector2 a) {
         CKIT_Vector2 vec_ret = {0};
         (void)a;
 
         return vec_ret;
     }
 
-    CKIT_Vector2 CKIT_Vector2_perpendicular(CKIT_Vector2 a) {
+    CKIT_Vector2 ckit_vector2_perpendicular(CKIT_Vector2 a) {
         CKIT_Vector2 vec_ret = {0};
         (void)a;
 
         return vec_ret;
     }
 
-    void CKIT_Vector2_print(CKIT_Vector2 point) {
+    void ckit_vector2_print(CKIT_Vector2 point) {
         LOG_PRINT("(%f, %f)\n", point.x, point.y);
     }
 
-    CKIT_Vector2 CKIT_Vector2_spline_point(CKIT_Vector2* spline_points, u32 spline_points_count, double t) {
+    CKIT_Vector2 ckit_vector2_spline_point(CKIT_Vector2* spline_points, u32 spline_points_count, double t) {
         if (spline_points_count == 1) {
             return spline_points[0];
         }
 
         CKIT_Vector2* points_vector = NULLPTR;
         for (u32 i = 0; i < spline_points_count - 1; i++) { // get lerp points
-            CKIT_Vector2 lerp_point = CKIT_Vector2_lerp(spline_points[i + 1], spline_points[i], t);
+            CKIT_Vector2 lerp_point = ckit_vector2_lerp(spline_points[i + 1], spline_points[i], t);
             ckit_vector_push(points_vector, lerp_point);
         }
 
-        CKIT_Vector2 ret = CKIT_Vector2_spline_point(points_vector, ckit_vector_count(points_vector), t); // feed back points
+        CKIT_Vector2 ret = ckit_vector2_spline_point(points_vector, ckit_vector_count(points_vector), t); // feed back points
         ckit_vector_free(points_vector);
         return ret;
     }
@@ -1941,3 +1937,628 @@ CKIT_API void ckit_cleanup();
     #endif
 #endif
 
+
+#if defined(CKIT_IMPL_COLLECTIONS)
+    //
+    // ========== Start CKIT_Vector ==========
+    //
+
+    // Start experimenting with returning an index back
+    // - [ ] Serializable
+    // - [ ] Deletable
+    // - [ ] Relocatable (shuffuling the data) (update the referece so you have the right index?)
+    // - [ ] No dangling pointers
+
+    // typedef struct CKIT_MemoryIndex {
+    //     u32 index;
+    // } CKIT_MemoryIndex;
+
+    #define VECTOR_DEFAULT_CAPACITY 1
+    #define CKIT_VECTOR_MAGIC "CKIT_MAGIC_VECTOR"
+
+    internal void ckit_vector_check_magic(void* vector) {
+        ckit_assert_msg(ckit_str_equal(ckit_vector_base(vector)->magic, CKIT_VECTOR_MAGIC), "Vector has wrong magic: {%s} got: {%s} \n", CKIT_VECTOR_MAGIC, ckit_vector_base(vector)->magic);
+    }
+
+    void* ckit_vector_grow(void* vector, size_t element_size, Boolean force_grow, const char* file, const u32 line, const char* function) {
+        if (vector == NULLPTR) {
+            vector = ckit_alloc_custom(sizeof(CKIT_VectorHeader) + (VECTOR_DEFAULT_CAPACITY * element_size), TAG_CKIT_CORE_VECTOR);
+            vector = (u8*)vector + sizeof(CKIT_VectorHeader);
+            ckit_vector_base(vector)->count = 0;
+            ckit_vector_base(vector)->capacity = VECTOR_DEFAULT_CAPACITY;
+            ckit_vector_base(vector)->magic = CKIT_VECTOR_MAGIC;
+        }
+
+        ckit_vector_check_magic(vector);
+        u32 count = ckit_vector_count(vector);
+        u32 capactiy = ckit_vector_capacity(vector);
+
+        if (force_grow || capactiy < count + 1) {
+            u32 new_capactiy = capactiy * 2;
+            size_t new_allocation_size = sizeof(CKIT_VectorHeader) + (new_capactiy * element_size);
+
+            vector = MACRO_ckit_realloc(ckit_vector_base(vector), new_allocation_size, file, line, function);
+            vector = (u8*)vector + sizeof(CKIT_VectorHeader);
+
+            ckit_vector_base(vector)->count = count;
+            ckit_vector_base(vector)->capacity = new_capactiy;
+        }
+
+        return vector;
+    }
+
+    void* MACRO_ckit_vector_reserve(size_t element_size, u32 inital_capacity, const char* file, const u32 line, const char* function) {
+        void* vector = MACRO_ckit_alloc(sizeof(CKIT_VectorHeader) + (inital_capacity * element_size), TAG_CKIT_CORE_VECTOR, file, line, function);
+        vector = (u8*)vector + sizeof(CKIT_VectorHeader);
+        ckit_vector_base(vector)->count = 0;
+        ckit_vector_base(vector)->capacity = inital_capacity;
+        ckit_vector_base(vector)->magic = CKIT_VECTOR_MAGIC;
+        return vector;
+    }
+
+    void* MACRO_ckit_vector_free(void* vector) {
+        ckit_vector_check_magic(vector);
+        CKIT_VectorHeader* vector_base = ckit_vector_base(vector);
+        ckit_assert_msg(vector_base, "WHAT"); 
+        vector_base->count = 0;
+        vector_base->capacity = 0;
+        ckit_free(vector_base);
+
+        return vector_base;
+    }
+    //
+    // ========== End CKIT_Vector ==========
+    //
+
+    //
+    // ========== Start CKIT_HashMap ==========
+    //
+    #define CKIT_HASHMAP_DEFAULT_LOAD_FACTOR 0.75
+
+    u32 ckit_hash_value(char *str) {
+        unsigned long hash = 5381;
+        int c;
+
+        while ((c = *str++)) {
+            hash = ((hash << 5) + hash) + c;
+        }
+
+        return hash;
+    }
+
+    float ckit_hashmap_load_factor(CKIT_HashMap* hashmap) {
+        return (float)hashmap->count / (float)hashmap->capacity;
+    }
+
+    internal u64 ckit_hashmap_resolve_collision(CKIT_HashMap* hashmap, char* key, u64 inital_hash_index) {
+        u64 cannonical_hash_index = inital_hash_index;
+        while (hashmap->entries[cannonical_hash_index].key && !ckit_str_equal(hashmap->entries[cannonical_hash_index].key, key)) {
+            cannonical_hash_index++;
+            cannonical_hash_index = cannonical_hash_index % hashmap->capacity;
+        }
+        return cannonical_hash_index;
+    }
+
+    void ckit_hashmap_grow(CKIT_HashMap* hashmap) {
+        if (ckit_hashmap_load_factor(hashmap) < CKIT_HASHMAP_DEFAULT_LOAD_FACTOR) {
+            return;
+        }
+
+        u32 old_capacity = hashmap->capacity;
+        hashmap->capacity *= 2;
+        CKIT_HashMapEntry* new_entries = ckit_alloc_custom(sizeof(CKIT_HashMapEntry) * hashmap->capacity, TAG_CKIT_CORE_HASHMAP);
+        
+        // rehash
+        for (u32 i = 0; i < old_capacity; i++) {
+            if (hashmap->entries[i].key != NULLPTR) {
+                u32 index =  ckit_hash_value(hashmap->entries[i].key) % hashmap->capacity;
+                LOG_PRINT("String: %s\n", hashmap->entries[i].key);
+                CKIT_HashMapEntry* cached_ptr = hashmap->entries;
+                hashmap->entries = new_entries;
+                u64 real_index = ckit_hashmap_resolve_collision(hashmap, cached_ptr[i].key, index);
+                hashmap->entries = cached_ptr;
+
+                new_entries[real_index] = hashmap->entries[i];
+            }
+        }
+
+        ckit_free(hashmap->entries);
+        hashmap->entries = new_entries;
+    }
+
+    CKIT_HashMap* MACRO_ckit_hashmap_create(u32 hashmap_capacity, size_t element_size, Boolean is_pointer_type) {
+        CKIT_HashMap* ret = ckit_alloc_custom(sizeof(CKIT_HashMap), TAG_CKIT_CORE_HASHMAP);
+        ret->capacity = 1;
+        ret->entries = (CKIT_HashMapEntry*)ckit_alloc_custom(sizeof(CKIT_HashMapEntry) * hashmap_capacity, TAG_CKIT_CORE_HASHMAP);
+        ret->element_size = element_size;
+        ret->count = 0;
+        ret->capacity = hashmap_capacity;
+        ret->is_pointer_type = is_pointer_type;
+
+        return ret;
+    }
+
+    CKIT_HashMapEntry ckit_hashmap_entry_create(CKIT_HashMap* hashmap, char* key, void* value) {
+        CKIT_HashMapEntry entry;
+        entry.key = key;
+        if (hashmap->is_pointer_type) {
+            entry.value = value;
+        } else {
+            entry.value = ckit_alloc_custom(hashmap->element_size, TAG_CKIT_EXPECTED_USER_FREE);
+            ckit_memory_copy(value, entry.value, hashmap->element_size, hashmap->element_size);
+        }
+
+        return entry;
+    }
+
+    CKIT_HashMap* MACRO_ckit_hashmap_free(CKIT_HashMap* hashmap) {
+        if (!hashmap->is_pointer_type) {
+            for (u32 i = 0; i < hashmap->capacity; i++) {
+                if (hashmap->entries[i].value) {
+                    ckit_free(hashmap->entries[i].value);
+                }
+            }
+        }
+        ckit_free(hashmap->entries);
+        ckit_free(hashmap);
+
+        return hashmap;
+    }
+
+
+    Boolean ckit_hashmap_entry_exists(CKIT_HashMap* hashmap, u32 index) {
+        return hashmap->entries[index].key != NULLPTR;
+    }
+
+    void* ckit_hashmap_put(CKIT_HashMap* hashmap, char* key, void* value) {
+        ckit_hashmap_grow(hashmap);
+
+        void* ret = NULLPTR;
+
+        u32 index =  ckit_hash_value(key) % hashmap->capacity;
+        u64 real_index = ckit_hashmap_resolve_collision(hashmap, key, index);
+
+        if (ckit_hashmap_entry_exists(hashmap, (u32)real_index)) {
+            ret = hashmap->entries[real_index].value; // get previous value
+            hashmap->entries[real_index] = ckit_hashmap_entry_create(hashmap, key, value);
+        } else { // don't have the value
+            hashmap->count++;
+            hashmap->entries[real_index] = ckit_hashmap_entry_create(hashmap, key, value);
+        }
+
+        return ret;
+    }
+
+    void* ckit_hashmap_get(CKIT_HashMap* hashmap, char* key) {
+        u32 index =  ckit_hash_value(key) % hashmap->capacity;
+        u64 real_index = ckit_hashmap_resolve_collision(hashmap, key, index);
+
+        return hashmap->entries[real_index].value;
+    }
+
+    Boolean ckit_hashmap_has(CKIT_HashMap* hashmap, char* key) {
+        u32 index =  ckit_hash_value(key) % hashmap->capacity;
+        u64 real_index = ckit_hashmap_resolve_collision(hashmap, key, index);
+
+        return hashmap->entries[real_index].key != NULLPTR;
+    }
+
+    // open addressing
+    // probing (linear or with double hashing)
+    //
+    // ========== End CKIT_HashMap ==========
+    //
+
+    //
+    // ========== Start CKIT_HashSet ==========
+    //
+    #define CKIT_HASHSET_DEFAULT_LOAD_FACTOR 0.75
+
+    float ckit_hashset_load_factor(CKIT_HashSet* hashset) {
+        return (float)hashset->count / (float)hashset->capacity;
+    }
+
+    internal u64 ckit_hashset_resolve_collision(CKIT_HashSet* hashset, char* key, u64 inital_hash_index) {
+        u64 cannonical_hash_index = inital_hash_index;
+        while (hashset->entries[cannonical_hash_index] && !ckit_str_equal(hashset->entries[cannonical_hash_index], key)) {
+            cannonical_hash_index++;
+            cannonical_hash_index = cannonical_hash_index % hashset->capacity;
+        }
+        return cannonical_hash_index;
+    }
+
+    void ckit_hashset_grow(CKIT_HashSet* hashset) {
+        if (ckit_hashset_load_factor(hashset) < CKIT_HASHSET_DEFAULT_LOAD_FACTOR) {
+            return;
+        }
+
+        u32 old_capacity = hashset->capacity;
+        hashset->capacity *= 2;
+        char** temp_entries = ckit_alloc_custom(sizeof(char*) * hashset->capacity, TAG_CKIT_TEMP);
+        
+        // rehash
+        for (u32 i = 0; i < old_capacity; i++) {
+            if (hashset->entries[i] != NULLPTR) {
+                u32 index =  ckit_hash_value(hashset->entries[i]) % hashset->capacity;
+                LOG_PRINT("String: %s\n", hashset->entries[i]);
+                char** cached_ptr = hashset->entries;
+                hashset->entries = temp_entries;
+                u64 real_index = ckit_hashset_resolve_collision(hashset, cached_ptr[i], index);
+                hashset->entries = cached_ptr;
+
+                temp_entries[real_index] = hashset->entries[i];
+            }
+        }
+
+        ckit_free(hashset->entries);
+        hashset->entries = temp_entries;
+    }
+
+    CKIT_HashSet* MACRO_ckit_hashset_create(u32 hashset_capacity) {
+        CKIT_HashSet* ret = ckit_alloc_custom(sizeof(CKIT_HashSet), TAG_CKIT_CORE_HASHSET);
+        ret->capacity = 1;
+        ret->entries = (char**)ckit_alloc_custom(sizeof(char*) * hashset_capacity, TAG_CKIT_CORE_HASHSET);
+        ret->count = 0;
+        ret->capacity = hashset_capacity;
+
+        return ret;
+    }
+
+    CKIT_HashSet* MACRO_ckit_hashset_free(CKIT_HashSet* hashset) {
+        ckit_free(hashset);
+
+        return hashset;
+    }
+
+
+    Boolean ckit_hashset_entry_exists(CKIT_HashSet* hashset, u32 index) {
+        return hashset->entries[index] != NULLPTR;
+    }
+
+    void ckit_hashset_put(CKIT_HashSet* hashset, char* key) {
+        ckit_hashset_grow(hashset);
+
+        u32 index =  ckit_hash_value(key) % hashset->capacity;
+        u64 real_index = ckit_hashset_resolve_collision(hashset, key, index);
+        if (hashset->entries[real_index] == NULLPTR) {
+            hashset->entries[real_index] = key;
+        }
+    }
+
+    Boolean ckit_hashset_has(CKIT_HashSet* hashset, char* key) {
+        u32 index =  ckit_hash_value(key) % hashset->capacity;
+        u64 real_index = ckit_hashset_resolve_collision(hashset, key, index);
+
+        return hashset->entries[real_index] != NULLPTR;
+    }
+    //
+    // ========== End CKIT_HashSet ==========
+    //
+
+    //
+    // ========== Start CKIT_LinkedList ==========
+    //
+    CKIT_LinkedList* MACRO_ckit_linked_list_create(size_t element_size_in_bytes, Boolean is_pointer_type, const char* file, const u32 line, const char* function) {
+        CKIT_LinkedList* ret = MACRO_ckit_alloc(sizeof(CKIT_LinkedList), TAG_CKIT_CORE_LINKED_LIST, file, line, function);
+        ret->count = 0;
+        ret->element_size_in_bytes = element_size_in_bytes;
+        ret->head = NULLPTR;
+        ret->tail = NULLPTR;
+        ret->is_pointer_type = is_pointer_type;
+        return ret;
+    }
+
+    CKIT_Node* MACRO_ckit_node_create(CKIT_LinkedList* linked_list, void* data) {
+        CKIT_Node* ret = ckit_alloc_custom(sizeof(CKIT_Node), TAG_CKIT_CORE_LINKED_LIST);
+        if (linked_list->is_pointer_type) {
+            ret->data = data;
+        } else {
+            ret->data = ckit_alloc_custom(linked_list->element_size_in_bytes, TAG_CKIT_EXPECTED_USER_FREE); // user has to free
+            ckit_memory_copy(data, ret->data, linked_list->element_size_in_bytes, linked_list->element_size_in_bytes); 
+        }
+
+        ret->element_size_in_bytes = linked_list->element_size_in_bytes;
+        ret->next = NULLPTR;
+        ret->prev = NULLPTR;
+        return ret;
+    }
+    #define ckit_node_create(linked_list, data) MACRO_ckit_node_create(linked_list, data)
+
+    /**
+     * @brief returns a null ptr
+     * 
+     * @param node 
+     * @return CKIT_Node* 
+     */
+    internal CKIT_Node* MACRO_ckit_node_free(CKIT_LinkedList* linked_list, CKIT_Node* node) {
+        ckit_assert(linked_list);
+        ckit_assert(node);
+        node->element_size_in_bytes = 0;
+        node->next = NULLPTR;
+        node->prev = NULLPTR;
+        ckit_free(node);
+
+        return node;
+    }
+    #define ckit_node_free(linked_list, node) node = MACRO_ckit_node_free(linked_list, node)
+
+
+    /**
+     * @brief returns a null ptr
+     * 
+     * @param node 
+     * @return CKIT_Node* 
+     */
+    internal CKIT_Node* MACRO_ckit_node_data_free(CKIT_LinkedList* linked_list, CKIT_Node* node) {
+        ckit_assert(linked_list);
+        ckit_assert(node);
+        ckit_assert(node->data);
+        node->element_size_in_bytes = 0;
+        node->next = NULLPTR;
+        node->prev = NULLPTR;
+        if (!linked_list->is_pointer_type) {
+            ckit_free(node->data);
+        }
+        ckit_free(node);
+
+        return node;
+    }
+    #define ckit_node_data_free(linked_list, node) node = MACRO_ckit_node_data_free(linked_list, node)
+
+    CKIT_Node* ckit_linked_list_insert(CKIT_LinkedList* linked_list, u32 index, void* data) {
+        ckit_assert(linked_list);
+        ckit_assert(data);
+        ckit_assert(index >= 0);
+
+        u32 old_count = linked_list->count++;
+        if (linked_list->head == NULLPTR) { // there is not head and by definition no tail
+            CKIT_Node* new_node_to_insert = ckit_node_create(linked_list, data);
+            linked_list->head = new_node_to_insert;
+            linked_list->tail = new_node_to_insert;
+
+            return linked_list->head;
+        }
+
+        ckit_assert(index <= old_count);
+        CKIT_Node* new_node_to_insert = ckit_node_create(linked_list, data);
+
+        if (index == 0) { // insert at head
+            linked_list->head->prev = new_node_to_insert;
+            new_node_to_insert->next = linked_list->head;
+            linked_list->head = new_node_to_insert;
+            
+            return new_node_to_insert;
+        }
+
+        if (index == old_count) { // insert at tail
+            linked_list->tail->next = new_node_to_insert;
+            new_node_to_insert->prev = linked_list->tail;
+            linked_list->tail = new_node_to_insert;
+
+            return new_node_to_insert;
+        }
+
+        CKIT_Node* current_node = linked_list->head; 
+        for (u32 i = 0; i < index; i++) {
+            current_node = current_node->next;
+        }
+
+        new_node_to_insert->prev = current_node;
+        new_node_to_insert->next = current_node->next;
+
+        current_node->next->prev = new_node_to_insert;
+        current_node->next = new_node_to_insert;
+
+        return new_node_to_insert;
+    }
+
+    CKIT_Node* ckit_linked_list_get_node(CKIT_LinkedList* linked_list, u32 index) {
+        ckit_assert(linked_list);
+        CKIT_Node* current_node = linked_list->head; 
+        for (u32 i = 0; i < index; i++) {
+            current_node = current_node->next;
+        }
+
+        return current_node;
+    }
+
+    void* ckit_linked_list_get(CKIT_LinkedList* linked_list, u32 index) {
+        return ckit_linked_list_get_node(linked_list, index)->data;
+    }
+
+    void* ckit_linked_list_peek_head(CKIT_LinkedList* linked_list) {
+        return ckit_linked_list_get_node(linked_list, 0)->data;
+    }
+
+    void* ckit_linked_list_peek_tail(CKIT_LinkedList* linked_list) {
+        return ckit_linked_list_get_node(linked_list, linked_list->count - 1)->data;
+    }
+
+    CKIT_Node* ckit_linked_list_push(CKIT_LinkedList* linked_list, void* data) {
+        return ckit_linked_list_insert(linked_list, linked_list->count, data);
+    }
+
+    u32 ckit_linked_list_node_to_index(CKIT_LinkedList* linked_list, CKIT_Node* address) {
+        CKIT_Node* current_node = linked_list->head; 
+        for (u32 i = 0; i < linked_list->count + 1; i++) {
+            if (current_node == address) {
+                return i;
+            }
+            current_node = current_node->next;
+        }
+
+        ckit_assert(FALSE); // couldn't match a node to an address
+        return 0; // should never get here
+    }
+
+    CKIT_Node ckit_linked_list_pop(CKIT_LinkedList* linked_list) {
+        return ckit_linked_list_remove(linked_list, linked_list->count - 1);
+    }
+
+    CKIT_Node ckit_linked_list_remove(CKIT_LinkedList* linked_list, u32 index) {
+        ckit_assert(linked_list); 
+        ckit_assert(linked_list->count > 0); 
+        ckit_assert(index >= 0);
+
+        u32 old_count = linked_list->count--;
+        if (index == 0 && old_count == 1) { // removing the head fully
+            CKIT_Node ret = *linked_list->head;
+            ckit_node_free(linked_list, linked_list->head);
+            linked_list->head = NULLPTR;
+
+            return ret;
+        }
+
+        if (index == 0) { // remove head
+            CKIT_Node* cached_head = linked_list->head;
+            linked_list->head = linked_list->head->next;
+            CKIT_Node ret = *cached_head; 
+            ckit_node_free(linked_list, cached_head);
+
+            return ret;
+        }
+
+        ckit_assert(index < old_count);
+        if (index == (old_count - 1)) { // remove tail
+            CKIT_Node* cached_tail = linked_list->tail;
+            linked_list->tail = linked_list->tail->prev;
+            CKIT_Node ret = *cached_tail; 
+            ckit_node_free(linked_list, cached_tail);
+
+            return ret;
+        }
+
+        CKIT_Node* current_node = linked_list->head; 
+        for (u32 i = 0; i < index; i++) {
+            current_node = current_node->next;
+        }
+
+        current_node->next->prev = current_node->prev;
+        current_node->prev->next = current_node->next;
+        CKIT_Node ret = *current_node; 
+        ckit_node_free(linked_list, current_node);
+
+        return ret;
+    }
+
+    void* MACRO_ckit_linked_list_free(CKIT_LinkedList* linked_list) {
+        ckit_assert(linked_list); 
+        CKIT_Node* current_node = linked_list->head; 
+        CKIT_Node* next_node = NULLPTR; 
+        for (u32 i = 0; i < linked_list->count; i++) {
+            next_node = current_node->next;
+            ckit_node_data_free(linked_list, current_node);
+            current_node = next_node;
+        }
+        ckit_free(linked_list);
+
+        return linked_list;
+    }
+    //
+    // ========== End CKIT_LinkedList ==========
+    //
+
+    //
+    // ========== Start CKIT_Queue ==========
+    //
+    CKIT_Queue* MACRO_ckit_queue_create(u32 inital_capacity, size_t element_size_in_bytes, Boolean is_pointer_type, const char* file, const u32 line, const char* function) {
+        CKIT_Queue* ret = MACRO_ckit_alloc(sizeof(CKIT_Queue), TAG_CKIT_CORE_QUEUE, file, line, function);
+        ret->element_size_in_bytes = element_size_in_bytes;
+        ret->capacity = inital_capacity;
+        ret->count = 0;
+        ret->is_pointer_type = is_pointer_type;
+        ret->data = MACRO_ckit_alloc(element_size_in_bytes * ret->capacity, TAG_CKIT_CORE_QUEUE, file, line, function);
+        return ret;
+    }
+
+    CKIT_Queue* MACRO_ckit_queue_free(CKIT_Queue* queue) {
+        queue->element_size_in_bytes = 0;
+        queue->capacity = 0;
+        queue->count = 0;
+        ckit_free(queue->data);
+        ckit_free(queue);
+        return queue;
+    }
+
+
+    // Date: July 19, 2024
+    // NOTE(Jovanni): If you have a count it kind of defeats the purpose sort of
+    void* ckit_dequeue(CKIT_Queue* queue) {
+        ckit_assert(queue->count > 0);
+        ckit_assert(queue->has_next_to_read || queue->read_index != queue->write_index);
+        queue->has_next_to_read = FALSE;
+
+        void* ret = NULLPTR;
+        
+        queue->read_index = queue->read_index % queue->capacity;
+        if (queue->is_pointer_type) {
+            u8** temp_ptr = (u8**)((u8*)queue->data + (queue->element_size_in_bytes * queue->read_index++));
+            ret = *temp_ptr;
+        } else {
+            ret = ckit_alloc_custom(queue->element_size_in_bytes, TAG_CKIT_EXPECTED_USER_FREE);
+            ckit_memory_copy((u8*)queue->data + (queue->element_size_in_bytes * queue->read_index++), ret, queue->element_size_in_bytes, queue->element_size_in_bytes);
+        }
+        queue->count--;
+
+        return ret;
+    }
+
+    void ckit_enqueue(CKIT_Queue* queue, void* element) {
+        ckit_assert(queue->count < queue->capacity);
+        ckit_assert(!queue->has_next_to_read || queue->read_index != queue->write_index);
+        queue->has_next_to_read = TRUE;
+
+        queue->write_index = queue->write_index % queue->capacity;
+        if (queue->is_pointer_type) {
+            u8** temp_ptr = (u8**)((u8*)queue->data + (queue->element_size_in_bytes * queue->write_index++));
+            *temp_ptr  = element;
+        }  else {
+            ckit_memory_copy(element, (u8*)queue->data + (queue->element_size_in_bytes * queue->write_index++), queue->element_size_in_bytes, queue->element_size_in_bytes);
+        }
+
+        queue->count++;
+    }
+
+    u32 ckit_queue_capacity(CKIT_Queue* queue) {
+        return queue->capacity;
+    }
+
+    u32 ckit_queue_count(CKIT_Queue* queue) {
+        return queue->count;
+    }
+    //
+    // ========== End CKIT_Queue ==========
+    //
+
+    //
+    // ========== Start CKIT_Stack ==========
+    //
+    typedef struct CKIT_Stack {
+        CKIT_LinkedList* linked_list;
+    } CKIT_Stack;
+
+    CKIT_Stack* MACRO_ckit_stack_create(size_t size_in_bytes, Boolean is_pointer_type, const char* file, const u32 line, const char* function) {
+        CKIT_Stack* stack = MACRO_ckit_alloc(sizeof(CKIT_Stack), TAG_CKIT_CORE_STACK, file, line, function);
+        stack->linked_list = MACRO_ckit_linked_list_create(size_in_bytes, is_pointer_type, file, line, function);
+
+        return stack;
+    }
+
+    void* ckit_stack_push(CKIT_Stack* stack, void* data) {
+        return ckit_linked_list_push(stack->linked_list, data);
+    }
+
+    void* ckit_stack_pop(CKIT_Stack* stack) {
+        return ckit_linked_list_pop(stack->linked_list).data;
+    }
+
+    void* MACRO_ckit_stack_free(CKIT_Stack* stack) {
+        ckit_linked_list_free(stack->linked_list);
+        ckit_free(stack);
+
+        return stack;
+    }
+    //
+    // ========== End CKIT_Queue ==========
+    //
+#endif

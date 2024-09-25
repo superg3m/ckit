@@ -107,13 +107,19 @@
 		"xlocnum": "cpp",
 		"ckit_bmp_parser.h": "c",
 		"ckit_color.h": "c",
-		"ckit_logger.c": "cpp",
-		"ckit_arena.c": "cpp",
-		"ckit_memory.c": "cpp",
-		"ckit_string.c": "cpp",
-		"ckit_math.c": "cpp",
-		"ckit_os.c": "cpp",
-		"ckit_platform_services.c": "cpp"
+		"ckit_logger.c": "c",
+		"ckit_arena.c": "c",
+		"ckit_memory.c": "c",
+		"ckit_string.c": "c",
+		"ckit_math.c": "c",
+		"ckit_os.c": "c",
+		"ckit_platform_services.c": "c",
+		"ckit_stack.c": "c",
+		"ckit_queue.c": "c",
+		"ckit_linked_list.c": "c",
+		"ckit_hashmap.c": "c",
+		"ckit_vector.c": "c",
+		"ckit_hashset.c": "c"
 	},
 	"editor.insertSpaces": false
 }
