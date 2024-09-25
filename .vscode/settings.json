@@ -106,7 +106,14 @@
 		"system_error": "cpp",
 		"xlocnum": "cpp",
 		"ckit_bmp_parser.h": "c",
-		"ckit_color.h": "c"
+		"ckit_color.h": "c",
+		"ckit_logger.c": "cpp",
+		"ckit_arena.c": "cpp",
+		"ckit_memory.c": "cpp",
+		"ckit_string.c": "cpp",
+		"ckit_math.c": "cpp",
+		"ckit_os.c": "cpp",
+		"ckit_platform_services.c": "cpp"
 	},
 	"editor.insertSpaces": false
 }
