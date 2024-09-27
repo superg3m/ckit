@@ -1738,7 +1738,7 @@ CKIT_API void ckit_cleanup();
         String current_line = ckit_str_create("");
         for (size_t i = 0; i < file_size; i++) {
             char current_char = file_data[i];
-            if (current_char == '\n') {
+            if (current_char == '\n' || (i == (file_size - 1))) {
                 ckit_vector_push(ret, current_line);
                 ckit_str_clear(current_line);
                 continue;

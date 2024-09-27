@@ -374,6 +374,9 @@ int main() {
 	LOG_SUCCESS("%d\n", ckit_str_to_int("45125"));
 
 	String* lines = ckit_os_get_lines_from_file("../../assets/Lexer_Test.txt");
+	for (size_t i = 0; i < ckit_vector_count(lines); i++) {
+		LOG_PRINT("Test: %s\n", lines[i]);
+	}
 
 	ckit_vector_free(lines);
 	ckit_cleanup();
