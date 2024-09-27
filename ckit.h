@@ -251,7 +251,10 @@ CKIT_API void ckit_cleanup();
 
     CKIT_API String MACRO_ckit_str_insert(String str, const char* to_insert, const u32 index);
     CKIT_API String MACRO_ckit_str_insert_char(String str, const char to_insert, const u32 index);
-    CKIT_API void ckit_str_clear(char* str1);
+    // Date: September 27, 2024
+    // NOTE(Jovanni): This is a bit scary if you clear with the wrong one the length with be wrong!
+    CKIT_API void ckit_str_clear(String str1);
+    CKIT_API void ckit_cstr_clear(char* str1);
 
     // If you are copying data to the string and need to update the header state specifically for length
     CKIT_API void ckit_str_recanonicalize_header_length(String str);
@@ -1381,7 +1384,12 @@ CKIT_API void ckit_cleanup();
         return str;
     }
 
-    void ckit_str_clear(char* str1) {
+    void ckit_str_clear(String str1) {
+        ckg_cstr_clear(str1);
+        ckit_str_recanonicalize_header_length(str1);
+    }
+
+    void ckit_cstr_clear(char* str1) {
         ckg_cstr_clear(str1);
     }
 
