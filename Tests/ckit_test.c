@@ -373,6 +373,9 @@ int main() {
 
 	LOG_SUCCESS("%d\n", ckit_str_to_int("45125"));
 
+	String* lines = ckit_os_get_lines_from_file("../../assets/Learn_About_BMP.bmp");
+
+	ckit_vector_free(lines);
 	ckit_cleanup();
 	return 0;
 }
