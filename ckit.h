@@ -459,6 +459,7 @@ CKIT_API void ckit_cleanup();
     CKIT_API CKIT_File* ckit_os_file_close(CKIT_File* file);
     CKIT_API CKIT_File* MACRO_ckit_os_close_file(CKIT_File* file);
     CKIT_API u8* ckit_os_read_entire_file(const char* path, size_t* returned_file_size);
+    CKIT_API String* ckit_os_get_lines_from_file(const char* path);
     CKIT_API void ckit_os_get_mouse_position(int* mouse_x, int* mouse_y);
     CKIT_API void ckit_os_push(char* path);
     CKIT_API void ckit_os_pop();
@@ -1886,6 +1887,29 @@ CKIT_API void ckit_cleanup();
             *returned_file_size = file_size;
 
             return file_data;
+        }
+
+        String* ckit_os_get_lines_from_file(const char* path) {
+            size_t file_size = 0;
+            u8* file_data = ckit_os_read_entire_file(path, &file_size);
+
+            String* ret = NULLPTR;
+
+            String current_line = ckit_str_create("");
+            for (size_t i = 0; i < file_size; i++) {
+                char current_char = file_data[i];
+                if (current_char == '\n') {
+                    ckit_vector_push(ret);
+                    ckit_str_clear(current_line);
+                    continue;
+                }
+
+                ckit_str_append_char(current_line, current_char);
+            }
+
+            ckit_free(file_data);
+
+            return ret;
         }
 
         void ckit_os_get_mouse_position(int* mouse_x, int* mouse_y) {
