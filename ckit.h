@@ -232,6 +232,12 @@ CKIT_API void ckit_cleanup();
 #endif 
 
 #if defined(CKIT_INCLUDE_STRING)
+    typedef struct CKIT_StringHeader {
+        u32 length; 
+        size_t capacity;
+        char* magic; 
+    } CKIT_StringHeader;
+    
     typedef char* String;
 
     CKIT_API String ckit_str_create_custom(const char* c_str, size_t capacity);
@@ -1302,12 +1308,6 @@ CKIT_API void ckit_cleanup();
 #endif
 
 #if defined(CKIT_IMPL_STRING)
-    typedef struct CKIT_StringHeader {
-        u32 length; 
-        size_t capacity;
-        char* magic; 
-    } CKIT_StringHeader;
-
     #define ckit_str_header(string) ((CKIT_StringHeader*)(string - sizeof(CKIT_StringHeader)))
     #define CKIT_STR_MAGIC "CKIT_MAGIC_STRING"
 
@@ -1732,6 +1732,19 @@ CKIT_API void ckit_cleanup();
             String ret = ckit_str_create(buffer);
 
             return ret;
+        }
+
+        // Date: September 25, 2024
+        // TODO(Jovanni): ckit_os_query_cycle_counter()
+        u64 ckit_os_query_cycle_counter() {
+            LARGE_INTEGER counter;
+            QueryPerformanceCounter(&counter);
+
+            // Date: September 25, 2024
+            // TODO(Jovanni): idk if this is right?
+            u64 cycles = counter.QuadPart;
+
+            return cycles;
         }
 
         double ckit_os_query_performance_counter() {
