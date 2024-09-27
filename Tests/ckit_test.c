@@ -373,7 +373,7 @@ int main() {
 
 	LOG_SUCCESS("%d\n", ckit_str_to_int("45125"));
 
-	String* lines = ckit_os_get_lines_from_file("../../assets/Learn_About_BMP.bmp");
+	String* lines = ckit_os_get_lines_from_file("../../assets/Lexer_Test.txt");
 
 	ckit_vector_free(lines);
 	ckit_cleanup();
