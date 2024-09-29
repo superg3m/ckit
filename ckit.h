@@ -1479,7 +1479,7 @@ CKIT_API void ckit_cleanup();
         return ckit_str_split_helper(string_vector, string_buffer, 0, delimitor);
     }
 
-    Boolean kit_cstr_contains(const char* string_buffer, const char* contains) {
+    Boolean ckit_str_contains(const char* string_buffer, const char* contains) {
         ckit_assert(string_buffer);
         ckit_assert(contains);
         return ckg_cstr_contains(string_buffer, contains);
