@@ -2158,7 +2158,6 @@ CKIT_API void ckit_cleanup();
         for (u32 i = 0; i < old_capacity; i++) {
             if (hashmap->entries[i].key != NULLPTR) {
                 u32 index =  ckit_hash_value(hashmap->entries[i].key) % hashmap->capacity;
-                LOG_PRINT("String: %s\n", hashmap->entries[i].key);
                 CKIT_HashMapEntry* cached_ptr = hashmap->entries;
                 hashmap->entries = new_entries;
                 u64 real_index = ckit_hashmap_resolve_collision(hashmap, cached_ptr[i].key, index);
@@ -2286,7 +2285,6 @@ CKIT_API void ckit_cleanup();
         for (u32 i = 0; i < old_capacity; i++) {
             if (hashset->entries[i] != NULLPTR) {
                 u32 index =  ckit_hash_value(hashset->entries[i]) % hashset->capacity;
-                LOG_PRINT("String: %s\n", hashset->entries[i]);
                 char** cached_ptr = hashset->entries;
                 hashset->entries = temp_entries;
                 u64 real_index = ckit_hashset_resolve_collision(hashset, cached_ptr[i], index);
