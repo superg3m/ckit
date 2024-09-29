@@ -36,7 +36,6 @@ void ckit_hashset_grow(CKIT_HashSet* hashset) {
 	for (u32 i = 0; i < old_capacity; i++) {
 		if (hashset->entries[i] != NULLPTR) {
 			u32 index =  ckit_hash_value(hashset->entries[i]) % hashset->capacity;
-			LOG_PRINT("String: %s\n", hashset->entries[i]);
 			char** cached_ptr = hashset->entries;
 			hashset->entries = temp_entries;
 			u64 real_index = ckit_hashset_resolve_collision(hashset, cached_ptr[i], index);
