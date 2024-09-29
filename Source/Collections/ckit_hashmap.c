@@ -48,7 +48,6 @@ void ckit_hashmap_grow(CKIT_HashMap* hashmap) {
 	for (u32 i = 0; i < old_capacity; i++) {
 		if (hashmap->entries[i].key != NULLPTR) {
 			u32 index =  ckit_hash_value(hashmap->entries[i].key) % hashmap->capacity;
-			LOG_PRINT("String: %s\n", hashmap->entries[i].key);
 			CKIT_HashMapEntry* cached_ptr = hashmap->entries;
 			hashmap->entries = new_entries;
 			u64 real_index = ckit_hashmap_resolve_collision(hashmap, cached_ptr[i].key, index);
