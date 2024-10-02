@@ -273,8 +273,8 @@ CKIT_API void ckit_cleanup();
     // TODO(Jovanni): String* ckit_str_split_with_char(const char* string_buffer, const char delimitor);
 
     CKIT_API Boolean ckit_str_contains(const char* string_buffer, const char* contains);
-    CKIT_API s32 ckit_str_index_of(const char* string_buffer, const char* sub_string);
-    CKIT_API s32 ckit_str_last_index_of(const char* string_buffer, const char* sub_string);
+    CKIT_API u32 ckit_str_index_of(const char* string_buffer, const char* sub_string);
+    CKIT_API u32 ckit_str_last_index_of(const char* string_buffer, const char* sub_string);
     CKIT_API Boolean ckit_str_starts_with(const char* string_buffer, const char* starts_with);
     CKIT_API Boolean ckit_str_ends_with(const char* string_buffer, const char* ends_with);
     CKIT_API String ckit_str_reverse(const char* string_buffer);
@@ -817,9 +817,9 @@ CKIT_API void ckit_cleanup();
     #endif
 
     Boolean message_has_special_delmitor(const char* message) {
-        s32 start_delimitor_index = ckit_str_index_of(message, logger_start_delimitor);
-        s32 end_delimitor_index = ckit_str_index_of(message, logger_end_delimitor);
-        return start_delimitor_index != -1 && end_delimitor_index != -1;
+        Boolean start_delimitor_index = ckit_str_contains(message, logger_start_delimitor);
+        Boolean end_delimitor_index = ckit_str_contains(message, logger_end_delimitor);
+        return start_delimitor_index && end_delimitor_index;
     }
 
     internal void special_print_helper(const char* message, CKIT_LogLevel log_level) {
@@ -1459,7 +1459,12 @@ CKIT_API void ckit_cleanup();
     }
 
     internal String* ckit_str_split_helper(String* ret_buffer, const char* string_buffer, u32 offset_into_buffer, const char* delimitor) {
-        s32 found_index = ckit_str_index_of(string_buffer + offset_into_buffer, delimitor);
+        if (!ckit_str_contains(string_buffer + offset_into_buffer, delimitor)) {
+            ckit_vector_push(ret_buffer, ckit_substring(string_buffer, offset_into_buffer, ckit_cstr_length(string_buffer) - 1));
+            return ret_buffer;
+        }
+
+        u32 found_index = ckit_str_index_of(string_buffer + offset_into_buffer, delimitor);
         u32 offset_to_delimitor = found_index + offset_into_buffer;
         if (found_index == -1) {
             ckit_vector_push(ret_buffer, ckit_substring(string_buffer, offset_into_buffer, ckit_cstr_length(string_buffer) - 1));
@@ -1485,13 +1490,13 @@ CKIT_API void ckit_cleanup();
         return ckg_cstr_contains(string_buffer, contains);
     }
 
-    s32 ckit_str_index_of(const char* string_buffer, const char* sub_string) {
+    u32 ckit_str_index_of(const char* string_buffer, const char* sub_string) {
         ckit_assert(string_buffer);
         ckit_assert(sub_string);
         return ckg_cstr_index_of(string_buffer, sub_string);
     }
 
-    s32 ckit_str_last_index_of(const char* string_buffer, const char* sub_string) {
+    u32 ckit_str_last_index_of(const char* string_buffer, const char* sub_string) {
         ckit_assert(string_buffer);
         ckit_assert(sub_string);
         return ckg_cstr_last_index_of(string_buffer, sub_string);
@@ -1544,6 +1549,10 @@ CKIT_API void ckit_cleanup();
         ckit_assert(start_delimitor);
         ckit_assert(end_delimitor);
         ckit_assert(!ckit_str_equal(start_delimitor, end_delimitor));
+
+        if (!ckit_str_contains(str, start_delimitor) || !ckit_str_contains(str, end_delimitor)) {
+            return NULLPTR;
+        }
 
         u32 start_delimitor_length = ckit_cstr_length(start_delimitor);
         s32 start_delimitor_index = ckit_str_index_of(str, start_delimitor); 
