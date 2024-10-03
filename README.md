@@ -43,8 +43,6 @@
 		- [ ] ckit_io
 
 
-
-
 2. - [ ] I need to have a public API for ckit and a private API for ckit.
 	- [ ] forward declare types to avoid redefs
 		- [ ] enums
