@@ -4,7 +4,7 @@ from c_build.source.Manager import *
 # --------------------------------------------------------------------------------------s
 
 compiler_name = C_BUILD_COMPILER_NAME() if C_BUILD_IS_DEPENDENCY() else "cl"
-if !IS_WINDOWS():
+if not IS_WINDOWS():
     compiler_name = "gcc"
 compiler_std_version = "c11"
 compiler_warning_level = ""
