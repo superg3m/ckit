@@ -203,10 +203,10 @@ CKIT_API void ckit_cleanup();
     // Date: September 24, 2024
     // TODO(Jovanni): Just make this defines
     typedef enum CKIT_ArenaFlag {
-    CKIT_ARENA_FLAG_FIXED,
-    CKIT_ARENA_FLAG_CIRCULAR,
-    CKIT_ARENA_FLAG_EXTENDABLE_PAGES,
-    CKIT_ARENA_FLAG_COUNT
+        CKIT_ARENA_FLAG_FIXED,
+        CKIT_ARENA_FLAG_CIRCULAR,
+        CKIT_ARENA_FLAG_EXTENDABLE_PAGES,
+        CKIT_ARENA_FLAG_COUNT
     } CKIT_ArenaFlag;
 
     typedef struct CKIT_Arena CKIT_Arena;
