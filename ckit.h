@@ -525,6 +525,7 @@ CKIT_API void ckit_cleanup();
     #define ckit_vector_remove_at(vector, index) ckit_memory_delete_index(vector, ckit_vector_count(vector), ckit_vector_capacity(vector), index); ckit_vector_base(vector)->count--
     #define ckit_vector_insert_at(vector, element, index) ckit_memory_insert_index(vector, ckit_vector_count(vector), ckit_vector_capacity(vector), element, index); ckit_vector_base(vector)->count++
     #define ckit_vector_free(vector) vector = MACRO_ckit_vector_free(vector)
+    #define ckit_vector_to_array(vector) MACRO_ckit_vector_to_array(vector, sizeof(vector[0]))
     //
     // ========== End CKIT_Vector ==========
     //
@@ -2101,6 +2102,14 @@ CKIT_API void ckit_cleanup();
 
         return vector;
     }
+    
+    void* MACRO_ckit_vector_to_array(void* vector, size_t element_size) {
+        size_t total_size = ckit_vector_count(vector) * element_size;
+        u8* ret = ckit_alloc(ckit_vector_count(vector) * element_size);
+        ckit_memory_copy(vector, ret, total_size, total_size);
+
+        return ret;
+    }
 
     void* MACRO_ckit_vector_reserve(size_t element_size, u32 inital_capacity, const char* file, const u32 line, const char* function) {
         void* vector = MACRO_ckit_alloc(sizeof(CKIT_VectorHeader) + (inital_capacity * element_size), TAG_CKIT_CORE_VECTOR, file, line, function);
@@ -2108,6 +2117,7 @@ CKIT_API void ckit_cleanup();
         ckit_vector_base(vector)->count = 0;
         ckit_vector_base(vector)->capacity = inital_capacity;
         ckit_vector_base(vector)->magic = CKIT_VECTOR_MAGIC;
+        
         return vector;
     }
 
