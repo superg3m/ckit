@@ -27,30 +27,11 @@
 2. - [ ] Parse the message better so you can intuitively \n something. (Maybe add some string in the beginning of a message ot ommit the <WARN:> for example)
 
 ### Next Steps
-1. More umbrela files
-	- [ ] ckit_types.h
-		common types and defines you always want to be able to talk about
-
-	- [ ] ckit_utility.h
-		- math
-		- threading
-		- intrinsics
-	- [ ] ckit_collections.h
-		- [ ] ckit_vector
-		- [ ] hashmap and so on
-	- [ ] ckit_os.h
-		- [ ] ckit_platform_services
-		- [ ] ckit_io
-
-
-2. - [ ] I need to have a public API for ckit and a private API for ckit.
-	- [ ] forward declare types to avoid redefs
+1. - [ ] forward declare types to avoid redefs
 		- [ ] enums
 		- [ ] defines
 		- [ ] structs
-	 - [ ] extern prototypes
-	 
-3. - [ ] Hot_Reloading.h
+2. - [ ] Hot_Reloading
 
 Thoughts:
 	But in regards to dangling pointers maybe I can just give back a index indead of a pointer (Handles are the better pointers)
@@ -267,10 +248,6 @@ Thoughts:
 	- [ ] ckit_lexer_consume_token_stream(lexer);
 	- [ ] ckit_lexer_free(lexer);
 
-### Networking
-- [ ] ckit_client.h
-- [ ] ckit_server.h
-
 ### Intrinsics (PROB CORE)
 - [ ] compiler_memory_fences
 - [ ] interlock_exchange
@@ -297,11 +274,18 @@ make vector operations easier
 - [ ] test_string_functions()
 
 
-Kyle gave me a great idea modules are actually going to be stand alone repos that works as a plugin for ckit.
-Application (that opens a window does graphics and uses the networking functionality, this all should just work!)
-	- ckit.lib
-	- ckit_graphics.lib
-	- ckit_networking.lib
+# Develoepr Notes: (For me)
+- [ ] Arenas need to have an option to desigate memory such as stack memory or heap memory.
+   - This is for stuff like embbeded systems if you don't have access to a virtual alloc.
+   - CKIT_Arena* arena = ckit_arena_create(0);
+   u8 memory_buffer[] = {};
+   ckit_arena_assign_memory(arena, memory_buffer);
+   - Free list to store memory that is not longer allocated so I can use those spots up first.
 
-ckit_externs.h (has all the extern function you can encounter with ckit, I can auto generate this programmatically)
-ckit.h (This should be auto generated as well...)
+- [ ] Start phasing out standard library use native functions for everything.
+	- [ ] printf() -> ckit_printf() break c compataibltity with printf so I can do cool stuff like:
+		- [ ] ckit_printf("%iv\n") // (int vector) -> [5, 6, 2]
+		- [ ] ckit_printf("%fv\n") // (float vector) [1.0, 3.24]
+		- [ ] ckit_printf("%sv\n") // (string vector) ["Stuff in here", "Hello"]
+		- [ ] ckit_printf("%cv\n") // (char vector) ['y', 'f']
+
