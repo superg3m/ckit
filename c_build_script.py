@@ -23,7 +23,7 @@ if compiler_name == "cl":
 	compiler_disable_specific_warnings = ["5105", "4668", "4820", "4996"]
 elif compiler_name in ["gcc", "cc", "clang"]:
 	compiler_warning_level = "all"
-	compiler_disable_specific_warnings = ["deprecated", "pointer-sign", "parentheses"]
+	compiler_disable_specific_warnings = ["deprecated", "parentheses"]
 
 executable_procedure_libs = [f"../../build_{compiler_name}/{C_BUILD_LIB('ckit', compiler_name)}"]
 
