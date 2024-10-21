@@ -289,3 +289,4 @@ make vector operations easier
 		- [ ] ckit_printf("%sv\n") // (string vector) ["Stuff in here", "Hello"]
 		- [ ] ckit_printf("%cv\n") // (char vector) ['y', 'f']
 
+- [ ] Actually I think this will remain pure C but I will add a cpp file that is ckit.cpp and ckit.hpp that will be a more powerful version of ckit
