@@ -112,142 +112,372 @@ using conditional_t = typename conditional_impl<Condition, TrueType>::type;
 */
 
 namespace ckit {
-    template <u8 T_DIMENSIONS>
-    struct Vector {
-        union {
+    struct Vector2D {
+		union {
 			struct {
-				// conditional_t<(T_DIMENSIONS >= 1), float> x;
-				// conditional_t<(T_DIMENSIONS >= 2), float> y;
-				// conditional_t<(T_DIMENSIONS >= 3), float> z;
-				// conditional_t<(T_DIMENSIONS >= 4), float> w;
+				float x;
+				float y;
+			};
+
+			float v[2];
+		};
+
+		Vector2D(float value = 0.0f);
+		Vector2D(float x_value, float y_value);
+
+		Vector2D& operator+=(const Vector2D& v);
+		Vector2D& operator-=(const Vector2D& v);
+		Vector2D& operator*=(const Vector2D& v);
+		Vector2D& operator/=(const Vector2D& v);
+
+		Vector2D operator+(const Vector2D& v) const;
+		Vector2D operator-(const Vector2D& v) const;
+		Vector2D operator*(const Vector2D& v) const;
+		Vector2D operator/(const Vector2D& v) const;
+
+		float getMagnitude() const;
+		void normalize();
+	};
+
+	struct Vector3D {
+		union {
+			struct {
+				float x;
+				float y;
+				float z;
+			};
+			
+			float v[3];
+		};
+
+		Vector3D(float value = 0.0f);
+		Vector3D(float x_value, float y_value, float z_value);
+
+		Vector3D& operator+=(const Vector3D& v);
+		Vector3D& operator-=(const Vector3D& v);
+		Vector3D& operator*=(const Vector3D& v);
+		Vector3D& operator/=(const Vector3D& v);
+
+		Vector3D operator+(const Vector3D& v) const;
+		Vector3D operator-(const Vector3D& v) const;
+		Vector3D operator*(const Vector3D& v) const;
+		Vector3D operator/(const Vector3D& v) const;
+
+		float getMagnitude() const;
+		void normalize();
+	};
+
+	struct Vector4D {
+		union {
+			struct {
 				float x;
 				float y;
 				float z;
 				float w;
 			};
-
-			float v[T_DIMENSIONS];
+			
+			float v[4];
 		};
 
-        Vector(float value = 0.0f) {
-            for (u8 i = 0; i < T_DIMENSIONS; i++) {
-                v[i] = value;
-            }
-        }
+		Vector4D(float value = 0.0f);
+		Vector4D(float x_value, float y_value, float z_value, float w_value);
 
-        Vector& operator+=(const Vector& v2);
-        Vector& operator-=(const Vector& v2);
-        Vector& operator*=(const Vector& v2);
-        Vector& operator/=(const Vector& v2);
+		Vector4D& operator+=(const Vector4D& v);
+		Vector4D& operator-=(const Vector4D& v);
+		Vector4D& operator*=(const Vector4D& v);
+		Vector4D& operator/=(const Vector4D& v);
 
-		Vector operator+(const Vector& v2);
-		Vector operator-(const Vector& v2);
-		Vector operator*(const Vector& v2);
-		Vector operator/(const Vector& v2);
+		Vector4D operator+(const Vector4D& v) const;
+		Vector4D operator-(const Vector4D& v) const;
+		Vector4D operator*(const Vector4D& v) const;
+		Vector4D operator/(const Vector4D& v) const;
 
 		float getMagnitude() const;
 		void normalize();
-    };
-
-	using Vector2D = Vector<2>;
-	using Vector3D = Vector<3>;
-	using Vector4D = Vector<4>;
+	};
 
 	//
 	// ===================================================== MATRIX =====================================================
 	//
+}
 
-	//
-	// ===================================================== CKIT_IMPL =====================================================
-	//
+//
+// ===================================================== CKIT_IMPL =====================================================
+//
 
-	template <u8 T_DIMENSIONS>
-	Vector<T_DIMENSIONS>& Vector<T_DIMENSIONS>::operator+=(const Vector<T_DIMENSIONS>& v2) {
-		for (u8 i = 0; i < T_DIMENSIONS; ++i) {
-			this->v[i] += v2.v[i];
-		}
-		return *this;
-	}
-
-	template <u8 T_DIMENSIONS>
-	Vector<T_DIMENSIONS>& Vector<T_DIMENSIONS>::operator-=(const Vector<T_DIMENSIONS>& v2) {
-		for (u8 i = 0; i < T_DIMENSIONS; ++i) {
-			this->v[i] -= v2.v[i];
-		}
-		return *this;
-	}
-
-	template <u8 T_DIMENSIONS>
-	Vector<T_DIMENSIONS>& Vector<T_DIMENSIONS>::operator*=(const Vector<T_DIMENSIONS>& v2) {
-		for (u8 i = 0; i < T_DIMENSIONS; ++i) {
-			this->v[i] *= v2.v[i];
-		}
-		return *this;
-	}
-
-	template <u8 T_DIMENSIONS>
-	Vector<T_DIMENSIONS>& Vector<T_DIMENSIONS>::operator/=(const Vector<T_DIMENSIONS>& v2) {
-		for (u8 i = 0; i < T_DIMENSIONS; ++i) {
-			this->v[i] /= v2.v[i];
-		}
-		return *this;
-	}
-
-	template <u8 T_DIMENSIONS>
-	Vector<T_DIMENSIONS> Vector<T_DIMENSIONS>::operator+(const Vector<T_DIMENSIONS>& v2) {
-		Vector<T_DIMENSIONS> result;
-		for (u8 i = 0; i < T_DIMENSIONS; ++i) {
-			result.v[i] = this->v[i] + v2.v[i];
-		}
-		return result;
-	}
-
-	template <u8 T_DIMENSIONS>
-	Vector<T_DIMENSIONS> Vector<T_DIMENSIONS>::operator-(const Vector<T_DIMENSIONS>& v2) {
-		Vector<T_DIMENSIONS> result;
-		for (u8 i = 0; i < T_DIMENSIONS; ++i) {
-			result.v[i] = this->v[i] - v2.v[i];
-		}
-		return result;
-	}
-
-	template <u8 T_DIMENSIONS>
-	Vector<T_DIMENSIONS> Vector<T_DIMENSIONS>::operator*(const Vector<T_DIMENSIONS>& v2) {
-		Vector<T_DIMENSIONS> result;
-		for (u8 i = 0; i < T_DIMENSIONS; ++i) {
-			result.v[i] = this->v[i] * v2.v[i];
-		}
-		return result;
-	}
-
-	template <u8 T_DIMENSIONS>
-	Vector<T_DIMENSIONS> Vector<T_DIMENSIONS>::operator/(const Vector<T_DIMENSIONS>& v2) {
-		Vector<T_DIMENSIONS> result;
-		for (u8 i = 0; i < T_DIMENSIONS; ++i) {
-			result.v[i] = this->v[i] / v2.v[i];
-		}
-		return result;
-	}
-
-	template <u8 T_DIMENSIONS>
-	float Vector<T_DIMENSIONS>::getMagnitude() const {
-		float sum = 0;
-		for (u8 i = 0; i < T_DIMENSIONS; ++i) {
-			sum += v[i] * v[i];
+namespace ckit {
+	#if defined(CKIT_IMPL_MATH)
+		Vector2D::Vector2D(float value) {
+			this->x = value;
+			this->y = value;
 		}
 
-		return sqrt(sum);
-	}
+		Vector2D::Vector2D(float x, float y) {
+			this->x = x;
+			this->y = y;
+		}
 
-	template <u8 T_DIMENSIONS>
-	void Vector<T_DIMENSIONS>::normalize() {
-		float magnitude = getMagnitude();
-		if (magnitude != 0) {
-			for (u8 i = 0; i < T_DIMENSIONS; ++i) {
-				v[i] /= magnitude;
+		Vector2D& Vector2D::operator+=(const Vector2D& v) {
+			this->x += v.x;
+			this->y += v.y;
+
+			return *this;
+		}
+
+		Vector2D& Vector2D::operator-=(const Vector2D& v) {
+			this->x -= v.x;
+			this->y -= v.y;
+
+			return *this;
+		}
+
+		Vector2D& Vector2D::operator*=(const Vector2D& v) {
+			this->x *= v.x;
+			this->y *= v.y;
+
+			return *this;
+		}
+
+		Vector2D& Vector2D::operator/=(const Vector2D& v) {
+			this->x /= v.x;
+			this->y /= v.y;
+
+			return *this;
+		}
+
+		Vector2D Vector2D::operator+(const Vector2D& v) const {
+			float new_x = this->x + v.x;
+			float new_y = this->y + v.y;
+
+			return Vector2D(new_x, new_y);
+		}
+
+		Vector2D Vector2D::operator-(const Vector2D& v) const {
+			float new_x = this->x - v.x;
+			float new_y = this->y - v.y;
+
+			return Vector2D(new_x, new_y);
+		}
+
+		Vector2D Vector2D::operator*(const Vector2D& v) const {
+			float new_x = this->x * v.x;
+			float new_y = this->y * v.y;
+
+			return Vector2D(new_x, new_y);
+		}
+
+		Vector2D Vector2D::operator/(const Vector2D& v) const {
+			float new_x = this->x / v.x;
+			float new_y = this->y / v.y;
+
+			return Vector2D(new_x, new_y);
+		}
+
+		float Vector2D::getMagnitude() const {
+			return sqrtf(SQUARED(this->x) + SQUARED(this->y));
+		}
+
+		void Vector2D::normalize() {
+			float magnitude = this->getMagnitude();
+			if (magnitude != 0.0f) {
+				this->x /= magnitude;
+				this->y /= magnitude;
 			}
 		}
-	}
+
+		// -------------------- Vector3D Implementation --------------------
+
+		Vector3D::Vector3D(float value) {
+			this->x = value;
+			this->y = value;
+			this->z = value;
+		}
+
+		Vector3D::Vector3D(float x, float y, float z) {
+			this->x = x;
+			this->y = y;
+			this->z = z;
+		}
+
+		Vector3D& Vector3D::operator+=(const Vector3D& v) {
+			this->x += v.x;
+			this->y += v.y;
+			this->z += v.z;
+
+			return *this;
+		}
+
+		Vector3D& Vector3D::operator-=(const Vector3D& v) {
+			this->x -= v.x;
+			this->y -= v.y;
+			this->z -= v.z;
+
+			return *this;
+		}
+
+		Vector3D& Vector3D::operator*=(const Vector3D& v) {
+			this->x *= v.x;
+			this->y *= v.y;
+			this->z *= v.z;
+
+			return *this;
+		}
+
+		Vector3D& Vector3D::operator/=(const Vector3D& v) {
+			this->x /= v.x;
+			this->y /= v.y;
+			this->z /= v.z;
+
+			return *this;
+		}
+
+		Vector3D Vector3D::operator+(const Vector3D& v) const {
+			float new_x = this->x + v.x;
+			float new_y = this->y + v.y;
+			float new_z = this->z + v.z;
+
+			return Vector3D(new_x, new_y, new_z);
+		}
+
+		Vector3D Vector3D::operator-(const Vector3D& v) const {
+			float new_x = this->x - v.x;
+			float new_y = this->y - v.y;
+			float new_z = this->z - v.z;
+
+			return Vector3D(new_x, new_y, new_z);
+		}
+
+		Vector3D Vector3D::operator*(const Vector3D& v) const {
+			float new_x = this->x * v.x;
+			float new_y = this->y * v.y;
+			float new_z = this->z * v.z;
+
+			return Vector3D(new_x, new_y, new_z);
+		}
+
+		Vector3D Vector3D::operator/(const Vector3D& v) const {
+			float new_x = this->x / v.x;
+			float new_y = this->y / v.y;
+			float new_z = this->z / v.z;
+
+			return Vector3D(new_x, new_y, new_z);
+		}
+
+		float Vector3D::getMagnitude() const {
+			return sqrtf(SQUARED(this->x) + SQUARED(this->y) + SQUARED(this->z));
+		}
+
+		void Vector3D::normalize() {
+			float magnitude = this->getMagnitude();
+			if (magnitude != 0.0f) {
+				this->x /= magnitude;
+				this->y /= magnitude;
+				this->z /= magnitude;
+			}
+		}
+
+		// -------------------- Vector4D Implementation --------------------
+
+		Vector4D::Vector4D(float value) {
+			this->x = value;
+			this->y = value;
+			this->z = value;
+			this->w = value;
+		}
+
+		Vector4D::Vector4D(float x, float y, float z, float w) {
+			this->x = x;
+			this->y = y;
+			this->z = z;
+			this->w = w;
+		}
+
+		Vector4D& Vector4D::operator+=(const Vector4D& v) {
+			this->x += v.x;
+			this->y += v.y;
+			this->z += v.z;
+			this->w += v.w;
+
+			return *this;
+		}
+
+		Vector4D& Vector4D::operator-=(const Vector4D& v) {
+			this->x -= v.x;
+			this->y -= v.y;
+			this->z -= v.z;
+			this->w-= v.w;
+
+			return *this;
+		}
+
+		Vector4D& Vector4D::operator*=(const Vector4D& v) {
+			this->x *= v.x;
+			this->y *= v.y;
+			this->z *= v.z;
+			this->w *= v.w;
+
+			return *this;
+		}
+
+		Vector4D& Vector4D::operator/=(const Vector4D& v) {
+			this->x /= v.x;
+			this->y /= v.y;
+			this->z /= v.z;
+			this->w /= v.w;
+
+			return *this;
+		}
+
+		Vector4D Vector4D::operator+(const Vector4D& v) const {
+			float new_x = this->x + v.x;
+			float new_y = this->y + v.y;
+			float new_z = this->z + v.z;
+			float new_w = this->w + v.w;
+
+			return Vector4D(new_x, new_y, new_z, new_w);
+		}
+
+		Vector4D Vector4D::operator-(const Vector4D& v) const {
+			float new_x = this->x - v.x;
+			float new_y = this->y - v.y;
+			float new_z = this->z - v.z;
+			float new_w = this->w - v.w;
+
+			return Vector4D(new_x, new_y, new_z, new_w);
+		}
+
+		Vector4D Vector4D::operator*(const Vector4D& v) const {
+			float new_x = this->x * v.x;
+			float new_y = this->y * v.y;
+			float new_z = this->z * v.z;
+			float new_w = this->w * v.w;
+
+			return Vector4D(new_x, new_y, new_z, new_w);
+		}
+
+		Vector4D Vector4D::operator/(const Vector4D& v) const {
+			float new_x = this->x / v.x;
+			float new_y = this->y / v.y;
+			float new_z = this->z / v.z;
+			float new_w = this->w / v.w;
+
+			return Vector4D(new_x, new_y, new_z, new_w);
+		}
+
+		float Vector4D::getMagnitude() const {
+			return sqrtf(SQUARED(this->x) + SQUARED(this->y) + SQUARED(this->z) + SQUARED(this->w));
+		}
+
+		void Vector4D::normalize() {
+			float magnitude = this->getMagnitude();
+			if (magnitude != 0.0f) {
+				this->x /= magnitude;
+				this->y /= magnitude;
+				this->z /= magnitude;
+				this->w /= magnitude;
+			}
+		}
+	#endif
 }
 
 
