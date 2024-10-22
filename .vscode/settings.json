@@ -121,7 +121,15 @@
 		"ckit_vector.c": "c",
 		"ckit_hashset.c": "c",
 		"ckit_file_system.c": "cpp",
-		"ckit_color.c": "cpp"
+		"ckit_color.c": "cpp",
+		"iostream": "cpp",
+		"clocale": "cpp",
+		"istream": "cpp",
+		"ostream": "cpp",
+		"stdexcept": "cpp",
+		"streambuf": "cpp",
+		"xfacet": "cpp",
+		"xlocinfo": "cpp"
 	},
 	"editor.insertSpaces": false
 }

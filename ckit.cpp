@@ -1,1 +1,2 @@
-// This is entirely experiemental
+#define CKIT_IMPL_CPP
+#include "./ckit.hpp"
