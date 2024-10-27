@@ -111,400 +111,211 @@ template<bool Condition, typename TrueType>
 using conditional_t = typename conditional_impl<Condition, TrueType>::type;
 */
 
-namespace ckit {
-    struct Vector2 {
-		union {
-			struct {
-				float x;
-				float y;
-			};
 
-			float v[2];
-		};
-
-		Vector2(float value = 0.0f);
-		Vector2(float x_value, float y_value);
-
-		Vector2& operator+=(const Vector2& v);
-		Vector2& operator-=(const Vector2& v);
-		Vector2& operator*=(const Vector2& v);
-		Vector2& operator/=(const Vector2& v);
-
-		Vector2 operator+(const Vector2& v) const;
-		Vector2 operator-(const Vector2& v) const;
-		Vector2 operator*(const Vector2& v) const;
-		Vector2 operator/(const Vector2& v) const;
-
-		float getMagnitude() const;
-		float getMagnitudeSquared() const;
-		float getAngleFromOrigin() const;
-		float getAngleFromTarget(const Vector2& v2) const;
-		void normalize();
-	};
-
-	struct Vector3 {
-		union {
-			struct {
-				float x;
-				float y;
-				float z;
-			};
-			
-			float v[3];
-		};
-
-		Vector3(float value = 0.0f);
-		Vector3(float x_value, float y_value, float z_value);
-
-		Vector3& operator+=(const Vector3& v);
-		Vector3& operator-=(const Vector3& v);
-		Vector3& operator*=(const Vector3& v);
-		Vector3& operator/=(const Vector3& v);
-
-		Vector3 operator+(const Vector3& v) const;
-		Vector3 operator-(const Vector3& v) const;
-		Vector3 operator*(const Vector3& v) const;
-		Vector3 operator/(const Vector3& v) const;
-
-		float getMagnitude() const;
-		float getMagnitudeSquared() const;
-		void normalize();
-	};
-
-	struct Vector4 {
-		union {
-			struct {
-				float x;
-				float y;
-				float z;
-				float w;
-			};
-			
-			float v[4];
-		};
-
-		Vector4(float value = 0.0f);
-		Vector4(float x_value, float y_value, float z_value, float w_value);
-
-		Vector4& operator+=(const Vector4& v);
-		Vector4& operator-=(const Vector4& v);
-		Vector4& operator*=(const Vector4& v);
-		Vector4& operator/=(const Vector4& v);
-
-		Vector4 operator+(const Vector4& v) const;
-		Vector4 operator-(const Vector4& v) const;
-		Vector4 operator*(const Vector4& v) const;
-		Vector4 operator/(const Vector4& v) const;
-
-		float getMagnitude() const;
-		float getMagnitudeSquared() const;
-		void normalize();
-	};
-
-	//
-	// ===================================================== MATRIX =====================================================
-	//
-}
-
-//
-// ===================================================== CKIT_IMPL =====================================================
-//
+#pragma once
+#include <cmath> // for sqrtf and atan2f
 
 namespace ckit {
-	#if defined(CKIT_IMPL_MATH)
-		Vector2::Vector2(float value) {
-			this->x = value;
-			this->y = value;
-		}
+    #define VECTOR_DIM 3
+    #define PI 3.14159265358979323846f
 
-		Vector2::Vector2(float x, float y) {
-			this->x = x;
-			this->y = y;
-		}
+    struct Vector {
+        union {
+            struct {
+                float x, y, z;
+            };
+            float v[VECTOR_DIM];
+        };
 
-		Vector2& Vector2::operator+=(const Vector2& v) {
-			this->x += v.x;
-			this->y += v.y;
+        // Constructors
+        Vector(float value = 0.0f);
+        Vector(float x_value, float y_value);
+        Vector(float x_value, float y_value, float z_value);
 
-			return *this;
-		}
+        // Vector-Vector operators
+        Vector& operator+=(const Vector& v);
+        Vector& operator-=(const Vector& v);
+        Vector& operator*=(const Vector& v);
+        Vector& operator/=(const Vector& v);
 
-		Vector2& Vector2::operator-=(const Vector2& v) {
-			this->x -= v.x;
-			this->y -= v.y;
+        Vector operator+(const Vector& v) const;
+        Vector operator-(const Vector& v) const;
+        Vector operator*(const Vector& v) const;
+        Vector operator/(const Vector& v) const;
 
-			return *this;
-		}
+        // Vector-Scalar operators
+        Vector& operator+=(float scalar);
+        Vector& operator-=(float scalar);
+        Vector& operator*=(float scalar);
+        Vector& operator/=(float scalar);
 
-		Vector2& Vector2::operator*=(const Vector2& v) {
-			this->x *= v.x;
-			this->y *= v.y;
+        Vector operator+(float scalar) const;
+        Vector operator-(float scalar) const;
+        Vector operator*(float scalar) const;
+        Vector operator/(float scalar) const;
 
-			return *this;
-		}
+        // Scalar-Vector friend operators (to allow scalar * Vector)
+        friend Vector operator+(float scalar, const Vector& v);
+        friend Vector operator-(float scalar, const Vector& v);
+        friend Vector operator*(float scalar, const Vector& v);
+        friend Vector operator/(float scalar, const Vector& v);
 
-		Vector2& Vector2::operator/=(const Vector2& v) {
-			this->x /= v.x;
-			this->y /= v.y;
+        // Utility methods
+        float getMagnitude() const;
+        float getMagnitudeSquared() const;
+        Vector normalize();
+        float getAngleFromOrigin() const;
+        float getAngleFromTarget(const Vector& v2) const;
 
-			return *this;
-		}
+        static Vector lerp(const Vector& v1, const Vector& v2, float t);
+        static float dotProduct(const Vector& v1, const Vector& v2);
+    };
 
-		Vector2 Vector2::operator+(const Vector2& v) const {
-			float new_x = this->x + v.x;
-			float new_y = this->y + v.y;
+    // ==============================================================
+    //                       IMPLEMENTATION
+    // ==============================================================
 
-			return Vector2(new_x, new_y);
-		}
-
-		Vector2 Vector2::operator-(const Vector2& v) const {
-			float new_x = this->x - v.x;
-			float new_y = this->y - v.y;
-
-			return Vector2(new_x, new_y);
-		}
-
-		Vector2 Vector2::operator*(const Vector2& v) const {
-			float new_x = this->x * v.x;
-			float new_y = this->y * v.y;
-
-			return Vector2(new_x, new_y);
-		}
-
-		Vector2 Vector2::operator/(const Vector2& v) const {
-			float new_x = this->x / v.x;
-			float new_y = this->y / v.y;
-
-			return Vector2(new_x, new_y);
-		}
-
-		float Vector2::getMagnitude() const {
-			return sqrtf(SQUARED(this->x) + SQUARED(this->y));
-		}
-
-		float Vector2::getMagnitudeSquared() const {
-			return (SQUARED(this->x) + SQUARED(this->y));
-		}
-
-		void Vector2::normalize() {
-			float magnitude = this->getMagnitude();
-			if (magnitude != 0.0f) {
-				this->x /= magnitude;
-				this->y /= magnitude;
-			}
-		}
-
-		float Vector2::getAngleFromOrigin() const {
-			return atan2f(this->y, this->x) * (180 / PI);
-		}
-
-		// in degrees
-		float Vector2::getAngleFromTarget(const Vector2& v2) const {
-			Vector2 v3 = (*this) - v2;
-			return atan2f(this->y, this->x) * (180 / PI);
-		}
-
-		// -------------------- Vector3 Implementation --------------------
-
-		Vector3::Vector3(float value) {
+    #ifdef CKIT_IMPL_MATH
+		Vector::Vector(float value) {
 			this->x = value;
 			this->y = value;
 			this->z = value;
 		}
 
-		Vector3::Vector3(float x, float y, float z) {
-			this->x = x;
-			this->y = y;
-			this->z = z;
+		Vector::Vector(float x_value, float y_value) {
+			this->x = x_value;
+			this->y = y_value;
+			this->z = 0;
 		}
 
-		Vector3& Vector3::operator+=(const Vector3& v) {
-			this->x += v.x;
-			this->y += v.y;
-			this->z += v.z;
+		Vector::Vector(float x_value, float y_value, float z_value) {
+			this->x = x_value;
+			this->y = y_value;
+			this->z = z_value;
+		}
 
+		Vector& Vector::operator+=(const Vector& v) {
+			x += v.x; y += v.y; z += v.z;
 			return *this;
 		}
 
-		Vector3& Vector3::operator-=(const Vector3& v) {
-			this->x -= v.x;
-			this->y -= v.y;
-			this->z -= v.z;
-
+		Vector& Vector::operator-=(const Vector& v) {
+			x -= v.x; y -= v.y; z -= v.z;
 			return *this;
 		}
 
-		Vector3& Vector3::operator*=(const Vector3& v) {
-			this->x *= v.x;
-			this->y *= v.y;
-			this->z *= v.z;
-
+		Vector& Vector::operator*=(const Vector& v) {
+			x *= v.x; y *= v.y; z *= v.z;
 			return *this;
 		}
 
-		Vector3& Vector3::operator/=(const Vector3& v) {
-			this->x /= v.x;
-			this->y /= v.y;
-			this->z /= v.z;
-
+		Vector& Vector::operator/=(const Vector& v) {
+			x /= v.x; y /= v.y; z /= v.z;
 			return *this;
 		}
 
-		Vector3 Vector3::operator+(const Vector3& v) const {
-			float new_x = this->x + v.x;
-			float new_y = this->y + v.y;
-			float new_z = this->z + v.z;
-
-			return Vector3(new_x, new_y, new_z);
+		Vector Vector::operator+(const Vector& v) const {
+			return Vector(x + v.x, y + v.y, z + v.z);
 		}
 
-		Vector3 Vector3::operator-(const Vector3& v) const {
-			float new_x = this->x - v.x;
-			float new_y = this->y - v.y;
-			float new_z = this->z - v.z;
-
-			return Vector3(new_x, new_y, new_z);
+		Vector Vector::operator-(const Vector& v) const {
+			return Vector(x - v.x, y - v.y, z - v.z);
 		}
 
-		Vector3 Vector3::operator*(const Vector3& v) const {
-			float new_x = this->x * v.x;
-			float new_y = this->y * v.y;
-			float new_z = this->z * v.z;
-
-			return Vector3(new_x, new_y, new_z);
+		Vector Vector::operator*(const Vector& v) const {
+			return Vector(x * v.x, y * v.y, z * v.z);
 		}
 
-		Vector3 Vector3::operator/(const Vector3& v) const {
-			float new_x = this->x / v.x;
-			float new_y = this->y / v.y;
-			float new_z = this->z / v.z;
-
-			return Vector3(new_x, new_y, new_z);
+		Vector Vector::operator/(const Vector& v) const {
+			return Vector(x / v.x, y / v.y, z / v.z);
 		}
 
-		float Vector3::getMagnitude() const {
-			return sqrtf(SQUARED(this->x) + SQUARED(this->y) + SQUARED(this->z));
+		Vector& Vector::operator+=(float scalar) {
+			x += scalar; y += scalar; z += scalar;
+			return *this;
 		}
 
-		float Vector3::getMagnitudeSquared() const {
-			return (SQUARED(this->x) + SQUARED(this->y) + SQUARED(this->z));
+		Vector& Vector::operator-=(float scalar) {
+			x -= scalar; y -= scalar; z -= scalar;
+			return *this;
 		}
 
-		void Vector3::normalize() {
-			float magnitude = this->getMagnitude();
-			if (magnitude != 0.0f) {
-				this->x /= magnitude;
-				this->y /= magnitude;
-				this->z /= magnitude;
+		Vector& Vector::operator*=(float scalar) {
+			x *= scalar; y *= scalar; z *= scalar;
+			return *this;
+		}
+
+		Vector& Vector::operator/=(float scalar) {
+			x /= scalar; y /= scalar; z /= scalar;
+			return *this;
+		}
+
+		Vector Vector::operator+(float scalar) const {
+			return Vector(x + scalar, y + scalar, z + scalar);
+		}
+
+		Vector Vector::operator-(float scalar) const {
+			return Vector(x - scalar, y - scalar, z - scalar);
+		}
+
+		Vector Vector::operator*(float scalar) const {
+			return Vector(x * scalar, y * scalar, z * scalar);
+		}
+
+		Vector Vector::operator/(float scalar) const {
+			return Vector(x / scalar, y / scalar, z / scalar);
+		}
+
+		// Scalar-Vector friend operators
+		Vector operator+(float scalar, const Vector& v) {
+			return v + scalar;
+		}
+
+		Vector operator-(float scalar, const Vector& v) {
+			return Vector(scalar - v.x, scalar - v.y, scalar - v.z);
+		}
+
+		Vector operator*(float scalar, const Vector& v) {
+			return v * scalar;
+		}
+
+		Vector operator/(float scalar, const Vector& v) {
+			return Vector(scalar / v.x, scalar / v.y, scalar / v.z);
+		}
+
+		float Vector::getMagnitude() const {
+			return std::sqrt(x * x + y * y + z * z);
+		}
+
+		float Vector::getMagnitudeSquared() const {
+			return x * x + y * y + z * z;
+		}
+
+		Vector Vector::normalize() {
+			float magnitude = getMagnitude();
+			if (magnitude > 0.0f) {
+				*this /= magnitude;
 			}
-		}
-
-		// -------------------- Vector4 Implementation --------------------
-
-		Vector4::Vector4(float value) {
-			this->x = value;
-			this->y = value;
-			this->z = value;
-			this->w = value;
-		}
-
-		Vector4::Vector4(float x, float y, float z, float w) {
-			this->x = x;
-			this->y = y;
-			this->z = z;
-			this->w = w;
-		}
-
-		Vector4& Vector4::operator+=(const Vector4& v) {
-			this->x += v.x;
-			this->y += v.y;
-			this->z += v.z;
-			this->w += v.w;
-
 			return *this;
 		}
 
-		Vector4& Vector4::operator-=(const Vector4& v) {
-			this->x -= v.x;
-			this->y -= v.y;
-			this->z -= v.z;
-			this->w-= v.w;
-
-			return *this;
+		float Vector::getAngleFromOrigin() const {
+			return std::atan2(y, x) * (180.0f / PI);
 		}
 
-		Vector4& Vector4::operator*=(const Vector4& v) {
-			this->x *= v.x;
-			this->y *= v.y;
-			this->z *= v.z;
-			this->w *= v.w;
-
-			return *this;
+		float Vector::getAngleFromTarget(const Vector& v2) const {
+			Vector delta = *this - v2;
+			return delta.getAngleFromOrigin();
 		}
 
-		Vector4& Vector4::operator/=(const Vector4& v) {
-			this->x /= v.x;
-			this->y /= v.y;
-			this->z /= v.z;
-			this->w /= v.w;
-
-			return *this;
+		Vector Vector::lerp(const Vector& v1, const Vector& v2, float t) {
+			return ((1.0f - t) * v1) + (t * v2);
 		}
 
-		Vector4 Vector4::operator+(const Vector4& v) const {
-			float new_x = this->x + v.x;
-			float new_y = this->y + v.y;
-			float new_z = this->z + v.z;
-			float new_w = this->w + v.w;
-
-			return Vector4(new_x, new_y, new_z, new_w);
+		float Vector::dotProduct(const Vector& v1, const Vector& v2) {
+			return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 		}
-
-		Vector4 Vector4::operator-(const Vector4& v) const {
-			float new_x = this->x - v.x;
-			float new_y = this->y - v.y;
-			float new_z = this->z - v.z;
-			float new_w = this->w - v.w;
-
-			return Vector4(new_x, new_y, new_z, new_w);
-		}
-
-		Vector4 Vector4::operator*(const Vector4& v) const {
-			float new_x = this->x * v.x;
-			float new_y = this->y * v.y;
-			float new_z = this->z * v.z;
-			float new_w = this->w * v.w;
-
-			return Vector4(new_x, new_y, new_z, new_w);
-		}
-
-		Vector4 Vector4::operator/(const Vector4& v) const {
-			float new_x = this->x / v.x;
-			float new_y = this->y / v.y;
-			float new_z = this->z / v.z;
-			float new_w = this->w / v.w;
-
-			return Vector4(new_x, new_y, new_z, new_w);
-		}
-
-		float Vector4::getMagnitude() const {
-			return sqrtf(SQUARED(this->x) + SQUARED(this->y) + SQUARED(this->z) + SQUARED(this->w));
-		}
-
-		float Vector4::getMagnitudeSquared() const {
-			return (SQUARED(this->x) + SQUARED(this->y) + SQUARED(this->z) + SQUARED(this->w));
-		}
-
-		void Vector4::normalize() {
-			float magnitude = this->getMagnitude();
-			if (magnitude != 0.0f) {
-				this->x /= magnitude;
-				this->y /= magnitude;
-				this->z /= magnitude;
-				this->w /= magnitude;
-			}
-		}
-	#endif
+    #endif // CKIT_IMPL_MATH
 }
 
 
