@@ -279,11 +279,11 @@ namespace ckit {
 		}
 
 		float Vector2::getMagnitude() const {
-			return sqrtf(SQUARE(this->x) + SQUARE(this->y));
+			return sqrtf(SQUARED(this->x) + SQUARED(this->y));
 		}
 
 		float Vector2::getMagnitudeSquared() const {
-			return (SQUARE(this->x) + SQUARE(this->y));
+			return (SQUARED(this->x) + SQUARED(this->y));
 		}
 
 		void Vector2::normalize() {
@@ -383,11 +383,11 @@ namespace ckit {
 		}
 
 		float Vector3::getMagnitude() const {
-			return sqrtf(SQUARE(this->x) + SQUARE(this->y) + SQUARE(this->z));
+			return sqrtf(SQUARED(this->x) + SQUARED(this->y) + SQUARED(this->z));
 		}
 
 		float Vector3::getMagnitudeSquared() const {
-			return (SQUARE(this->x) + SQUARE(this->y) + SQUARE(this->z));
+			return (SQUARED(this->x) + SQUARED(this->y) + SQUARED(this->z));
 		}
 
 		void Vector3::normalize() {
@@ -488,11 +488,11 @@ namespace ckit {
 		}
 
 		float Vector4::getMagnitude() const {
-			return sqrtf(SQUARE(this->x) + SQUARE(this->y) + SQUARE(this->z) + SQUARE(this->w));
+			return sqrtf(SQUARED(this->x) + SQUARED(this->y) + SQUARED(this->z) + SQUARED(this->w));
 		}
 
 		float Vector4::getMagnitudeSquared() const {
-			return (SQUARE(this->x) + SQUARE(this->y) + SQUARE(this->z) + SQUARE(this->w));
+			return (SQUARED(this->x) + SQUARED(this->y) + SQUARED(this->z) + SQUARED(this->w));
 		}
 
 		void Vector4::normalize() {
