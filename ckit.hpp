@@ -117,8 +117,9 @@ using conditional_t = typename conditional_impl<Condition, TrueType>::type;
 
 namespace ckit {
     #define VECTOR_DIM 3
-    #define PI 3.14159265358979323846f
 
+    float approach(const float goal, const float current_value, float dt);
+    
     struct Vector {
         union {
             struct {
@@ -176,6 +177,18 @@ namespace ckit {
     // ==============================================================
 
     #ifdef CKIT_IMPL_MATH
+        float approach(const float goal, const float current_value, float dt) {
+            float difference = goal - current_value;
+
+            if (difference > dt) {
+                return difference + dt;
+            } else if (difference < -dt) {
+                return difference - dt;
+            }
+
+            return goal;
+        }
+
 		Vector::Vector(float value) {
 			this->x = value;
 			this->y = value;
