@@ -9,8 +9,11 @@ void test_func() {
 	Vector vec3 = vec2 - vec;
 	float angle_from_origin = vec3.getAngleFromOrigin();
 
-	std::cout << "X: " << vec3.x << std::endl; // Access and print the x component
-    std::cout << "Y: " << vec3.y << std::endl; // Access and print the y component
+	std::cout << "X: " << vec3.x << std::endl;
+    std::cout << "Y: " << vec3.y << std::endl;
+    std::cout << "angle_from_origin: " << angle_from_origin<< std::endl;
+
+
 
 	Vector view_vector_player = Vector(2.0f, 2.0f);
 	Vector view_vector_enemy = Vector(1.0f, 1.0f); // trying to backstab
