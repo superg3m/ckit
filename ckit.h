@@ -1223,7 +1223,7 @@ CKIT_API void ckit_cleanup();
     void ckit_memory_arena_register(CKIT_Arena* arena);
     void ckit_memory_arena_unregister(CKIT_Arena* arena);
 
-    Boolean ckit_CKIT_ARENA_FLAG_is_set(CKIT_Arena* arena, CKIT_ArenaFlag flag) {
+    Boolean ckit_arena_flag_is_set(CKIT_Arena* arena, CKIT_ArenaFlag flag) {
         return arena->flag == flag;
     }
 
@@ -1282,14 +1282,14 @@ CKIT_API void ckit_cleanup();
         ckit_assert(arena);
 
         CKIT_ArenaPage* last_page = ckit_linked_list_peek_tail(arena->pages);
-        if (ckit_CKIT_ARENA_FLAG_is_set(arena, CKIT_ARENA_FLAG_FIXED)) { // single page assert if you run out of memory
+        if (ckit_arena_flag_is_set(arena, CKIT_ARENA_FLAG_FIXED)) { // single page assert if you run out of memory
             ckit_assert((last_page->used + element_size <= last_page->capacity));
-        } else if (ckit_CKIT_ARENA_FLAG_is_set(arena, CKIT_ARENA_FLAG_CIRCULAR)) { // single page circle around if you run out of memory
+        } else if (ckit_arena_flag_is_set(arena, CKIT_ARENA_FLAG_CIRCULAR)) { // single page circle around if you run out of memory
             if ((last_page->used + element_size > last_page->capacity)) {
                 last_page->used = 0;
                 ckit_assert((last_page->used + element_size <= last_page->capacity));
             }
-        } else if (ckit_CKIT_ARENA_FLAG_is_set(arena, CKIT_ARENA_FLAG_EXTENDABLE_PAGES)) { // Allocate memory, doesn't invalidate pointers
+        } else if (ckit_arena_flag_is_set(arena, CKIT_ARENA_FLAG_EXTENDABLE_PAGES)) { // Allocate memory, doesn't invalidate pointers
             ckit_assert(last_page->base_address);
             if ((last_page->used + element_size > last_page->capacity)) {
                 CKIT_ArenaPage* next_page = ckit_arena_page_create((last_page->capacity + element_size) * 2);
