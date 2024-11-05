@@ -1289,7 +1289,7 @@ CKIT_API void ckit_cleanup();
                 last_page->used = 0;
                 ckit_assert((last_page->used + element_size <= last_page->capacity));
             }
-        } else if (ckit_arena_flag_is_set(arena, CKIT_ARENA_FLAG_EXTENDABLE_PAGES)) { // Allocate memory, doesn't invalidate pointers
+        } else if (ckit_arena_flag_is_set(arena, CKIT_ARENA_FLAG_EXTENDABLE_PAGES)) { // Allocate extra pages of memory, doesn't invalidate pointers
             ckit_assert(last_page->base_address);
             if ((last_page->used + element_size > last_page->capacity)) {
                 CKIT_ArenaPage* next_page = ckit_arena_page_create((last_page->capacity + element_size) * 2);
