@@ -1304,8 +1304,12 @@ CKIT_API void ckit_cleanup();
 
         u8* ret = ((u8*)last_page->base_address) + last_page->used;
         last_page->used += element_size;
-        if ((last_page->used & (arena->alignment - 1)) != 0) { // if first bit is set then its not aligned
-            last_page->used += (arena->alignment - (last_page->used & (arena->alignment - 1)));
+
+        const u64 ALIGNMENT_MASK = (arena->alignment - 1);
+        const u64 REMAINDER = (last_page->used & ALIGNMENT_MASK);
+
+        if (REMAINDER != 0) {
+            last_page->used += (arena->alignment - REMAINDER);
         }
 
         return ret;
