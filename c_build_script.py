@@ -15,7 +15,7 @@ project_name = "ckit"
 project_dependencies = ["ckg"]
 project_rebuild_project_dependencies = False
 project_debug_with_visual_studio = False
-project_executable_procedures = ["test_cpp.exe"]
+project_executable_procedures = ["ckit_test.exe"]
 
 # Do different things depending on the platform
 if compiler_name == "cl":
@@ -37,22 +37,6 @@ procedures_config = {
         "output_name": C_BUILD_LIB('ckit', compiler_name),
         "source_files": ["../ckg/ckg.c", "../ckit.c"],
         "additional_libs": [],
-        "compile_time_defines": ["CKIT_WSL"],
-        "include_paths": [],
-    },
-	"ckitpp_lib": {
-        "build_directory": f"./build_{compiler_name}",
-        "output_name": C_BUILD_LIB('cppkit', compiler_name),
-        "source_files": ["../ckit.cpp"],
-        "additional_libs": [],
-        "compile_time_defines": ["CKIT_WSL"],
-        "include_paths": [],
-    },
-	"ckitcpp_test": {
-        "build_directory": f"./test_cpp/build_{compiler_name}",
-        "output_name": "test_cpp.exe",
-        "source_files": ["../*.cpp"],
-        "additional_libs": [f"../../build_{compiler_name}/{C_BUILD_LIB('cppkit', compiler_name)}"],
         "compile_time_defines": ["CKIT_WSL"],
         "include_paths": [],
     },
