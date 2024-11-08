@@ -36,7 +36,7 @@ procedures_config = {
     "ckit_lib": {
         "build_directory": f"./build_{compiler_name}",
         "output_name": C_BUILD_LIB('ckit', compiler_name),
-        "source_files": ["../ckg/ckg.c", "../ckit.c"],
+        "source_files": ["../ckg/ckg.c", "../ckit.cpp"],
         "additional_libs": [],
         "compile_time_defines": ["CKIT_WSL"],
         "include_paths": [],
@@ -44,7 +44,7 @@ procedures_config = {
     "ckit_core_test": {
         "build_directory": f"./Tests/build_{compiler_name}",
         "output_name": "ckit_test.exe",
-        "source_files": ["../*.c"],
+        "source_files": ["../*.cpp"],
         "additional_libs": executable_procedure_libs,
         "compile_time_defines": ["CKIT_WSL"],
         "include_paths": [],
