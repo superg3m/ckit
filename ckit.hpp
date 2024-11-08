@@ -98,24 +98,52 @@
     CKIT_API void STACK_TRACE_DUMP();
 #endif
 
-/*
-template<bool Condition, typename TrueType>
-struct conditional_impl;
-
-template<typename TrueType>
-struct conditional_impl<true, TrueType> {
-    using type = TrueType;
-};
-
-template<bool Condition, typename TrueType>
-using conditional_t = typename conditional_impl<Condition, TrueType>::type;
-*/
-
-
 #pragma once
-#include <cmath> // for sqrtf and atan2f
+#include <cmath> // for sqrtf and atan2f 
+// Date: November 07, 2024
+// TODO(Jovanni): replace with intrinsics later
 
 namespace ckit {
+    template <typename T>
+    struct Memory {
+        static void copy(void* source, void* dest, size_t source_size, size_t dest_size);
+        static void zero(void* data, size_t data_size);
+        static void compare(void* buffer1, void* buffer2, size_t buffer1_size, size_t buffer2_size);
+
+        // static void insert_at_index(T* data, u32 number_of_elements, u32 data_capacity, u32 index);
+        static T delete_at_index(T* data, u32 number_of_elements, u32 data_capacity, u32 index);
+
+        static void insert_at_index(T* data, u32 number_of_elements, u32 data_capacity, u32 index) {
+            assert((number_of_elements + 1) < data_capacity);
+            assert(index < data_capacity - 1);
+            assert(index >= 0);
+
+            u8* byte_data = (u8*)data;
+
+            size_t total_size = sizeof(T) * data_capacity;
+            size_t source_offset = index * sizeof(T);
+            size_t dest_offset = (index + 1) * sizeof(T);
+
+            size_t payload_source_size = (number_of_elements * sizeof(T)) - source_offset;
+            Memory::copy(byte_data + source_offset, byte_data + dest_offset, payload_source_size, total_size - source_offset);
+        }
+
+        static T delete_at_index(T* data, u32 number_of_elements, u32 data_capacity, u32 index) {
+            assert((s32)number_of_elements - 1 >= 0);
+            assert(index < data_capacity);
+            assert(index >= 0);
+
+            u8* byte_data = (u8*)data;
+
+            size_t total_size = sizeof(T) * data_capacity;
+            size_t source_offset = (index + 1) * sizeof(T);
+            size_t dest_offset =  index * sizeof(T);
+
+            size_t payload_source_size = (number_of_elements * sizeof(T)) - source_offset;
+            Memory::copy(byte_data + source_offset, byte_data + dest_offset, payload_source_size, total_size - source_offset);
+        }
+    };
+
     #define VECTOR_DIM 3
 
     float approach(const float goal, const float current_value, float dt);
@@ -171,6 +199,72 @@ namespace ckit {
         static Vector lerp(const Vector& v1, const Vector& v2, float t);
         static float dotProduct(const Vector& v1, const Vector& v2);
     };
+
+    template<typename T>
+    struct DynamicArray {
+        T* data;
+        u64 capacity;
+        u64 count;
+
+        void push(T element);
+        void insert(int index);
+        T pop(T element);
+        T remove(int index);
+
+        void T operator[](u64 index);
+
+        // IMPL
+
+        void push(T element) {
+            if (this->count + 1 > this->capacity) {
+                this->capacity *= 2;
+                T* new_data = new T[this->capacity];
+
+                size_t array_size_in_byte = dynamic_array.count * sizeof(T);
+
+                memory::copy(this->data, new_data, array_size_in_byte, array_size_in_byte)
+
+                this->data = new_data;
+                
+            }
+
+            this->data[this->count++] = element;
+        }
+
+        void insert(int index) {
+
+        }
+
+        T pop(T element) {
+            assert(this->count > 0);
+            return this->data[--this->count];
+        }
+
+        T remove(int index) {
+            assert(this->count - 1 >= 0);
+            assert(index < this->count);
+            assert(index >= 0);
+
+            u8* byte_data = (u8*)this->data;
+
+            size_t total_size = element_size_in_bytes * data_capacity;
+            size_t source_offset = (index + 1) * element_size_in_bytes;
+            size_t dest_offset =  index * element_size_in_bytes;
+
+            size_t payload_source_size = (number_of_elements * element_size_in_bytes) - source_offset;
+            memory::copy(byte_data + source_offset, byte_data + dest_offset, payload_source_size, total_size - source_offset);
+
+            return this->data[--this->count]
+        }
+
+
+        void T DynamicArray<T>::operator[](u64 index) {
+
+        }
+    };
+
+    template<typename T>
+    T* to_array(DynamicArray<T> dynamic_array);
 
     // ==============================================================
     //                       IMPLEMENTATION
@@ -329,6 +423,19 @@ namespace ckit {
 			return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 		}
     #endif // CKIT_IMPL_MATH
+
+
+    #if defined(CKIT_IMPL_COLLECTIONS)
+        template<typename T>
+        T* to_array(DynamicArray<T> dynamic_array) {
+            T* ret = new T[dynamic_array.count];
+            size_t array_size_in_byte = dynamic_array.count * sizeof(T);
+
+            memory::copy(dynamic_array.data, ret, array_size_in_byte, array_size_in_byte);
+
+            return ret;
+        }
+    #endif // CKIT_IMPL_COLLECTIONS
 }
 
 
