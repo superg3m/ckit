@@ -3,7 +3,7 @@ from c_build.source.Utilities import *
 from c_build.source.Manager import *
 # --------------------------------------------------------------------------------------s
 
-compiler_name = C_BUILD_COMPILER_NAME() if C_BUILD_IS_DEPENDENCY() else "cl"
+compiler_name = C_BUILD_COMPILER_NAME() if C_BUILD_IS_DEPENDENCY() else "g++"
 
 if not IS_WINDOWS():
     compiler_name = "gcc"
@@ -14,7 +14,7 @@ compiler_treat_warnings_as_errors = True
 
 project_name = "ckit"
 project_dependencies = ["ckg"]
-project_rebuild_project_dependencies = False
+project_rebuild_project_dependencies = True
 project_debug_with_visual_studio = False
 project_executable_procedures = ["ckit_test.exe"]
 

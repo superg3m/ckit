@@ -9,7 +9,7 @@ void test_vector_operations() {
 	int intArray[] = {1, 2, 3, 4, 5};
 	Boolean boolArray[] = {TRUE, FALSE, TRUE, TRUE, FALSE};
 	char charArray[] = {'a', 'b', 'c', 'd', 'e'};
-	char* stringArray[] = {"Hello", "World", "!", "OpenAI", "GPT-3"};
+	const char* stringArray[] = {"Hello", "World", "!", "OpenAI", "GPT-3"};
 
 	// Create vector of int
 	int* intVector = ckit_vector_reserve(5, int);
@@ -30,7 +30,7 @@ void test_vector_operations() {
 	}
 
 	// Create vector of strings
-	char** stringVector = NULLPTR;
+	const char** stringVector = NULLPTR;
 	for (u32 i = 0; i < 5; i++) {
 		ckit_vector_push(stringVector, stringArray[i]);
 	}
@@ -52,7 +52,7 @@ void test_vector_operations() {
 	}
 
 	for (u32 i = 0; i < ckit_vector_count(stringVector); i++) {
-		char* element = stringVector[i];
+		const char* element = stringVector[i];
 		ckit_assert_msg(ckit_str_equal(element, stringArray[i]), "Error: Incorrect element value\n");
 	}
 
@@ -64,9 +64,9 @@ void test_vector_operations() {
 
 	ckit_assert_msg(before_popped_int == after_popped_int, "Error: popped expected: %d | got %d\n", before_popped_int, after_popped_int);
 
-	char* before_popped_string = stringVector[ckit_vector_count(stringVector) - 1];
-	char* after_popped_string = ckit_vector_pop(stringVector);
-	char* string_to_push = "TRYING TO PUSH A LITERAL!\n";
+	const char* before_popped_string = stringVector[ckit_vector_count(stringVector) - 1];
+	const char* after_popped_string = ckit_vector_pop(stringVector);
+	const char* string_to_push = "TRYING TO PUSH A LITERAL!\n";
 	ckit_vector_push(stringVector, string_to_push);
 
 	ckit_assert_msg(ckit_str_equal(before_popped_string, after_popped_string), "Error: Incorrect popped element value\n");
@@ -130,16 +130,16 @@ void inital_operations() {
 
 void middle_ground_opperations() {
 	CKIT_Vector2 points[4];
-	points[0] = (CKIT_Vector2){0, 0};
-	points[1] = (CKIT_Vector2){1, 2};
-	points[2] = (CKIT_Vector2){3, 0};
-	points[3] = (CKIT_Vector2){4, 2};
+	points[0] = {0, 0};
+	points[1] = {1, 2};
+	points[2] = {3, 0};
+	points[3] = {4, 2};
 
 	CKIT_Vector2 ret = ckit_vector2_spline_point(points, 4, 0.5f); // has memory leak with vector
 	LOG_ERROR("FINAL POINT: (%f, %f)\n", ret.x, ret.y);
 
 
-	FileSystem file_system = file_system_create("../../assets/Learn_About_BMP.bmp");
+	FileSystem file_system = file_system_create((char*)"../../assets/Learn_About_BMP.bmp");
 	file_open(&file_system);
 
 	BmpHeader bmp_header = {0};
@@ -161,7 +161,7 @@ void middle_ground_opperations() {
 void hashmap_operations() {
 	CKIT_HashMap* name_to_age = ckit_hashmap_create(4, char*, TRUE);
 
-	char* names[5] = {
+	const char* names[5] = {
 		"jofhn",
 		"john",
 		"johhn",
@@ -169,7 +169,7 @@ void hashmap_operations() {
 		"jo234hyn234235325",
 	};
 
-	char* value[5] = {
+	const char* value[5] = {
 		"10",
 		"11",
 		"12",
@@ -178,12 +178,12 @@ void hashmap_operations() {
 	};
 
 	for (u32 i = 0; i < 5; i++) {
-		ckit_hashmap_put(name_to_age, names[i], value[i]);
+		ckit_hashmap_put(name_to_age, (char*)names[i], (char*)value[i]);
 	}
 
 	for (u32 i = 0; i < 5; i++) { // growing hashmap is broken
-		LOG_DEBUG("(key: %s | value: %s)\n", names[i], (char*)ckit_hashmap_get(name_to_age, names[i]));
-		ckit_assert(ckit_hashmap_has(name_to_age, names[i]));
+		LOG_DEBUG("(key: %s | value: %s)\n", (char*)names[i], (char*)ckit_hashmap_get(name_to_age, (char*)names[i]));
+		ckit_assert(ckit_hashmap_has(name_to_age, (char*)names[i]));
 	}
 
 	ckit_hashmap_free(name_to_age);
@@ -191,31 +191,31 @@ void hashmap_operations() {
 
 void queue_operations() {
 	CKIT_Queue* queue = ckit_queue_create(4, char*, TRUE);
-	char* queue_values[] = {"\"1, 2, 3, 4, 5, 6\"", "\"HELLO!\"", "\"HELLO!12345!\"", "\"HEL45!\"", "\"!12345!\"", "\"!6H23dgfa45!\""};
-	ckit_enqueue(queue, queue_values[0]);
+	const char* queue_values[] = {"\"1, 2, 3, 4, 5, 6\"", "\"HELLO!\"", "\"HELLO!12345!\"", "\"HEL45!\"", "\"!12345!\"", "\"!6H23dgfa45!\""};
+	ckit_enqueue(queue, (char*)queue_values[0]);
 
 	char* current_value = NULLPTR;
-	current_value = ckit_dequeue(queue);
+	current_value = (char*)ckit_dequeue(queue);
 	LOG_DEBUG("value: %s\n", current_value);
 
 	for (size_t i = 1; i < 4; i++) {
-		ckit_enqueue(queue, queue_values[i]);
+		ckit_enqueue(queue, (char*)queue_values[i]);
 	}
 
 	for (size_t i = 1; i < 4; i++) {
 		current_value = NULLPTR;
-		current_value = ckit_dequeue(queue);
+		current_value = (char*)ckit_dequeue(queue);
 		LOG_DEBUG("value: %s\n", current_value);
 	}
 
-	ckit_enqueue(queue, queue_values[4]);
+	ckit_enqueue(queue, (char*)queue_values[4]);
 	current_value = NULLPTR;
-	current_value = ckit_dequeue(queue);
+	current_value = (char*)ckit_dequeue(queue);
 	LOG_DEBUG("value: %s\n", current_value);
 
-	ckit_enqueue(queue, queue_values[5]);
+	ckit_enqueue(queue, (char*)queue_values[5]);
 	current_value = NULLPTR;
-	current_value = ckit_dequeue(queue);
+	current_value = (char*)ckit_dequeue(queue);
 	LOG_DEBUG("value: %s\n", current_value);
 
 	ckit_queue_free(queue);
@@ -223,20 +223,20 @@ void queue_operations() {
 
 void linked_list_operations() {
 	CKIT_LinkedList* linked_list = ckit_linked_list_create(char*, TRUE);
-	ckit_linked_list_insert(linked_list, 0, "hello");
-	ckit_linked_list_push(linked_list, "hello_sailor1!");
-	ckit_linked_list_push(linked_list, "hello_sailor2!");
-	ckit_linked_list_push(linked_list, "hello_sailor3!");
-	ckit_linked_list_push(linked_list, "hello_sailor4!");
-	char* test_str = ckit_linked_list_remove(linked_list, 4).data;
+	ckit_linked_list_insert(linked_list, 0, (void*)"hello");
+	ckit_linked_list_push(linked_list, (void*)"hello_sailor1!");
+	ckit_linked_list_push(linked_list, (void*)"hello_sailor2!");
+	ckit_linked_list_push(linked_list, (void*)"hello_sailor3!");
+	ckit_linked_list_push(linked_list, (void*)"hello_sailor4!");
+	char* test_str = (char*)ckit_linked_list_remove(linked_list, 4).data;
 	LOG_DEBUG("list value: %s\n", test_str);
-	test_str = ckit_linked_list_pop(linked_list).data;
+	test_str = (char*)ckit_linked_list_pop(linked_list).data;
 	LOG_DEBUG("list value: %s\n", test_str);
-	test_str = ckit_linked_list_pop(linked_list).data;
+	test_str = (char*)ckit_linked_list_pop(linked_list).data;
 	LOG_DEBUG("list value: %s\n", test_str);
-	test_str = ckit_linked_list_pop(linked_list).data;
+	test_str = (char*)ckit_linked_list_pop(linked_list).data;
 	LOG_DEBUG("list value: %s\n", test_str);
-	test_str = ckit_linked_list_pop(linked_list).data;
+	test_str = (char*)ckit_linked_list_pop(linked_list).data;
 	LOG_DEBUG("list value: %s\n", test_str);
 	ckit_linked_list_free(linked_list);
 
@@ -254,23 +254,23 @@ void linked_list_operations() {
 	ckit_linked_list_push(linked_list_int, &value1[2]);
 	ckit_linked_list_push(linked_list_int, &value1[3]);
 	ckit_linked_list_push(linked_list_int, &value1[4]);
-	u32* test_u32 = ckit_linked_list_pop(linked_list_int).data;
+	u32* test_u32 = (u32*)ckit_linked_list_pop(linked_list_int).data;
 	LOG_DEBUG("list value: %d\n", *test_u32);
 	ckit_free(test_u32);
 
-	test_u32 = ckit_linked_list_remove(linked_list_int, 2).data;
+	test_u32 = (u32*)ckit_linked_list_remove(linked_list_int, 2).data;
 	LOG_DEBUG("list value: %d\n", *test_u32);
 	ckit_free(test_u32);
 
-	test_u32 = ckit_linked_list_pop(linked_list_int).data;
+	test_u32 = (u32*)ckit_linked_list_pop(linked_list_int).data;
 	LOG_DEBUG("list value: %d\n", *test_u32);
 	ckit_free(test_u32);
 
-	test_u32 = ckit_linked_list_pop(linked_list_int).data;
+	test_u32 = (u32*)ckit_linked_list_pop(linked_list_int).data;
 	LOG_DEBUG("list value: %d\n", *test_u32);
 	ckit_free(test_u32);
 
-	test_u32 = ckit_linked_list_pop(linked_list_int).data;
+	test_u32 = (u32*)ckit_linked_list_pop(linked_list_int).data;
 	LOG_DEBUG("list value: %d\n", *test_u32);
 	ckit_free(test_u32);
 	ckit_linked_list_free(linked_list_int);
@@ -291,14 +291,14 @@ void stack_operations() {
 	}
 
 	for (u32 i = 0; i < 5; i++) {
-		u32* value_back = ckit_stack_pop(stack_int);
+		u32* value_back = (u32*)ckit_stack_pop(stack_int);
 		LOG_SUCCESS("stack_value #%d: %d\n", i + 1, *value_back);
 		ckit_free(value_back);
 	}
 	ckit_stack_free(stack_int);
 
 	CKIT_Stack* stack_str = ckit_stack_create(char*, TRUE);	
-	char* names[5] = {
+	const char* names[5] = {
 		"jofhn",
 		"john",
 		"johhn",
@@ -307,11 +307,11 @@ void stack_operations() {
 	};
 
 	for (u32 i = 0; i < 5; i++) {
-		ckit_stack_push(stack_str, names[i]);
+		ckit_stack_push(stack_str, (char*)names[i]);
 	}
 
 	for (u32 i = 0; i < 5; i++) {
-		char* value_back = ckit_stack_pop(stack_str);
+		char* value_back = (char*)ckit_stack_pop(stack_str);
 		LOG_SUCCESS("stack_value #%d: %s\n", i + 1, value_back);
 	}
 	ckit_stack_free(stack_str);
