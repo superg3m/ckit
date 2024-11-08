@@ -130,10 +130,10 @@ void inital_operations() {
 
 void middle_ground_opperations() {
 	CKIT_Vector2 points[4];
-	points[0] = {0, 0};
-	points[1] = {1, 2};
-	points[2] = {3, 0};
-	points[3] = {4, 2};
+	points[0] = (CKIT_Vector2){0, 0};
+	points[1] = (CKIT_Vector2){1, 2};
+	points[2] = (CKIT_Vector2){3, 0};
+	points[3] = (CKIT_Vector2){4, 2};
 
 	CKIT_Vector2 ret = ckit_vector2_spline_point(points, 4, 0.5f); // has memory leak with vector
 	LOG_ERROR("FINAL POINT: (%f, %f)\n", ret.x, ret.y);
