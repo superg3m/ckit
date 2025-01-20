@@ -2197,12 +2197,11 @@ CKIT_API void ckit_cleanup();
         // rehash
         for (u32 i = 0; i < old_capacity; i++) {
             if (hashmap->entries[i].key != NULLPTR) {
-                u32 index =  ckit_hash_value(hashmap->entries[i].key) % hashmap->capacity;
-                CKIT_HashMapEntry* cached_ptr = hashmap->entries;
-                hashmap->entries = new_entries;
-                u64 real_index = ckit_hashmap_resolve_collision(hashmap, cached_ptr[i].key, index);
-                hashmap->entries = cached_ptr;
-
+                u32 index = ckit_hash_value(hashmap->entries[i].key) % hashmap->capacity;
+                CKIT_HashMapEntry* cached_entries = hashmap->entries; // Have to cache the original hashmap entries because I need a pointer to it
+                hashmap->entries = new_entries; // This is needed, otherwise resolve collisions is looking at the wrong entries buffer
+                u64 real_index = ckit_hashmap_resolve_collision(hashmap, cached_entries[i].key, index);
+                hashmap->entries = cached_entries;
                 new_entries[real_index] = hashmap->entries[i];
             }
         }
@@ -2229,8 +2228,9 @@ CKIT_API void ckit_cleanup();
         if (hashmap->is_pointer_type) {
             entry.value = value;
         } else {
-            entry.value = ckit_alloc_custom(hashmap->element_size, TAG_CKIT_EXPECTED_USER_FREE);
-            ckit_memory_copy(value, entry.value, hashmap->element_size, hashmap->element_size);
+            entry.value = ckit_alloc_custom(hashmap->element_size, TAG_CKIT_EXPECTED_USER_FREE); 
+            // The reason why this is EXPECTED USER FREE IS BECAUSE YOU ARE supposed to free it from ckit_hashmap_put!
+            ckit_memory_copy(value, entry.value, hashmap->element_size, hashmap->element_size); 
         }
 
         return entry;

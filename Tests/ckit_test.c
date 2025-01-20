@@ -159,9 +159,9 @@ void middle_ground_opperations() {
 }
 
 void hashmap_operations() {
-	CKIT_HashMap* name_to_age = ckit_hashmap_create(4, char*, TRUE);
+	CKIT_HashMap* name_to_age = ckit_hashmap_create(1, char*, TRUE);
 
-	const char* names[5] = {
+	char* names[5] = {
 		"jofhn",
 		"john",
 		"johhn",
@@ -169,7 +169,7 @@ void hashmap_operations() {
 		"jo234hyn234235325",
 	};
 
-	const char* value[5] = {
+	char* value[5] = {
 		"10",
 		"11",
 		"12",
@@ -178,18 +178,53 @@ void hashmap_operations() {
 	};
 
 	for (u32 i = 0; i < 5; i++) {
-		ckit_hashmap_put(name_to_age, (char*)names[i], (char*)value[i]);
+		void* ret = ckit_hashmap_put(name_to_age, names[i], value[i]);
+		if (ret) {
+			ckit_free(ret);
+		}
 	}
 
 	for (u32 i = 0; i < 5; i++) { // growing hashmap is broken
-		LOG_DEBUG("(key: %s | value: %s)\n", (char*)names[i], (char*)ckit_hashmap_get(name_to_age, (char*)names[i]));
-		ckit_assert(ckit_hashmap_has(name_to_age, (char*)names[i]));
+		LOG_DEBUG("(key: %s | value: %s)\n", names[i], (char*)ckit_hashmap_get(name_to_age, names[i]));
+		ckit_assert(ckit_hashmap_has(name_to_age, names[i]));
 	}
 
 	CKIT_HashSet* hashset_test = ckit_hashset_create(16);
-
-
 	ckit_hashset_free(hashset_test);
+
+	CKIT_HashMap* name_to_age_int = ckit_hashmap_create(1, int, FALSE);
+
+	char* names2[10] = {
+		"jofhn",
+		"john",
+		"johhn",
+		"johyn",
+		"jo234hyn234235325",
+		"jofhn",
+		"john",
+		"johhn",
+		"johyn",
+		"jo234hyn234235325"
+	};
+
+	const int value_int[10] = {
+		3, 2, 5, 1, 7,
+		3, 2, 5, 1, 7
+	};
+
+	for (u32 i = 0; i < 10; i++) {
+		void* ret = ckit_hashmap_put(name_to_age_int, names2[i], &value_int[i]);
+		if (ret) {
+			ckit_free(ret);
+		}
+	}
+
+	for (u32 i = 0; i < 10; i++) { // growing hashmap is broken
+		LOG_DEBUG("(key: %s | value: %d)\n", names2[i], *((int*)ckit_hashmap_get(name_to_age_int, names2[i])));
+		ckit_assert(ckit_hashmap_has(name_to_age_int, names2[i]));
+	}
+
+	ckit_hashmap_free(name_to_age_int);
 	ckit_hashmap_free(name_to_age);
 }
 
