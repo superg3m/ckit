@@ -2349,6 +2349,7 @@ CKIT_API void ckit_cleanup();
     }
 
     CKIT_HashSet* MACRO_ckit_hashset_free(CKIT_HashSet* hashset) {
+        ckit_free(hashset->entries);
         ckit_free(hashset);
 
         return hashset;

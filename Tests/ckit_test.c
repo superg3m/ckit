@@ -186,6 +186,10 @@ void hashmap_operations() {
 		ckit_assert(ckit_hashmap_has(name_to_age, (char*)names[i]));
 	}
 
+	CKIT_HashSet* hashset_test = ckit_hashset_create(16);
+
+
+	ckit_hashset_free(hashset_test);
 	ckit_hashmap_free(name_to_age);
 }
 
