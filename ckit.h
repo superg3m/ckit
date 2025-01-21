@@ -39,9 +39,6 @@
 #define CKIT_INCLUDE_OS
 #define CKIT_INCLUDE_UTILITIES
 
-CKIT_API void ckit_init();
-CKIT_API void ckit_cleanup();
-
 #if defined(CKIT_INCLUDE_TYPES)
 	#define CKG_EXTERN
 	#include "./ckg/ckg.h"
@@ -56,6 +53,9 @@ CKIT_API void ckit_cleanup();
 	#define MEMORY_TAG_CHARACTER_LIMIT 16
 	#define PLATFORM_CHARACTER_LIMIT 200
 #endif
+
+CKIT_API void ckit_init();
+CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
 #if defined(CKIT_INCLUDE_ASSERT)
     #define CKIT_ASSERT_ENABLED TRUE
@@ -246,10 +246,19 @@ CKIT_API void ckit_cleanup();
     typedef char* String;
 
     CKIT_API String ckit_str_create_custom(const char* c_str, size_t capacity);
+
     CKIT_API u32 ckit_cstr_length(const char* str);
     CKIT_API u32 ckit_str_length(const String str);
     CKIT_API Boolean ckit_str_equal(const char* str1, const char* str2);
     CKIT_API void ckit_str_copy(String str, const char* source);
+
+
+    CKIT_API char* ckit_cstr_va_sprint(char* fmt, va_list args);
+    CKIT_API char* MACRO_ckit_cstr_sprint_color(char* fmt, ...);
+    CKIT_API char* MACRO_ckit_cstr_sprint(CKIT_LogLevel log_level, char* fmt, ...);
+
+    CKIT_API String ckit_str_va_sprint(char* fmt, va_list args);
+    CKIT_API String MACRO_ckit_str_sprint(char* fmt, ...);
 
     CKIT_API String MACRO_ckit_str_append(String str, const char* source);
     CKIT_API String MACRO_ckit_str_append_char(String str, const char source);
@@ -292,6 +301,10 @@ CKIT_API void ckit_cleanup();
     #define ckit_str_insert_char(str, source, index) str = MACRO_ckit_str_insert_char(str, source, index);
     #define ckit_str_append(str, source) str = MACRO_ckit_str_append(str, source);
     #define ckit_str_append_char(str, source) str = MACRO_ckit_str_append_char(str, source);
+
+    #define ckit_str_sprint(fmt, ...) MACRO_ckit_str_sprint(fmt, ##__VA_ARGS__)
+    #define ckit_cstr_sprint(fmt, ...) MACRO_ckit_cstr_sprint(fmt, ##__VA_ARGS__)
+    #define ckit_cstr_sprint_color(log_level, fmt, ...) MACRO_ckit_cstr_sprint_color(log_level, fmt, ##__VA_ARGS__)
 #endif
 
 #if defined(CKIT_INCLUDE_MATH)
@@ -799,11 +812,14 @@ CKIT_API void ckit_cleanup();
     ckit_str_register_arena();
   }
 
-  void ckit_cleanup() {
+  void ckit_cleanup(Boolean generate_memory_report) {
     ckit_memory_arena_unregister_all();
     //platform_console_shutdown();
 
-    ckit_memory_report(LOG_LEVEL_WARN);
+    if (generate_memory_report) {
+        ckit_memory_report(LOG_LEVEL_WARN); 
+        // Evenetually this should happen before arenas are unregistered
+    }
   }
 #endif
 
@@ -863,28 +879,25 @@ CKIT_API void ckit_cleanup();
     }
 
     void MACRO_ckit_log_output(CKIT_LogLevel log_level, const char* message, ...) {
-        char out_message[CKG_PLATFORM_CHARACTER_LIMIT];
-        ckit_memory_zero(out_message, sizeof(out_message));
-        
         va_list args_list;
         va_start(args_list, message);
-        vsnprintf(out_message, CKG_PLATFORM_CHARACTER_LIMIT, message, args_list);
+        String out_message = ckit_str_va_sprint(message, args_list);
         va_end(args_list);
 
         printf("%s%s%s", log_level_format[log_level], log_level_strings[log_level], CKG_COLOR_RESET);
         
-        u32 out_message_length = ckit_cstr_length(out_message);
+        u32 out_message_length = ckit_str_length(out_message);
 
         if (message_has_special_delmitor(out_message)) {
             special_print_helper(out_message, log_level);
         } else {
             Boolean found = out_message[out_message_length - 1] == '\n';
             printf("%s%.*s%s", log_level_format[log_level], out_message_length - found, out_message, CKG_COLOR_RESET);
-        } 
+        }
 
         if (out_message[out_message_length - 1] == '\n') {
             printf("\n");
-        }           
+        }
     }
 #endif
 
@@ -1062,23 +1075,33 @@ CKIT_API void ckit_cleanup();
 
     void ckit_tracker_print_header(CKIT_MemoryHeader* header, CKIT_LogLevel log_level) {
         u8* data_address = (u8*)header + sizeof(CKIT_MemoryHeader);
-        ckit_log_output(log_level, "=>     Address: %p | Size: %d(Bytes)\n", data_address, header->tag.allocation_info.allocation_size);
-        ckit_log_output(log_level, "      - Allocation Site:\n");
-        ckit_log_output(log_level, "          - File: %s:%d\n", header->tag.allocation_info.file_name, header->tag.allocation_info.line);
-        ckit_log_output(log_level, "          - Function: %s\n", header->tag.allocation_info.function_name);
+        
+        char* m1 = ckit_cstr_sprint_color(log_level, "[WARN]  : =>    - Address: %p | Size: %d(Bytes)", data_address, header->tag.allocation_info.allocation_size);
+        char* m2 = ckit_cstr_sprint_color(log_level, "[WARN]  :         - Allocation Site:");
+        char* m3 = ckit_cstr_sprint_color(log_level, "[WARN]  :           - File: %s:%d", header->tag.allocation_info.file_name, header->tag.allocation_info.line);
+        char* m4 = ckit_cstr_sprint_color(log_level, "[WARN]  :           - Function: %s", header->tag.allocation_info.function_name);
+
+        printf("%s\n", m1);
+        printf("%s\n", m2);
+        printf("%s\n", m3);
+        printf("%s\n", m4);
+        ckit_free(m1);
+        ckit_free(m2);
+        ckit_free(m3);
+        ckit_free(m4);
     }
 
     void ckit_tracker_print_pool(CKIT_MemoryTagPool* pool, CKIT_LogLevel log_level) {
-        LOG_PRINT("============================== POOL NAME: %s | SIZE: %d | Items: %d ==============================\n", pool->pool_name, pool->total_pool_allocation_size, pool->allocated_headers->count);
+        printf("============================== POOL NAME: %s | SIZE: %d | Items: %d ==============================\n", pool->pool_name, pool->total_pool_allocation_size, pool->allocated_headers->count);
         u32 count = pool->allocated_headers->count;
         for (u32 i = 0; i < count; i++) {
             CKIT_MemoryHeader* current_header = (CKIT_MemoryHeader*)ckg_linked_list_pop(pool->allocated_headers).data;
             ckit_tracker_print_header(current_header, log_level);
             if (i != count - 1) {
-                LOG_PRINT("\n");
+                printf("\n");
             }
         }
-        LOG_PRINT("========================================================================================================\n");
+        printf("========================================================================================================\n");
     }
 
     CKIT_MemoryHeader* ckit_tracker_get_header(void* data) {
@@ -1089,11 +1112,14 @@ CKIT_API void ckit_cleanup();
 
     void ckit_tracker_print_all_pools(CKIT_LogLevel log_level) {
         if (global_total_pool_memory_used == 0) {
-            LOG_SUCCESS("--- No Memory Leaks Detected --- \n");
+            printf("%s[SUCCESS]: --- No Memory Leaks Detected ---%s\n", log_level_format[LOG_LEVEL_SUCCESS], CKG_COLOR_RESET);
             return;
         }
 
-        LOG_ERROR("---------------------- Memory Leak Detected: %d(total) - %d(internal) = %d(Bytes) ----------------------\n", global_total_pool_memory_used, global_total_pool_memory_internal, global_total_pool_memory_used - global_total_pool_memory_internal);
+        char* message = ckit_cstr_sprint_color(LOG_LEVEL_ERROR, "[ERROR]  : ---------------------- Memory Leak Detected: %d(total) - %d(internal) = %d(Bytes) ----------------------", global_total_pool_memory_used, global_total_pool_memory_internal, global_total_pool_memory_used - global_total_pool_memory_internal);
+        printf("%s\n", message);
+        ckit_free(message);
+
         u32 count = ckg_vector_capacity(global_memory_tag_pool_vector);
         Boolean has_start = FALSE; 
         Boolean has_end = FALSE; 
@@ -1110,15 +1136,17 @@ CKIT_API void ckit_cleanup();
             }
             
             if (has_end && i != ckg_vector_capacity(global_memory_tag_pool_vector) - 1) {
-                LOG_PRINT("                                               |\n");
-                LOG_PRINT("                                               |\n");
+                printf("                                               |\n");
+                printf("                                               |\n");
                 has_end = FALSE;
             }
 
             ckit_tracker_print_pool(&pool, log_level);
 
         }
-        LOG_ERROR("------------------------------------------------------------------------------------------------------------\n");
+        message = ckit_cstr_sprint_color(LOG_LEVEL_ERROR, "[ERROR]  : ------------------------------------------------------------------------------------------------------------");
+        printf("%s\n", message);
+        ckit_free(message);
     }
 
     //
@@ -1452,6 +1480,72 @@ CKIT_API void ckit_cleanup();
         return str;
     }
 
+
+    CKIT_API char* MACRO_ckit_cstr_sprint_color(CKIT_LogLevel log_level, char* fmt, ...) {
+        va_list args_list;
+        va_start(args_list, fmt);
+        
+        u32 allocation_size = snprintf(NULLPTR, 0, "%s%s%s", log_level_format[log_level], fmt, CKG_COLOR_RESET) + 1; // + 1 because null terminator
+        char* buffer = ckit_alloc(allocation_size);
+        snprintf(buffer, allocation_size, "%s%s%s", log_level_format[log_level], fmt, CKG_COLOR_RESET);
+
+        allocation_size = vsnprintf(NULLPTR, 0, buffer, args_list) + 1; // + 1 because null terminator
+        char* ret_buffer = ckit_alloc(allocation_size);
+        vsnprintf(ret_buffer, allocation_size, buffer, args_list);
+        ckit_free(buffer);
+
+        va_end(args_list);
+
+        return ret_buffer;
+    }
+
+    CKIT_API char* MACRO_ckit_cstr_sprint(char* fmt, ...) {
+        va_list args_list;
+        va_start(args_list, fmt);
+
+        u32 allocation_size = vsnprintf(NULLPTR, 0, fmt, args_list) + 1; // + 1 because null terminator
+        char* buffer = ckit_alloc(allocation_size);
+        vsnprintf(buffer, allocation_size, fmt, args_list);
+
+        va_end(args_list);
+
+        return buffer;
+    }
+
+    CKIT_API String MACRO_ckit_str_sprint(char* fmt, ...) {
+        va_list args_list;
+        va_start(args_list, fmt);
+
+        u32 allocation_size = vsnprintf(NULLPTR, 0, fmt, args_list) + 1; // + 1 because null terminator
+        char* buffer = ckit_alloc(allocation_size);
+        vsnprintf(buffer, allocation_size, fmt, args_list);
+
+        va_end(args_list);
+
+        String ret = ckit_str_create(buffer);
+        ckit_free(buffer);
+        
+        return ret;
+    }
+
+    CKIT_API char* ckit_cstr_va_sprint(char* fmt, va_list args) {
+        u32 allocation_size = vsnprintf(NULLPTR, 0, fmt, args) + 1; // + 1 because null terminator
+        char* buffer = ckit_alloc(allocation_size);
+        vsnprintf(buffer, allocation_size, fmt, args);
+
+        return buffer;
+    }
+
+    CKIT_API String ckit_str_va_sprint(char* fmt, va_list args) {
+        u32 allocation_size = vsnprintf(NULLPTR, 0, fmt, args) + 1; // + 1 because null terminator
+        char* buffer = ckit_alloc(allocation_size);
+        vsnprintf(buffer, allocation_size, fmt, args);
+        String ret = ckit_str_create(buffer);
+        ckit_free(buffer);
+        
+        return ret;
+    }
+    
     String MACRO_ckit_str_append_char(String str, const char source) {
         ckit_str_check_magic(str);
         ckit_assert_msg(str, "ckit_str_append_char: String passed is null\n");

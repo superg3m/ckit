@@ -418,6 +418,6 @@ int main() {
 	}
 
 	ckit_vector_free(lines);
-	ckit_cleanup();
+	ckit_cleanup(TRUE);
 	return 0;
 }

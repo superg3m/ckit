@@ -15,7 +15,7 @@ compiler_treat_warnings_as_errors = True
 project_name = "ckit"
 project_dependencies = ["ckg"]
 project_rebuild_project_dependencies = True
-project_debug_with_visual_studio = True
+project_debug_with_visual_studio = False
 project_executable_procedures = ["ckit_test.exe"]
 
 # Do different things depending on the platform
