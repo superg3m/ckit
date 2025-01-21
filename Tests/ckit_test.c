@@ -213,7 +213,7 @@ void hashmap_operations() {
 	};
 
 	for (u32 i = 0; i < 10; i++) {
-		void* ret = ckit_hashmap_put(name_to_age_int, names2[i], &value_int[i]);
+		void* ret = ckit_hashmap_put(name_to_age_int, names2[i], (void*)&value_int[i]);
 		if (ret) {
 			ckit_free(ret);
 		}

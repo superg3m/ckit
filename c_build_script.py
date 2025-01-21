@@ -11,16 +11,17 @@ if not IS_WINDOWS():
 compiler_warning_level = ""
 compiler_disable_specific_warnings = []
 compiler_treat_warnings_as_errors = True
+compiler_disable_warnings = False
 
 project_name = "ckit"
 project_dependencies = ["ckg"]
 project_rebuild_project_dependencies = True
-project_debug_with_visual_studio = False
+project_debug_with_visual_studio = True
 project_executable_procedures = ["ckit_test.exe"]
 
 # Do different things depending on the platform
 if compiler_name == "cl":
-	compiler_warning_level = "2"
+	compiler_warning_level = "4"
 	compiler_disable_specific_warnings = ["5105", "4668", "4820", "4996"]
 elif compiler_name in ["gcc", "cc", "clang"]:
 	compiler_warning_level = "all"

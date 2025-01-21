@@ -254,8 +254,8 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
 
     CKIT_API char* ckit_cstr_va_sprint(char* fmt, va_list args);
-    CKIT_API char* MACRO_ckit_cstr_sprint_color(char* fmt, ...);
-    CKIT_API char* MACRO_ckit_cstr_sprint(CKIT_LogLevel log_level, char* fmt, ...);
+    CKIT_API char* MACRO_ckit_cstr_sprint_color(CKIT_LogLevel log_level, char* fmt, ...);
+    CKIT_API char* MACRO_ckit_cstr_sprint(char* fmt, ...);
 
     CKIT_API String ckit_str_va_sprint(char* fmt, va_list args);
     CKIT_API String MACRO_ckit_str_sprint(char* fmt, ...);
@@ -881,7 +881,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     void MACRO_ckit_log_output(CKIT_LogLevel log_level, const char* message, ...) {
         va_list args_list;
         va_start(args_list, message);
-        String out_message = ckit_str_va_sprint(message, args_list);
+        String out_message = ckit_str_va_sprint((char*)message, args_list);
         va_end(args_list);
 
         printf("%s%s%s", log_level_format[log_level], log_level_strings[log_level], CKG_COLOR_RESET);
@@ -1092,7 +1092,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     }
 
     void ckit_tracker_print_pool(CKIT_MemoryTagPool* pool, CKIT_LogLevel log_level) {
-        printf("============================== POOL NAME: %s | SIZE: %d | Items: %d ==============================\n", pool->pool_name, pool->total_pool_allocation_size, pool->allocated_headers->count);
+        printf("============================== POOL NAME: %s | SIZE: %lld | Items: %d ==============================\n", pool->pool_name, pool->total_pool_allocation_size, pool->allocated_headers->count);
         u32 count = pool->allocated_headers->count;
         for (u32 i = 0; i < count; i++) {
             CKIT_MemoryHeader* current_header = (CKIT_MemoryHeader*)ckg_linked_list_pop(pool->allocated_headers).data;
