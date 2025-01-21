@@ -207,6 +207,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 #if defined(CKIT_INCLUDE_ARENA)
     // Date: September 24, 2024
     // TODO(Jovanni): Just make this defines
+    //========================== Begin Types ==========================
     typedef enum CKIT_ArenaFlag {
         CKIT_ARENA_FLAG_FIXED,
         CKIT_ARENA_FLAG_CIRCULAR,
@@ -214,12 +215,26 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         CKIT_ARENA_FLAG_COUNT
     } CKIT_ArenaFlag;
 
-    typedef struct CKIT_Arena CKIT_Arena;
+    typedef struct CKIT_ArenaPage {
+        u8* base_address;
+        u64 capacity;
+        u64 used;
+    } CKIT_ArenaPage;
+
+    typedef struct CKIT_Arena {
+        const char* name;
+        CKG_LinkedList* pages;
+        CKIT_ArenaFlag flag;
+        u8 alignment;
+    } CKIT_Arena;
+    //=========================== End Types ===========================
 
     CKIT_API CKIT_Arena* MACRO_ckit_arena_create(size_t allocation_size, const char* name, CKIT_ArenaFlag flag, u8 alignment);
     CKIT_API void* MACRO_ckit_arena_push(CKIT_Arena* arena, size_t element_size);	
     CKIT_API CKIT_Arena* MACRO_ckit_arena_free(CKIT_Arena* arena);
     CKIT_API void ckit_arena_clear(CKIT_Arena* arena);
+    CKIT_API u64 ckit_arena_used(CKIT_Arena* arena);
+    CKIT_API u64 ckit_arena_capacity(CKIT_Arena* arena);
 
     #define ckit_arena_create(allocation_size, name) MACRO_ckit_arena_create(allocation_size, name, CKIT_ARENA_FLAG_EXTENDABLE_PAGES, 0)
     #define ckit_arena_create_custom(allocation_size, name, flags, alignment) MACRO_ckit_arena_create(allocation_size, name, flags, alignment)
@@ -530,7 +545,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
     // Date: July 13, 2024
     // NOTE(Jovanni): This doesn't have very good checking if the vector is NULLPTR
-    // Attemptying to get the length/cap/pop of a NULLPTR will result in a uncontrolled crash
+    // Attempting to get the length/cap/pop of a NULLPTR will result in a uncontrolled crash
 
     // Date: September 12, 2024
     // TODO(Jovanni): MAKE SURE YOU TEST ckit_vector_remove_at() and ckit_vector_insert_at()
@@ -789,16 +804,9 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     //
 #endif
 
-// Date: September 24, 2024
-// TODO(Jovanni): Make this a module
-#if defined(CKIT_INCLUDE_PARSER)
-    #include "./Include/Parser_and_Lexer/ckit_bmp_parser.h"
-#endif 
-
 //
 // ===================================================== CKIT_IMPL =====================================================
 //
-
 #if defined(CKIT_IMPL)
   void ckit_str_register_arena();
   void ckit_memory_arena_unregister_all();
@@ -813,13 +821,13 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
   }
 
   void ckit_cleanup(Boolean generate_memory_report) {
-    ckit_memory_arena_unregister_all();
-    //platform_console_shutdown();
-
     if (generate_memory_report) {
         ckit_memory_report(LOG_LEVEL_WARN); 
         // Evenetually this should happen before arenas are unregistered
     }
+
+    //platform_console_shutdown();
+    ckit_memory_arena_unregister_all();
   }
 #endif
 
@@ -905,6 +913,8 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     // 
     // Memory Tracker
     //
+    internal CKG_LinkedList* registered_arenas = NULLPTR;
+
     CKIT_MemoryTagID reserved_tags[] = {
         TAG_USER_UNKNOWN,
 
@@ -1040,7 +1050,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     }
 
     void ckit_tracker_register_tag_pool(CKIT_MemoryTagID tag_id, const char* name) {
-        ckit_assert(!ckit_tracker_tag_pool_exists(tag_id, name)); // don't register a tag that already exists/has been registered (name can't be the same either)
+        ckit_assert_msg(!ckit_tracker_tag_pool_exists(tag_id, name), "Attempted to register memory tag_id: %d Number of registed tags: %d\n", tag_id, ckg_vector_count(global_memory_tag_pool_vector)); // don't register a tag that already exists/has been registered (name can't be the same either)
 
         CKIT_MemoryTagPool tag_pool = ckit_tracker_tag_pool_create(tag_id, name);
         ckg_vector_push(global_memory_tag_pool_vector, tag_pool);
@@ -1107,25 +1117,44 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     CKIT_MemoryHeader* ckit_tracker_get_header(void* data) {
         ckit_tracker_check_magic(data);
         CKIT_MemoryHeader* header = (CKIT_MemoryHeader*)((u8*)data - sizeof(CKIT_MemoryHeader));
-        ckit_assert(ckit_tracker_tag_pool_exists(header->tag.tag_id, header->tag.tag_name));
+        ckit_assert_msg(ckit_tracker_tag_pool_exists(header->tag.tag_id, header->tag.tag_name), "Tag id or tag_name must be corrupted\n");
+        
         return header;
     }
 
     void ckit_tracker_print_all_pools(CKIT_LogLevel log_level) {
-        if (global_total_pool_memory_used == 0) {
+        u64 arena_allocation_capacity = 0;
+        u64 arena_allocation_internal = 0;
+        for (u32 i = 0; i < registered_arenas->count; i++) {
+            CKIT_Arena* current_arena = (CKIT_Arena*)ckg_linked_list_get(registered_arenas, i);
+            arena_allocation_capacity += (sizeof(CKIT_ArenaPage) * current_arena->pages->count);
+            arena_allocation_capacity += ckit_arena_capacity(current_arena);
+            arena_allocation_capacity += sizeof(CKIT_Arena);
+
+            arena_allocation_internal += sizeof(CKIT_MemoryHeader); // For the arena
+            arena_allocation_internal += (sizeof(CKIT_MemoryHeader) * current_arena->pages->count); // for the pages
+        }
+
+        printf("arena_cap: %llu\n", arena_allocation_capacity);
+        printf("arena_cap_internal:  %llu\n", arena_allocation_internal);
+        printf("GLOBAL_internal:  %llu\n", global_total_pool_memory_internal); 
+
+        u64 total_memory_without_arena = global_total_pool_memory_used - arena_allocation_capacity - arena_allocation_internal;
+        u64 total_memory_internal_without_arena = global_total_pool_memory_internal - arena_allocation_internal;
+        if ((global_total_pool_memory_used - arena_allocation_capacity) == 0) {
             printf("%s[SUCCESS]: --- No Memory Leaks Detected ---%s\n", log_level_format[LOG_LEVEL_SUCCESS], CKG_COLOR_RESET);
             return;
         }
 
-        char* message = ckit_cstr_sprint_color(LOG_LEVEL_ERROR, "[ERROR]  : ---------------------- Memory Leak Detected: %d(total) - %d(internal) = %d(Bytes) ----------------------", global_total_pool_memory_used, global_total_pool_memory_internal, global_total_pool_memory_used - global_total_pool_memory_internal);
-        printf("%s\n", message);
-        ckit_free(message);
+
+        LOG_ERROR("---------------------- Memory Leak Detected: %d(total) - %d(internal) = %d(Bytes) ----------------------\n", total_memory_without_arena, total_memory_internal_without_arena, total_memory_without_arena - total_memory_internal_without_arena);
 
         u32 count = ckg_vector_capacity(global_memory_tag_pool_vector);
         Boolean has_start = FALSE; 
         Boolean has_end = FALSE; 
         for (u32 i = 0; i < count; i++) {
             CKIT_MemoryTagPool pool = global_memory_tag_pool_vector[i];
+            //pool.tag_id == TAG_CKIT_CORE_ARENA || 
             if (pool.total_pool_allocation_size == 0) {
                 continue;
             }
@@ -1145,16 +1174,13 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
             ckit_tracker_print_pool(&pool, log_level);
 
         }
-        message = ckit_cstr_sprint_color(LOG_LEVEL_ERROR, "[ERROR]  : ------------------------------------------------------------------------------------------------------------");
-        printf("%s\n", message);
-        ckit_free(message);
+
+        LOG_ERROR("------------------------------------------------------------------------------------------------------------\n");
     }
 
     //
     // Memory
     //
-
-    internal CKG_LinkedList* registered_arenas = NULLPTR;
 
     void memory_init() {
         registered_arenas = ckg_linked_list_create(CKIT_Arena*, TRUE);
@@ -1252,21 +1278,6 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 #if defined(CKIT_IMPL_ARENA)
     #define ARENA_DEFAULT_ALLOCATION_SIZE MegaBytes(1)
 
-    //========================== Begin Types ==========================
-    typedef struct CKIT_ArenaPage {
-        u8* base_address;
-        u64 capacity;
-        u64 used;
-    } CKIT_ArenaPage;
-
-    typedef struct CKIT_Arena {
-        const char* name;
-        CKIT_LinkedList* pages;
-        CKIT_ArenaFlag flag;
-        u8 alignment;
-    } CKIT_Arena;
-    //=========================== End Types ===========================
-
     void ckit_memory_arena_register(CKIT_Arena* arena);
     void ckit_memory_arena_unregister(CKIT_Arena* arena);
 
@@ -1277,8 +1288,8 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     internal CKIT_ArenaPage* ckit_arena_page_create(size_t allocation_size) {
         CKIT_ArenaPage* ret = (CKIT_ArenaPage*)ckit_alloc_custom(sizeof(CKIT_ArenaPage), TAG_CKIT_CORE_ARENA);
         ret->used = 0;
-        ret->capacity = allocation_size;
-        ret->base_address = (u8*)ckit_alloc_custom(allocation_size != 0 ? allocation_size : ARENA_DEFAULT_ALLOCATION_SIZE, TAG_CKIT_CORE_ARENA);
+        ret->capacity = allocation_size != 0 ? allocation_size : ARENA_DEFAULT_ALLOCATION_SIZE;
+        ret->base_address = (u8*)ckit_alloc_custom(ret->capacity, TAG_CKIT_CORE_ARENA);
 
         return ret;
     }
@@ -1288,9 +1299,9 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         arena->alignment = alignment == 0 ? 8 : alignment;
         arena->name = name;
         arena->flag = flag;
-        arena->pages = ckit_linked_list_create(CKIT_ArenaPage*, TRUE);
+        arena->pages = ckg_linked_list_create(CKIT_ArenaPage*, TRUE);
         CKIT_ArenaPage* inital_page = ckit_arena_page_create(allocation_size);
-        ckit_linked_list_push(arena->pages, inital_page);
+        ckg_linked_list_push(arena->pages, inital_page);
         ckit_memory_arena_register(arena);
 
         return arena;
@@ -1301,12 +1312,12 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
         u32 cached_count = arena->pages->count;
         for (u32 i = 0; i < cached_count; i++) {
-            CKIT_ArenaPage* page = (CKIT_ArenaPage*)ckit_linked_list_remove(arena->pages, 0).data;
+            CKIT_ArenaPage* page = (CKIT_ArenaPage*)ckg_linked_list_remove(arena->pages, 0).data;
             ckit_assert(page->base_address);
             ckit_free(page->base_address);
             ckit_free(page);
         }
-        ckit_linked_list_free(arena->pages);
+        ckg_linked_list_free(arena->pages);
 
         ckit_memory_arena_unregister(arena);
         ckit_free(arena);
@@ -1318,17 +1329,37 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         ckit_assert(arena);
 
         for (u32 i = 0; i < arena->pages->count; i++) {
-            CKIT_ArenaPage* page = (CKIT_ArenaPage*)ckit_linked_list_get(arena->pages, i);
+            CKIT_ArenaPage* page = (CKIT_ArenaPage*)ckg_linked_list_get(arena->pages, i);
             ckit_assert(page->base_address);
             ckit_memory_zero(page->base_address, page->used);
             page->used = 0;
         }
     }
 
+    CKIT_API u64 ckit_arena_used(CKIT_Arena* arena) {
+        u64 total_used = 0;
+        for (u32 i = 0; i < arena->pages->count; i++) {
+            CKIT_ArenaPage* page = (CKIT_ArenaPage*)ckg_linked_list_get(arena->pages, i);
+            total_used += page->used;
+        }
+
+        return total_used;
+    }
+
+    CKIT_API u64 ckit_arena_capacity(CKIT_Arena* arena) {
+        u64 total_capacity = 0;
+        for (u32 i = 0; i < arena->pages->count; i++) {
+            CKIT_ArenaPage* page = (CKIT_ArenaPage*)ckg_linked_list_get(arena->pages, i);
+            total_capacity += page->capacity;
+        }
+
+        return total_capacity;
+    }
+
     void* MACRO_ckit_arena_push(CKIT_Arena* arena, size_t element_size) {
         ckit_assert(arena);
 
-        CKIT_ArenaPage* last_page = (CKIT_ArenaPage*)ckit_linked_list_peek_tail(arena->pages);
+        CKIT_ArenaPage* last_page = (CKIT_ArenaPage*)ckg_linked_list_peek_tail(arena->pages);
         if (ckit_arena_flag_is_set(arena, CKIT_ARENA_FLAG_FIXED)) { // single page assert if you run out of memory
             ckit_assert((last_page->used + element_size <= last_page->capacity));
         } else if (ckit_arena_flag_is_set(arena, CKIT_ARENA_FLAG_CIRCULAR)) { // single page circle around if you run out of memory
@@ -1341,13 +1372,13 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
             if ((last_page->used + element_size > last_page->capacity)) {
                 CKIT_ArenaPage* next_page = ckit_arena_page_create((last_page->capacity + element_size) * 2);
                 ckit_assert(next_page->base_address);
-                ckit_linked_list_push(arena->pages, next_page);
+                ckg_linked_list_push(arena->pages, next_page);
             }
         } else {
             ckit_assert(FALSE);
         }
 
-        last_page = (CKIT_ArenaPage*)ckit_linked_list_peek_tail(arena->pages); // tail might change
+        last_page = (CKIT_ArenaPage*)ckg_linked_list_peek_tail(arena->pages); // tail might change
 
         u8* ret = last_page->base_address + last_page->used;
         last_page->used += element_size;
