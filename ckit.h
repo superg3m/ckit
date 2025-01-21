@@ -824,7 +824,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 #endif
 
 #if defined(CKIT_IMPL_LOGGER)
-    internal Boolean logging_is_initialized = FALSE;
+    // internal Boolean logging_is_initialized = FALSE;
     internal const char* logger_start_delimitor = "${";
     internal const char* logger_end_delimitor = "}";
 
@@ -972,7 +972,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         return ret;
     }
 
-    internal CKIT_MemoryTag ckit_tracker_memory_tag_create(CKIT_MemoryTagID tag_id, const char* name) {
+    UNUSED_FUNCTION internal CKIT_MemoryTag ckit_tracker_memory_tag_create(CKIT_MemoryTagID tag_id, const char* name)  {
         CKIT_MemoryTag ret;
         ret.tag_id = tag_id;
         ret.tag_name = name;
@@ -1105,6 +1105,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     }
 
     CKIT_MemoryHeader* ckit_tracker_get_header(void* data) {
+        ckit_tracker_check_magic(data);
         CKIT_MemoryHeader* header = (CKIT_MemoryHeader*)((u8*)data - sizeof(CKIT_MemoryHeader));
         ckit_assert(ckit_tracker_tag_pool_exists(header->tag.tag_id, header->tag.tag_name));
         return header;
@@ -1177,7 +1178,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     }
 
     void* MACRO_ckit_free(void* data) {
-        ckit_assert_msg(data, "ckit_free: Data passed is null in free\n");
+        ckit_assert_msg(data, "ckit_free: Data passed is null in free\n");\
 
         CKIT_MemoryHeader* header = ckit_tracker_get_header(data);
         const size_t allocation_size = header->tag.allocation_info.allocation_size;
@@ -1190,6 +1191,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
     void* MACRO_ckit_realloc(void* data, u64 new_allocation_size, const char* file, const u32 line, const char* function) {
         ckit_assert_msg(data, "ckit_reallocation: Data passed is null\n");
+
         const CKIT_MemoryHeader* header = ckit_tracker_get_header(data);
 
         void* ret_data = MACRO_ckit_alloc(sizeof(header) + new_allocation_size, header->tag.tag_id, file, line, function);
@@ -1375,11 +1377,6 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     internal void ckit_str_check_magic(String str) {
         ckit_assert_msg(str, "String: %s is null can't check magic: (%s) Likely not a CKIT_String\n", str, CKIT_STR_MAGIC);
         ckit_assert_msg(ckit_str_equal(ckit_str_header(str)->magic, CKIT_STR_MAGIC), "String: %s has the wrong magic: {%s} got: {%s} \n", str, CKIT_STR_MAGIC, ckit_str_header(str)->magic);
-    }
-
-    internal void ckit_str_insert_header(char** str, CKIT_StringHeader header) {
-        ckit_memory_copy(&header, *str,  sizeof(header),  sizeof(header) + header.capacity);
-        *str = (char*)(((u8*)(*str)) + sizeof(header));
     }
 
     internal inline String ckit_str_grow(String str, size_t new_allocation_size) {
@@ -1839,7 +1836,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
 #if defined(CKIT_IMPL_OS)
     internal String cwd = NULLPTR;
-    internal String cached_directory = NULLPTR;
+    // internal String cached_directory = NULLPTR;
 
     // just asserts because I don't like handling errors
 
