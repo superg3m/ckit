@@ -422,7 +422,7 @@ int main() {
 	int* custom_tag_test = ckit_alloc_custom(sizeof(int), TEST_TAG);
 	ckit_free(custom_tag_test);
 
-	// ckit_vector_free(lines);
+	ckit_vector_free(lines);
 	ckit_cleanup(TRUE);
 	return 0;
 }
