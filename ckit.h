@@ -1067,7 +1067,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         
         global_memory_tag_pool_vector[tag_pool_index].total_pool_allocation_size += header->tag.allocation_info.allocation_size;
         global_total_pool_memory_internal += sizeof(CKIT_MemoryHeader);
-        global_total_pool_memory_used += sizeof(CKIT_MemoryHeader) + header->tag.allocation_info.allocation_size;
+        global_total_pool_memory_used += header->tag.allocation_info.allocation_size;
 
         header->linked_list_address = ckg_linked_list_push(global_memory_tag_pool_vector[tag_pool_index].allocated_headers, header);
     }
@@ -1077,7 +1077,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
         global_memory_tag_pool_vector[tag_pool_index].total_pool_allocation_size -= header->tag.allocation_info.allocation_size;
         global_total_pool_memory_internal -= sizeof(CKIT_MemoryHeader);
-        global_total_pool_memory_used -= sizeof(CKIT_MemoryHeader) + header->tag.allocation_info.allocation_size;
+        global_total_pool_memory_used -= header->tag.allocation_info.allocation_size;
         
         u32 index = ckg_linked_list_node_to_index(global_memory_tag_pool_vector[tag_pool_index].allocated_headers,  header->linked_list_address);
         ckg_linked_list_remove(global_memory_tag_pool_vector[tag_pool_index].allocated_headers, index); 
@@ -1086,32 +1086,23 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     void ckit_tracker_print_header(CKIT_MemoryHeader* header, CKIT_LogLevel log_level) {
         u8* data_address = (u8*)header + sizeof(CKIT_MemoryHeader);
         
-        char* m1 = ckit_cstr_sprint_color(log_level, "[WARN]  : =>    - Address: %p | Size: %d(Bytes)", data_address, header->tag.allocation_info.allocation_size);
-        char* m2 = ckit_cstr_sprint_color(log_level, "[WARN]  :         - Allocation Site:");
-        char* m3 = ckit_cstr_sprint_color(log_level, "[WARN]  :           - File: %s:%d", header->tag.allocation_info.file_name, header->tag.allocation_info.line);
-        char* m4 = ckit_cstr_sprint_color(log_level, "[WARN]  :           - Function: %s", header->tag.allocation_info.function_name);
-
-        printf("%s\n", m1);
-        printf("%s\n", m2);
-        printf("%s\n", m3);
-        printf("%s\n", m4);
-        ckit_free(m1);
-        ckit_free(m2);
-        ckit_free(m3);
-        ckit_free(m4);
+        ckit_log_output(log_level, "=>  Address: %p | Size: %d(Bytes)\n", data_address, header->tag.allocation_info.allocation_size);
+        ckit_log_output(log_level, "        - Allocation Site:\n");
+        ckit_log_output(log_level, "            - File: %s:%d\n", header->tag.allocation_info.file_name, header->tag.allocation_info.line);
+        ckit_log_output(log_level, "            - Function: %s\n", header->tag.allocation_info.function_name);
     }
 
     void ckit_tracker_print_pool(CKIT_MemoryTagPool* pool, CKIT_LogLevel log_level) {
-        printf("============================== POOL NAME: %s | SIZE: %lld | Items: %d ==============================\n", pool->pool_name, pool->total_pool_allocation_size, pool->allocated_headers->count);
+        LOG_PRINT("============================== POOL NAME: %s | SIZE: %lld | Items: %d ==============================\n", pool->pool_name, pool->total_pool_allocation_size, pool->allocated_headers->count);
         u32 count = pool->allocated_headers->count;
         for (u32 i = 0; i < count; i++) {
             CKIT_MemoryHeader* current_header = (CKIT_MemoryHeader*)ckg_linked_list_pop(pool->allocated_headers).data;
             ckit_tracker_print_header(current_header, log_level);
             if (i != count - 1) {
-                printf("\n");
+                LOG_PRINT("\n");
             }
         }
-        printf("========================================================================================================\n");
+        LOG_PRINT("========================================================================================================\n");
     }
 
     CKIT_MemoryHeader* ckit_tracker_get_header(void* data) {
@@ -1125,37 +1116,32 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     void ckit_tracker_print_all_pools(CKIT_LogLevel log_level) {
         u64 arena_allocation_capacity = 0;
         u64 arena_allocation_internal = 0;
-        for (u32 i = 0; i < registered_arenas->count; i++) {
-            CKIT_Arena* current_arena = (CKIT_Arena*)ckg_linked_list_get(registered_arenas, i);
-            arena_allocation_capacity += (sizeof(CKIT_ArenaPage) * current_arena->pages->count);
-            arena_allocation_capacity += ckit_arena_capacity(current_arena);
-            arena_allocation_capacity += sizeof(CKIT_Arena);
 
-            arena_allocation_internal += sizeof(CKIT_MemoryHeader); // For the arena
-            arena_allocation_internal += (sizeof(CKIT_MemoryHeader) * current_arena->pages->count); // for the pages
+        for (u32 i = 0; i < ckit_vector_count(global_memory_tag_pool_vector); i++) {
+            CKIT_MemoryTagPool current_pool = global_memory_tag_pool_vector[i];
+            if (current_pool.tag_id == TAG_CKIT_CORE_ARENA) {
+                arena_allocation_capacity = current_pool.total_pool_allocation_size;
+                arena_allocation_internal = current_pool.allocated_headers->count * sizeof(CKIT_MemoryHeader);
+                break;
+            }
         }
 
-        printf("arena_cap: %llu\n", arena_allocation_capacity);
-        printf("arena_cap_internal:  %llu\n", arena_allocation_internal);
-        printf("GLOBAL_internal:  %llu\n", global_total_pool_memory_internal); 
-
-        u64 total_memory_without_arena = global_total_pool_memory_used - arena_allocation_capacity - arena_allocation_internal;
-        u64 total_memory_internal_without_arena = global_total_pool_memory_internal - arena_allocation_internal;
-        if ((global_total_pool_memory_used - arena_allocation_capacity) == 0) {
-            printf("%s[SUCCESS]: --- No Memory Leaks Detected ---%s\n", log_level_format[LOG_LEVEL_SUCCESS], CKG_COLOR_RESET);
+        if ((global_total_pool_memory_used - arena_allocation_capacity) == 0 && (global_total_pool_memory_internal - arena_allocation_internal) == 0) {
+            LOG_SUCCESS("--- No Memory Leaks Detected ---\n");
             return;
         }
 
+        u64 total_memory_without_arena = global_total_pool_memory_used - arena_allocation_capacity;
+        u64 total_memory_without_arena_internal = global_total_pool_memory_internal - arena_allocation_internal;
 
-        LOG_ERROR("---------------------- Memory Leak Detected: %d(total) - %d(internal) = %d(Bytes) ----------------------\n", total_memory_without_arena, total_memory_internal_without_arena, total_memory_without_arena - total_memory_internal_without_arena);
+        LOG_ERROR("---------------------- Memory Leak Detected: %d(total) + %d(internal) = %d(Bytes) ----------------------\n", total_memory_without_arena, total_memory_without_arena_internal, total_memory_without_arena + total_memory_without_arena_internal);
 
         u32 count = ckg_vector_capacity(global_memory_tag_pool_vector);
         Boolean has_start = FALSE; 
         Boolean has_end = FALSE; 
         for (u32 i = 0; i < count; i++) {
             CKIT_MemoryTagPool pool = global_memory_tag_pool_vector[i];
-            //pool.tag_id == TAG_CKIT_CORE_ARENA || 
-            if (pool.total_pool_allocation_size == 0) {
+            if (pool.tag_id == TAG_CKIT_CORE_ARENA || pool.total_pool_allocation_size == 0) {
                 continue;
             }
 
@@ -1166,8 +1152,8 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
             }
             
             if (has_end && i != ckg_vector_capacity(global_memory_tag_pool_vector) - 1) {
-                printf("                                               |\n");
-                printf("                                               |\n");
+                LOG_PRINT("                                               |\n");
+                LOG_PRINT("                                               |\n");
                 has_end = FALSE;
             }
 

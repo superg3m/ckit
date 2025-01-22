@@ -288,8 +288,3 @@ make vector operations easier
 		- [ ] ckit_printf("%fv\n") // (float vector) [1.0, 3.24]
 		- [ ] ckit_printf("%sv\n") // (string vector) ["Stuff in here", "Hello"]
 		- [ ] ckit_printf("%cv\n") // (char vector) ['y', 'f']
-
-I need to be able to overwrite memory tags of things like linked lists and stuff like that
-
-
-Hey the memory tag allocation system is somehow missing one internal object when calcualting it for the arena
