@@ -1530,10 +1530,8 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     String MACRO_ckit_str_sprint(u64* allocation_size_ptr, char* fmt, ...) {
         va_list args;
         va_start(args, fmt);
-        char* buffer = ckit_str_va_sprint(allocation_size_ptr, fmt, args);
+        String ret = ckit_str_va_sprint(allocation_size_ptr, fmt, args);
         va_end(args);
-        String ret = ckit_str_create(buffer);
-        ckit_free(buffer);
         
         return ret;
     }
