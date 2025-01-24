@@ -1492,29 +1492,31 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         return str;
     }
 
-    CKIT_API char* MACRO_ckit_cstr_sprint(u64* allocation_size_ptr, char* fmt, ...) {
-        va_list args_list;
-        va_start(args_list, fmt);
-        u64 allocation_size = vsnprintf(NULLPTR, 0, fmt, args_list) + 1; // + 1 because null terminator
-        char* buffer = ckit_alloc(allocation_size);
-        vsnprintf(buffer, allocation_size, fmt, args_list);
-        va_end(args_list);
+        char* MACRO_ckit_cstr_va_sprint(u64* allocation_size_ptr, char* fmt, va_list args) {
+        u64 allocation_size = vsnprintf(NULLPTR, 0, fmt, args) + 1; // + 1 because null terminator
+        char* ret = ckit_alloc(allocation_size);
+        vsnprintf(ret, allocation_size, fmt, args);
 
         if (allocation_size_ptr != NULLPTR) {
             *allocation_size_ptr = allocation_size;
         } 
 
-        return buffer;
+        return ret;
     }
 
-    CKIT_API String MACRO_ckit_str_sprint(u64* allocation_size_ptr, char* fmt, ...) {
-        va_list args_list;
-        va_start(args_list, fmt);
-        u64 allocation_ret = vsnprintf(NULLPTR, 0, fmt, args_list) + 1; // + 1 because null terminator
-        char* buffer = ckit_alloc(allocation_ret);
-        vsnprintf(buffer, allocation_ret, fmt, args_list);
-        va_end(args_list);
+    char* MACRO_ckit_cstr_sprint(u64* allocation_size_ptr, char* fmt, ...) {
+        va_list args;
+        va_start(args, fmt);
+        char* ret = MACRO_ckit_cstr_va_sprint(allocation_size_ptr, fmt, args);
+        va_end(args);
 
+        return ret;
+    }
+
+    String ckit_str_va_sprint(u64* allocation_size_ptr, char* fmt, va_list args) {
+        u64 allocation_ret = vsnprintf(NULLPTR, 0, fmt, args) + 1; // + 1 because null terminator
+        char* buffer = ckit_alloc(allocation_ret);
+        vsnprintf(buffer, allocation_ret, fmt, args);
         String ret = ckit_str_create(buffer);
         ckit_free(buffer);
 
@@ -1525,28 +1527,13 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         return ret;
     }
 
-    CKIT_API char* ckit_cstr_va_sprint(u64* allocation_size_ptr, char* fmt, va_list args) {
-        u64 allocation_ret = vsnprintf(NULLPTR, 0, fmt, args) + 1; // + 1 because null terminator
-        char* buffer = ckit_alloc(allocation_ret);
-        vsnprintf(buffer, allocation_ret, fmt, args);
-
-        if (allocation_size_ptr != NULLPTR) {
-            *allocation_size_ptr = allocation_ret;
-        } 
-
-        return buffer;
-    }
-
-    CKIT_API String ckit_str_va_sprint(u64* allocation_size_ptr, char* fmt, va_list args) {
-        u64 allocation_ret = vsnprintf(NULLPTR, 0, fmt, args) + 1; // + 1 because null terminator
-        char* buffer = ckit_alloc(allocation_ret);
-        vsnprintf(buffer, allocation_ret, fmt, args);
+    String MACRO_ckit_str_sprint(u64* allocation_size_ptr, char* fmt, ...) {
+        va_list args;
+        va_start(args, fmt);
+        char* buffer = ckit_str_va_sprint(allocation_size_ptr, fmt, args);
+        va_end(args);
         String ret = ckit_str_create(buffer);
         ckit_free(buffer);
-
-        if (allocation_size_ptr != NULLPTR) {
-            *allocation_size_ptr = allocation_ret;
-        } 
         
         return ret;
     }
