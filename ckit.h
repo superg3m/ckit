@@ -1868,7 +1868,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         String* ret = NULLPTR;
 
         String current_line = ckit_str_create("");
-        for (size_t i = 0; i <= file_size; i++) {
+        for (size_t i = 0; i < file_size; i++) {
             char current_char = file_data[i];
             if (current_char == '\n' || current_char == '\0') {
                 ckit_vector_push(ret, current_line);
@@ -1943,18 +1943,34 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
             ckit_assert(ckit_os_path_exists(path));
 
             HANDLE file_handle = CreateFileA(path, GENERIC_READ, 0, NULLPTR, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULLPTR);
+            if (file_handle == INVALID_HANDLE_VALUE) {
+                return NULLPTR; // Failed to open file
+            }
+
             LARGE_INTEGER large_int = {0};
             BOOL success = GetFileSizeEx(file_handle, &large_int);
             ckit_assert(success);
-            size_t file_size = large_int.QuadPart + 1; // +1 for null term
-            DWORD bytes_read = 0;
 
-            u8* file_data = (u8*)ckit_alloc_custom(file_size, TAG_CKIT_EXPECTED_USER_FREE);
+            uint64_t file_size = large_int.QuadPart + 1;
+            if (file_size > SIZE_MAX) {
+                CloseHandle(file_handle);
+                return NULLPTR; // File too large to handle
+            }
+
+            u8* file_data = (u8*)ckit_alloc_custom((size_t)file_size, TAG_CKIT_EXPECTED_USER_FREE); // +1 for optional null-terminator
+            if (file_data == NULLPTR) {
+                CloseHandle(file_handle);
+                return NULLPTR; // Memory allocation failed
+            }
+
+            DWORD bytes_read = 0;
             success = ReadFile(file_handle, file_data, (DWORD)file_size, &bytes_read, NULLPTR);
-            ckit_assert(success && CloseHandle(file_handle));
+            CloseHandle(file_handle);
+
+            ckit_assert(success && bytes_read == (file_size - 1));
 
             if (returned_file_size) {
-                *returned_file_size = file_size;
+                *returned_file_size = (size_t)file_size;
             }
 
             return file_data;
@@ -2032,10 +2048,10 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
             }
 
             fseek(file_handle, 0L, SEEK_END);
-            size_t file_size = ftell(file_handle);
+            size_t file_size = ftell(file_handle) + 1;
             rewind(file_handle);
 
-            if (file_size == 0) {
+            if (file_size == 1) {
                 fclose(file_handle);
                 if (returned_file_size) {
                     *returned_file_size = 0;
@@ -2043,7 +2059,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
                 return NULLPTR;
             }
 
-            u8* file_data = ckit_alloc(file_size + 1); // +1 for null terminator
+            u8* file_data = ckit_alloc(file_size); // +1 for null terminator
             if (file_data == NULLPTR) {
                 fclose(file_handle);
                 return NULLPTR;
