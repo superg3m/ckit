@@ -810,6 +810,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
   void ckit_memory_arena_unregister_all();
   void platform_console_init();
   void platform_console_shutdown();
+  void ckit_tracker_cleanup();
 
   void ckit_init() {
     ckit_tracker_init();
@@ -826,6 +827,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
     //platform_console_shutdown();
     ckit_memory_arena_unregister_all();
+    ckit_tracker_cleanup();
   }
 #endif
 
@@ -1034,6 +1036,11 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         }
     }
 
+    void ckit_tracker_cleanup() {
+        void* to_free = ((u8*)global_memory_tag_pool_vector) - sizeof(CKG_VectorHeader);
+        ckg_free(to_free);
+    }
+
     CKIT_MemoryHeader ckit_tracker_header_create(CKIT_MemoryTagID tag_id, size_t allocation_size, const char* file_name, const u64 line, const char* function_name) {
         CKIT_MemoryHeader ret;
         ret.magic = CKIT_MEMORY_MAGIC;
@@ -1116,7 +1123,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         u64 arena_allocation_capacity = 0;
         u64 arena_allocation_internal = 0;
 
-        for (u32 i = 0; i < ckit_vector_count(global_memory_tag_pool_vector); i++) {
+        for (u32 i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
             CKIT_MemoryTagPool current_pool = global_memory_tag_pool_vector[i];
             if (current_pool.tag_id == TAG_CKIT_CORE_ARENA) {
                 arena_allocation_capacity = current_pool.total_pool_allocation_size;
@@ -2283,7 +2290,6 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     void* MACRO_ckit_vector_free(void* vector) {
         ckit_vector_check_magic(vector);
         CKIT_VectorHeader* vector_base = ckit_vector_base(vector);
-        ckit_assert_msg(vector_base, "WHAT"); 
         vector_base->count = 0;
         vector_base->capacity = 0;
         ckit_free(vector_base);
