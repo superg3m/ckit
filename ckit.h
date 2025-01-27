@@ -2048,10 +2048,10 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
             }
 
             fseek(file_handle, 0L, SEEK_END);
-            size_t file_size = ftell(file_handle) + 1;
+            size_t file_size = ftell(file_handle);
             rewind(file_handle);
 
-            if (file_size == 1) {
+            if (file_size == 0) {
                 fclose(file_handle);
                 if (returned_file_size) {
                     *returned_file_size = 0;
@@ -2059,7 +2059,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
                 return NULLPTR;
             }
 
-            u8* file_data = ckit_alloc(file_size); // +1 for null terminator
+            u8* file_data = ckit_alloc(file_size + 1); // +1 for null terminator
             if (file_data == NULLPTR) {
                 fclose(file_handle);
                 return NULLPTR;
@@ -2075,7 +2075,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
             fclose(file_handle);
 
             if (returned_file_size) {
-                *returned_file_size = file_size;
+                *returned_file_size = file_size + 1;
             }
 
             return file_data;
