@@ -890,6 +890,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         String out_message = ckit_str_va_sprint(NULLPTR, (char*)message, args_list);
         va_end(args_list);
 
+
         printf("%s%s%s", log_level_format[log_level], log_level_strings[log_level], CKG_COLOR_RESET);
         
         u32 out_message_length = ckit_str_length(out_message);
@@ -1492,11 +1493,18 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         return str;
     }
 
-        char* MACRO_ckit_cstr_va_sprint(u64* allocation_size_ptr, char* fmt, va_list args) {
-        u64 allocation_size = vsnprintf(NULLPTR, 0, fmt, args) + 1; // + 1 because null terminator
-        char* ret = ckit_alloc(allocation_size);
-        vsnprintf(ret, allocation_size, fmt, args);
+    char* MACRO_ckit_cstr_va_sprint(u64* allocation_size_ptr, char* fmt, va_list args) {
+        va_list args_copy;
+        va_copy(args_copy, args);
+        u64 allocation_size = vsnprintf(NULLPTR, 0, fmt, args_copy) + 1; // + 1 because null terminator
+        va_end(args_copy);
 
+        char* ret = ckit_alloc(allocation_size);
+
+        va_copy(args_copy, args);
+        vsnprintf(ret, allocation_size, fmt, args_copy);
+        va_end(args_copy);
+        
         if (allocation_size_ptr != NULLPTR) {
             *allocation_size_ptr = allocation_size;
         } 
@@ -1514,9 +1522,17 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     }
 
     String ckit_str_va_sprint(u64* allocation_size_ptr, char* fmt, va_list args) {
-        u64 allocation_ret = vsnprintf(NULLPTR, 0, fmt, args) + 1; // + 1 because null terminator
+        va_list args_copy;
+        va_copy(args_copy, args);
+        u64 allocation_ret = vsnprintf(NULLPTR, 0, fmt, args_copy) + 1; // +1 for null terminator
+        va_end(args_copy);
+
         char* buffer = ckit_alloc(allocation_ret);
-        vsnprintf(buffer, allocation_ret, fmt, args);
+
+        va_copy(args_copy, args);
+        vsnprintf(buffer, allocation_ret, fmt, args_copy);
+        va_end(args_copy);
+
         String ret = ckit_str_create(buffer);
         ckit_free(buffer);
 
@@ -1526,6 +1542,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         
         return ret;
     }
+
 
     String MACRO_ckit_str_sprint(u64* allocation_size_ptr, char* fmt, ...) {
         va_list args;
@@ -1929,14 +1946,16 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
             LARGE_INTEGER large_int = {0};
             BOOL success = GetFileSizeEx(file_handle, &large_int);
             ckit_assert(success);
-            size_t file_size = large_int.QuadPart;
+            size_t file_size = large_int.QuadPart + 1; // +1 for null term
             DWORD bytes_read = 0;
 
             u8* file_data = (u8*)ckit_alloc_custom(file_size, TAG_CKIT_EXPECTED_USER_FREE);
             success = ReadFile(file_handle, file_data, (DWORD)file_size, &bytes_read, NULLPTR);
             ckit_assert(success && CloseHandle(file_handle));
 
-            *returned_file_size = file_size;
+            if (returned_file_size) {
+                *returned_file_size = file_size;
+            }
 
             return file_data;
         }
@@ -2005,24 +2024,43 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         }
 
         u8* ckit_os_read_entire_file(const char* path, size_t* returned_file_size) {
-            ckit_assert(ckit_os_path_exists(path));
+            ckit_assert_msg(ckit_os_path_exists(path), "Path doesn't exist\n");
 
-            FILE* file_handle = fopen(path, "r");
-
-            if (file_handle == NULL) {
-                return FALSE;
+            FILE* file_handle = fopen(path, "rb");
+            if (file_handle == NULLPTR) {
+                return NULLPTR;
             }
 
             fseek(file_handle, 0L, SEEK_END);
             size_t file_size = ftell(file_handle);
             rewind(file_handle);
 
-            u8* file_data = ckit_alloc(file_size);
-            ckg_assert_msg(fread(file_data, file_size, 1 , file_handle) != file_size, "Error reading file");
-            rewind(file_handle);
+            if (file_size == 0) {
+                fclose(file_handle);
+                if (returned_file_size) {
+                    *returned_file_size = 0;
+                }
+                return NULLPTR;
+            }
+
+            u8* file_data = ckit_alloc(file_size + 1); // +1 for null terminator
+            if (file_data == NULLPTR) {
+                fclose(file_handle);
+                return NULLPTR;
+            }
+
+            if (fread(file_data, file_size, 1, file_handle) != 1) {
+                fclose(file_handle);
+                ckit_free(file_data);
+                ckit_assert_msg(FALSE, "Error reading file");
+                return NULLPTR;
+            }
 
             fclose(file_handle);
-            *returned_file_size = file_size;
+
+            if (returned_file_size) {
+                *returned_file_size = file_size;
+            }
 
             return file_data;
         }
