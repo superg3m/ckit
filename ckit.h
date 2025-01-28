@@ -876,8 +876,8 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         u32 start_delimitor_index = ckit_str_index_of(message, logger_start_delimitor);
         u32 end_delimitor_index = ckit_str_index_of(message, logger_end_delimitor);
 
-        String left_side = ckit_substring(message, 0, start_delimitor_index - 1);
-        String right_side = ckit_substring(message, end_delimitor_index + ckit_cstr_length(logger_end_delimitor), ckit_cstr_length(message) - 1);
+        String left_side = ckit_substring(message, 0, start_delimitor_index);
+        String right_side = ckit_substring(message, end_delimitor_index + ckit_cstr_length(logger_end_delimitor), ckit_cstr_length(message));
 
         printf("%s%s%s%s", left_side, log_level_format[log_level], middle_to_color, CKG_COLOR_RESET);
 
@@ -1037,6 +1037,11 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     }
 
     void ckit_tracker_cleanup() {
+        u32 pool_count = ckg_vector_count(global_memory_tag_pool_vector);
+        for (u32 i = 0 ;i < pool_count; i++) {
+            ckg_linked_list_free(global_memory_tag_pool_vector[i].allocated_headers);
+        }
+
         void* to_free = ((u8*)global_memory_tag_pool_vector) - sizeof(CKG_VectorHeader);
         ckg_free(to_free);
     }
@@ -1590,18 +1595,18 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
     internal String* ckit_str_split_helper(String* ret_buffer, const char* string_buffer, u32 offset_into_buffer, const char* delimitor) {
         if (!ckit_str_contains(string_buffer + offset_into_buffer, delimitor)) {
-            ckit_vector_push(ret_buffer, ckit_substring(string_buffer, offset_into_buffer, ckit_cstr_length(string_buffer) - 1));
+            ckit_vector_push(ret_buffer, ckit_substring(string_buffer, offset_into_buffer, ckit_cstr_length(string_buffer)));
             return ret_buffer;
         }
 
         u32 found_index = ckit_str_index_of(string_buffer + offset_into_buffer, delimitor);
         u32 offset_to_delimitor = found_index + offset_into_buffer;
         if (found_index == -1) {
-            ckit_vector_push(ret_buffer, ckit_substring(string_buffer, offset_into_buffer, ckit_cstr_length(string_buffer) - 1));
+            ckit_vector_push(ret_buffer, ckit_substring(string_buffer, offset_into_buffer, ckit_cstr_length(string_buffer)));
             return ret_buffer;
         }
 
-        String debug_test = ckit_substring(string_buffer, offset_into_buffer, offset_to_delimitor - 1);
+        String debug_test = ckit_substring(string_buffer, offset_into_buffer, offset_to_delimitor);
         ckit_vector_push(ret_buffer, debug_test);
         return ckit_str_split_helper(ret_buffer, string_buffer, offset_to_delimitor + 1, delimitor);
     }
