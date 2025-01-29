@@ -253,20 +253,17 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
 #if defined(CKIT_INCLUDE_STRING)
     typedef struct CKIT_StringHeader {
-        u32 length; 
-        size_t capacity;
+        u64 length; 
+        u64 capacity;
         const char* magic; 
     } CKIT_StringHeader;
     
     typedef char* String;
 
-    CKIT_API String ckit_str_create_custom(const char* c_str, size_t capacity);
-
-    CKIT_API u32 ckit_cstr_length(const char* str);
-    CKIT_API u32 ckit_str_length(const String str);
-    CKIT_API Boolean ckit_str_equal(const char* str1, const char* str2);
+    CKIT_API String ckit_str_create_custom(const char* c_str, u64 length, u64 capacity);
+    CKIT_API u64 ckit_str_length(const String str);
+    CKIT_API Boolean ckit_str_equal(const String str1, const String str2);
     CKIT_API void ckit_str_copy(String str, const char* source);
-
 
     CKIT_API char* ckit_cstr_va_sprint(u64* allocation_size_ptr, char* fmt, va_list args);
     CKIT_API char* MACRO_ckit_cstr_sprint(u64* allocation_size_ptr, char* fmt, ...);
@@ -286,8 +283,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
     // If you are copying data to the string and need to update the header state specifically for length
     CKIT_API void ckit_str_recanonicalize_header_length(String str);
-
-    CKIT_API String ckit_substring(const char* string_buffer, u32 start_range, u32 end_range);
+    CKIT_API String ckit_substring(const char* string_buffer, u64 start_range, u64 end_range);
 
     // Little bit tricky. This method returns a vector of strings so 
     // ckit_vector_count(): to get the number of strings it returned
@@ -310,7 +306,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     CKIT_API int ckit_str_to_int(const char* ascii_number);
     CKIT_API String ckit_str_between_delimiters(const char* str, const char* start_delimitor, const char* end_delimitor);
 
-    #define ckit_str_create(str) ckit_str_create_custom(str, 0)
+    #define ckit_str_create(str) ckit_str_create_custom(str, 0, 0)
     #define ckit_str_insert(str, source, index) str = MACRO_ckit_str_insert(str, source, index);
     #define ckit_str_insert_char(str, source, index) str = MACRO_ckit_str_insert_char(str, source, index);
     #define ckit_str_append(str, source) str = MACRO_ckit_str_append(str, source);
@@ -864,24 +860,25 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         return start_delimitor_index && end_delimitor_index;
     }
 
-    internal void special_print_helper(const char* message, CKIT_LogLevel log_level) {
+    internal void special_print_helper(const char* message, u64 message_length, CKIT_LogLevel log_level) {
         String middle_to_color = ckit_str_between_delimiters(message, logger_start_delimitor, logger_end_delimitor);
         if (!middle_to_color) {
-            u32 message_length = ckit_cstr_length(message);
             Boolean found = message[message_length - 1] == '\n';
-            printf("%.*s", message_length - found, message);
+            printf("%.*s", (int)(message_length - found), message);
             return;
         }
 
         u32 start_delimitor_index = ckit_str_index_of(message, logger_start_delimitor);
         u32 end_delimitor_index = ckit_str_index_of(message, logger_end_delimitor);
 
-        String left_side = ckit_substring(message, 0, start_delimitor_index);
-        String right_side = ckit_substring(message, end_delimitor_index + ckit_cstr_length(logger_end_delimitor), ckit_cstr_length(message));
+        CKG_StringView left_side_view = ckg_strview_create((char*)message, 0, start_delimitor_index);
+        CKG_StringView right_side_view = ckg_strview_create((char*)message, end_delimitor_index + ckg_cstr_length(logger_end_delimitor), message_length);
+        String left_side = ckit_str_create_custom(CKG_SV_ARG(left_side_view), 0);
+        String right_side = ckit_str_create_custom(CKG_SV_ARG(right_side_view), 0);
 
         printf("%s%s%s%s", left_side, log_level_format[log_level], middle_to_color, CKG_COLOR_RESET);
 
-        special_print_helper(right_side, log_level);
+        special_print_helper(right_side, ckg_strview_length(right_side_view), log_level);
 
         return;
     }
@@ -892,13 +889,12 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         String out_message = ckit_str_va_sprint(NULLPTR, (char*)message, args_list);
         va_end(args_list);
 
-
         printf("%s%s%s", log_level_format[log_level], log_level_strings[log_level], CKG_COLOR_RESET);
         
         u32 out_message_length = ckit_str_length(out_message);
 
         if (message_has_special_delmitor(out_message)) {
-            special_print_helper(out_message, log_level);
+            special_print_helper(out_message, out_message_length, log_level);
         } else {
             Boolean found = out_message[out_message_length - 1] == '\n';
             printf("%s%.*s%s", log_level_format[log_level], out_message_length - found, out_message, CKG_COLOR_RESET);
@@ -970,7 +966,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     internal u64 global_total_pool_memory_internal = 0;
 
     internal void ckit_tracker_check_magic(void* data) {
-        ckit_assert(ckg_cstr_equal(ckit_memory_header(data)->magic, CKIT_MEMORY_MAGIC));
+        ckit_assert(ckg_cstr_equal(ckit_memory_header(data)->magic, sizeof(CKIT_MEMORY_MAGIC) - 1, CKIT_MEMORY_MAGIC, sizeof(CKIT_MEMORY_MAGIC) - 1));
     }
 
     internal CKIT_MemoryTagPool ckit_tracker_tag_pool_create(CKIT_MemoryTagID tag_id, const char* name) {
@@ -1007,8 +1003,11 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     }
 
     internal Boolean ckit_tracker_tag_pool_exists(CKIT_MemoryTagID tag_id, const char* name) {
+        u64 name_length = ckg_cstr_length(name);
+
         for (u32 i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
-            if (global_memory_tag_pool_vector[i].tag_id == tag_id || ckg_cstr_equal(global_memory_tag_pool_vector[i].pool_name, name)) {
+            u64 pool_name_length = ckg_cstr_length(global_memory_tag_pool_vector[i].pool_name);
+            if (global_memory_tag_pool_vector[i].tag_id == tag_id || ckg_cstr_equal(global_memory_tag_pool_vector[i].pool_name, pool_name_length, name, name_length)) {
                 return TRUE;
             }
         }
@@ -1030,15 +1029,15 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     void ckit_tracker_init() {
         global_memory_tag_pool_vector = NULLPTR;
 
-        for (u32 i = 0; i < TAG_CKIT_RESERVED_COUNT; i++) {
+        for (u64 i = 0; i < TAG_CKIT_RESERVED_COUNT; i++) {
             CKIT_MemoryTagPool tag_pool = ckit_tracker_tag_pool_create(reserved_tags[i], reserved_tags_stringified[i]);
             ckg_vector_push(global_memory_tag_pool_vector, tag_pool);
         }
     }
 
     void ckit_tracker_cleanup() {
-        u32 pool_count = ckg_vector_count(global_memory_tag_pool_vector);
-        for (u32 i = 0 ;i < pool_count; i++) {
+        u64 pool_count = ckg_vector_count(global_memory_tag_pool_vector);
+        for (u64 i = 0 ;i < pool_count; i++) {
             ckg_linked_list_free(global_memory_tag_pool_vector[i].allocated_headers);
         }
 
@@ -1090,7 +1089,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         global_total_pool_memory_internal -= sizeof(CKIT_MemoryHeader);
         global_total_pool_memory_used -= header->tag.allocation_info.allocation_size;
         
-        u32 index = ckg_linked_list_node_to_index(global_memory_tag_pool_vector[tag_pool_index].allocated_headers,  header->linked_list_address);
+        u64 index = ckg_linked_list_node_to_index(global_memory_tag_pool_vector[tag_pool_index].allocated_headers,  header->linked_list_address);
         ckg_linked_list_remove(global_memory_tag_pool_vector[tag_pool_index].allocated_headers, index); 
     }
 
@@ -1105,8 +1104,8 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
     void ckit_tracker_print_pool(CKIT_MemoryTagPool* pool, CKIT_LogLevel log_level) {
         LOG_PRINT("============================== POOL NAME: %s | SIZE: %lld | Items: %d ==============================\n", pool->pool_name, pool->total_pool_allocation_size, pool->allocated_headers->count);
-        u32 count = pool->allocated_headers->count;
-        for (u32 i = 0; i < count; i++) {
+        u64 count = pool->allocated_headers->count;
+        for (u64 i = 0; i < count; i++) {
             CKIT_MemoryHeader* current_header = (CKIT_MemoryHeader*)ckg_linked_list_pop(pool->allocated_headers).data;
             ckit_tracker_print_header(current_header, log_level);
             if (i != count - 1) {
@@ -1147,10 +1146,10 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
         LOG_ERROR("---------------------- Memory Leak Detected: %d(total) + %d(internal) = %d(Bytes) ----------------------\n", total_memory_without_arena, total_memory_without_arena_internal, total_memory_without_arena + total_memory_without_arena_internal);
 
-        u32 count = ckg_vector_capacity(global_memory_tag_pool_vector);
+        u64 count = ckg_vector_capacity(global_memory_tag_pool_vector);
         Boolean has_start = FALSE; 
         Boolean has_end = FALSE; 
-        for (u32 i = 0; i < count; i++) {
+        for (u64 i = 0; i < count; i++) {
             CKIT_MemoryTagPool pool = global_memory_tag_pool_vector[i];
             if (pool.tag_id == TAG_CKIT_CORE_ARENA || pool.total_pool_allocation_size == 0) {
                 continue;
@@ -1307,8 +1306,8 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     CKIT_Arena* MACRO_ckit_arena_free(CKIT_Arena* arena) {
         ckit_assert(arena);
 
-        u32 cached_count = arena->pages->count;
-        for (u32 i = 0; i < cached_count; i++) {
+        u64 cached_count = arena->pages->count;
+        for (u64 i = 0; i < cached_count; i++) {
             CKIT_ArenaPage* page = (CKIT_ArenaPage*)ckg_linked_list_remove(arena->pages, 0).data;
             ckit_assert(page->base_address);
             ckit_free(page->base_address);
@@ -1325,7 +1324,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     void ckit_arena_clear(CKIT_Arena* arena) {
         ckit_assert(arena);
 
-        for (u32 i = 0; i < arena->pages->count; i++) {
+        for (u64 i = 0; i < arena->pages->count; i++) {
             CKIT_ArenaPage* page = (CKIT_ArenaPage*)ckg_linked_list_get(arena->pages, i);
             ckit_assert(page->base_address);
             ckit_memory_zero(page->base_address, page->used);
@@ -1335,7 +1334,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
     CKIT_API u64 ckit_arena_used(CKIT_Arena* arena) {
         u64 total_used = 0;
-        for (u32 i = 0; i < arena->pages->count; i++) {
+        for (u64 i = 0; i < arena->pages->count; i++) {
             CKIT_ArenaPage* page = (CKIT_ArenaPage*)ckg_linked_list_get(arena->pages, i);
             total_used += page->used;
         }
@@ -1345,7 +1344,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
     CKIT_API u64 ckit_arena_capacity(CKIT_Arena* arena) {
         u64 total_capacity = 0;
-        for (u32 i = 0; i < arena->pages->count; i++) {
+        for (u64 i = 0; i < arena->pages->count; i++) {
             CKIT_ArenaPage* page = (CKIT_ArenaPage*)ckg_linked_list_get(arena->pages, i);
             total_capacity += page->capacity;
         }
@@ -1404,21 +1403,21 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
     internal void ckit_str_check_magic(String str) {
         ckit_assert_msg(str, "String: %s is null can't check magic: (%s) Likely not a CKIT_String\n", str, CKIT_STR_MAGIC);
-        ckit_assert_msg(ckit_str_equal(ckit_str_header(str)->magic, CKIT_STR_MAGIC), "String: %s has the wrong magic: {%s} got: {%s} \n", str, CKIT_STR_MAGIC, ckit_str_header(str)->magic);
+        ckit_assert_msg(ckg_cstr_equal(ckit_str_header(str)->magic, sizeof(CKIT_STR_MAGIC) - 1, CKIT_STR_MAGIC, sizeof(CKIT_STR_MAGIC) - 1), "String: %s has the wrong magic: {%s} got: {%s} \n", str, CKIT_STR_MAGIC, ckit_str_header(str)->magic);
     }
 
-    internal inline String ckit_str_grow(String str, size_t new_allocation_size) {
+    internal inline String ckit_str_grow(String str, u64 new_allocation_size) {
         ckit_str_check_magic(str);
         CKIT_StringHeader header = *ckit_str_header(str);
         header.capacity = new_allocation_size;
-        String ret = ckit_str_create_custom(str, header.capacity);
+        String ret = ckit_str_create_custom(str, header.length, header.capacity);
         
         return ret;
     }
 
-    String ckit_str_create_custom(const char* c_string, size_t capacity) {
-        u32 c_str_length = ckg_cstr_length(c_string);
-        size_t true_capacity = capacity != 0 ? capacity : sizeof(char) * (c_str_length + 1);
+    String ckit_str_create_custom(const char* c_string, u64 length, u64 capacity) {
+        u64 c_str_length = length ? length : ckg_cstr_length(c_string);
+        u64 true_capacity = capacity != 0 ? capacity : sizeof(char) * (c_str_length + 1);
         CKIT_StringHeader* header = (CKIT_StringHeader*)MACRO_ckit_arena_push(string_arena, sizeof(CKIT_StringHeader) + true_capacity);
         header->length = c_str_length;
         header->capacity = true_capacity;
@@ -1426,24 +1425,25 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
         String ret = (String)((u8*)header + sizeof(CKIT_StringHeader));
 
-        ckg_cstr_copy(ret, header->capacity, c_string);
+        ckg_cstr_copy(ret, header->capacity, c_string, header->length);
         return ret;
     }
 
-    Boolean ckit_str_equal(const char* str1, const char* str2) {
-        return ckg_cstr_equal(str1, str2);
+    Boolean ckit_str_equal(const String str1, const String str2) {
+        return ckg_cstr_equal(str1, ckit_str_length(str1), str2, ckit_str_length(str2));
     }
 
     String MACRO_ckit_str_insert(String str, const char* to_insert, const u32 index) {
-        u32 source_capacity = ckit_cstr_length(to_insert) + 1; 
+        u32 to_insert_length = ckit_cstr_length(to_insert); 
+        u32 to_insert_capacity = to_insert_length;
         CKIT_StringHeader* header = ckit_str_header(str);
-        if (header->length + source_capacity >= header->capacity) {
-            str = ckit_str_grow(str, (header->length + source_capacity) * 2);
+        if (header->length + to_insert_capacity >= header->capacity) {
+            str = ckit_str_grow(str, (header->length + to_insert_capacity) * 2);
             header = ckit_str_header(str);
         }
 
-        ckg_cstr_insert(str, header->capacity, to_insert, index);
-        header->length += source_capacity - 1;
+        ckg_cstr_insert(str, ckit_str_length(str), header->capacity, to_insert, to_insert_length, index);
+        header->length += to_insert_capacity - 1;
         return str;
     }
 
@@ -1455,22 +1455,18 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
             header = ckit_str_header(str);
         }
 
-        ckg_cstr_insert_char(str, header->capacity, to_insert, index);
+        ckg_cstr_insert_char(str, ckit_str_length(str), header->capacity, to_insert, index);
         header->length++;
         return str;
     }
 
     void ckit_str_clear(String str1) {
-        ckg_cstr_clear(str1);
+        ckit_memory_zero(str1, ckit_str_length(str1));
         ckit_str_recanonicalize_header_length(str1);
     }
 
-    void ckit_cstr_clear(char* str1) {
-        ckg_cstr_clear(str1);
-    }
-
     void ckit_str_recanonicalize_header_length(String str) {
-        u32 actual_length = ckit_cstr_length(str);
+        u64 actual_length = ckit_str_length(str);
         ckit_str_header(str)->length = actual_length;
     }
 
@@ -1479,11 +1475,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         ckit_str_append(str1, source);
     }
 
-    u32 ckit_cstr_length(const char* str) {
-        return ckg_cstr_length(str);
-    }
-
-    u32 ckit_str_length(const String str) {
+    u64 ckit_str_length(const String str) {
         ckit_str_check_magic(str);
         return ckit_str_header(str)->length;
     }
@@ -1493,7 +1485,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         ckit_assert_msg(str, "ckit_str_append: String passed is null\n");
         ckit_assert_msg(source, "ckit_str_append: Source passed is null\n");
 
-        u32 source_capacity = ckit_cstr_length(source) + 1; 
+        u64 source_capacity = ckit_cstr_length(source) + 1; 
         CKIT_StringHeader* header = ckit_str_header(str);
         if (header->length + source_capacity >= header->capacity) {
             str = ckit_str_grow(str, (header->length + source_capacity) * 2);
