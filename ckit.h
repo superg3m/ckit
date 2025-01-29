@@ -274,8 +274,8 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     CKIT_API String MACRO_ckit_str_append(String str, const char* source);
     CKIT_API String MACRO_ckit_str_append_char(String str, const char source);
 
-    CKIT_API String MACRO_ckit_str_insert(String str, const char* to_insert, const u32 index);
-    CKIT_API String MACRO_ckit_str_insert_char(String str, const char to_insert, const u32 index);
+    CKIT_API String MACRO_ckit_str_insert(String str, const char* to_insert, u64 to_insert_length, const u64 index);
+    CKIT_API String MACRO_ckit_str_insert_char(String str, const char to_insert, const u64 index);
     // Date: September 27, 2024
     // NOTE(Jovanni): This is a bit scary if you clear with the wrong one the length with be wrong!
     CKIT_API void ckit_str_clear(String str1);
@@ -296,15 +296,9 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     // Date: September 09, 2024
     // TODO(Jovanni): String* ckit_str_split_with_char(const char* string_buffer, const char delimitor);
 
-    CKIT_API Boolean ckit_str_contains(const char* string_buffer, const char* contains);
-    CKIT_API u32 ckit_str_index_of(const char* string_buffer, const char* sub_string);
-    CKIT_API u32 ckit_str_last_index_of(const char* string_buffer, const char* sub_string);
-    CKIT_API Boolean ckit_str_starts_with(const char* string_buffer, const char* starts_with);
-    CKIT_API Boolean ckit_str_ends_with(const char* string_buffer, const char* ends_with);
-    CKIT_API String ckit_str_reverse(const char* string_buffer);
+    CKIT_API String ckit_str_reverse(const char* str, u64 str_length);
     CKIT_API String ckit_str_int_to_str(int number);
-    CKIT_API int ckit_str_to_int(const char* ascii_number);
-    CKIT_API String ckit_str_between_delimiters(const char* str, const char* start_delimitor, const char* end_delimitor);
+    CKIT_API String ckit_str_between_delimiters(const char* str, u64 str_length, const char* start_delimitor, u64 start_delimitor_length, const char* end_delimitor, u64 end_delimitor_length);
 
     #define ckit_str_create(str) ckit_str_create_custom(str, 0, 0)
     #define ckit_str_insert(str, source, index) str = MACRO_ckit_str_insert(str, source, index);
@@ -829,8 +823,8 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
 #if defined(CKIT_IMPL_LOGGER)
     // internal Boolean logging_is_initialized = FALSE;
-    internal const char* logger_start_delimitor = "${";
-    internal const char* logger_end_delimitor = "}";
+    #define LOGGER_START_DELIM "${"
+    #define LOGGER_END_DELIM "}"
 
     internal const char log_level_strings[LOG_LEVEL_COUNT][LOG_LEVEL_CHARACTER_LIMIT] = {
         "[FATAL]  : ",
@@ -854,25 +848,26 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         #include <windows.h>
     #endif
 
-    Boolean message_has_special_delmitor(const char* message) {
-        Boolean start_delimitor_index = ckit_str_contains(message, logger_start_delimitor);
-        Boolean end_delimitor_index = ckit_str_contains(message, logger_end_delimitor);
+    internal Boolean message_has_special_delmitor(const char* message, u64 message_length) {
+        Boolean start_delimitor_index = ckg_cstr_contains(message, message_length, LOGGER_START_DELIM, sizeof(LOGGER_START_DELIM) - 1);
+        Boolean end_delimitor_index = ckg_cstr_contains(message, message_length, LOGGER_END_DELIM, sizeof(LOGGER_END_DELIM) - 1);
+
         return start_delimitor_index && end_delimitor_index;
     }
 
     internal void special_print_helper(const char* message, u64 message_length, CKIT_LogLevel log_level) {
-        String middle_to_color = ckit_str_between_delimiters(message, logger_start_delimitor, logger_end_delimitor);
+        String middle_to_color = ckit_str_between_delimiters(message, message_length, LOGGER_START_DELIM, sizeof(LOGGER_START_DELIM) - 1, LOGGER_END_DELIM, sizeof(LOGGER_END_DELIM) - 1);
         if (!middle_to_color) {
             Boolean found = message[message_length - 1] == '\n';
             printf("%.*s", (int)(message_length - found), message);
             return;
         }
 
-        u32 start_delimitor_index = ckit_str_index_of(message, logger_start_delimitor);
-        u32 end_delimitor_index = ckit_str_index_of(message, logger_end_delimitor);
+        u64 start_delimitor_index = ckg_cstr_index_of(message, message_length, LOGGER_START_DELIM, sizeof(LOGGER_START_DELIM) - 1);
+        u64 end_delimitor_index = ckg_cstr_index_of(message, message_length, LOGGER_END_DELIM, sizeof(LOGGER_END_DELIM) - 1);
 
         CKG_StringView left_side_view = ckg_strview_create((char*)message, 0, start_delimitor_index);
-        CKG_StringView right_side_view = ckg_strview_create((char*)message, end_delimitor_index + ckg_cstr_length(logger_end_delimitor), message_length);
+        CKG_StringView right_side_view = ckg_strview_create((char*)message, end_delimitor_index + (sizeof(LOGGER_END_DELIM) - 1), message_length);
         String left_side = ckit_str_create_custom(CKG_SV_ARG(left_side_view), 0);
         String right_side = ckit_str_create_custom(CKG_SV_ARG(right_side_view), 0);
 
@@ -891,13 +886,13 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
         printf("%s%s%s", log_level_format[log_level], log_level_strings[log_level], CKG_COLOR_RESET);
         
-        u32 out_message_length = ckit_str_length(out_message);
+        u64 out_message_length = ckit_str_length(out_message);
 
-        if (message_has_special_delmitor(out_message)) {
+        if (message_has_special_delmitor(out_message, out_message_length)) {
             special_print_helper(out_message, out_message_length, log_level);
         } else {
             Boolean found = out_message[out_message_length - 1] == '\n';
-            printf("%s%.*s%s", log_level_format[log_level], out_message_length - found, out_message, CKG_COLOR_RESET);
+            printf("%s%.*s%s", log_level_format[log_level], (int)(out_message_length - found), out_message, CKG_COLOR_RESET);
         }
 
         if (out_message[out_message_length - 1] == '\n') {
@@ -1430,12 +1425,16 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     }
 
     Boolean ckit_str_equal(const String str1, const String str2) {
+        ckit_str_check_magic(str1);
+        ckit_str_check_magic(str2);
+
         return ckg_cstr_equal(str1, ckit_str_length(str1), str2, ckit_str_length(str2));
     }
 
-    String MACRO_ckit_str_insert(String str, const char* to_insert, const u32 index) {
-        u32 to_insert_length = ckit_cstr_length(to_insert); 
-        u32 to_insert_capacity = to_insert_length;
+    String MACRO_ckit_str_insert(String str, const char* to_insert, u64 to_insert_length, const u64 index) {
+        ckit_str_check_magic(str);
+
+        u64 to_insert_capacity = to_insert_length + 1;
         CKIT_StringHeader* header = ckit_str_header(str);
         if (header->length + to_insert_capacity >= header->capacity) {
             str = ckit_str_grow(str, (header->length + to_insert_capacity) * 2);
@@ -1447,8 +1446,10 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         return str;
     }
 
-    String MACRO_ckit_str_insert_char(String str, const char to_insert, const u32 index) {
-        u32 source_size = 1;
+    String MACRO_ckit_str_insert_char(String str, const char to_insert, const u64 index) {
+        ckit_str_check_magic(str);
+
+        u8 source_size = 1;
         CKIT_StringHeader* header = ckit_str_header(str);
         if (header->length + source_size >= header->capacity) {
             str = ckit_str_grow(str, (header->length + source_size) * 2);
@@ -1485,14 +1486,15 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         ckit_assert_msg(str, "ckit_str_append: String passed is null\n");
         ckit_assert_msg(source, "ckit_str_append: Source passed is null\n");
 
-        u64 source_capacity = ckit_cstr_length(source) + 1; 
+        u64 source_length = ckg_cstr_length(source); 
+        u64 source_capacity = source_length + 1; 
         CKIT_StringHeader* header = ckit_str_header(str);
         if (header->length + source_capacity >= header->capacity) {
             str = ckit_str_grow(str, (header->length + source_capacity) * 2);
             header = ckit_str_header(str);
         }
 
-        ckg_cstr_append(str, header->capacity, source);
+        ckg_cstr_append(str, ckit_str_length(str), header->capacity, source, source_length);
         header->length += source_capacity - 1;
         return str;
     }
@@ -1575,81 +1577,38 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         return str;
     }
 
-    String ckit_substring(const char* string_buffer, u32 start_range, u32 end_range) {
-        ckit_assert(string_buffer);
-
-        String ret_string = ckit_str_create_custom("", ((end_range + 1) - start_range) + 1);
-        ckg_substring(string_buffer, ret_string, start_range, end_range);
-        ckit_str_recanonicalize_header_length(ret_string);
-
-        return ret_string;
-    }
-
-    internal String* ckit_str_split_helper(String* ret_buffer, const char* string_buffer, u32 offset_into_buffer, const char* delimitor) {
-        if (!ckit_str_contains(string_buffer + offset_into_buffer, delimitor)) {
-            ckit_vector_push(ret_buffer, ckit_substring(string_buffer, offset_into_buffer, ckit_cstr_length(string_buffer)));
-            return ret_buffer;
-        }
-
-        u32 found_index = ckit_str_index_of(string_buffer + offset_into_buffer, delimitor);
-        u32 offset_to_delimitor = found_index + offset_into_buffer;
+    internal String* ckit_str_split_helper(String* ret_vector, CKG_StringView str_view, const char* delimitor, u64 delimitor_length) {
+        s64 found_index = ckg_cstr_index_of(CKG_SV_ARG(str_view), delimitor, delimitor_length);
         if (found_index == -1) {
-            ckit_vector_push(ret_buffer, ckit_substring(string_buffer, offset_into_buffer, ckit_cstr_length(string_buffer)));
-            return ret_buffer;
+            String substring = ckit_str_create_custom(CKG_SV_ARG(str_view), ckg_strview_length(str_view) + 1);
+            ckit_vector_push(ret_vector, substring);
+            return ret_vector;
         }
 
-        String debug_test = ckit_substring(string_buffer, offset_into_buffer, offset_to_delimitor);
-        ckit_vector_push(ret_buffer, debug_test);
-        return ckit_str_split_helper(ret_buffer, string_buffer, offset_to_delimitor + 1, delimitor);
+        str_view.end = str_view.start + found_index;
+        String debug_test = ckit_str_create_custom(CKG_SV_ARG(str_view), ckg_strview_length(str_view) + 1);
+        ckit_vector_push(ret_vector, debug_test);
+
+        return ckit_str_split_helper(ret_vector, str_view, delimitor, delimitor_length);
     }
 
-    String* ckit_str_split(const char* string_buffer, const char* delimitor) {
-        ckit_assert(string_buffer);
+    String* ckit_str_split(const char* str, const char* delimitor) {
+        ckit_assert(str);
         ckit_assert(delimitor);
 
+        u64 str_length = ckg_cstr_length(str);
+        u64 delimitor_length = ckg_cstr_length(delimitor);
+
         String* string_vector = NULLPTR;
-        return ckit_str_split_helper(string_vector, string_buffer, 0, delimitor);
+        CKG_StringView str_view = ckg_strview_create((char*)str, 0, str_length);
+        return ckit_str_split_helper(string_vector, str_view, delimitor, delimitor_length);
     }
 
-    Boolean ckit_str_contains(const char* string_buffer, const char* contains) {
-        ckit_assert(string_buffer);
-        ckit_assert(contains);
-        return ckg_cstr_contains(string_buffer, contains);
-    }
+    String ckit_str_reverse(const char* str, u64 str_length) {
+        ckit_assert(str);
 
-    u32 ckit_str_index_of(const char* string_buffer, const char* sub_string) {
-        ckit_assert(string_buffer);
-        ckit_assert(sub_string);
-        return ckg_cstr_index_of(string_buffer, sub_string);
-    }
-
-    u32 ckit_str_last_index_of(const char* string_buffer, const char* sub_string) {
-        ckit_assert(string_buffer);
-        ckit_assert(sub_string);
-        return ckg_cstr_last_index_of(string_buffer, sub_string);
-    }
-
-    Boolean ckit_str_starts_with(const char* string_buffer, const char* starts_with) {
-        ckit_assert(string_buffer);
-        ckit_assert(starts_with);
-
-        return ckg_cstr_starts_with(string_buffer, starts_with);
-    }
-
-    Boolean ckit_str_ends_with(const char* string_buffer, const char* ends_with) {
-        ckit_assert(string_buffer);
-        ckit_assert(ends_with);
-
-
-        return ckg_cstr_ends_with(string_buffer, ends_with);
-    }
-
-    String ckit_str_reverse(const char* string_buffer) {
-        ckit_assert(string_buffer);
-
-        size_t reversed_string_buffer_capacity = ckit_cstr_length(string_buffer) + 1;
-        String reversed_string_buffer = ckit_str_create_custom("", reversed_string_buffer_capacity);
-        ckg_cstr_reverse(string_buffer, reversed_string_buffer, reversed_string_buffer_capacity);
+        String reversed_string_buffer = ckit_str_create_custom("", 0, str_length + 1);
+        ckg_cstr_reverse(str, str_length, reversed_string_buffer, str_length + 1);
         return reversed_string_buffer;
     }
 
@@ -1665,39 +1624,29 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         return ret;
     }
 
-    int ckit_str_to_int(const char* ascii_number) {
-        ckit_assert(ascii_number);
-
-        return atoi(ascii_number);
-    }
-
-    String ckit_str_between_delimiters(const char* str, const char* start_delimitor, const char* end_delimitor) {
+    String ckit_str_between_delimiters(const char* str, u64 str_length, const char* start_delimitor, u64 start_delimitor_length, const char* end_delimitor, u64 end_delimitor_length) {
         ckit_assert(str);
         ckit_assert(start_delimitor);
         ckit_assert(end_delimitor);
-        ckit_assert(!ckit_str_equal(start_delimitor, end_delimitor));
+        ckit_assert(!ckg_cstr_equal(start_delimitor, start_delimitor_length, end_delimitor, end_delimitor_length));
 
-        if (!ckit_str_contains(str, start_delimitor) || !ckit_str_contains(str, end_delimitor)) {
+        s64 start_delimitor_index = ckg_cstr_index_of(str, str_length, start_delimitor, start_delimitor_length); 
+        s64 end_delimitor_index = ckg_cstr_index_of(str, str_length, end_delimitor, end_delimitor_length);
+        if (start_delimitor_index == -1 || end_delimitor_index == -1) {
             return NULLPTR;
         }
-
-        u32 start_delimitor_length = ckit_cstr_length(start_delimitor);
-        s32 start_delimitor_index = ckit_str_index_of(str, start_delimitor); 
-        s32 end_delimitor_index = ckit_str_index_of(str, end_delimitor);
 
         String ret = ckit_str_create("");
 
         if (start_delimitor_index == -1 || end_delimitor_index == -1) {
             return NULLPTR;
-        }
-
-        if (start_delimitor_index > end_delimitor_index) {
+        } else if (start_delimitor_index > end_delimitor_index) {
             return NULLPTR; // The start delimtor is after the end delimitor
         }
 
-        u32 i = start_delimitor_index + start_delimitor_length;
+        u64 i = (u64)(start_delimitor_index + start_delimitor_length);
 
-        while (i < (u32)end_delimitor_index) {
+        while (i < (u64)end_delimitor_index) {
             ckit_str_append_char(ret, str[i++]);
         }
 
@@ -1890,7 +1839,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
     #if defined(PLATFORM_WINDOWS)
         void ckit_os_init() {
-            cwd = ckit_str_create_custom("", PLATFORM_MAX_PATH);
+            cwd = ckit_str_create_custom("", sizeof("") - 1, PLATFORM_MAX_PATH);
         }
 
         String ckit_os_get_cwd() {
@@ -2236,7 +2185,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     #define CKIT_VECTOR_MAGIC "CKIT_MAGIC_VECTOR"
 
     internal void ckit_vector_check_magic(void* vector) {
-        ckit_assert_msg(ckit_str_equal(ckit_vector_base(vector)->magic, CKIT_VECTOR_MAGIC), "Vector has wrong magic: {%s} got: {%s} \n", CKIT_VECTOR_MAGIC, ckit_vector_base(vector)->magic);
+        ckit_assert_msg(ckg_cstr_equal(ckit_vector_base(vector)->magic, sizeof(CKIT_VECTOR_MAGIC) - 1, CKIT_VECTOR_MAGIC, sizeof(CKIT_VECTOR_MAGIC) - 1), "Vector has wrong magic: {%s} got: {%s} \n", CKIT_VECTOR_MAGIC, ckit_vector_base(vector)->magic);
     }
 
     void* ckit_vector_grow(void* vector, size_t element_size, Boolean force_grow, const char* file, const u32 line, const char* function) {

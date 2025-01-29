@@ -53,7 +53,7 @@ void test_vector_operations() {
 
 	for (u32 i = 0; i < ckit_vector_count(stringVector); i++) {
 		const char* element = stringVector[i];
-		ckit_assert_msg(ckit_str_equal(element, stringArray[i]), "Error: Incorrect element value\n");
+		ckit_assert_msg(ckg_cstr_equal(element, ckg_cstr_length(element), stringArray[i], ckg_cstr_length(stringArray[i])), "Error: Incorrect element value\n");
 	}
 
 	// Test pop
@@ -69,7 +69,7 @@ void test_vector_operations() {
 	const char* string_to_push = "TRYING TO PUSH A LITERAL!\n";
 	ckit_vector_push(stringVector, string_to_push);
 
-	ckit_assert_msg(ckit_str_equal(before_popped_string, after_popped_string), "Error: Incorrect popped element value\n");
+	ckit_assert_msg(ckg_cstr_equal(before_popped_string, ckg_cstr_length(before_popped_string), after_popped_string, ckg_cstr_length(after_popped_string)), "Error: Incorrect popped element value\n");
 
 	// Test free
 	ckit_vector_free(intVector);
@@ -99,7 +99,7 @@ void inital_operations() {
 	ckit_str_append_char(str, 'a');
 	LOG_PRINT("String: %s\n", str);
 	ckit_str_append(str, " | FEEL THE WORLD AROUND ME!");
-	LOG_PRINT("String: %s | length: %d | cstrlen: %d\n", str, ckit_str_length(str), ckit_cstr_length(str));
+	LOG_PRINT("String: %s | length: %d | cstrlen: %d\n", str, ckit_str_length(str), ckg_cstr_length(str));
 	LOG_PRINT("\n");
 
 	int* int_array = (int*)ckit_alloc(sizeof(int) * 5);
@@ -402,7 +402,7 @@ int main() {
 	String str_test = ckit_str_int_to_str(test_int_to_str);
 	LOG_ERROR("AT THE END TEST: %s\n\n", str_test);
 
-	String str_between_test = ckit_str_between_delimiters("WOW - ${Hello!}", "${", "}");
+	String str_between_test = ckit_str_between_delimiters(CKG_LIT_ARG("WOW - ${Hello!}"), CKG_LIT_ARG("${"), CKG_LIT_ARG("}"));
 	LOG_DEBUG("String_Between: %s\n", str_between_test);
 
 	LOG_SUCCESS("String: %s\n", "Hello There! EVERYTHING IS GREEN!");
@@ -414,7 +414,7 @@ int main() {
 	ckit_memory_copy(file_data, &bmp_header, sizeof(BmpHeader), sizeof(BmpHeader));
 	ckit_free(file_data);
 
-	LOG_SUCCESS("%d\n", ckit_str_to_int("45125"));
+	LOG_SUCCESS("%d\n", atoi("45125"));
 
 	String* lines = ckit_os_get_lines_from_file("../../assets/Lexer_Test.txt");
 	for (size_t i = 0; i < ckit_vector_count(lines); i++) {
