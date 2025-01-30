@@ -89,7 +89,6 @@ void test_vector_operations() {
 
 void inital_operations() {
 	String str = ckit_str_create("SOLAR_FLARE");
-	LOG_ERROR("HOW IS THAT POSSIBLE?\n");
 	LOG_PRINT("STR: %s\n", str);
 
 	LOG_PRINT("========== CHAR: %c ==========\n", str[0]);

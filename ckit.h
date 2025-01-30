@@ -258,7 +258,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         const char* magic; 
     } CKIT_StringHeader;
     
-    typedef char* String;
+    typedef unsigned char* String;
 
     CKIT_API String ckit_str_create_custom(const char* c_str, u64 length, u64 capacity);
     CKIT_API u64 ckit_str_length(const String str);
@@ -1585,10 +1585,10 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
             return ret_vector;
         }
 
-        str_view.end = str_view.start + found_index;
-        String debug_test = ckit_str_create_custom(CKG_SV_ARG(str_view), ckg_strview_length(str_view) + 1);
+        String debug_test = ckit_str_create_custom(str_view.ptr + str_view.start, found_index, (str_view.start + found_index) + 1);
         ckit_vector_push(ret_vector, debug_test);
 
+        str_view.start += (found_index + 1);
         return ckit_str_split_helper(ret_vector, str_view, delimitor, delimitor_length);
     }
 
@@ -2268,7 +2268,8 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
     internal u64 ckit_hashmap_resolve_collision(CKIT_HashMap* hashmap, char* key, u64 inital_hash_index) {
         u64 cannonical_hash_index = inital_hash_index;
-        while (hashmap->entries[cannonical_hash_index].key && !ckit_str_equal(hashmap->entries[cannonical_hash_index].key, key)) {
+
+        while (hashmap->entries[cannonical_hash_index].key && !ckg_cstr_equal(hashmap->entries[cannonical_hash_index].key, ckg_cstr_length(hashmap->entries[cannonical_hash_index].key), key, ckg_cstr_length(key))) {
             cannonical_hash_index++;
             cannonical_hash_index = cannonical_hash_index % hashmap->capacity;
         }
