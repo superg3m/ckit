@@ -12,6 +12,7 @@ compiler_warning_level = ""
 compiler_disable_specific_warnings = []
 compiler_treat_warnings_as_errors = True
 compiler_disable_warnings = False
+compiler_disable_sanitizer = True
 
 project_name = "ckit"
 project_dependencies = ["ckg"]
