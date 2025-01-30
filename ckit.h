@@ -2396,10 +2396,11 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
     internal u64 ckit_hashset_resolve_collision(CKIT_HashSet* hashset, char* key, u64 inital_hash_index) {
         u64 cannonical_hash_index = inital_hash_index;
-        while (hashset->entries[cannonical_hash_index] && !ckit_str_equal(hashset->entries[cannonical_hash_index], key)) {
+        while (hashset->entries[cannonical_hash_index] && !ckg_cstr_equal(hashset->entries[cannonical_hash_index], ckg_cstr_length(hashset->entries[cannonical_hash_index]), key, ckg_cstr_length(key))) {
             cannonical_hash_index++;
             cannonical_hash_index = cannonical_hash_index % hashset->capacity;
         }
+        
         return cannonical_hash_index;
     }
 
