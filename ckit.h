@@ -1943,7 +1943,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         void ckit_os_dir_append_file(CKIT_Directory* directory, CKIT_File* file);
     #else
         void ckit_os_init() {
-            cwd = ckit_str_create_custom("", PLATFORM_MAX_PATH);
+            cwd = ckit_str_create_custom("", 0, PLATFORM_MAX_PATH);
         }
 
         String ckit_os_get_cwd() {
