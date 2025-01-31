@@ -258,7 +258,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         const char* magic; 
     } CKIT_StringHeader;
     
-    typedef unsigned char* String;
+    typedef char* String;
 
     CKIT_API String ckit_str_create_custom(const char* c_str, u64 length, u64 capacity);
     CKIT_API u64 ckit_str_length(const String str);
@@ -562,7 +562,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     // ========== Start CKIT_HashMap ==========
     //
     typedef struct CKIT_HashMapEntry {
-        String key;
+        char* key;
         void* value;
     } CKIT_HashMapEntry;
 
@@ -848,14 +848,14 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         #include <windows.h>
     #endif
 
-    internal Boolean message_has_special_delmitor(const char* message, u64 message_length) {
+    internal Boolean message_has_special_delmitor(const String message, u64 message_length) {
         Boolean start_delimitor_index = ckg_cstr_contains(message, message_length, LOGGER_START_DELIM, sizeof(LOGGER_START_DELIM) - 1);
         Boolean end_delimitor_index = ckg_cstr_contains(message, message_length, LOGGER_END_DELIM, sizeof(LOGGER_END_DELIM) - 1);
 
         return start_delimitor_index && end_delimitor_index;
     }
 
-    internal void special_print_helper(const char* message, u64 message_length, CKIT_LogLevel log_level) {
+    internal void special_print_helper(const String message, u64 message_length, CKIT_LogLevel log_level) {
         String middle_to_color = ckit_str_between_delimiters(message, message_length, LOGGER_START_DELIM, sizeof(LOGGER_START_DELIM) - 1, LOGGER_END_DELIM, sizeof(LOGGER_END_DELIM) - 1);
         if (!middle_to_color) {
             Boolean found = message[message_length - 1] == '\n';
@@ -866,8 +866,8 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         u64 start_delimitor_index = ckg_cstr_index_of(message, message_length, LOGGER_START_DELIM, sizeof(LOGGER_START_DELIM) - 1);
         u64 end_delimitor_index = ckg_cstr_index_of(message, message_length, LOGGER_END_DELIM, sizeof(LOGGER_END_DELIM) - 1);
 
-        CKG_StringView left_side_view = ckg_strview_create((char*)message, 0, start_delimitor_index);
-        CKG_StringView right_side_view = ckg_strview_create((char*)message, end_delimitor_index + (sizeof(LOGGER_END_DELIM) - 1), message_length);
+        CKG_StringView left_side_view = ckg_strview_create(message, 0, start_delimitor_index);
+        CKG_StringView right_side_view = ckg_strview_create(message, end_delimitor_index + (sizeof(LOGGER_END_DELIM) - 1), message_length);
         String left_side = ckit_str_create_custom(CKG_SV_ARG(left_side_view), 0);
         String right_side = ckit_str_create_custom(CKG_SV_ARG(right_side_view), 0);
 
@@ -1405,7 +1405,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         ckit_str_check_magic(str);
         CKIT_StringHeader header = *ckit_str_header(str);
         header.capacity = new_allocation_size;
-        String ret = ckit_str_create_custom(str, header.length, header.capacity);
+        String ret = ckit_str_create_custom((char*)str, header.length, header.capacity);
         
         return ret;
     }
@@ -1420,7 +1420,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
         String ret = (String)((u8*)header + sizeof(CKIT_StringHeader));
 
-        ckg_cstr_copy(ret, header->capacity, c_string, header->length);
+        ckg_cstr_copy((char*)ret, header->capacity, c_string, header->length);
         return ret;
     }
 
@@ -1428,7 +1428,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         ckit_str_check_magic(str1);
         ckit_str_check_magic(str2);
 
-        return ckg_cstr_equal(str1, ckit_str_length(str1), str2, ckit_str_length(str2));
+        return ckg_cstr_equal((char*)str1, ckit_str_length(str1), (char*)str2, ckit_str_length(str2));
     }
 
     String MACRO_ckit_str_insert(String str, const char* to_insert, u64 to_insert_length, const u64 index) {
@@ -1441,7 +1441,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
             header = ckit_str_header(str);
         }
 
-        ckg_cstr_insert(str, ckit_str_length(str), header->capacity, to_insert, to_insert_length, index);
+        ckg_cstr_insert((char*)str, ckit_str_length(str), header->capacity, to_insert, to_insert_length, index);
         header->length += to_insert_capacity - 1;
         return str;
     }
@@ -1494,7 +1494,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
             header = ckit_str_header(str);
         }
 
-        ckg_cstr_append(str, ckit_str_length(str), header->capacity, source, source_length);
+        ckg_cstr_append((char*)str, ckit_str_length(str), header->capacity, source, source_length);
         header->length += source_capacity - 1;
         return str;
     }
@@ -1608,7 +1608,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         ckit_assert(str);
 
         String reversed_string_buffer = ckit_str_create_custom("", 0, str_length + 1);
-        ckg_cstr_reverse(str, str_length, reversed_string_buffer, str_length + 1);
+        ckg_cstr_reverse(str, str_length, (char*)reversed_string_buffer, str_length + 1);
         return reversed_string_buffer;
     }
 
@@ -2288,10 +2288,10 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         // rehash
         for (u32 i = 0; i < old_capacity; i++) {
             if (hashmap->entries[i].key != NULLPTR) {
-                u32 index = ckit_hash_value(hashmap->entries[i].key) % hashmap->capacity;
+                u32 index = ckit_hash_value((char*)hashmap->entries[i].key) % hashmap->capacity;
                 CKIT_HashMapEntry* cached_entries = hashmap->entries; // Have to cache the original hashmap entries because I need a pointer to it
                 hashmap->entries = new_entries; // This is needed, otherwise resolve collisions is looking at the wrong entries buffer
-                u64 real_index = ckit_hashmap_resolve_collision(hashmap, cached_entries[i].key, index);
+                u64 real_index = ckit_hashmap_resolve_collision(hashmap, (char*)cached_entries[i].key, index);
                 hashmap->entries = cached_entries;
                 new_entries[real_index] = hashmap->entries[i];
             }
@@ -2809,7 +2809,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     }
 
     void file_open(FileSystem* file_system) {
-        file_system->handle = fopen(file_system->file_name, "r");
+        file_system->handle = fopen((char*)file_system->file_name, "r");
         ckit_assert_msg(file_system->handle != NULLPTR, "FILE HANDLE IS NULL, CHECK INITIAL FILE NAME\n");
         fseek(file_system->handle, 0L, SEEK_END);
         file_system->file_size = ftell(file_system->handle);
