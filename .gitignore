@@ -37,11 +37,11 @@
 *.ilk
 
 # c-build
-build_cl/
-/Tests/CoreTest/build_cl
-/Tests/GraphicsTest/build_cl
+build_*/
+/Tests/CoreTest/build_*/
+/Tests/GraphicsTest/build_*/
 
-build_cl/
+
 ./ckg/
 c_build/
 *.ps1
