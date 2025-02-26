@@ -541,12 +541,18 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     #define ckit_vector_count(vector) (*ckit_vector_base(vector)).count
     #define ckit_vector_capacity(vector) (*ckit_vector_base(vector)).capacity
 
+    #define ckit_stack_count(stack) (*ckit_vector_header_base(stack)).count
+
     #ifdef __cplusplus
         #define ckit_vector_push(vector, element) vector = (decltype(vector))ckit_vector_grow(vector, sizeof(element), FALSE, __FILE__, __LINE__, __func__); vector[ckit_vector_base(vector)->count++] = element
         #define ckit_vector_free(vector) vector = (decltype(vector))MACRO_ckit_vector_free(vector)
+
+        #define ckit_stack_push(vector, element) vector = (decltype(vector))ckit_vector_grow(vector, sizeof(element)); vector[ckit_vector_base(vector)->count++] = element
     #else 
         #define ckit_vector_push(vector, element) vector = ckit_vector_grow(vector, sizeof(element), FALSE, __FILE__, __LINE__, __func__); vector[ckit_vector_base(vector)->count++] = element
         #define ckit_vector_free(vector) vector = MACRO_ckit_vector_free(vector)
+
+        #define ckit_stack_push(stack, element) stack = ckit_vector_grow(stack, sizeof(element), FALSE, __FILE__, __LINE__, __func__); stack[ckit_vector_base(stack)->count++] = element
     #endif
 
     #define ckit_vector_reserve(capactiy, type) (type*)MACRO_ckit_vector_reserve(sizeof(type), capactiy, __FILE__, __LINE__, __func__)
@@ -554,6 +560,11 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     #define ckit_vector_remove_at(vector, index) ckit_memory_delete_index(vector, ckit_vector_count(vector), ckit_vector_capacity(vector), index); ckit_vector_base(vector)->count--
     #define ckit_vector_insert_at(vector, element, index) ckit_memory_insert_index(vector, ckit_vector_count(vector), ckit_vector_capacity(vector), element, index); ckit_vector_base(vector)->count++
     #define ckit_vector_to_array(vector) MACRO_ckit_vector_to_array(vector, sizeof(vector[0]))
+
+    #define ckit_stack_free(stack) stack = MACRO_ckit_vector_free(stack)
+    #define ckit_stack_pop(stack) stack[--ckit_vector_base(stack)->count]
+    #define ckit_stack_peek(stack) stack[ckit_stack_count(stack) - 1]
+    #define ckit_stack_empty(stack) ckit_stack_count(stack) == 0
     //
     // ========== End CKIT_Vector ==========
     //
@@ -685,24 +696,6 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     #define ckit_queue_free(queue) MACRO_ckit_queue_free(queue);
     //
     // ========== End CKIT_Queue ==========
-    //
-
-    //
-    // ========== Start CKIT_Stack ==========
-    //
-    typedef struct CKIT_Stack CKIT_Stack;
-
-    CKIT_API CKIT_Stack* MACRO_ckit_stack_create(size_t size_in_bytes, Boolean is_pointer_type, const char* file, const u32 line, const char* function);
-    CKIT_API void* ckit_stack_push(CKIT_Stack* stack, void* data);
-    // Date: July 22, 2024
-    // NOTE(Jovanni): If pointer type is true you must free this yourself, trivially this should be able to go into an arena.
-    CKIT_API void* ckit_stack_pop(CKIT_Stack* stack);
-    CKIT_API void* MACRO_ckit_stack_free(CKIT_Stack* stack);
-
-    #define ckit_stack_create(type, is_pointer_type) MACRO_ckit_stack_create(sizeof(type), is_pointer_type, __FILE__, __LINE__, __func__)
-    #define ckit_stack_free(stack) MACRO_ckit_stack_free(stack)
-    //
-    // ========== End CKIT_Stack ==========
     //
 #endif
 
@@ -2762,38 +2755,6 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
     u32 ckit_queue_count(CKIT_Queue* queue) {
         return queue->count;
-    }
-    //
-    // ========== End CKIT_Queue ==========
-    //
-
-    //
-    // ========== Start CKIT_Stack ==========
-    //
-    typedef struct CKIT_Stack {
-        CKIT_LinkedList* linked_list;
-    } CKIT_Stack;
-
-    CKIT_Stack* MACRO_ckit_stack_create(size_t size_in_bytes, Boolean is_pointer_type, const char* file, const u32 line, const char* function) {
-        CKIT_Stack* stack = (CKIT_Stack*)MACRO_ckit_alloc(sizeof(CKIT_Stack), TAG_CKIT_CORE_STACK, file, line, function);
-        stack->linked_list = MACRO_ckit_linked_list_create(size_in_bytes, is_pointer_type, file, line, function);
-
-        return stack;
-    }
-
-    void* ckit_stack_push(CKIT_Stack* stack, void* data) {
-        return ckit_linked_list_push(stack->linked_list, data);
-    }
-
-    void* ckit_stack_pop(CKIT_Stack* stack) {
-        return ckit_linked_list_pop(stack->linked_list).data;
-    }
-
-    void* MACRO_ckit_stack_free(CKIT_Stack* stack) {
-        ckit_linked_list_free(stack->linked_list);
-        ckit_free(stack);
-
-        return stack;
     }
     //
     // ========== End CKIT_Queue ==========

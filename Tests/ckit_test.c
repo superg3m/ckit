@@ -319,7 +319,7 @@ void linked_list_operations() {
 }
 
 void stack_operations() {
-	CKIT_Stack* stack_int = ckit_stack_create(u32, FALSE);	
+	u32* stack_int = NULLPTR;
 	u32 int_value[5] = {
 		15,
 		25,
@@ -329,18 +329,17 @@ void stack_operations() {
 	};
 
 	for (u32 i = 0; i < 5; i++) {
-		ckit_stack_push(stack_int, &int_value[i]);
+		ckit_stack_push(stack_int, int_value[i]);
 	}
 
 	for (u32 i = 0; i < 5; i++) {
-		u32* value_back = (u32*)ckit_stack_pop(stack_int);
-		LOG_SUCCESS("stack_value #%d: %d\n", i + 1, *value_back);
-		ckit_free(value_back);
+		u32 value_back = ckit_stack_pop(stack_int);
+		LOG_SUCCESS("stack_value #%d: %d\n", i + 1, value_back);
 	}
 	ckit_stack_free(stack_int);
 
-	CKIT_Stack* stack_str = ckit_stack_create(char*, TRUE);	
-	const char* names[5] = {
+	char** stack_str = NULLPTR;
+	char* names[5] = {
 		"jofhn",
 		"john",
 		"johhn",
@@ -349,7 +348,7 @@ void stack_operations() {
 	};
 
 	for (u32 i = 0; i < 5; i++) {
-		ckit_stack_push(stack_str, (char*)names[i]);
+		ckit_stack_push(stack_str, names[i]);
 	}
 
 	for (u32 i = 0; i < 5; i++) {
