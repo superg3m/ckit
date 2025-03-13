@@ -41,6 +41,7 @@ procedures_config = {
         "source_files": ["../ckg/ckg.c", "../ckit.c"],
         "additional_libs": [],
         "compile_time_defines": ["CKIT_WSL"],
+        "compiler_inject_into_args": [],
         "include_paths": [],
     },
     "ckit_core_test": {
@@ -49,6 +50,7 @@ procedures_config = {
         "source_files": ["../*.c"],
         "additional_libs": executable_procedure_libs,
         "compile_time_defines": ["CKIT_WSL"],
+        "compiler_inject_into_args": [],
         "include_paths": [],
     },
 }
