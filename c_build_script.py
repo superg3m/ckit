@@ -7,13 +7,13 @@ pc: ProjectConfig = ProjectConfig(
     project_name = "ckit",
     project_dependencies = ["ckg"],
     project_debug_with_visual_studio = True,
-    project_rebuild_project_dependencies = True,
+    project_rebuild_project_dependencies = False,
     project_executable_procedures  = ["ckit_test.exe"]
 )
 
 cc: CompilerConfig = CompilerConfig(
     compiler_name = C_BUILD_COMPILER_NAME() if C_BUILD_IS_DEPENDENCY() else "INVALID_COMPILER",
-    compiler_warning_level = [],
+    compiler_warning_level = "",
     compiler_disable_specific_warnings = False,
     compiler_treat_warnings_as_errors = True,
     compiler_disable_warnings  = False,
