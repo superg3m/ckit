@@ -42,8 +42,8 @@ if IS_WINDOWS():
 
 procedures_config = {
     "ckit_lib": ProcedureConfigElement(
-        build_directory = f"./build_{compiler_name}",
-        output_name = C_BUILD_LIB('ckit', compiler_name),
+        build_directory = f"./build_{cc.compiler_name}",
+        output_name = C_BUILD_LIB('ckit', cc.compiler_name),
         source_files = ["../ckg/ckg.c", "../ckit.c"],
         additional_libs = [],
         compile_time_defines = ["CKIT_WSL"],
@@ -52,7 +52,7 @@ procedures_config = {
     ),
 
     "ckit_core_test": ProcedureConfigElement(
-        build_directory = f"./Tests/build_{compiler_name}",
+        build_directory = f"./Tests/build_{cc.compiler_name}",
         output_name = "ckit_test.exe",
         source_files = ["../*.c"],
         additional_libs = executable_procedure_libs,
