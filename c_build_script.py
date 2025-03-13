@@ -7,7 +7,7 @@ pc: ProjectConfig = ProjectConfig(
     project_name = "ckit",
     project_dependencies = ["ckg"],
     project_debug_with_visual_studio = True,
-    project_rebuild_project_dependencies = False,
+    project_rebuild_project_dependencies = True,
     project_executable_procedures  = ["ckit_test.exe"]
 )
 
@@ -20,11 +20,11 @@ cc: CompilerConfig = CompilerConfig(
     compiler_disable_sanitizer = True
 )
 
-if IS_WINDOWS():
+if IS_WINDOWS() and not C_BUILD_IS_DEPENDENCY():
     cc.compiler_name = "cl"
-if IS_DARWIN():
+if IS_DARWIN() and not C_BUILD_IS_DEPENDENCY():
     cc.compiler_name = "clang"
-elif IS_LINUX():
+elif IS_LINUX() and not C_BUILD_IS_DEPENDENCY():
     cc.compiler_name = "gcc"
 
 # Do different things depending on the platform
