@@ -7,7 +7,7 @@ pc: ProjectConfig = ProjectConfig(
     project_name = "ckit",
     project_dependencies = ["ckg"],
     project_debug_with_visual_studio = True,
-    project_rebuild_project_dependencies = False,
+    project_rebuild_project_dependencies = True,
     project_executable_procedures  = ["ckit_test.exe"]
 )
 
