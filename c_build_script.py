@@ -49,7 +49,7 @@ else:
 	cc.compiler_warning_level = "all"
 	cc.compiler_disable_specific_warnings = ["deprecated", "parentheses"]
 
-executable_procedure_libs = [f"../../build_{cc.compiler_name}/{C_BUILD_LIB('ckit', cc.compiler_name)}"]
+executable_procedure_libs = [f"../../build_{cc.compiler_name}/{GET_LIB_NAME(cc, 'ckit')}"]
 if IS_WINDOWS():
     windows_libs = ["User32.lib", "Gdi32.lib"] if cc.compiler_name == "cl" else ["-lUser32", "-lGdi32"]
     executable_procedure_libs += windows_libs
@@ -57,7 +57,7 @@ if IS_WINDOWS():
 procedures_config = {
     "ckit_lib": ProcedureConfigElement(
         build_directory = f"./build_{cc.compiler_name}",
-        output_name = C_BUILD_LIB('ckit', cc.compiler_name),
+        output_name = GET_LIB_NAME(cc, 'ckit'),
         source_files = ["../ckg/ckg.c", "../ckit.c"],
         additional_libs = [],
         compile_time_defines = ["CKIT_WSL"],
