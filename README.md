@@ -2,14 +2,14 @@
 
 # Ckits's Core Thesis
 - The point of the ckit is to provide a nice library to build c projects with.
-- Ckit is built with the granular api ckit granular [CKG](https://github.com/superg3m/ckg)
+- ckit is built with the granular api ckit granular [CKG](https://github.com/superg3m/ckg)
 - This library will be completly cross-platform (Will be windows exclusive for a while ngl)
 - Collection of tools, data structures, and algorithms that I find useful
 
 - cloc . --fullpath --not-match-d='.*External_Libraries.*'
 
-# CKIT plugins
-- CKIT_Graphics allows you to create native windows and draw to the screen! [CKIT_Graphisc](https://github.com/superg3m/ckit_graphics)
+# CKIT Plugins
+- CKIT_Graphics allows you to create native windows and draw to the screen! [CKIT_Graphics](https://github.com/superg3m/ckit_graphics)
 
 # How to build
 1. ./bootstrap.ps1
