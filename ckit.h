@@ -1578,8 +1578,16 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
             return ret_vector;
         }
 
-        String debug_test = ckit_str_create_custom(str_view.ptr + str_view.start, found_index, (str_view.start + found_index) + 1);
-        ckit_vector_push(ret_vector, debug_test);
+        if (found_index == 0) {
+            String empty_string = ckit_str_create("");
+            ckit_vector_push(ret_vector, empty_string);
+
+            str_view.start += (found_index + 1);
+            return ckit_str_split_helper(ret_vector, str_view, delimitor, delimitor_length);
+        }
+
+        String substring = ckit_str_create_custom(str_view.ptr + str_view.start, found_index, (found_index) + 1);
+        ckit_vector_push(ret_vector, substring);
 
         str_view.start += (found_index + 1);
         return ckit_str_split_helper(ret_vector, str_view, delimitor, delimitor_length);
@@ -1591,6 +1599,15 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
         u64 str_length = ckg_cstr_length(str);
         u64 delimitor_length = ckg_cstr_length(delimitor);
+        ckit_assert_msg(delimitor_length > 0, "delimitor can not be a empty string!\n");
+
+        if (str_length == 0) {
+            String* string_vector = NULLPTR;
+            String debug_test = ckit_str_create(str);
+            ckit_vector_push(string_vector, debug_test);
+
+            return string_vector;
+        }
 
         String* string_vector = NULLPTR;
         CKG_StringView str_view = ckg_strview_create((char*)str, 0, str_length);

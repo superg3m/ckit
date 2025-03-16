@@ -159,6 +159,12 @@ void middle_ground_opperations() {
 		LOG_SUCCESS("str #%d | %s\n", i, split_strings[i]);
 	}
 	ckit_vector_free(split_strings);
+
+	split_strings = ckit_str_split(" a ", " "); // Should return 
+	for (u32 i = 0; i < ckit_vector_count(split_strings); i++) {
+		LOG_SUCCESS("str #%d | %s\n", i, split_strings[i]);
+	}
+	ckit_vector_free(split_strings);
 }
 
 void hashmap_operations() {
