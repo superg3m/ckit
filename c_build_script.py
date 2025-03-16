@@ -31,7 +31,7 @@ cc: CompilerConfig = CompilerConfig(
     compiler_disable_specific_warnings = False,
     compiler_treat_warnings_as_errors = True,
     compiler_disable_warnings  = False,
-    compiler_disable_sanitizer = True
+    compiler_disable_sanitizer = False
 )
 
 if IS_WINDOWS() and not C_BUILD_IS_DEPENDENCY():
