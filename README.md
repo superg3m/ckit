@@ -283,6 +283,7 @@ make vector operations easier
 	- I need to string view a lot more...
 	- string should be a last ditch thing, you should always be returned string views and then you can allocate a `String` if you really need it...
 	- Use arenas for much more... vectors need some type of way to input an allocator.
+	- Any function that allocats should have a version that uses an allocator/arena
 
 - [ ] Start phasing out standard library use native functions for everything.
 	- [ ] printf() -> ckit_printf():
