@@ -276,14 +276,16 @@ make vector operations easier
 
 # Develoepr Notes: (For me)
 - [ ] Arenas need to have an option to desigate memory such as stack memory or heap memory.
-   - This is for stuff like embbeded systems if you don't have access to a virtual alloc.
-   - CKIT_Arena* arena = ckit_arena_create(0);
-   u8 memory_buffer[] = {};
-   ckit_arena_assign_memory(arena, memory_buffer);
-   - Free list to store memory that is not longer allocated so I can use those spots up first.
+	- This is for stuff like embbeded systems if you don't have access to a virtual alloc.
+	- CKIT_Arena* arena = ckit_arena_create(0); // Optional 
+	- u8 memory_buffer[MB(40)];
+	- ckit_arena_assign_memory(arena, memory_buffer);
+	- I need to string view a lot more...
+	- string should be a last ditch thing, you should always be returned string views and then you can allocate a `String` if you really need it...
+	- Use arenas for much more... vectors need some type of way to input an allocator.
 
 - [ ] Start phasing out standard library use native functions for everything.
-	- [ ] printf() -> ckit_printf() break c compataibltity with printf so I can do cool stuff like:
+	- [ ] printf() -> ckit_printf():
 		- [ ] ckit_printf("%iv\n") // (int vector) -> [5, 6, 2]
 		- [ ] ckit_printf("%fv\n") // (float vector) [1.0, 3.24]
 		- [ ] ckit_printf("%sv\n") // (string vector) ["Stuff in here", "Hello"]
