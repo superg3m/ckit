@@ -97,6 +97,9 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 #if defined(CKIT_INCLUDE_MEMORY)
     // Date: September 24, 2024
     // TODO(Jovanni): Just make this defines and CKIT_MemoryTagID a u8
+
+    // Date: March 23, 2025
+    // TODO(Jovanni): Make the reserved space like 256+ so userspace has nice numbers
     typedef enum CKIT_MemoryTagID { // Reserved tags
         TAG_USER_UNKNOWN,
 
