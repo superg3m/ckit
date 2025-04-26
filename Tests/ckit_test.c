@@ -142,7 +142,7 @@ void middle_ground_opperations() {
 	LOG_ERROR("FINAL POINT: (%f, %f)\n", ret.x, ret.y);
 
 
-	FileSystem file_system = file_system_create((char*)"../../assets/Learn_About_BMP.bmp");
+	FileSystem file_system = file_system_create((char*)"../../../assets/Learn_About_BMP.bmp");
 	file_open(&file_system);
 
 	BmpHeader bmp_header = {0};
@@ -413,14 +413,14 @@ int main() {
 	LOG_WARN("String ${WILL POWER = %d} TESTING BINGO BONGO: ${%s} HAHHA THIS SHOULD WORK ${RIGHT?}\n", 5, "I'M PURPLE ONLY!");
 
 	size_t file_size = 0; 
-	u8* file_data = ckit_os_read_entire_file("../../assets/Learn_About_BMP.bmp", &file_size);
+	u8* file_data = ckit_os_read_entire_file("../../../assets/Learn_About_BMP.bmp", &file_size);
 	BmpHeader bmp_header = {0};
 	ckit_memory_copy(file_data, &bmp_header, sizeof(BmpHeader), sizeof(BmpHeader));
 	ckit_free(file_data);
 
 	LOG_SUCCESS("%d\n", atoi("45125"));
 
-	String* lines = ckit_os_get_lines_from_file("../../assets/Lexer_Test.txt");
+	String* lines = ckit_os_get_lines_from_file("../../../assets/Lexer_Test.txt");
 	for (size_t i = 0; i < ckit_vector_count(lines); i++) {
 		LOG_PRINT("Test: %s\n", lines[i]);
 	}

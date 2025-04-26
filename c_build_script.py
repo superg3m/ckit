@@ -20,18 +20,11 @@ pc: ProjectConfig = ProjectConfig(
     project_name = "ckit",
     project_dependencies = ["ckg"],
     project_debug_with_visual_studio = True,
-    project_rebuild_project_dependencies = True,
-    project_executable_procedures  = ["ckit_test.exe"]
+    project_executable_names  = ["ckit_test.exe"]
 )
 
 cc: CompilerConfig = CompilerConfig(
     compiler_name = C_BUILD_COMPILER_NAME() if C_BUILD_IS_DEPENDENCY() else "INVALID_COMPILER",
-    compiler_std_version = "",
-    compiler_warning_level = "",
-    compiler_disable_specific_warnings = False,
-    compiler_treat_warnings_as_errors = True,
-    compiler_disable_warnings  = False,
-    compiler_disable_sanitizer = True
 )
 
 if IS_WINDOWS() and not C_BUILD_IS_DEPENDENCY():
@@ -49,33 +42,31 @@ else:
 	cc.compiler_warning_level = "all"
 	cc.compiler_disable_specific_warnings = ["deprecated", "parentheses"]
 
-executable_procedure_libs = [f"../../build_{cc.compiler_name}/{GET_LIB_NAME(cc, 'ckit')}"]
+build_postfix = f"build_{cc.compiler_name}/{C_BUILD_BUILD_TYPE()}"
+executable_procedure_libs = [f"../../../{build_postfix}/{GET_LIB_NAME(cc, 'ckit')}"]
 if IS_WINDOWS():
-    windows_libs = ["User32.lib", "Gdi32.lib"] if cc.compiler_name == "cl" else ["-lUser32", "-lGdi32"]
+    windows_libs = [GET_LIB_FLAG(cc, "User32"), GET_LIB_FLAG(cc, "Gdi32")]
     executable_procedure_libs += windows_libs
+    
 
-procedures_config = {
-    "ckit_lib": ProcedureConfigElement(
-        build_directory = f"./build_{cc.compiler_name}",
+build_postfix = f"build_{cc.compiler_name}/{C_BUILD_BUILD_TYPE()}"
+procedures: Dict[str, ProcedureConfig] = {
+    "ckit_lib": ProcedureConfig(
+        build_directory = f"./{build_postfix}",
         output_name = GET_LIB_NAME(cc, 'ckit'),
-        source_files = ["../ckg/ckg.c", "../ckit.c"],
-        additional_libs = [],
+        source_files = ["../../ckg/ckg.c", "../../ckit.c"],
         compile_time_defines = ["CKIT_WSL"],
-        compiler_inject_into_args = [],
-        include_paths = [],
     ),
 
-    "ckit_core_test": ProcedureConfigElement(
-        build_directory = f"./Tests/build_{cc.compiler_name}",
+    "ckit_core_test": ProcedureConfig(
+        build_directory = f"./Tests/{build_postfix}",
         output_name = "ckit_test.exe",
-        source_files = ["../*.c"],
+        source_files = ["../../*.c"],
         additional_libs = executable_procedure_libs,
         compile_time_defines = ["CKIT_WSL"],
-        compiler_inject_into_args = [],
-        include_paths = [],
     ),
 }
 
-manager: Manager = Manager(cc, pc, procedures_config)
+manager: Manager = Manager(cc, pc, procedures)
 manager.build_project()
 # -------------------------------------------------------------------------------------
