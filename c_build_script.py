@@ -50,7 +50,6 @@ if IS_WINDOWS():
     executable_procedure_libs += windows_libs
     
 
-build_postfix = f"build_{cc.compiler_name}/{C_BUILD_BUILD_TYPE()}"
 procedures: Dict[str, ProcedureConfig] = {
     "ckit_lib": ProcedureConfig(
         build_directory = f"./{build_postfix}",
