@@ -9,6 +9,12 @@ $repositoryUrl = "https://github.com/superg3m/c_build.git"
 if (-not (Test-Path -Path $directoryPath)) {
     Write-Output "Directory does not exist. Cloning the repository..."
     git clone $repositoryUrl
+} else {
+    Push-Location  "./c_build"
+    git fetch origin -q
+    git reset --hard origin/main -q
+    git pull -q
+    Pop-Location
 }
 
 . ./c_build/validate_temp_files.ps1 $MyInvocation.MyCommand.Name
@@ -19,3 +25,5 @@ if (Test-Path -Path $bootstrapScriptPath) {
 } else {
     Write-Output "Bootstrap script not found at $bootstrapScriptPath"
 }
+
+#changing

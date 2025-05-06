@@ -357,10 +357,14 @@ void stack_operations() {
 		ckit_stack_push(stack_str, names[i]);
 	}
 
-	for (u32 i = 0; i < 5; i++) {
+	ckit_stack_push(stack_str, "WOWdsfsdfdsfsd");
+
+	u32 inital_count = ckit_stack_count(stack_str);
+	for (u32 i = 0; i < inital_count; i++) {
 		char* value_back = (char*)ckit_stack_pop(stack_str);
 		LOG_SUCCESS("stack_value #%d: %s\n", i + 1, value_back);
 	}
+	
 	ckit_stack_free(stack_str);
 }
 

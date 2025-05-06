@@ -544,18 +544,18 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     #define ckit_vector_count(vector) (*ckit_vector_base(vector)).count
     #define ckit_vector_capacity(vector) (*ckit_vector_base(vector)).capacity
 
-    #define ckit_stack_count(stack) (*ckit_vector_header_base(stack)).count
-
     #ifdef __cplusplus
-        #define ckit_vector_push(vector, element) vector = (decltype(vector))ckit_vector_grow(vector, sizeof(element), FALSE, __FILE__, __LINE__, __func__); vector[ckit_vector_base(vector)->count++] = element
+        #define ckit_vector_push(vector, element) vector = (decltype(vector))ckit_vector_grow(vector, sizeof(vector[0]), FALSE, __FILE__, __LINE__, __func__); vector[ckit_vector_base(vector)->count++] = element
         #define ckit_vector_free(vector) vector = (decltype(vector))MACRO_ckit_vector_free(vector)
 
-        #define ckit_stack_push(vector, element) vector = (decltype(vector))ckit_vector_grow(vector, sizeof(element)); vector[ckit_vector_base(vector)->count++] = element
+        #define ckit_stack_push(stack, element) stack = (decltype(stack))ckit_vector_grow(stack, sizeof(stack[0])); stack[ckit_vector_base(stack)->count++] = element
+        #define ckit_stack_free(stack) stack = (decltype(stack))MACRO_ckit_vector_free(stack)
     #else 
-        #define ckit_vector_push(vector, element) vector = ckit_vector_grow(vector, sizeof(element), FALSE, __FILE__, __LINE__, __func__); vector[ckit_vector_base(vector)->count++] = element
+        #define ckit_vector_push(vector, element) vector = ckit_vector_grow(vector, sizeof(vector[0]), FALSE, __FILE__, __LINE__, __func__); vector[ckit_vector_base(vector)->count++] = element
         #define ckit_vector_free(vector) vector = MACRO_ckit_vector_free(vector)
 
-        #define ckit_stack_push(stack, element) stack = ckit_vector_grow(stack, sizeof(element), FALSE, __FILE__, __LINE__, __func__); stack[ckit_vector_base(stack)->count++] = element
+        #define ckit_stack_push(stack, element) stack = ckit_vector_grow(stack, sizeof(stack[0]), FALSE, __FILE__, __LINE__, __func__); stack[ckit_vector_base(stack)->count++] = element
+        #define ckit_stack_free(stack) stack = MACRO_ckit_vector_free(stack)
     #endif
 
     #define ckit_vector_reserve(capactiy, type) (type*)MACRO_ckit_vector_reserve(sizeof(type), capactiy, __FILE__, __LINE__, __func__)
@@ -564,8 +564,8 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     #define ckit_vector_insert_at(vector, element, index) ckit_memory_insert_index(vector, ckit_vector_count(vector), ckit_vector_capacity(vector), element, index); ckit_vector_base(vector)->count++
     #define ckit_vector_to_array(vector) MACRO_ckit_vector_to_array(vector, sizeof(vector[0]))
 
-    #define ckit_stack_free(stack) stack = MACRO_ckit_vector_free(stack)
     #define ckit_stack_pop(stack) stack[--ckit_vector_base(stack)->count]
+    #define ckit_stack_count(stack) (*ckit_vector_base(stack)).count
     #define ckit_stack_peek(stack) stack[ckit_stack_count(stack) - 1]
     #define ckit_stack_empty(stack) ckit_stack_count(stack) == 0
     //
