@@ -18,7 +18,12 @@ from c_build.source.Manager import *
 
 pc: ProjectConfig = ProjectConfig(
     project_name = "ckit",
-    project_dependencies = ["ckg"],
+    project_dependencies = [        
+        Dependency(
+            name="ckg",
+            branch_name="main"
+        ),
+    ],
     project_debug_with_visual_studio = False,
     project_executable_names  = ["ckit_test.exe"]
 )
