@@ -21,7 +21,7 @@ pc: ProjectConfig = ProjectConfig(
     project_dependencies = [        
         Dependency(
             name="ckg",
-            branch_name="main"
+            branch_name="main",
         ),
     ],
     project_debug_with_visual_studio = False,
@@ -30,7 +30,7 @@ pc: ProjectConfig = ProjectConfig(
 
 cc: CompilerConfig = CompilerConfig(
     compiler_name = C_BUILD_COMPILER_NAME() if C_BUILD_IS_DEPENDENCY() else "INVALID_COMPILER",
-    compiler_disable_sanitizer=False
+    compiler_disable_sanitizer=True
 )
 
 if IS_WINDOWS() and not C_BUILD_IS_DEPENDENCY():
