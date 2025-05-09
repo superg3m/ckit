@@ -845,13 +845,13 @@ CKIT_API void ckit_cleanup(bool generate_memory_report);
     #endif
 
     internal bool message_has_special_delmitor(const String message, u64 message_length) {
-        bool start_delimitor_index = ckg_cstr_contains(message, message_length, LOGGER_START_DELIM, sizeof(LOGGER_START_DELIM) - 1);
-        bool end_delimitor_index = ckg_cstr_contains(message, message_length, LOGGER_END_DELIM, sizeof(LOGGER_END_DELIM) - 1);
+        bool start_delimitor_index = ckg_str_contains(message, message_length, LOGGER_START_DELIM, sizeof(LOGGER_START_DELIM) - 1);
+        bool end_delimitor_index = ckg_str_contains(message, message_length, LOGGER_END_DELIM, sizeof(LOGGER_END_DELIM) - 1);
 
         return start_delimitor_index && end_delimitor_index;
     }
 
-    internal void special_print_helper(const String message, u64 message_length, CKIT_LogLevel log_level) {
+    internal void special_print_helper(const char* message, u64 message_length, CKIT_LogLevel log_level) {
         String middle_to_color = ckit_str_between_delimiters(message, message_length, LOGGER_START_DELIM, sizeof(LOGGER_START_DELIM) - 1, LOGGER_END_DELIM, sizeof(LOGGER_END_DELIM) - 1);
         if (!middle_to_color) {
             bool found = message[message_length - 1] == '\n';
@@ -859,17 +859,15 @@ CKIT_API void ckit_cleanup(bool generate_memory_report);
             return;
         }
 
-        u64 start_delimitor_index = ckg_cstr_index_of(message, message_length, LOGGER_START_DELIM, sizeof(LOGGER_START_DELIM) - 1);
-        u64 end_delimitor_index = ckg_cstr_index_of(message, message_length, LOGGER_END_DELIM, sizeof(LOGGER_END_DELIM) - 1);
+        u64 start_delimitor_index = ckg_str_index_of(message, message_length, LOGGER_START_DELIM, sizeof(LOGGER_START_DELIM) - 1);
+        u64 end_delimitor_index = ckg_str_index_of(message, message_length, LOGGER_END_DELIM, sizeof(LOGGER_END_DELIM) - 1);
 
-        CKG_StringView left_side_view = ckg_strview_create(message, 0, start_delimitor_index);
-        CKG_StringView right_side_view = ckg_strview_create(message, end_delimitor_index + (sizeof(LOGGER_END_DELIM) - 1), message_length);
-        String left_side = ckit_str_create_custom(CKG_SV_ARG(left_side_view), 0);
-        String right_side = ckit_str_create_custom(CKG_SV_ARG(right_side_view), 0);
+        CKG_StringView left_side_view = ckg_sv_create(message, start_delimitor_index);
+        CKG_StringView right_side_view = ckg_sv_create(message + (end_delimitor_index + (sizeof(LOGGER_END_DELIM) - 1)), message_length);
 
-        printf("%s%s%s%s", left_side, log_level_format[log_level], middle_to_color, CKG_COLOR_RESET);
+        printf("%s%s%s%s", left_side_view.length, left_side_view.data, log_level_format[log_level], middle_to_color, CKG_COLOR_RESET);
 
-        special_print_helper(right_side, ckg_strview_length(right_side_view), log_level);
+        special_print_helper(right_side_view.data, right_side_view.length, log_level);
 
         return;
     }
@@ -1590,9 +1588,9 @@ CKIT_API void ckit_cleanup(bool generate_memory_report);
         }
 
         String* ret_vector = NULLPTR;
-        CKG_StringView str_view = ckg_strview_create((char*)str, 0, str_length);
+        CKG_StringView str_view = ckg_sv_create((char*)str, 0, str_length);
         while (true) {
-            s64 found_index = ckg_cstr_index_of(CKG_SV_ARG(str_view), delimitor, delimitor_length);
+            s64 found_index = ckg_str_index_of(CKG_SV_ARG(str_view), delimitor, delimitor_length);
             if (found_index == -1) {
                 String substring = ckit_str_create_custom(CKG_SV_ARG(str_view), ckg_strview_length(str_view) + 1);
                 ckit_vector_push(ret_vector, substring);
@@ -1642,8 +1640,8 @@ CKIT_API void ckit_cleanup(bool generate_memory_report);
         ckit_assert(end_delimitor);
         ckit_assert(!ckg_cstr_equal(start_delimitor, start_delimitor_length, end_delimitor, end_delimitor_length));
 
-        s64 start_delimitor_index = ckg_cstr_index_of(str, str_length, start_delimitor, start_delimitor_length); 
-        s64 end_delimitor_index = ckg_cstr_index_of(str, str_length, end_delimitor, end_delimitor_length);
+        s64 start_delimitor_index = ckg_str_index_of(str, str_length, start_delimitor, start_delimitor_length); 
+        s64 end_delimitor_index = ckg_str_index_of(str, str_length, end_delimitor, end_delimitor_length);
         if (start_delimitor_index == -1 || end_delimitor_index == -1) {
             return NULLPTR;
         }
