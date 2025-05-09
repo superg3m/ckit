@@ -853,15 +853,15 @@ CKIT_API void ckit_cleanup(bool generate_memory_report);
 
     internal void special_print_helper(char* message, u64 message_length, CKIT_LogLevel log_level) {
         CKG_StringView middle_to_color = ckg_sv_between_delimiters(message, message_length, LOGGER_START_DELIM, sizeof(LOGGER_START_DELIM) - 1, LOGGER_END_DELIM, sizeof(LOGGER_END_DELIM) - 1);
-        if (!middle_to_color.data) {
+        if (middle_to_color.length == 0) {
             bool found = message[message_length - 1] == '\n';
             printf("%.*s", (int)(message_length - found), message);
 
             return;
         }
 
-        u64 start_delimitor_index = ckg_str_index_of(message, message_length, LOGGER_START_DELIM, sizeof(LOGGER_START_DELIM) - 1);
-        u64 end_delimitor_index = ckg_str_index_of(message, message_length, LOGGER_END_DELIM, sizeof(LOGGER_END_DELIM) - 1);
+        s64 start_delimitor_index = ckg_str_index_of(message, message_length, LOGGER_START_DELIM, sizeof(LOGGER_START_DELIM) - 1);
+        s64 end_delimitor_index = ckg_str_index_of(message, message_length, LOGGER_END_DELIM, sizeof(LOGGER_END_DELIM) - 1);
 
         CKG_StringView left_side_view = ckg_sv_create(message, start_delimitor_index);
         CKG_StringView right_side_view = ckg_sv_create(message + (end_delimitor_index + (sizeof(LOGGER_END_DELIM) - 1)), message_length);
@@ -1599,6 +1599,7 @@ CKIT_API void ckit_cleanup(bool generate_memory_report);
                 ckit_vector_push(ret_vector, empty_string);
 
                 str_view.data += (found_index + 1);
+                str_view.length -= (found_index + 1);
                 
                 continue;
             }
@@ -1607,6 +1608,7 @@ CKIT_API void ckit_cleanup(bool generate_memory_report);
             ckit_vector_push(ret_vector, substring);
 
             str_view.data += (found_index + 1);
+            str_view.length -= (found_index + 1);
         }
 
         return ret_vector;
