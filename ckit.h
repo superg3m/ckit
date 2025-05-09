@@ -55,14 +55,14 @@
 #endif
 
 CKIT_API void ckit_init();
-CKIT_API void ckit_cleanup(Boolean generate_memory_report);
+CKIT_API void ckit_cleanup(bool generate_memory_report);
 
 #if defined(CKIT_INCLUDE_ASSERT)
-    #define CKIT_ASSERT_ENABLED TRUE
+    #define CKIT_ASSERT_ENABLED true
 
     // Date: August 14, 2024
     // TODO(Jovanni): This has to get fixed because I have my own logging logic for ckit now! ${} needs to be handled here
-    #if CKIT_ASSERT_ENABLED == TRUE
+    #if CKIT_ASSERT_ENABLED == true
         #define ckit_assert_msg(expression, message, ...) ckg_assert_msg(expression, message, ##__VA_ARGS__)
         #define ckit_assert(expression) ckg_assert(expression)
     #else
@@ -183,7 +183,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
     CKIT_API void ckit_memory_report(CKIT_LogLevel log_level);
 
-    CKIT_API Boolean ckit_memory_compare(const void* buffer_one, const void* buffer_two, u32 b1_allocation_size, u32 b2_allocation_size);
+    CKIT_API bool ckit_memory_compare(const void* buffer_one, const void* buffer_two, u32 b1_allocation_size, u32 b2_allocation_size);
     CKIT_API void ckit_memory_copy(const void* source, void* destination, size_t source_size, size_t destination_capacity);
     CKIT_API void ckit_memory_move(const void* source, void* destination, size_t source_payload_size);
     CKIT_API void ckit_memory_zero(void* data, size_t data_size_in_bytes);
@@ -265,7 +265,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
     CKIT_API String ckit_str_create_custom(const char* c_str, u64 length, u64 capacity);
     CKIT_API u64 ckit_str_length(const String str);
-    CKIT_API Boolean ckit_str_equal(const String str1, const String str2);
+    CKIT_API bool ckit_str_equal(const String str1, const String str2);
     CKIT_API void ckit_str_copy(String str, const char* source);
 
     CKIT_API char* ckit_cstr_va_sprint(u64* allocation_size_ptr, char* fmt, va_list args);
@@ -423,7 +423,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     CKIT_API Mat4x4 ckit_mat4x4_add();
 
     CKIT_API CKIT_Rectangle2D ckit_rectangle2d_create(s32 x, s32 y, u32 width, u32 height);
-    CKIT_API Boolean ckit_rectangle_check_aabb_collision(CKIT_Rectangle2D rect1, CKIT_Rectangle2D rect2);
+    CKIT_API bool ckit_rectangle_check_aabb_collision(CKIT_Rectangle2D rect1, CKIT_Rectangle2D rect2);
     CKIT_API CKIT_Rectangle2D ckit_rectangle_get_aabb_collision(CKIT_Rectangle2D rect1, CKIT_Rectangle2D rect2);
     CKIT_API CKIT_Rectangle3D ckit_rectangle3d_create(s32 x, s32 y, s32 z, u32 length, u32 width, u32 height);
     CKIT_API CKIT_Circle2D ckit_circle2d_create(s32 x, s32 y, u32 radius);
@@ -456,7 +456,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     CKIT_API void ckit_os_chdir();
     CKIT_API void ckit_os_mkdir();
     CKIT_API void ckit_os_create_file(const char* path);
-    CKIT_API Boolean ckit_os_path_exists(const char* path);
+    CKIT_API bool ckit_os_path_exists(const char* path);
     CKIT_API void ckit_os_run_subprocess();
     CKIT_API void ckit_os_get_file_info();
     CKIT_API String ckit_os_path_join(char* path, const char* to_join);
@@ -530,7 +530,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         const char* magic;
     } CKIT_VectorHeader;
 
-    CKIT_API void* ckit_vector_grow(void* vector, size_t element_size, Boolean force_grow, const char* file, const u32 line, const char* function);
+    CKIT_API void* ckit_vector_grow(void* vector, size_t element_size, bool force_grow, const char* file, const u32 line, const char* function);
     CKIT_API void* MACRO_ckit_vector_reserve(size_t element_size, u32 capacity, const char* file, const u32 line, const char* function);
     CKIT_API void* MACRO_ckit_vector_free(void* vector);
 
@@ -545,16 +545,16 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     #define ckit_vector_capacity(vector) (*ckit_vector_base(vector)).capacity
 
     #ifdef __cplusplus
-        #define ckit_vector_push(vector, element) vector = (decltype(vector))ckit_vector_grow(vector, sizeof(vector[0]), FALSE, __FILE__, __LINE__, __func__); vector[ckit_vector_base(vector)->count++] = element
+        #define ckit_vector_push(vector, element) vector = (decltype(vector))ckit_vector_grow(vector, sizeof(vector[0]), false, __FILE__, __LINE__, __func__); vector[ckit_vector_base(vector)->count++] = element
         #define ckit_vector_free(vector) vector = (decltype(vector))MACRO_ckit_vector_free(vector)
 
         #define ckit_stack_push(stack, element) stack = (decltype(stack))ckit_vector_grow(stack, sizeof(stack[0])); stack[ckit_vector_base(stack)->count++] = element
         #define ckit_stack_free(stack) stack = (decltype(stack))MACRO_ckit_vector_free(stack)
     #else 
-        #define ckit_vector_push(vector, element) vector = ckit_vector_grow(vector, sizeof(vector[0]), FALSE, __FILE__, __LINE__, __func__); vector[ckit_vector_base(vector)->count++] = element
+        #define ckit_vector_push(vector, element) vector = ckit_vector_grow(vector, sizeof(vector[0]), false, __FILE__, __LINE__, __func__); vector[ckit_vector_base(vector)->count++] = element
         #define ckit_vector_free(vector) vector = MACRO_ckit_vector_free(vector)
 
-        #define ckit_stack_push(stack, element) stack = ckit_vector_grow(stack, sizeof(stack[0]), FALSE, __FILE__, __LINE__, __func__); stack[ckit_vector_base(stack)->count++] = element
+        #define ckit_stack_push(stack, element) stack = ckit_vector_grow(stack, sizeof(stack[0]), false, __FILE__, __LINE__, __func__); stack[ckit_vector_base(stack)->count++] = element
         #define ckit_stack_free(stack) stack = MACRO_ckit_vector_free(stack)
     #endif
 
@@ -585,17 +585,17 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         u32 count;
         CKIT_HashMapEntry* entries; // not a vector
         size_t element_size;
-        Boolean is_pointer_type;
+        bool is_pointer_type;
     } CKIT_HashMap;
 
     CKIT_API u32 ckit_hash_value(char *str);
-    CKIT_API CKIT_HashMap* MACRO_ckit_hashmap_create(u32 hashmap_capacity, size_t element_size, Boolean is_pointer_type);
+    CKIT_API CKIT_HashMap* MACRO_ckit_hashmap_create(u32 hashmap_capacity, size_t element_size, bool is_pointer_type);
     CKIT_API CKIT_HashMap* MACRO_ckit_hashmap_free(CKIT_HashMap* hashmap);
 
     // Returns previous value
     CKIT_API void* ckit_hashmap_put(CKIT_HashMap* hashmap, char* key, void* value);
     CKIT_API void* ckit_hashmap_get(CKIT_HashMap* hashmap, char* key);
-    CKIT_API Boolean ckit_hashmap_has(CKIT_HashMap* hashmap, char* key);
+    CKIT_API bool ckit_hashmap_has(CKIT_HashMap* hashmap, char* key);
 
     #define ckit_hashmap_create(capacity, type, is_pointer_type) MACRO_ckit_hashmap_create(capacity, sizeof(type), is_pointer_type)
     #define ckit_hashmap_free(hashmap) hashmap = MACRO_ckit_hashmap_free(hashmap)
@@ -619,7 +619,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
     // Returns previous value
     CKIT_API void ckit_hashset_put(CKIT_HashSet* hashset, char* key);
-    CKIT_API Boolean ckit_hashset_has(CKIT_HashSet* hashset, char* key);
+    CKIT_API bool ckit_hashset_has(CKIT_HashSet* hashset, char* key);
 
     #define ckit_hashset_create(capacity) MACRO_ckit_hashset_create(capacity)
     #define ckit_hashset_free(hashset) hashset = MACRO_ckit_hashset_free(hashset)
@@ -642,10 +642,10 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         CKIT_Node* tail;
         size_t element_size_in_bytes;
         u32 count;
-        Boolean is_pointer_type;
+        bool is_pointer_type;
     } CKIT_LinkedList;
 
-    CKIT_API CKIT_LinkedList* MACRO_ckit_linked_list_create(size_t element_size_in_bytes, Boolean is_pointer_type, const char* file, const u32 line, const char* function);
+    CKIT_API CKIT_LinkedList* MACRO_ckit_linked_list_create(size_t element_size_in_bytes, bool is_pointer_type, const char* file, const u32 line, const char* function);
     CKIT_API CKIT_Node* ckit_linked_list_insert(CKIT_LinkedList* linked_list, u32 index, void* data);
     CKIT_API CKIT_Node* ckit_linked_list_get_node(CKIT_LinkedList* linked_list, u32 index);
     CKIT_API void* ckit_linked_list_get(CKIT_LinkedList* linked_list, u32 index);
@@ -680,12 +680,12 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         size_t element_size_in_bytes;
 
         u32 read_index;
-        Boolean has_next_to_read;
+        bool has_next_to_read;
         u32 write_index;
-        Boolean is_pointer_type;
+        bool is_pointer_type;
     } CKIT_Queue;
 
-    CKIT_API CKIT_Queue* MACRO_ckit_queue_create(u32 inital_capacity, size_t element_size_in_bytes, Boolean is_pointer_type, const char* file, const u32 line, const char* function);
+    CKIT_API CKIT_Queue* MACRO_ckit_queue_create(u32 inital_capacity, size_t element_size_in_bytes, bool is_pointer_type, const char* file, const u32 line, const char* function);
     CKIT_API CKIT_Queue* MACRO_ckit_queue_free(CKIT_Queue* queue);
     CKIT_API void ckit_enqueue(CKIT_Queue* queue, void* element);
 
@@ -711,7 +711,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         FILE* handle;
         u8* data;
         size_t file_size;
-        Boolean reachedEOF;
+        bool reachedEOF;
     } FileSystem;
 
     CKIT_API FileSystem file_system_create(String file_name);
@@ -805,7 +805,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     ckit_str_register_arena();
   }
 
-  void ckit_cleanup(Boolean generate_memory_report) {
+  void ckit_cleanup(bool generate_memory_report) {
     if (generate_memory_report) {
         ckit_memory_report(LOG_LEVEL_WARN); 
         // Evenetually this should happen before arenas are unregistered
@@ -818,7 +818,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 #endif
 
 #if defined(CKIT_IMPL_LOGGER)
-    // internal Boolean logging_is_initialized = FALSE;
+    // internal bool logging_is_initialized = false;
     #define LOGGER_START_DELIM "${"
     #define LOGGER_END_DELIM "}"
 
@@ -844,9 +844,9 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         #include <windows.h>
     #endif
 
-    internal Boolean message_has_special_delmitor(const String message, u64 message_length) {
-        Boolean start_delimitor_index = ckg_cstr_contains(message, message_length, LOGGER_START_DELIM, sizeof(LOGGER_START_DELIM) - 1);
-        Boolean end_delimitor_index = ckg_cstr_contains(message, message_length, LOGGER_END_DELIM, sizeof(LOGGER_END_DELIM) - 1);
+    internal bool message_has_special_delmitor(const String message, u64 message_length) {
+        bool start_delimitor_index = ckg_cstr_contains(message, message_length, LOGGER_START_DELIM, sizeof(LOGGER_START_DELIM) - 1);
+        bool end_delimitor_index = ckg_cstr_contains(message, message_length, LOGGER_END_DELIM, sizeof(LOGGER_END_DELIM) - 1);
 
         return start_delimitor_index && end_delimitor_index;
     }
@@ -854,7 +854,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     internal void special_print_helper(const String message, u64 message_length, CKIT_LogLevel log_level) {
         String middle_to_color = ckit_str_between_delimiters(message, message_length, LOGGER_START_DELIM, sizeof(LOGGER_START_DELIM) - 1, LOGGER_END_DELIM, sizeof(LOGGER_END_DELIM) - 1);
         if (!middle_to_color) {
-            Boolean found = message[message_length - 1] == '\n';
+            bool found = message[message_length - 1] == '\n';
             printf("%.*s", (int)(message_length - found), message);
             return;
         }
@@ -887,7 +887,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         if (message_has_special_delmitor(out_message, out_message_length)) {
             special_print_helper(out_message, out_message_length, log_level);
         } else {
-            Boolean found = out_message[out_message_length - 1] == '\n';
+            bool found = out_message[out_message_length - 1] == '\n';
             printf("%s%.*s%s", log_level_format[log_level], (int)(out_message_length - found), out_message, CKG_COLOR_RESET);
         }
 
@@ -965,7 +965,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         ret.tag_id = tag_id;
         ret.pool_name = name;
         ret.total_pool_allocation_size = 0;
-        ret.allocated_headers = ckg_linked_list_create(CKIT_MemoryHeader, TRUE);
+        ret.allocated_headers = ckg_linked_list_create(CKIT_MemoryHeader, true);
 
         return ret;
     }
@@ -989,21 +989,21 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
             }
         }
         
-        ckit_assert(FALSE); // don't query a not registed tag_id
+        ckit_assert(false); // don't query a not registed tag_id
         return 0; // never gets here
     }
 
-    internal Boolean ckit_tracker_tag_pool_exists(CKIT_MemoryTagID tag_id, const char* name) {
+    internal bool ckit_tracker_tag_pool_exists(CKIT_MemoryTagID tag_id, const char* name) {
         u64 name_length = ckg_cstr_length(name);
 
         for (u32 i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
             u64 pool_name_length = ckg_cstr_length(global_memory_tag_pool_vector[i].pool_name);
             if (global_memory_tag_pool_vector[i].tag_id == tag_id || ckg_cstr_equal(global_memory_tag_pool_vector[i].pool_name, pool_name_length, name, name_length)) {
-                return TRUE;
+                return true;
             }
         }
 
-        return FALSE;
+        return false;
     }
 
     internal const char* ckit_tracker_tag_to_string(CKIT_MemoryTagID tag_id) {
@@ -1013,7 +1013,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
             }
         }
 
-        ckit_assert(FALSE); // Don't query a tag you don't have registered
+        ckit_assert(false); // Don't query a tag you don't have registered
         return NULLPTR; // never gets here
     }
 
@@ -1138,8 +1138,8 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         LOG_ERROR("---------------------- Memory Leak Detected: %d(total) + %d(internal) = %d(Bytes) ----------------------\n", total_memory_without_arena, total_memory_without_arena_internal, total_memory_without_arena + total_memory_without_arena_internal);
 
         u64 count = ckg_vector_capacity(global_memory_tag_pool_vector);
-        Boolean has_start = FALSE; 
-        Boolean has_end = FALSE; 
+        bool has_start = false; 
+        bool has_end = false; 
         for (u64 i = 0; i < count; i++) {
             CKIT_MemoryTagPool pool = global_memory_tag_pool_vector[i];
             if (pool.tag_id == TAG_CKIT_CORE_ARENA || pool.total_pool_allocation_size == 0) {
@@ -1147,15 +1147,15 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
             }
 
             if (!has_start) {
-                has_start = TRUE;
+                has_start = true;
             } else if (has_start && !has_end) {
-                has_end = TRUE;
+                has_end = true;
             }
             
             if (has_end && i != ckg_vector_capacity(global_memory_tag_pool_vector) - 1) {
                 LOG_PRINT("                                               |\n");
                 LOG_PRINT("                                               |\n");
-                has_end = FALSE;
+                has_end = false;
             }
 
             ckit_tracker_print_pool(&pool, log_level);
@@ -1170,7 +1170,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     //
 
     void memory_init() {
-        registered_arenas = ckg_linked_list_create(CKIT_Arena*, TRUE);
+        registered_arenas = ckg_linked_list_create(CKIT_Arena*, true);
 
         ckg_bind_alloc_callback(&platform_allocate);
         ckg_bind_free_callback(&platform_free);
@@ -1214,7 +1214,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         return ret_data;
     }
 
-    Boolean ckit_memory_compare(const void* buffer_one, const void* buffer_two, u32 b1_allocation_size, u32 b2_allocation_size) {
+    bool ckit_memory_compare(const void* buffer_one, const void* buffer_two, u32 b1_allocation_size, u32 b2_allocation_size) {
         return ckg_memory_compare(buffer_one, buffer_two, b1_allocation_size, b2_allocation_size);
     }
 
@@ -1268,7 +1268,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     void ckit_memory_arena_register(CKIT_Arena* arena);
     void ckit_memory_arena_unregister(CKIT_Arena* arena);
 
-    Boolean ckit_arena_flag_is_set(CKIT_Arena* arena, CKIT_ArenaFlag flag) {
+    bool ckit_arena_flag_is_set(CKIT_Arena* arena, CKIT_ArenaFlag flag) {
         return arena->flag == flag;
     }
 
@@ -1286,7 +1286,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         arena->alignment = alignment == 0 ? 8 : alignment;
         arena->name = name;
         arena->flag = flag;
-        arena->pages = ckg_linked_list_create(CKIT_ArenaPage*, TRUE);
+        arena->pages = ckg_linked_list_create(CKIT_ArenaPage*, true);
         CKIT_ArenaPage* inital_page = ckit_arena_page_create(allocation_size);
         ckg_linked_list_push(arena->pages, inital_page);
         ckit_memory_arena_register(arena);
@@ -1362,7 +1362,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
                 ckg_linked_list_push(arena->pages, next_page);
             }
         } else {
-            ckit_assert(FALSE);
+            ckit_assert(false);
         }
 
         last_page = (CKIT_ArenaPage*)ckg_linked_list_peek_tail(arena->pages); // tail might change
@@ -1420,7 +1420,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         return ret;
     }
 
-    Boolean ckit_str_equal(const String str1, const String str2) {
+    bool ckit_str_equal(const String str1, const String str2) {
         ckit_str_check_magic(str1);
         ckit_str_check_magic(str2);
 
@@ -1591,7 +1591,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
 
         String* ret_vector = NULLPTR;
         CKG_StringView str_view = ckg_strview_create((char*)str, 0, str_length);
-        while (TRUE) {
+        while (true) {
             s64 found_index = ckg_cstr_index_of(CKG_SV_ARG(str_view), delimitor, delimitor_length);
             if (found_index == -1) {
                 String substring = ckit_str_create_custom(CKG_SV_ARG(str_view), ckg_strview_length(str_view) + 1);
@@ -1770,13 +1770,13 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         return ret;
     }
 
-    Boolean ckit_rectangle_check_aabb_collision(CKIT_Rectangle2D rect1, CKIT_Rectangle2D rect2) {
+    bool ckit_rectangle_check_aabb_collision(CKIT_Rectangle2D rect1, CKIT_Rectangle2D rect2) {
         if (rect1.position.x < rect2.position.x + rect2.width && rect1.position.x + rect1.width > rect2.position.x &&
             rect1.position.y < rect2.position.y + rect2.height && rect1.position.y + rect1.height > rect2.position.y) {
-            return TRUE;
+            return true;
         }
 
-        return FALSE;
+        return false;
     }
 
     CKIT_Rectangle2D ckit_rectangle_get_aabb_collision(CKIT_Rectangle2D rect1, CKIT_Rectangle2D rect2) {
@@ -1899,7 +1899,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
             ckit_assert(CloseHandle(file_handle));
         }
 
-        Boolean ckit_os_path_exists(const char* path) {
+        bool ckit_os_path_exists(const char* path) {
             return (GetFileAttributesA(path) != INVALID_FILE_ATTRIBUTES);
         }
         void ckit_os_run_subprocess(); // runs on seperate thread?
@@ -1971,20 +1971,20 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
             
         }
 
-        Boolean ckit_os_path_exists(const char* path) {
+        bool ckit_os_path_exists(const char* path) {
             FILE *fptr = fopen(path, "r");
 
             if (fptr == NULL) {
-                return FALSE;
+                return false;
             }
 
             fclose(fptr);
 
-            return TRUE;
+            return true;
         }
 
         double ckit_os_query_performance_counter() {
-            ckit_assert_msg(FALSE, "NOT IMPLEMENTED YET!");
+            ckit_assert_msg(false, "NOT IMPLEMENTED YET!");
             return 0.0;
         }
 
@@ -2033,7 +2033,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
             if (fread(file_data, file_size, 1, file_handle) != 1) {
                 fclose(file_handle);
                 ckit_free(file_data);
-                ckit_assert_msg(FALSE, "Error reading file");
+                ckit_assert_msg(false, "Error reading file");
                 return NULLPTR;
             }
 
@@ -2047,7 +2047,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         }
 
         void ckit_os_get_mouse_position(int* mouse_x, int* mouse_y) {
-            ckit_assert_msg(FALSE, "NOT IMPLETMENTED FOR LINUX YET");
+            ckit_assert_msg(false, "NOT IMPLETMENTED FOR LINUX YET");
         }
 
         void ckit_os_dir_append_subdir(CKIT_Directory* directory, CKIT_Directory* sub_directory) {
@@ -2153,7 +2153,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
                 } break;
             }
 
-            ckit_assert(FALSE);
+            ckit_assert(false);
             return -1;
         }
 
@@ -2200,7 +2200,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         ckit_assert_msg(ckg_cstr_equal(ckit_vector_base(vector)->magic, sizeof(CKIT_VECTOR_MAGIC) - 1, CKIT_VECTOR_MAGIC, sizeof(CKIT_VECTOR_MAGIC) - 1), "Vector has wrong magic: {%s} got: {%s} \n", CKIT_VECTOR_MAGIC, ckit_vector_base(vector)->magic);
     }
 
-    void* ckit_vector_grow(void* vector, size_t element_size, Boolean force_grow, const char* file, const u32 line, const char* function) {
+    void* ckit_vector_grow(void* vector, size_t element_size, bool force_grow, const char* file, const u32 line, const char* function) {
         if (vector == NULLPTR) {
             vector = ckit_alloc_custom(sizeof(CKIT_VectorHeader) + (VECTOR_DEFAULT_CAPACITY * element_size), TAG_CKIT_CORE_VECTOR);
             vector = (u8*)vector + sizeof(CKIT_VectorHeader);
@@ -2313,7 +2313,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         hashmap->entries = new_entries;
     }
 
-    CKIT_HashMap* MACRO_ckit_hashmap_create(u32 hashmap_capacity, size_t element_size, Boolean is_pointer_type) {
+    CKIT_HashMap* MACRO_ckit_hashmap_create(u32 hashmap_capacity, size_t element_size, bool is_pointer_type) {
         CKIT_HashMap* ret = (CKIT_HashMap*)ckit_alloc_custom(sizeof(CKIT_HashMap), TAG_CKIT_CORE_HASHMAP);
         ret->capacity = 1;
         ret->entries = (CKIT_HashMapEntry*)ckit_alloc_custom(sizeof(CKIT_HashMapEntry) * hashmap_capacity, TAG_CKIT_CORE_HASHMAP);
@@ -2354,7 +2354,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     }
 
 
-    Boolean ckit_hashmap_entry_exists(CKIT_HashMap* hashmap, u32 index) {
+    bool ckit_hashmap_entry_exists(CKIT_HashMap* hashmap, u32 index) {
         return hashmap->entries[index].key != NULLPTR;
     }
 
@@ -2384,7 +2384,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         return hashmap->entries[real_index].value;
     }
 
-    Boolean ckit_hashmap_has(CKIT_HashMap* hashmap, char* key) {
+    bool ckit_hashmap_has(CKIT_HashMap* hashmap, char* key) {
         u32 index =  ckit_hash_value(key) % hashmap->capacity;
         u64 real_index = ckit_hashmap_resolve_collision(hashmap, key, index);
 
@@ -2460,7 +2460,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     }
 
 
-    Boolean ckit_hashset_entry_exists(CKIT_HashSet* hashset, u32 index) {
+    bool ckit_hashset_entry_exists(CKIT_HashSet* hashset, u32 index) {
         return hashset->entries[index] != NULLPTR;
     }
 
@@ -2474,7 +2474,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         }
     }
 
-    Boolean ckit_hashset_has(CKIT_HashSet* hashset, char* key) {
+    bool ckit_hashset_has(CKIT_HashSet* hashset, char* key) {
         u32 index =  ckit_hash_value(key) % hashset->capacity;
         u64 real_index = ckit_hashset_resolve_collision(hashset, key, index);
 
@@ -2487,7 +2487,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     //
     // ========== Start CKIT_LinkedList ==========
     //
-    CKIT_LinkedList* MACRO_ckit_linked_list_create(size_t element_size_in_bytes, Boolean is_pointer_type, const char* file, const u32 line, const char* function) {
+    CKIT_LinkedList* MACRO_ckit_linked_list_create(size_t element_size_in_bytes, bool is_pointer_type, const char* file, const u32 line, const char* function) {
         CKIT_LinkedList* ret = (CKIT_LinkedList*)MACRO_ckit_alloc(sizeof(CKIT_LinkedList), TAG_CKIT_CORE_LINKED_LIST, file, line, function);
         ret->count = 0;
         ret->element_size_in_bytes = element_size_in_bytes;
@@ -2636,7 +2636,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
             current_node = current_node->next;
         }
 
-        ckit_assert(FALSE); // couldn't match a node to an address
+        ckit_assert(false); // couldn't match a node to an address
         return 0; // should never get here
     }
 
@@ -2710,7 +2710,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     //
     // ========== Start CKIT_Queue ==========
     //
-    CKIT_Queue* MACRO_ckit_queue_create(u32 inital_capacity, size_t element_size_in_bytes, Boolean is_pointer_type, const char* file, const u32 line, const char* function) {
+    CKIT_Queue* MACRO_ckit_queue_create(u32 inital_capacity, size_t element_size_in_bytes, bool is_pointer_type, const char* file, const u32 line, const char* function) {
         CKIT_Queue* ret = (CKIT_Queue*)MACRO_ckit_alloc(sizeof(CKIT_Queue), TAG_CKIT_CORE_QUEUE, file, line, function);
         ret->element_size_in_bytes = element_size_in_bytes;
         ret->capacity = inital_capacity;
@@ -2735,7 +2735,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     void* ckit_dequeue(CKIT_Queue* queue) {
         ckit_assert(queue->count > 0);
         ckit_assert(queue->has_next_to_read || queue->read_index != queue->write_index);
-        queue->has_next_to_read = FALSE;
+        queue->has_next_to_read = false;
 
         void* ret = NULLPTR;
         
@@ -2755,7 +2755,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     void ckit_enqueue(CKIT_Queue* queue, void* element) {
         ckit_assert(queue->count < queue->capacity);
         ckit_assert(!queue->has_next_to_read || queue->read_index != queue->write_index);
-        queue->has_next_to_read = TRUE;
+        queue->has_next_to_read = true;
 
         queue->write_index = queue->write_index % queue->capacity;
         if (queue->is_pointer_type) {
@@ -2807,7 +2807,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
             ckit_str_append_char(line, c);
             }
             if (c == EOF) {
-            file_system->reachedEOF = TRUE;
+            file_system->reachedEOF = true;
             }
         } while (c != '\n' && c != EOF);
         return line;
@@ -2825,7 +2825,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
     FileSystem file_system_create(String file_name) {
         FileSystem file_system;
         file_system.handle = NULLPTR;
-        file_system.reachedEOF = FALSE;
+        file_system.reachedEOF = false;
         file_system.file_name = file_name;
         file_system.data = NULLPTR;
         return file_system;

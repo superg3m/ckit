@@ -7,7 +7,7 @@ typedef enum CustomTagPool {
 void test_vector_operations() {
 	// Test types
 	int intArray[] = {1, 2, 3, 4, 5};
-	Boolean boolArray[] = {TRUE, FALSE, TRUE, TRUE, FALSE};
+	bool boolArray[] = {true, false, true, true, false};
 	char charArray[] = {'a', 'b', 'c', 'd', 'e'};
 	const char* stringArray[] = {"Hello", "World", "!", "OpenAI", "GPT-3"};
 
@@ -18,7 +18,7 @@ void test_vector_operations() {
 	}
 
 	// Create vector of bool
-	Boolean* boolVector = ckit_vector_reserve(5, Boolean);
+	bool* boolVector = ckit_vector_reserve(5, bool);
 	for (u32 i = 0; i < 5; i++) {
 		ckit_vector_push(boolVector, boolArray[i]);
 	}
@@ -42,7 +42,7 @@ void test_vector_operations() {
 	}
 
 	for (u32 i = 0; i < ckit_vector_count(boolVector); i++) {
-		Boolean element = boolVector[i];
+		bool element = boolVector[i];
 		ckit_assert_msg(element == boolArray[i], "Error: Incorrect element value\n");
 	}
 
@@ -150,7 +150,7 @@ void middle_ground_opperations() {
 	file_close(&file_system);
 
 	CKIT_Arena* frame_boundary_arena = ckit_arena_create(500, "Frame Boundary");
-	ckit_arena_push(frame_boundary_arena, Boolean);
+	ckit_arena_push(frame_boundary_arena, bool);
 	ckit_arena_free(frame_boundary_arena);
 
 	// String str_to_be_split = ckit_str_create("They said it couldn't be done. They tried to recite the dark magics to me! THEY DON'T KNOW I WAS THERE WHEN THEY WERE WRITTEN!");
@@ -168,7 +168,7 @@ void middle_ground_opperations() {
 }
 
 void hashmap_operations() {
-	CKIT_HashMap* name_to_age = ckit_hashmap_create(1, char*, TRUE);
+	CKIT_HashMap* name_to_age = ckit_hashmap_create(1, char*, true);
 
 	char* names[5] = {
 		"jofhn",
@@ -201,7 +201,7 @@ void hashmap_operations() {
 	CKIT_HashSet* hashset_test = ckit_hashset_create(16);
 	ckit_hashset_free(hashset_test);
 
-	CKIT_HashMap* name_to_age_int = ckit_hashmap_create(1, int, FALSE);
+	CKIT_HashMap* name_to_age_int = ckit_hashmap_create(1, int, false);
 
 	char* names2[10] = {
 		"jofhn",
@@ -238,7 +238,7 @@ void hashmap_operations() {
 }
 
 void queue_operations() {
-	CKIT_Queue* queue = ckit_queue_create(4, char*, TRUE);
+	CKIT_Queue* queue = ckit_queue_create(4, char*, true);
 	const char* queue_values[] = {"\"1, 2, 3, 4, 5, 6\"", "\"HELLO!\"", "\"HELLO!12345!\"", "\"HEL45!\"", "\"!12345!\"", "\"!6H23dgfa45!\""};
 	ckit_enqueue(queue, (char*)queue_values[0]);
 
@@ -270,7 +270,7 @@ void queue_operations() {
 }
 
 void linked_list_operations() {
-	CKIT_LinkedList* linked_list = ckit_linked_list_create(char*, TRUE);
+	CKIT_LinkedList* linked_list = ckit_linked_list_create(char*, true);
 	ckit_linked_list_insert(linked_list, 0, (void*)"hello");
 	ckit_linked_list_push(linked_list, (void*)"hello_sailor1!");
 	ckit_linked_list_push(linked_list, (void*)"hello_sailor2!");
@@ -288,7 +288,7 @@ void linked_list_operations() {
 	LOG_DEBUG("list value: %s\n", test_str);
 	ckit_linked_list_free(linked_list);
 
-	CKIT_LinkedList* linked_list_int = ckit_linked_list_create(u32, FALSE);	
+	CKIT_LinkedList* linked_list_int = ckit_linked_list_create(u32, false);	
 	u32 value1[5] = {
 		1,
 		2,
@@ -435,6 +435,6 @@ int main() {
 	ckit_free(custom_tag_test);
 
 	ckit_vector_free(lines);
-	ckit_cleanup(TRUE);
+	ckit_cleanup(true);
 	return 0;
 }
