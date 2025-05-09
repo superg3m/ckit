@@ -1165,12 +1165,10 @@ CKIT_API void ckit_cleanup(bool generate_memory_report);
     //
     // Memory
     //
-
     void memory_init() {
         registered_arenas = ckg_linked_list_create(CKIT_Arena*, true);
 
-        ckg_bind_alloc_callback(&platform_allocate);
-        ckg_bind_free_callback(&platform_free);
+        // ckg_bind_custom_allocator(&platform_allocate, &platform_free, &arena);
     }
 
     void* MACRO_ckit_alloc(size_t byte_allocation_size, CKIT_MemoryTagID tag_id, char* file, u32 line, char* function) {
