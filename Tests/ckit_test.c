@@ -9,7 +9,7 @@ void test_vector_operations() {
 	int intArray[] = {1, 2, 3, 4, 5};
 	bool boolArray[] = {true, false, true, true, false};
 	char charArray[] = {'a', 'b', 'c', 'd', 'e'};
-	const char* stringArray[] = {"Hello", "World", "!", "OpenAI", "GPT-3"};
+	char* stringArray[] = {"Hello", "World", "!", "OpenAI", "GPT-3"};
 
 	// Create vector of int
 	int* intVector = ckit_vector_reserve(5, int);
@@ -30,7 +30,7 @@ void test_vector_operations() {
 	}
 
 	// Create vector of strings
-	const char** stringVector = NULLPTR;
+	char** stringVector = NULLPTR;
 	for (u32 i = 0; i < 5; i++) {
 		ckit_vector_push(stringVector, stringArray[i]);
 	}
@@ -52,8 +52,8 @@ void test_vector_operations() {
 	}
 
 	for (u32 i = 0; i < ckit_vector_count(stringVector); i++) {
-		const char* element = stringVector[i];
-		ckit_assert_msg(ckg_cstr_equal(element, ckg_cstr_length(element), stringArray[i], ckg_cstr_length(stringArray[i])), "Error: Incorrect element value\n");
+		char* element = stringVector[i];
+		ckit_assert_msg(ckg_str_equal(element, ckg_cstr_length(element), stringArray[i], ckg_cstr_length(stringArray[i])), "Error: Incorrect element value\n");
 	}
 
 	// Test pop
@@ -64,12 +64,12 @@ void test_vector_operations() {
 
 	ckit_assert_msg(before_popped_int == after_popped_int, "Error: popped expected: %d | got %d\n", before_popped_int, after_popped_int);
 
-	const char* before_popped_string = stringVector[ckit_vector_count(stringVector) - 1];
-	const char* after_popped_string = ckit_vector_pop(stringVector);
-	const char* string_to_push = "TRYING TO PUSH A LITERAL!\n";
+	char* before_popped_string = stringVector[ckit_vector_count(stringVector) - 1];
+	char* after_popped_string = ckit_vector_pop(stringVector);
+	char* string_to_push = "TRYING TO PUSH A LITERAL!\n";
 	ckit_vector_push(stringVector, string_to_push);
 
-	ckit_assert_msg(ckg_cstr_equal(before_popped_string, ckg_cstr_length(before_popped_string), after_popped_string, ckg_cstr_length(after_popped_string)), "Error: Incorrect popped element value\n");
+	ckit_assert_msg(ckg_str_equal(before_popped_string, ckg_cstr_length(before_popped_string), after_popped_string, ckg_cstr_length(after_popped_string)), "Error: Incorrect popped element value\n");
 
 	// Test free
 	ckit_vector_free(intVector);
@@ -216,7 +216,7 @@ void hashmap_operations() {
 		"jo234hyn234235325"
 	};
 
-	const int value_int[10] = {
+	int value_int[10] = {
 		3, 2, 5, 1, 7,
 		3, 2, 5, 1, 7
 	};
@@ -239,7 +239,7 @@ void hashmap_operations() {
 
 void queue_operations() {
 	CKIT_Queue* queue = ckit_queue_create(4, char*, true);
-	const char* queue_values[] = {"\"1, 2, 3, 4, 5, 6\"", "\"HELLO!\"", "\"HELLO!12345!\"", "\"HEL45!\"", "\"!12345!\"", "\"!6H23dgfa45!\""};
+	char* queue_values[] = {"\"1, 2, 3, 4, 5, 6\"", "\"HELLO!\"", "\"HELLO!12345!\"", "\"HEL45!\"", "\"!12345!\"", "\"!6H23dgfa45!\""};
 	ckit_enqueue(queue, (char*)queue_values[0]);
 
 	char* current_value = NULLPTR;
