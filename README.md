@@ -27,11 +27,10 @@
 2. - [ ] Parse the message better so you can intuitively \n something. (Maybe add some string in the beginning of a message ot ommit the <WARN:> for example)
 
 ### Next Steps
-1. - [ ] forward declare types to avoid redefs
-		- [ ] enums
-		- [ ] defines
-		- [ ] structs
-2. - [ ] Hot_Reloading
+- Remove and simplify tons of stuff
+- use ckg in the backend try not to make users use ckg... I think?
+- Have errors
+- typedef CKG_Error to CKIT_Error
 
 Thoughts:
 	But in regards to dangling pointers maybe I can just give back a index indead of a pointer (Handles are the better pointers)
