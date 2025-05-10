@@ -43,13 +43,6 @@
 	#define CKG_EXTERN
 	#include "./ckg/ckg.h"
 
-	typedef struct CKIT_Bitmap {
-		u32 height;
-		u32 width;
-		u8 bytes_per_pixel;
-		u8* memory;
-	} CKIT_Bitmap;
-
 	#define MEMORY_TAG_CHARACTER_LIMIT 16
 	#define PLATFORM_CHARACTER_LIMIT 200
 #endif
@@ -57,6 +50,9 @@
 CKIT_API void ckit_init();
 CKIT_API void ckit_cleanup(bool generate_memory_report);
 
+// Date: May 10, 2025
+// TODO(Jovanni): Fix the assert to use ckg logger
+// actually maybe just want to bring this into ckg entirely
 #if defined(CKIT_INCLUDE_ASSERT)
     #define CKIT_ASSERT_ENABLED true
 
@@ -71,6 +67,8 @@ CKIT_API void ckit_cleanup(bool generate_memory_report);
     #endif
 #endif 
 
+// Date: May 10, 2025
+// TODO(Jovanni): take a good look at logging between ckg and ckit
 #if defined(CKIT_INCLUDE_LOGGER)
     #define LOG_LEVEL_CHARACTER_LIMIT 12
 
@@ -130,8 +128,8 @@ CKIT_API void ckit_cleanup(bool generate_memory_report);
 
     typedef struct CKIT_AllocationInfo {
         char* file_name;
-        s64 line;
         char* function_name;
+        u64 line;
         size_t allocation_size;
     } CKIT_AllocationInfo;
 
@@ -268,6 +266,8 @@ CKIT_API void ckit_cleanup(bool generate_memory_report);
     CKIT_API bool ckit_str_equal(String str1, String str2);
     CKIT_API void ckit_str_copy(String str, char* source);
 
+    // Date: May 10, 2025
+    // TODO(Jovanni): I think all cstr stuff will be in ckg?
     CKIT_API char* ckit_cstr_va_sprint(u64* allocation_size_ptr, char* fmt, va_list args);
     CKIT_API char* MACRO_ckit_cstr_sprint(u64* allocation_size_ptr, char* fmt, ...);
 
@@ -279,13 +279,20 @@ CKIT_API void ckit_cleanup(bool generate_memory_report);
 
     CKIT_API String MACRO_ckit_str_insert(String str, char* to_insert, u64 to_insert_length, u64 index);
     CKIT_API String MACRO_ckit_str_insert_char(String str, char to_insert, u64 index);
+
     // Date: September 27, 2024
     // NOTE(Jovanni): This is a bit scary if you clear with the wrong one the length with be wrong!
+
+    // Date: May 10, 2025
+    // NOTE(Jovanni): This is also why its probably best if cstr stuff is under a different namespace ckg
     CKIT_API void ckit_str_clear(String str1);
     CKIT_API void ckit_cstr_clear(char* str1);
 
     // If you are copying data to the string and need to update the header state specifically for length
     CKIT_API void ckit_str_recanonicalize_header_length(String str);
+
+    // Date: May 10, 2025
+    // TODO(Jovanni): There should be very few things that allocate everything else should be a CKG_StringView
     CKIT_API String ckit_substring(char* string_buffer, u64 start_range, u64 end_range);
 
     // Little bit tricky. This method returns a vector of strings so 
