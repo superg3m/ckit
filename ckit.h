@@ -801,7 +801,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
   void ckit_init() {
     ckit_tracker_init();
     memory_init();
-    //platform_console_init();
+    platform_console_init();
     ckit_str_register_arena();
   }
 
@@ -883,6 +883,14 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         printf("%s%s%s", log_level_format[log_level], log_level_strings[log_level], CKG_COLOR_RESET);
         
         u64 out_message_length = ckit_str_length(out_message);
+
+        #if defined(PLATFORM_WINDOWS)
+            HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+            DWORD dwMode = 0;
+            GetConsoleMode(hOut, &dwMode);
+            dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+            SetConsoleMode(hOut, dwMode);
+        #endif
 
         if (message_has_special_delmitor(out_message, out_message_length)) {
             special_print_helper(out_message, out_message_length, log_level);
