@@ -801,7 +801,7 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
   void ckit_init() {
     ckit_tracker_init();
     memory_init();
-    platform_console_init();
+    // platform_console_init();
     ckit_str_register_arena();
   }
 
