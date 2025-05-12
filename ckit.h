@@ -884,14 +884,6 @@ CKIT_API void ckit_cleanup(Boolean generate_memory_report);
         
         u64 out_message_length = ckit_str_length(out_message);
 
-        #if defined(PLATFORM_WINDOWS)
-            HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-            DWORD dwMode = 0;
-            GetConsoleMode(hOut, &dwMode);
-            dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-            SetConsoleMode(hOut, dwMode);
-        #endif
-
         if (message_has_special_delmitor(out_message, out_message_length)) {
             special_print_helper(out_message, out_message_length, log_level);
         } else {
