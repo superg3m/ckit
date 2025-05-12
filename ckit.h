@@ -847,10 +847,6 @@ CKIT_API void ckit_cleanup(bool generate_memory_report);
         CKG_COLOR_RESET,
     };
 
-    #if defined(PLATFORM_WINDOWS)
-        #include <windows.h>
-    #endif
-
     internal bool message_has_special_delmitor(String message, u64 message_length) {
         bool start_delimitor_index = ckg_str_contains(message, message_length, LOGGER_START_DELIM, sizeof(LOGGER_START_DELIM) - 1);
         bool end_delimitor_index = ckg_str_contains(message, message_length, LOGGER_END_DELIM, sizeof(LOGGER_END_DELIM) - 1);
