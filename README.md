@@ -43,6 +43,8 @@ Thoughts:
     4. Long lived + unclear owner. Heavily shared, unknown when it may be accessed or freed. (Malloc)
 
 # Goals
+- This is actually going to have the memory tagging system and then a few other nice things but for the most part CKG is where its at
+- THe issue I have is that CKG is really memory efficent could be used for embedded systems and I don't think ckit is is that or hsould even try to be that.
 
 ## CORE
 - [x] ckit_types.c
