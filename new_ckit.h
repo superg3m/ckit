@@ -76,8 +76,7 @@
 #endif
 
 #if defined(CKIT_INCLUDE_MEMORY)
-    // Date: September 24, 2024
-    // TODO(Jovanni): Just make this defines and CKIT_MemoryTagID a u8
+    internal CKG_LinkedList* registered_arenas = NULLPTR;
 
     // Date: March 23, 2025
     // TODO(Jovanni): Make the reserved space like 256+ so userspace has nice numbers
@@ -164,6 +163,45 @@
     #define ckit_memory_delete_index(data, number_of_elements, data_capacity, index) MACRO_ckit_memory_delete_index(data, number_of_elements, data_capacity, sizeof(data[0]), index)
     #define ckit_memory_insert_index(data, number_of_elements, data_capacity, element, index) MACRO_ckit_memory_delete_index(data, number_of_elements, data_capacity, sizeof(data[0]), index); data[index] = element;
 #endif
+
+#if defined(CKIT_INCLUDE_ARENA)
+    // Date: September 24, 2024
+    // TODO(Jovanni): Just make this defines
+    //========================== Begin Types ==========================
+    typedef enum CKIT_ArenaFlag {
+        CKIT_ARENA_FLAG_FIXED,
+        CKIT_ARENA_FLAG_CIRCULAR,
+        CKIT_ARENA_FLAG_EXTENDABLE_PAGES,
+        CKIT_ARENA_FLAG_COUNT
+    } CKIT_ArenaFlag;
+
+    typedef struct CKIT_ArenaPage {
+        u8* base_address;
+        size_t capacity;
+        size_t used;
+    } CKIT_ArenaPage;
+
+    typedef struct CKIT_Arena {
+        char* name;
+        CKG_LinkedList* pages;
+        CKIT_ArenaFlag flag;
+        u8 alignment;
+    } CKIT_Arena;
+    //=========================== End Types ===========================
+
+    CKIT_API CKIT_Arena* MACRO_ckit_arena_create(size_t allocation_size, char* name, CKIT_ArenaFlag flag, u8 alignment);
+    CKIT_API void* MACRO_ckit_arena_push(CKIT_Arena* arena, size_t element_size);	
+    CKIT_API CKIT_Arena* MACRO_ckit_arena_free(CKIT_Arena* arena);
+    CKIT_API void ckit_arena_clear(CKIT_Arena* arena);
+    CKIT_API size_t ckit_arena_used(CKIT_Arena* arena);
+    CKIT_API size_t ckit_arena_capacity(CKIT_Arena* arena);
+
+    #define ckit_arena_create(allocation_size, name) MACRO_ckit_arena_create(allocation_size, name, CKIT_ARENA_FLAG_EXTENDABLE_PAGES, 0)
+    #define ckit_arena_create_custom(allocation_size, name, flags, alignment) MACRO_ckit_arena_create(allocation_size, name, flags, alignment)
+    #define ckit_arena_free(arena) arena = MACRO_ckit_arena_free(arena)
+    #define ckit_arena_push(arena, type) ((type*)MACRO_ckit_arena_push(arena, sizeof(type)))
+    #define ckit_arena_push_array(arena, type, element_count) ((type*)MACRO_ckit_arena_push(arena, sizeof(type) * element_count))
+#endif 
 
 #if defined(CKIT_IMPL_MEMORY)
     typedef CKG_Allocator CKIT_Allocator;
@@ -508,4 +546,3 @@ bool ckit_memory_compare(void* buffer_one, void* buffer_two, u32 b1_allocation_s
     // End Allocator
     //
 #endif
-
