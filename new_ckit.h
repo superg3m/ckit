@@ -144,7 +144,11 @@
     CKIT_API void ckit_memory_tracker_print_pool(CKIT_MemoryTagPool* pool, CKIT_LogLevel log_level);
     CKIT_API void ckit_memory_tracker_print_all_pools(CKIT_LogLevel log_level);
 
-    CKIT_API void ckit_bind_custom_allocator(CKG_Alloc_T* a, CKG_Free_T* f, void* user_ctx);
+    typedef CKG_Alloc_T CKIT_Alloc_T;
+    typedef CKG_Free_T CKIT_Free_T;
+
+
+    CKIT_API void ckit_bind_custom_allocator(CKIT_Alloc_T* a, CKIT_Free_T* f, void* user_ctx);
 #endif
 
 #if defined(CKIT_IMPL_MEMORY)
@@ -158,17 +162,21 @@
         void* user_ctx;
     } CKIT_Context;
 
-    internal void* cit_default_libc_malloc(CKG_Allocator* allocator, size_t allocation_size) {
+    typedef CKG_Allocator CKIT_Allocator;
+
+    internal void* cit_default_libc_malloc(CKIT_Allocator* allocator, size_t allocation_size) {
         (void)allocator;
         return malloc(allocation_size);
     }
 
-    internal void ckit_default_libc_free(CKG_Allocator* allocator, void* data) {
+    internal void ckit_default_libc_free(CKIT_Allocator* allocator, void* data) {
         (void)allocator;
         free(data);
     }
 
-    internal CKG_Allocator global_allocator = {cit_default_libc_malloc, ckit_default_libc_free, NULLPTR};
+    internal CKIT_Allocator global_allocator = {cit_default_libc_malloc, ckit_default_libc_free, NULLPTR};
+    // Date: May 18, 2025
+    // TODO(Jovanni): Replace this with a hashmap
     internal CKIT_MemoryTagPool* global_memory_tag_pool_vector = NULLPTR;
     internal u64 global_total_pool_memory_used = 0;
     internal u64 global_total_pool_memory_internal = 0;
@@ -242,7 +250,7 @@
     }
 
     void ckit_memory_tracker_add(CKIT_MemoryHeader* header);
-    internal void* ckit_allocate_wrapper(CKG_Allocator* allocator, size_t allocation_size) {
+    internal void* ckit_allocate_wrapper(CKIT_Allocator* allocator, size_t allocation_size) {
         (void)allocator;
         CKIT_Context* ctx = allocator->ctx;
 
@@ -255,7 +263,7 @@
     }
 
     void ckit_memory_tracker_remove(CKIT_MemoryHeader* header);
-    internal void ckit_free_wrapper(CKG_Allocator* allocator, void* data) {
+    internal void ckit_free_wrapper(CKIT_Allocator* allocator, void* data) {
         (void)allocator;
 
         ckit_tracker_check_magic(data);
@@ -301,7 +309,7 @@
         // ckit_str_register_arena();
     }
 
-    void ckit_bind_custom_allocator(CKG_Alloc_T* a, CKG_Free_T* f, void* user_ctx) {
+    void ckit_bind_custom_allocator(CKIT_Alloc_T* a, CKIT_Free_T* f, void* user_ctx) {
         ckit_assert_msg(a, "Alloc function is NULLPTR\n");
         ckit_assert_msg(f, "Free function is NULLPTR\n");
 
@@ -320,6 +328,7 @@
         ctx->file_name = file;
         ctx->function_name = function;
         ctx->line = line;
+
 
         return ckg_alloc(byte_allocation_size);
     }

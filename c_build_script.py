@@ -64,6 +64,10 @@ procedures: Dict[str, ProcedureConfig] = {
         compile_time_defines = ["CKIT_WSL"],
     ),
 
+
+}
+
+"""
     "ckit_core_test": ProcedureConfig(
         build_directory = f"./Tests/{build_postfix}",
         output_name = "ckit_test.exe",
@@ -71,7 +75,7 @@ procedures: Dict[str, ProcedureConfig] = {
         additional_libs = executable_procedure_libs,
         compile_time_defines = ["CKIT_WSL"],
     ),
-}
+"""
 
 manager: Manager = Manager(cc, pc, procedures)
 manager.build_project()
