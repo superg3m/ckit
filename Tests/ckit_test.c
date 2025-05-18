@@ -132,16 +132,6 @@ void inital_operations() {
 }
 
 void middle_ground_opperations() {
-	CKIT_Vector2 points[4];
-	points[0].x = 0; points[0].y = 0;
-	points[1].x = 1; points[1].y = 2;
-	points[2].x = 3; points[2].y = 0;
-	points[3].x = 4; points[3].y = 2;
-
-	CKIT_Vector2 ret = ckit_vector2_spline_point(points, 4, 0.5f); // has memory leak with vector
-	LOG_ERROR("FINAL POINT: (%f, %f)\n", ret.x, ret.y);
-
-
 	FileSystem file_system = file_system_create((char*)"../../../assets/Learn_About_BMP.bmp");
 	file_open(&file_system);
 

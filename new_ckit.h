@@ -63,7 +63,7 @@
 #endif
 
 #if defined(CKIT_INCLUDE_LOGGER)
-    typedef CKIT_LogLevel CKIT_LogLevel;
+    typedef CKG_LogLevel CKIT_LogLevel;
 
     CKIT_API void MACRO_ckit_log_output(CKIT_LogLevel log_level, char* message, ...);
     #define ckit_log_output(log_level, message, ...) MACRO_ckit_log_output(log_level, message, ##__VA_ARGS__)
@@ -143,45 +143,72 @@
 
     CKIT_API void ckit_memory_tracker_init();
     CKIT_API void ckit_memory_tracker_register_tag_pool(CKIT_MemoryTagID tag_id, const char* name);
-    CKIT_API void* MACRO_ckit_tracker_insert_header(void* data, CKIT_MemoryHeader header);
-
-    CKIT_API void* memory_insert_header(void* data, CKIT_MemoryHeader header);
-    CKIT_API void ckit_memory_tracker_add(CKIT_MemoryHeader* header);
-    CKIT_API void ckit_memory_tracker_remove(CKIT_MemoryHeader* header);
-
-
 
     CKIT_API void ckit_memory_tracker_print_header(CKIT_MemoryHeader* header, CKIT_LogLevel log_level);
     CKIT_API void ckit_memory_tracker_print_pool(CKIT_MemoryTagPool* pool, CKIT_LogLevel log_level);
     CKIT_API void ckit_memory_tracker_print_all_pools(CKIT_LogLevel log_level);
-
-    void* ckit_allocator_wrapper(CKIT_Allocator* allocator, size_t allocation_size);
-    void ckit_free_wrapper(CKIT_Allocator* allocator, void* data);
 #endif
 
-void ckit_init() {
-    // this needs to make the 
-    ckg_bind_custom_allocator(ckit_allocator_wrapper, ckit_free_wrapper, NULLPTR);
-    // ckit_tracker_init();
-    // memory_init();
-    // platform_console_init();
-    // ckit_str_register_arena();
-}
-
 #if defined(CKIT_IMPL_MEMORY)
-    internal CKIT_Allocator allocator = {ckg_default_libc_malloc, ckg_default_libc_free, NULLPTR};
+    typedef struct CKIT_Context {
+        CKIT_MemoryTagID tag_id;
+        size_t allocation_size;
+        const char* file_name;
+        const char* function_name;
+        const u64 line;
+
+        void* user_ctx;
+    } CKIT_Context;
+
+    internal void* cit_default_libc_malloc(CKG_Allocator* allocator, size_t allocation_size) {
+        (void)allocator;
+        return malloc(allocation_size);
+    }
+
+    internal void ckit_default_libc_free(CKG_Allocator* allocator, void* data) {
+        (void)allocator;
+        free(data);
+    }
+
+    internal CKIT_Allocator global_allocator = {cit_default_libc_malloc, ckit_default_libc_free, NULLPTR};
+    internal CKIT_MemoryTagPool* global_memory_tag_pool_vector = NULLPTR;
+    internal u64 global_total_pool_memory_used = 0;
+    internal u64 global_total_pool_memory_internal = 0;
+
     #define CKIT_MEMORY_MAGIC "CKIT_MAGIC_MEMORY"
     #define ckit_memory_header(data) ((CKIT_MemoryHeader*)((u8*)data - sizeof(CKIT_MemoryHeader)))
 
-    internal CKIT_MemoryHeader* ckit_memory_tracker_get_header(void* data) {
-        ckit_tracker_check_magic(data);
-        CKIT_MemoryHeader* header = (CKIT_MemoryHeader*)((u8*)data - sizeof(CKIT_MemoryHeader));
-        ckit_assert_msg(ckit_tracker_tag_pool_exists(header->tag.tag_id, header->tag.tag_name), "Tag id or tag_name must be corrupted\n");
-        
-        return header;
+    internal void ckit_tracker_check_magic(void* data) {
+        ckit_assert(ckg_str_equal(ckit_memory_header(data)->magic, sizeof(CKIT_MEMORY_MAGIC) - 1, CKG_LIT_ARG(CKIT_MEMORY_MAGIC)));
     }
 
-    internal CKIT_MemoryHeader ckit_tracker_header_create(CKIT_MemoryTagID tag_id, size_t allocation_size, const char* file_name, const u64 line, const char* function_name) {
+    internal void ckit_tracker_add(CKIT_MemoryHeader* header) {
+        u64 tag_pool_index = ckit_tracker_get_tag_pool_index(header->tag.tag_id);
+        
+        global_memory_tag_pool_vector[tag_pool_index].total_pool_allocation_size += header->tag.allocation_info.allocation_size;
+        global_total_pool_memory_internal += sizeof(CKIT_MemoryHeader);
+        global_total_pool_memory_used += header->tag.allocation_info.allocation_size;
+
+        ckg_bind_custom_allocator(global_allocator.allocate, global_allocator.free, global_allocator.ctx);
+        header->linked_list_address = ckg_linked_list_push(global_memory_tag_pool_vector[tag_pool_index].allocated_headers, header);
+        ckg_bind_custom_allocator(ckit_allocate_wrapper, ckit_free_wrapper, global_allocator.ctx);
+    }
+
+    internal void ckit_tracker_remove(CKIT_MemoryHeader* header) {
+        u64 tag_pool_index = ckit_tracker_get_tag_pool_index(header->tag.tag_id);
+
+        global_memory_tag_pool_vector[tag_pool_index].total_pool_allocation_size -= header->tag.allocation_info.allocation_size;
+        global_total_pool_memory_internal -= sizeof(CKIT_MemoryHeader);
+        global_total_pool_memory_used -= header->tag.allocation_info.allocation_size;
+        
+        u64 index = ckg_linked_list_node_to_index(global_memory_tag_pool_vector[tag_pool_index].allocated_headers,  header->linked_list_address);
+
+        ckg_bind_custom_allocator(global_allocator.allocate, global_allocator.free, global_allocator.ctx);
+        ckg_linked_list_remove(global_memory_tag_pool_vector[tag_pool_index].allocated_headers, index); 
+        ckg_bind_custom_allocator(ckit_allocate_wrapper, ckit_free_wrapper, global_allocator.ctx);
+    }
+
+    internal CKIT_MemoryHeader ckit_memory_header_create(CKIT_MemoryTagID tag_id, size_t allocation_size, const char* file_name, const char* function_name, const u64 line) {
         CKIT_MemoryHeader ret;
         ret.magic = CKIT_MEMORY_MAGIC;
 
@@ -195,77 +222,68 @@ void ckit_init() {
         return ret;
     }
 
-    void ckit_bind_custom_allocator(CKIT_Alloc_T* a, CKIT_Alloc_T* f, void* ctx) {
-        ckit_assert_msg(a, "Alloc function is NULLPTR\n");
-        ckit_assert_msg(f, "Free function is NULLPTR\n");
-
-        allocator.allocator = a;
-        allocator.free = f;
-        if (ctx) {
-            allocator.ctx = ctx;
-        }
-
-        ckg_bind_custom_allocator(ckit_allocator_wrapper, ckit_free_wrapper, ctx);
-    }
-
-    void ckit_tracker_add(CKIT_MemoryHeader* header) {
-        u64 tag_pool_index = ckit_tracker_get_tag_pool_index(header->tag.tag_id);
-        
-        global_memory_tag_pool_vector[tag_pool_index].total_pool_allocation_size += header->tag.allocation_info.allocation_size;
-        global_total_pool_memory_internal += sizeof(CKIT_MemoryHeader);
-        global_total_pool_memory_used += header->tag.allocation_info.allocation_size;
-
-        ckg_bind_custom_allocator(allocator.allocate, allocator.free, allocator.ctx);
-        header->linked_list_address = ckg_linked_list_push(global_memory_tag_pool_vector[tag_pool_index].allocated_headers, header);
-        ckg_bind_custom_allocator(ckit_allocator_wrapper, ckit_free_wrapper, allocator.ctx);
-    }
-
-    void ckit_tracker_remove(CKIT_MemoryHeader* header) {
-        u64 tag_pool_index = ckit_tracker_get_tag_pool_index(header->tag.tag_id);
-
-        global_memory_tag_pool_vector[tag_pool_index].total_pool_allocation_size -= header->tag.allocation_info.allocation_size;
-        global_total_pool_memory_internal -= sizeof(CKIT_MemoryHeader);
-        global_total_pool_memory_used -= header->tag.allocation_info.allocation_size;
-        
-        u64 index = ckg_linked_list_node_to_index(global_memory_tag_pool_vector[tag_pool_index].allocated_headers,  header->linked_list_address);
-
-        ckg_bind_custom_allocator(allocator.allocate, allocator.free, allocator.ctx);
-        ckg_linked_list_remove(global_memory_tag_pool_vector[tag_pool_index].allocated_headers, index); 
-        ckg_bind_custom_allocator(ckit_allocator_wrapper, ckit_free_wrapper, allocator.ctx);
-    }
-
-    void* ckit_allocator_wrapper(CKIT_Allocator* allocator, size_t allocation_size) {
+    internal void* ckit_allocate_wrapper(CKIT_Allocator* allocator, size_t allocation_size) {
         (void)allocator;
+        CKIT_Context* ctx = allocator->ctx;
+
 
         u8* ret = ckg_alloc(sizeof(CKIT_MemoryHeader) + allocation_size);
-        *((CKIT_MemoryHeader*)ret) = ckit_tracker_header_create();
+        *((CKIT_MemoryHeader*)ret) = ckit_memory_header_create(ctx->tag_id, ctx->allocation_size, ctx->file_name, ctx->function_name, ctx->line);
         ckit_memory_tracker_add((CKIT_MemoryHeader*)ret);
         ret += sizeof(CKIT_MemoryHeader);
     
         return ret;
     }
 
-    void ckit_free_wrapper(CKIT_Allocator* allocator, void* data) {
+    internal void ckit_free_wrapper(CKIT_Allocator* allocator, void* data) {
         (void)allocator;
 
-        ckit_memory_tracker_remove((CKIT_MemoryHeader*)ret);
-        u8* base = (u8*)data - sizeof(CKIT_MemoryHeader);
-        
-        ckg_free(base);
+        ckit_tracker_check_magic(data);
+        CKIT_MemoryHeader* header = (CKIT_MemoryHeader*)((u8*)data - sizeof(CKIT_MemoryHeader));
+        ckit_assert_msg(ckit_tracker_tag_pool_exists(header->tag.tag_id, header->tag.tag_name), "Tag id or tag_name must be corrupted\n");
+
+        ckit_memory_tracker_remove(header);
+        ckg_free(header);
     }
+
+    void ckit_init() {
+        ckg_bind_custom_allocator(ckit_allocate_wrapper, ckit_free_wrapper, NULLPTR);
+        // ckit_tracker_init();
+        // memory_init();
+        // platform_console_init();
+        // ckit_str_register_arena();
+    }
+
+    internal char* ckit_tracker_tag_to_string(CKIT_MemoryTagID tag_id) {
+        for (u32 i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
+            if (global_memory_tag_pool_vector[i].tag_id == tag_id) {
+                return global_memory_tag_pool_vector[i].pool_name;
+            }
+        }
+
+        ckit_assert(false); // Don't query a tag you don't have registered
+        return NULLPTR; // never gets here
+    }
+
+    void ckit_bind_custom_allocator(CKIT_Alloc_T* a, CKIT_Alloc_T* f, void* ctx) {
+        ckit_assert_msg(a, "Alloc function is NULLPTR\n");
+        ckit_assert_msg(f, "Free function is NULLPTR\n");
+
+        global_allocator.allocate = a;
+        global_allocator.free = f;
+        if (ctx) {
+            global_allocator.ctx = ctx;
+        }
+
+        ckg_bind_custom_allocator(ckit_allocate_wrapper, ckit_free_wrapper, ctx);
+    }
+
+
 
     void* MACRO_ckit_alloc(size_t byte_allocation_size, CKIT_MemoryTagID tag_id, const char* file, const u32 line, const char* function) {
         ckit_assert_msg(byte_allocation_size > 0, "Invalid allocation size zero or below\n");
 
-        CKIT_MemoryHeader temp_header = ckit_tracker_header_create(tag_id, byte_allocation_size, file, line, function);
-
-        void* data = ckg_alloc(sizeof(temp_header) + byte_allocation_size);
-        ckit_memory_zero(data, sizeof(temp_header) + byte_allocation_size);
-        ckit_tracker_insert_header(data, temp_header);
-        CKIT_MemoryHeader* real_header = ckit_tracker_get_header(data); // this is probably a bad constraint I shouldn't have to think about getting the real header
-        ckit_tracker_add(real_header);
-
-        return data;
+        return ckit_alloc(byte_allocation_size);
     }
 #endif
 
