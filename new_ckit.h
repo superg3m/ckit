@@ -49,37 +49,64 @@
 
 
 #if defined(CKIT_INCLUDE_MEMORY)
-	typedef struct CKIT_Allocator CKIT_Allocator;
-	typedef void*(CKIT_Alloc_T)(CKIT_Allocator* allocator, size_t allocation_size);
-	typedef void(CKIT_Free_T)(CKIT_Allocator* allocator, void* data);
+	typedef CKG_Alloc_T CKIT_Alloc_T;
+	typedef CKG_Free_T CKIT_Free_T;
+    typedef CKG_Allocator CKIT_Allocator;
 
-	typedef struct CKIT_Allocator {
-		CKIT_Alloc_T* allocate;
-		CKIT_Free_T* free;
-		void* ctx;
-	} CKIT_Allocator;
+    void* ckit_allocator_wrapper(CKIT_Allocator* allocator, size_t allocation_size);
+    void ckit_free_wrapper(CKIT_Allocator* allocator, void* data);
 #endif
+
+void ckit_init() {
+    // this needs to make the 
+    ckg_bind_custom_allocator(ckit_allocator_wrapper, ckit_free_wrapper, NULLPTR);
+    // ckit_tracker_init();
+    // memory_init();
+    // platform_console_init();
+    // ckit_str_register_arena();
+}
 
 #if defined(CKIT_IMPL_MEMORY)
-	typedef struct CKIT_Allocator CKIT_Allocator;
-	typedef void*(CKIT_Alloc_T)(CKIT_Allocator* allocator, size_t allocation_size);
-	typedef void(CKIT_Free_T)(CKIT_Allocator* allocator, void* data);
+	typedef CKG_Alloc_T CKIT_Alloc_T;
+	typedef CKG_Free_T CKIT_Free_T;
+    typedef CKG_Allocator CKIT_Allocator;
 
-	typedef struct CKIT_Allocator {
-		CKIT_Alloc_T* allocate;
-		CKIT_Free_T* free;
-		void* ctx;
-	} CKIT_Allocator;
+    CKIT_API void ckit_bind_custom_allocator(CKIT_Alloc_T* a, CKIT_Alloc_T* f, void* ctx) {
+        ckit_assert_msg(a, "Alloc function is NULLPTR\n");
+        ckit_assert_msg(f, "Free function is NULLPTR\n");
 
-	internal void* ckit_default_libc_malloc(CKG_Allocator* allocator, size_t allocation_size) {
-        (void)allocator;
-        return ckg_alloc(allocation_size);
+        allocator.allocator = a;
+        allocator.free = f;
+        if (ctx) {
+            allocator.ctx = ctx;
+        }
+
+        ckg_bind_custom_allocator(ckit_allocator_wrapper, ckit_free_wrapper, ctx);
     }
 
-    internal void ckit_default_libc_free(CKG_Allocator* allocator, void* data) {
+    void* ckit_allocator_wrapper(CKIT_Allocator* allocator, size_t allocation_size) {
         (void)allocator;
-        ckg_free(data);
+
+   
+        u8* ret = allocator.allocate(sizeof(CKIT_MemoryHeader) + allocation_size);
+        // memory_tagging
+        // register memory
+
+        ret += sizeof(CKIT_MemoryHeader);
+
+        return ret;
     }
 
-	internal CKIT_Allocator allocator = {ckit_default_libc_malloc, ckit_default_libc_free, 0};
+    void ckit_free_wrapper(CKIT_Allocator* allocator, void* data) {
+        // memory_tagging 
+
+        u8* base = (u8*)data - sizeof(CKIT_MemoryHeader);
+        // memory_tagging
+        // unregister memory
+
+        allocator.free(data);
+    }
+
+	internal CKIT_Allocator allocator = {ckg_default_libc_malloc, ckg_default_libc_free, NULLPTR};
 #endif
+
