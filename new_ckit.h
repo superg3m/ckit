@@ -246,9 +246,8 @@
         (void)allocator;
         CKIT_Context* ctx = allocator->ctx;
 
-
         u8* ret = ckg_alloc(sizeof(CKIT_MemoryHeader) + allocation_size);
-        *((CKIT_MemoryHeader*)ret) = ckit_memory_header_create(ctx->tag_id, ctx->allocation_size, ctx->file_name, ctx->function_name, ctx->line);
+        *((CKIT_MemoryHeader*)ret) = ckit_memory_header_create(ctx->tag_id, allocation_size, ctx->file_name, ctx->function_name, ctx->line);
         ckit_memory_tracker_add((CKIT_MemoryHeader*)ret);
         ret += sizeof(CKIT_MemoryHeader);
     
@@ -294,7 +293,8 @@
     }
 
     void ckit_init() {
-        ckg_bind_custom_allocator(ckit_allocate_wrapper, ckit_free_wrapper, NULLPTR);
+        CKIT_Context context = {0};
+        ckg_bind_custom_allocator(ckit_allocate_wrapper, ckit_free_wrapper, &context);
         // ckit_tracker_init();
         // memory_init();
         // platform_console_init();
@@ -314,6 +314,13 @@
     }
 
     void* MACRO_ckit_alloc(size_t byte_allocation_size, CKIT_MemoryTagID tag_id, const char* file, const char* function, const u32 line) {
+        CKIT_Context* ctx = global_allocator.ctx;
+        ctx->tag_id = tag_id;
+        ctx->allocation_size = byte_allocation_size;
+        ctx->file_name = file;
+        ctx->function_name = function;
+        ctx->line = line;
+
         return ckg_alloc(byte_allocation_size);
     }
 #endif

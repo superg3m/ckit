@@ -132,13 +132,6 @@ void inital_operations() {
 }
 
 void middle_ground_opperations() {
-	FileSystem file_system = file_system_create((char*)"../../../assets/Learn_About_BMP.bmp");
-	file_open(&file_system);
-
-	BmpHeader bmp_header = {0};
-	ckit_memory_copy(file_system.data, &bmp_header, sizeof(bmp_header), file_system.file_size);
-	file_close(&file_system);
-
 	CKIT_Arena* frame_boundary_arena = ckit_arena_create(500, "Frame Boundary");
 	ckit_arena_push(frame_boundary_arena, bool);
 	ckit_arena_free(frame_boundary_arena);
@@ -405,13 +398,6 @@ int main() {
 
 	LOG_SUCCESS("String: %s\n", "Hello There! EVERYTHING IS GREEN!");
 	LOG_WARN("String ${WILL POWER = %d} TESTING BINGO BONGO: ${%s} HAHHA THIS SHOULD WORK ${RIGHT?}\n", 5, "I'M PURPLE ONLY!");
-
-	size_t file_size = 0; 
-	u8* file_data = ckit_os_read_entire_file("../../../assets/Learn_About_BMP.bmp", &file_size);
-	BmpHeader bmp_header = {0};
-	ckit_memory_copy(file_data, &bmp_header, sizeof(BmpHeader), sizeof(BmpHeader));
-	ckit_free(file_data);
-
 	LOG_SUCCESS("%d\n", atoi("45125"));
 
 	String* lines = ckit_os_get_lines_from_file("../../../assets/Lexer_Test.txt");
