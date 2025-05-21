@@ -271,27 +271,28 @@
     #define ckit_cstr_sprint(allocation_size_ptr, fmt, ...) MACRO_ckit_cstr_sprint(allocation_size_ptr, fmt, ##__VA_ARGS__)
 #endif
 
-#if defined(CKG_INCLUDE_COLLECTIONS)
+#if defined(CKIT_INCLUDE_COLLECTIONS)
     //
     // ========== START CKG_VECTOR ==========
     //
     #define VECTOR_DEFAULT_CAPACITY 1
-    #define ckit_vector_header_base(vector) ((CKG_VectorHeader*)(((u8*)vector) - sizeof(CKG_VectorHeader)))
     #define ckit_vector_count(vector) (ckg_assert(vector), (*ckg_vector_header_base(vector)).count)
     #define ckit_vector_capacity(vector) (ckg_assert(vector), (*ckg_vector_header_base(vector)).capacity)
-
     #define ckit_stack_count(stack) (ckg_assert(stack), (*ckg_vector_header_base(stack)).count)
 
+    void* MACRO_ckit_vector_grow(void* vector, size_t element_size, bool force_grow, char* file, char* function, int line);
+    void* MACRO_ckit_vector_free(void* vector);
+
     #ifdef __cplusplus
-        #define ckg_vector_push(vector, element) vector = (decltype(vector))ckg_vector_grow(vector, sizeof(vector[0]), 0); vector[ckg_vector_header_base(vector)->count++] = element
-        #define ckg_stack_push(stack, element) stack = (decltype(stack))ckg_vector_grow(stack, sizeof(stack[0]), 0); stack[ckg_vector_header_base(stack)->count++] = element
+        #define ckit_vector_push(vector, element) vector = (decltype(vector))MACRO_ckit_vector_grow(vector, sizeof(vector[0]), 0); vector[ckg_vector_header_base(vector)->count++] = element
+        #define ckit_stack_push(stack, element) stack = (decltype(stack))MACRO_ckit_vector_grow(stack, sizeof(stack[0]), 0); stack[ckg_vector_header_base(stack)->count++] = element
     #else
         #define ckit_vector_push(vector, element) vector = ckg_vector_grow(vector, sizeof(vector[0]), 0); vector[ckg_vector_header_base(vector)->count++] = element
         #define ckit_stack_push(stack, element) stack = ckg_vector_grow(stack, sizeof(stack[0]), 0); stack[ckg_vector_header_base(stack)->count++] = element
     #endif
     
-    #define ckit_vector_free(vector) vector = MACRO_ckg_vector_free(vector)
-    #define ckit_stack_free(stack) stack = MACRO_ckg_vector_free(stack)
+    #define ckit_vector_free(vector) vector = MACRO_ckit_vector_free(vector)
+    #define ckit_stack_free(stack) stack = MACRO_ckit_vector_free(stack)
     #define ckit_stack_pop(stack) (ckg_assert(stack), stack[--ckg_vector_header_base(stack)->count])
     #define ckit_stack_peek(stack) (ckg_assert(stack), stack[ckg_stack_count(stack) - 1])
     #define ckit_stack_empty(stack) (ckg_assert(stack), (ckg_stack_count(stack) == 0))
@@ -1212,10 +1213,52 @@
 #endif
 
 #if defined(CKG_IMPL_COLLECTIONS)
+//
+    // ========== START CKIT_VECTOR ==========
+    //
+    void* MACRO_ckit_vector_grow(void* vector, size_t element_size, int capacity, char* file, char* function, int line) {
+        if (vector == NULLPTR) {
+            int real_capacity = (capacity > 0 ? capacity : VECTOR_DEFAULT_CAPACITY);
+            vector = ckit_alloc(sizeof(CKG_VectorHeader) + (real_capacity * element_size));
+            vector = (u8*)vector + sizeof(CKG_VectorHeader);
+            ckg_vector_header_base(vector)->capacity = real_capacity;
+            ckg_vector_header_base(vector)->element_size = element_size;
+        }
+
+        int count = ckg_vector_count(vector);
+        int capactiy = ckg_vector_capacity(vector);
+
+        if (capactiy < count + 1) {
+            size_t old_allocation_size = sizeof(CKG_VectorHeader) + (capactiy * element_size);
+            int new_capactiy = capactiy * 2;
+            size_t new_allocation_size = sizeof(CKG_VectorHeader) + (new_capactiy * element_size);
+
+            vector = ckg_realloc(ckg_vector_header_base(vector), old_allocation_size, new_allocation_size);
+            vector = (u8*)vector + sizeof(CKG_VectorHeader);
+
+            ckg_vector_header_base(vector)->element_size = element_size;
+            ckg_vector_header_base(vector)->count = count;
+            ckg_vector_header_base(vector)->capacity = new_capactiy;
+        }
+
+        return vector;
+    }
+
+    void* MACRO_ckit_vector_free(void* vector) {
+        CKG_VectorHeader* vector_base = ckg_vector_header_base(vector);
+        vector_base->count = 0;
+        vector_base->capacity = 0;
+        ckit_free(vector_base);
+
+        return vector_base;
+    }
+    //
+    // ========== END CKIT_VECTOR ==========
+    //
+
     //
     // ========== START CKG_LinkedList ==========
     //
-
     CKIT_Node* ckit_linked_list_insert(CKIT_LinkedList* linked_list, u64 index, void* data) {
         return ckg_linked_list_insert(linked_list, index, data);
     }
