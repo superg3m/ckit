@@ -138,22 +138,22 @@
     typedef CKG_Alloc_T CKIT_Alloc_T;
     typedef CKG_Free_T CKIT_Free_T;
     CKIT_API void ckit_bind_custom_allocator(CKIT_Alloc_T* a, CKIT_Free_T* f, void* user_ctx);
-    CKIT_API void* MACRO_ckit_alloc(size_t byte_allocation_size, CKIT_MemoryTagID tag_id, const char* file, const char* function, u32 line);
-    CKIT_API void* MACRO_ckit_realloc(void* data, u64 new_allocation_size, const char* file, const char* function, u32 line);
+    CKIT_API void* MACRO_ckit_alloc(size_t byte_allocation_size, CKIT_MemoryTagID tag_id, const char* file, const char* function, int line);
+    CKIT_API void* MACRO_ckit_realloc(void* data, u64 new_allocation_size, const char* file, const char* function, int line);
     CKIT_API void* MACRO_ckit_free(void* data);
 
     CKIT_API void ckit_memory_report(CKIT_LogLevel log_level);
 
-    CKIT_API bool ckit_memory_compare(void* buffer_one, void* buffer_two, u32 b1_allocation_size, u32 b2_allocation_size);
+    CKIT_API bool ckit_memory_compare(void* buffer_one, size_t b1_allocation_size, void* buffer_two, size_t b2_allocation_size);
     CKIT_API void ckit_memory_copy(void* source, void* destination, size_t source_size, size_t destination_capacity);
     CKIT_API void ckit_memory_move(void* source, void* destination, size_t source_payload_size);
     CKIT_API void ckit_memory_zero(void* data, size_t data_size_in_bytes);
 
-    CKIT_API void MACRO_ckit_memory_delete_index(void* data, u32 number_of_elements, u32 data_capacity, size_t element_size_in_bytes, u32 index);
-    CKIT_API void MACRO_ckit_memory_insert_index(void* data, u32 number_of_elements, u32 data_capacity, size_t element_size_in_bytes, u32 index);
-    #define ckit_alloc(number_of_bytes) MACRO_ckit_alloc(number_of_bytes, TAG_USER_UNKNOWN, __FILE__, __LINE__, __func__)
-    #define ckit_alloc_custom(number_of_bytes, tag_id) MACRO_ckit_alloc(number_of_bytes, tag_id, __FILE__, __LINE__, __func__)
-    #define ckit_realloc(data, new_allocation_size) MACRO_ckit_realloc(data, new_allocation_size, __FILE__, __LINE__, __func__)
+    CKIT_API void MACRO_ckit_memory_delete_index(void* data, int number_of_elements, int data_capacity, size_t element_size_in_bytes, int index);
+    CKIT_API void MACRO_ckit_memory_insert_index(void* data, int number_of_elements, int data_capacity, size_t element_size_in_bytes, int index);
+    #define ckit_alloc(number_of_bytes) MACRO_ckit_alloc(number_of_bytes, TAG_USER_UNKNOWN, __FILE__, __func__, __LINE__)
+    #define ckit_alloc_custom(number_of_bytes, tag_id) MACRO_ckit_alloc(number_of_bytes, tag_id, __FILE__, __func__, __LINE__)
+    #define ckit_realloc(data, new_allocation_size) MACRO_ckit_realloc(data, new_allocation_size, __FILE__,  __func__, __LINE__)
     #ifdef __cplusplus
         #define ckit_free(data) data = (decltype(data))MACRO_ckit_free(data)
     #else 
@@ -249,7 +249,7 @@
     // Little bit tricky. This method returns a vector of strings so 
     // ckit_vector_count(): to get the number of strings it returned
     //
-    //  for (u32 i = 0; i < ckit_vector_count(string_vector); i++) {
+    //  for (int i = 0; i < ckit_vector_count(string_vector); i++) {
     //     LOG_PRINT("%s\n", string_vector[i]);
     //  }
     //  ckit_vector_free(string_vector);
@@ -269,6 +269,201 @@
 
     #define ckit_str_sprint(allocation_size_ptr, fmt, ...) MACRO_ckit_str_sprint(allocation_size_ptr, fmt, ##__VA_ARGS__)
     #define ckit_cstr_sprint(allocation_size_ptr, fmt, ...) MACRO_ckit_cstr_sprint(allocation_size_ptr, fmt, ##__VA_ARGS__)
+#endif
+
+#if defined(CKG_INCLUDE_COLLECTIONS)
+    //
+    // ========== START CKG_VECTOR ==========
+    //
+    #define VECTOR_DEFAULT_CAPACITY 1
+    #define ckit_vector_header_base(vector) ((CKG_VectorHeader*)(((u8*)vector) - sizeof(CKG_VectorHeader)))
+    #define ckit_vector_count(vector) (ckg_assert(vector), (*ckg_vector_header_base(vector)).count)
+    #define ckit_vector_capacity(vector) (ckg_assert(vector), (*ckg_vector_header_base(vector)).capacity)
+
+    #define ckit_stack_count(stack) (ckg_assert(stack), (*ckg_vector_header_base(stack)).count)
+
+    #ifdef __cplusplus
+        #define ckg_vector_push(vector, element) vector = (decltype(vector))ckg_vector_grow(vector, sizeof(vector[0]), 0); vector[ckg_vector_header_base(vector)->count++] = element
+        #define ckg_stack_push(stack, element) stack = (decltype(stack))ckg_vector_grow(stack, sizeof(stack[0]), 0); stack[ckg_vector_header_base(stack)->count++] = element
+    #else
+        #define ckit_vector_push(vector, element) vector = ckg_vector_grow(vector, sizeof(vector[0]), 0); vector[ckg_vector_header_base(vector)->count++] = element
+        #define ckit_stack_push(stack, element) stack = ckg_vector_grow(stack, sizeof(stack[0]), 0); stack[ckg_vector_header_base(stack)->count++] = element
+    #endif
+    
+    #define ckit_vector_free(vector) vector = MACRO_ckg_vector_free(vector)
+    #define ckit_stack_free(stack) stack = MACRO_ckg_vector_free(stack)
+    #define ckit_stack_pop(stack) (ckg_assert(stack), stack[--ckg_vector_header_base(stack)->count])
+    #define ckit_stack_peek(stack) (ckg_assert(stack), stack[ckg_stack_count(stack) - 1])
+    #define ckit_stack_empty(stack) (ckg_assert(stack), (ckg_stack_count(stack) == 0))
+    //
+    // ========== END CKG_VECTOR ==========
+    //
+
+
+    //
+    // ========== START CKG_CircularBuffer ==========
+    //
+    #define ckit_ring_buffer_header_base(buffer) ((CKG_RingBufferHeader*)(((char*)(buffer)) - sizeof(CKG_RingBufferHeader)))
+
+    #define ckit_ring_buffer_free(buffer) buffer = MACRO_ckg_ring_buffer_free(buffer)
+    #define ckit_ring_buffer_read(buffer)         (ckg_ring_buffer_header_base(buffer)->read)
+    #define ckit_ring_buffer_write(buffer)        (ckg_ring_buffer_header_base(buffer)->write)
+    #define ckit_ring_buffer_count(buffer)        (ckg_assert(buffer != NULLPTR), ckg_ring_buffer_header_base(buffer)->count)
+    #define ckit_ring_buffer_capacity(buffer)     (ckg_assert(buffer != NULLPTR), ckg_ring_buffer_header_base(buffer)->capacity)
+    #define ckit_ring_buffer_element_size(buffer) (ckg_assert(buffer != NULLPTR), ckg_ring_buffer_header_base(buffer)->element_size)
+
+    #define ckit_ring_buffer_empty(buffer) (ckg_ring_buffer_count(buffer) == 0)
+    #define ckit_ring_buffer_full(buffer)  (ckg_ring_buffer_count(buffer) == ckg_ring_buffer_capacity(buffer))
+
+    #define ckit_ring_buffer_enqueue(buffer, element)                                                                               \
+    do {                                                                                                                            \
+        ckg_assert_msg(!ckg_ring_buffer_full(buffer), "Ring buffer is overwriting unread memory!\n");                               \
+        (buffer)[ckg_ring_buffer_write(buffer)] = (element);                                                                        \
+        ckg_ring_buffer_header_base(buffer)->count++;                                                                               \
+        ckg_ring_buffer_header_base(buffer)->write = (int)((ckg_ring_buffer_write(buffer) + 1) % ckg_ring_buffer_capacity(buffer)); \
+    } while(0)                                                                                                                      \
+
+    #define ckit_ring_buffer_dequeue(buffer) buffer[ckg_ring_buffer_read(buffer)]; ckg_assert_msg(!ckg_ring_buffer_empty(buffer), "Ring buffer is empty!\n"); ckg_ring_buffer_header_base(buffer)->count--; ckg_ring_buffer_header_base(buffer)->read = (ckg_ring_buffer_read(buffer) + 1) % ckg_ring_buffer_capacity(buffer)
+
+    //
+    // ========== END CKG_CircularBuffer ==========
+    //
+
+
+    //
+    // ========== START CKG_LinkedList ==========
+    //
+    typedef CKG_Node CKIT_Node;
+    typedef CKG_LinkedList CKIT_LinkedList;
+
+    CKG_API CKG_Node* ckit_linked_list_insert(CKG_LinkedList* linked_list, u64 index, void* data);
+    CKG_API CKG_Node* ckit_linked_list_get_node(CKG_LinkedList* linked_list, u64 index);
+    CKG_API void* ckit_linked_list_get(CKG_LinkedList* linked_list, u64 index);
+    CKG_API void* ckit_linked_list_peek_head(CKG_LinkedList* linked_list);
+    CKG_API void* ckit_linked_list_peek_tail(CKG_LinkedList* linked_list);
+    CKG_API CKG_Node* ckit_linked_list_push(CKG_LinkedList* linked_list, void* data);
+    CKG_API CKG_Node ckit_linked_list_pop(CKG_LinkedList* linked_list);
+    CKG_API CKG_Node ckit_linked_list_remove(CKG_LinkedList* linked_list, u64 index);
+    CKG_API size_t ckit_linked_list_node_to_index(CKG_LinkedList* linked_list, CKG_Node* address);
+
+    #define ckit_linked_list_create(type, is_pointer_type) MACRO_ckg_linked_list_create(sizeof(type), is_pointer_type)
+
+    #ifdef __cplusplus
+        #define ckit_linked_list_free(linked_list) linked_list = (decltype(linked_list))MACRO_ckg_linked_list_free(linked_list)
+    #else 
+        #define ckit_linked_list_free(linked_list) linked_list = MACRO_ckg_linked_list_free(linked_list)
+    #endif
+    //
+    // ========== END CKG_LinkedList ==========
+    //
+
+
+    //
+    // ========== START CKG_HashMap ==========
+    //
+
+    #define CKIT_HashMapEntry(KeyType, ValueType) \
+    struct {                                      \
+        KeyType key;                              \
+        ValueType value;                          \
+        bool filled;                              \
+    }                                             \
+
+    // Date: May 15, 2025
+    // NOTE(Jovanni): Its important to note that temp_key and temp_value are used on:
+    // insert to act as a stack object for the value or key literal
+    // THIS MIGHT HAVE TO BE PACKED!
+    #define CKIT_HashMap(KeyType, ValueType)            \
+    struct {                                            \
+        CKG_HashMapMeta meta;                           \
+        KeyType temp_key;                               \
+        ValueType temp_value;                           \
+        CKIT_HashMapEntry(KeyType, ValueType)* entries; \
+    }                                                   \
+
+    /**
+     * @brief Inserts a key-value pair into a generic hashmap.
+     *
+     * Supports value-type keys (e.g., integers, structs without pointers) via `ckg_hashmap_put`,
+     * and pointer-type keys via `ckg_hashmap_put_key_ptr`.
+     *
+     * A **trivially hashable struct**:
+     * - Contains only value types (e.g., int, float, char).
+     * - Does **not** contain any pointers.
+     * - Can be safely hashed via byte-wise hashing.
+     *
+     * If your key is a pointer (e.g., `char *`, `void *`), use `ckg_hashmap_put_key_ptr`.
+     * For non-trivial structs (e.g., structs with pointers), you may also define a custom hash function
+     * and assign it to the hashmap's `meta.hash_fn` field.
+     *
+     * @example
+     *     typedef struct { int x, y; } Point; // Trivially hashable
+     *     ckg_hashmap_put(map, (Point){1, 2}, 42);
+     *
+     *     const char *name = "Alice";
+     *     ckg_hashmap_put_key_ptr(map, name, 100); // Required for pointer keys
+     */
+   #define ckit_hashmap_init_with_hash(map, KeyType, ValueType, __key_is_ptr, __hash_function, __eq_function) \
+    do {                                                                                                     \
+        map = ckit_alloc(sizeof(CKG_HashMap(KeyType, ValueType)));                                            \
+        map->meta.key_offset = offsetof(CKG_HashMap(KeyType, ValueType), temp_key);                          \
+        map->meta.value_offset = offsetof(CKG_HashMap(KeyType, ValueType), temp_value);                      \
+        map->meta.entry_offset = offsetof(CKG_HashMap(KeyType, ValueType), entries);                         \
+        map->meta.entry_key_offset = offsetof(CKG_HashMapEntry(KeyType, ValueType), key);                    \
+        map->meta.entry_value_offset = offsetof(CKG_HashMapEntry(KeyType, ValueType), value);                \
+        map->meta.entry_filled_offset = offsetof(CKG_HashMapEntry(KeyType, ValueType), filled);              \
+        map->meta.key_size = sizeof(KeyType);                                                                \
+        map->meta.value_size = sizeof(ValueType);                                                            \
+        map->meta.entry_size = sizeof(CKG_HashMapEntry(KeyType, ValueType));                                 \
+        map->meta.capacity = CKG_HASHMAP_DEFAULT_CAPACITY;                                                   \
+        map->meta.count = 0;                                                                                 \
+        map->meta.hash_fn = __hash_function;                                                                 \
+        map->meta.equal_fn = __eq_function;                                                                  \
+        map->meta.key_is_ptr = __key_is_ptr;                                                                 \
+        map->entries = ckit_alloc(map->meta.entry_size * map->meta.capacity);                                \
+    } while(0)                                                                                               \
+
+
+    #define ckg_hashmap_init_siphash(map, KeyType, ValueType) ckg_hashmap_init_with_hash(map, KeyType, ValueType, false, siphash24, byte_equality)
+    #define ckg_hashmap_init_string_hash(map, KeyType, ValueType) ckg_hashmap_init_with_hash(map, KeyType, ValueType, true, ckg_string_hash, string_equality)
+    #define ckg_hashmap_init_string_view_hash(map, KeyType, ValueType) ckg_hashmap_init_with_hash(map, KeyType, ValueType, false, ckg_string_view_hash, string_view_equality)
+
+    #define ckit_hashmap_put(map, __key, __value) \
+    do {                                          \
+        (map)->temp_key = (__key);                \
+        (map)->temp_value = (__value);            \
+        ckg_hashmap_put_helper((u8*)(map));       \
+    } while(0)                                    \
+
+    #define ckit_hashmap_has(map, key)      \
+    (                                       \
+        (map)->temp_key = (key),            \
+        ckg_hashmap_has_helper((u8*)(map))  \
+    )                                       \
+
+
+    #define ckit_hashmap_get(map, key)      \
+    (                                       \
+        (map)->temp_key = (key),            \
+        ckg_hashmap_get_helper((u8*)(map)), \
+        (map)->temp_value                   \
+    )                                       \
+
+    #define ckit_hashmap_pop(map, key)      \
+    (                                       \
+        (map)->temp_key = (key),            \
+        ckg_hashmap_pop_helper((u8*)(map)), \
+        (map)->temp_value                   \
+    )         
+
+    #define ckit_hashmap_free(map) \
+    do {                           \
+        ckit_free(map->entries);   \
+        ckit_free(map);            \
+    } while(0)                     \
+    //
+    // ========== END CKIT_HashMap ==========
+    //
 #endif
 
 //
@@ -334,7 +529,7 @@
     }
 
     internal u64 ckit_tracker_get_tag_pool_index(CKIT_MemoryTagID tag_id) {
-        for (u32 i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
+        for (int i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
             if (global_memory_tag_pool_vector[i].tag_id == tag_id) {
                 return i;
             }
@@ -347,7 +542,7 @@
     internal bool ckit_tracker_tag_pool_exists(CKIT_MemoryTagID tag_id, char* name) {
         u64 name_length = ckg_cstr_length(name);
 
-        for (u32 i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
+        for (int i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
             u64 pool_name_length = ckg_cstr_length(global_memory_tag_pool_vector[i].pool_name);
             if (global_memory_tag_pool_vector[i].tag_id == tag_id || ckg_str_equal(global_memory_tag_pool_vector[i].pool_name, pool_name_length, name, name_length)) {
                 return true;
@@ -358,7 +553,7 @@
     }
 
     internal char* ckit_tracker_tag_to_string(CKIT_MemoryTagID tag_id) {
-        for (u32 i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
+        for (int i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
             if (global_memory_tag_pool_vector[i].tag_id == tag_id) {
                 return global_memory_tag_pool_vector[i].pool_name;
             }
@@ -437,7 +632,7 @@
         u64 arena_allocation_capacity = 0;
         u64 arena_allocation_internal = 0;
 
-        for (u32 i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
+        for (int i = 0; i < ckg_vector_count(global_memory_tag_pool_vector); i++) {
             CKIT_MemoryTagPool current_pool = global_memory_tag_pool_vector[i];
             if (current_pool.tag_id == TAG_CKIT_CORE_ARENA) {
                 arena_allocation_capacity = current_pool.total_pool_allocation_size;
@@ -490,23 +685,23 @@
     // 
     // Start Memory Operations
     //
-    bool ckit_memory_compare(void* buffer_one, void* buffer_two, u32 b1_allocation_size, u32 b2_allocation_size) {
-        return ckg_memory_compare(buffer_one, buffer_two, b1_allocation_size, b2_allocation_size);
+    bool ckit_memory_compare(void* buffer_one, size_t b1_allocation_size, void* buffer_two, size_t b2_allocation_size) {
+        return ckg_memory_compare(buffer_one, b1_allocation_size, buffer_two, b2_allocation_size);
     }
 
     void ckit_memory_copy(void* source, void* destination, size_t source_size_in_bytes, size_t destination_size_in_bytes) {
-        ckg_memory_copy(source, destination, source_size_in_bytes, destination_size_in_bytes);
+        ckg_memory_copy(destination, destination_size_in_bytes, source, source_size_in_bytes);
     }
 
     void ckit_memory_zero(void* data, size_t data_size_in_bytes) {
         ckg_memory_zero(data, data_size_in_bytes);
     }
 
-    void MACRO_ckit_memory_delete_index(void* data, u32 number_of_elements, u32 data_capacity, size_t element_size_in_bytes, u32 index) {
+    void MACRO_ckit_memory_delete_index(void* data, int number_of_elements, int data_capacity, size_t element_size_in_bytes, int index) {
         MACRO_ckg_memory_delete_index(data, number_of_elements, data_capacity, element_size_in_bytes, index);
     }
 
-    void MACRO_ckit_memory_insert_index(void* data, u32 number_of_elements, u32 data_capacity, size_t element_size_in_bytes, u32 index) {
+    void MACRO_ckit_memory_insert_index(void* data, int number_of_elements, int data_capacity, size_t element_size_in_bytes, int index) {
         MACRO_ckg_memory_insert_index(data, number_of_elements, data_capacity, element_size_in_bytes, index);
     }
 
@@ -519,7 +714,7 @@
     }
 
     void ckit_memory_arena_unregister(CKIT_Arena* arena) {
-        for (u32 i = 0; i < registered_arenas->count; i++) {
+        for (int i = 0; i < registered_arenas->count; i++) {
             CKIT_Arena* current_arena = (CKIT_Arena*)ckg_linked_list_get(registered_arenas, i);
             if (arena == current_arena) {
                 ckg_linked_list_remove(registered_arenas, i);
@@ -529,7 +724,7 @@
     }
 
     void ckit_memory_arena_unregister_all() {
-        for (u32 i = 0; i < registered_arenas->count; i++) {
+        for (int i = 0; i < registered_arenas->count; i++) {
             CKIT_Arena* arena = (CKIT_Arena*)ckg_linked_list_pop(registered_arenas).data;
             ckit_arena_free(arena);
         }
@@ -578,7 +773,7 @@
         ckg_bind_custom_allocator(ckit_allocate_wrapper, ckit_free_wrapper, user_ctx);
     }
 
-    void* MACRO_ckit_alloc(size_t byte_allocation_size, CKIT_MemoryTagID tag_id, const char* file, const char* function, const u32 line) {
+    void* MACRO_ckit_alloc(size_t byte_allocation_size, CKIT_MemoryTagID tag_id, const char* file, const char* function, const int line) {
         CKIT_Context* ctx = global_allocator.ctx;
         ctx->tag_id = tag_id;
         ctx->allocation_size = byte_allocation_size;
@@ -594,7 +789,7 @@
         return ckg_free(data);
     }
 
-    void* MACRO_ckit_realloc(void* data, u64 new_allocation_size, const char* file, const char* function, u32 line) {
+    void* MACRO_ckit_realloc(void* data, u64 new_allocation_size, const char* file, const char* function, int line) {
         ckit_assert_msg(data, "ckit_reallocation: Data passed is null\n");
 
         CKIT_MemoryHeader* header = ckit_memory_header(data);
@@ -907,7 +1102,7 @@
         ckit_assert_msg(str, "ckit_str_append_char: String passed is null\n");
         ckit_assert_msg(source, "ckit_str_append_char: Source passed is null\n");
 
-        u32 source_size = 1;
+        int source_size = 1;
         CKIT_StringHeader* header = ckit_str_header(str);
         if (header->length + source_size >= header->capacity) {
             str = ckit_str_grow(str, (header->length + source_size) * 2);
@@ -1016,6 +1211,342 @@
     }
 #endif
 
+#if defined(CKG_IMPL_COLLECTIONS)
+    //
+    // ========== START CKG_LinkedList ==========
+    //
+
+    CKIT_Node* ckit_linked_list_insert(CKIT_LinkedList* linked_list, u64 index, void* data) {
+        return ckg_linked_list_insert(linked_list, index, data);
+    }
+
+    CKIT_Node* ckg_linked_list_get_node(CKIT_LinkedList* linked_list, u64 index) {
+        return ckg_linked_list_get_node(linked_list, index, data);
+    }
+
+    void* ckit_linked_list_get(CKIT_LinkedList* linked_list, u64 index) {
+        return ckg_linked_list_get_node(linked_list, index)->data;
+    }
+
+    void* ckit_linked_list_peek_head(CKIT_LinkedList* linked_list) {
+        return ckg_linked_list_get_node(linked_list, 0)->data;
+    }
+
+    void* ckit_linked_list_peek_tail(CKIT_LinkedList* linked_list) {
+        return ckg_linked_list_get_node(linked_list, linked_list->count - 1)->data;
+    }
+
+    CKIT_Node* ckit_linked_list_push(CKIT_LinkedList* linked_list, void* data) {
+        return ckg_linked_list_insert(linked_list, linked_list->count, data);
+    }
+
+    size_t ckit_linked_list_node_to_index(CKIT_LinkedList* linked_list, CKIT_Node* address) {
+        return ckg_linked_list_node_to_index(linked_list, address);
+    }
+
+    CKIT_Node ckit_linked_list_pop(CKIT_LinkedList* linked_list) {
+        return ckg_linked_list_remove(linked_list, linked_list->count - 1);
+    }
+
+    CKIT_Node ckit_linked_list_remove(CKIT_LinkedList* linked_list, u64 index) {
+        return ckg_linked_list_remove(linked_list, index);
+    }
+    //
+    // ========== END CKG_LinkedList ==========
+    //
+
+
+    //
+    // ========== Start CKG_HashMap ==========
+    //
+    // Original location:
+    // https://github.com/majek/csiphash/1
+
+    #if defined(_WIN32)
+        #define _le64toh(x) ((uint64_t)(x))
+    #elif defined(__APPLE__)
+        #include <libkern/OSByteOrder.h>
+        #define _le64toh(x) OSSwapLittleToHostInt64(x)
+    #else
+        #if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
+            #include <sys/endian.h>
+        #else
+            #include <endian.h>
+        #endif
+
+        #if defined(__BYTE_ORDER) && defined(__LITTLE_ENDIAN) && __BYTE_ORDER == __LITTLE_ENDIAN   
+            #define _le64toh(x) ((uint64_t)(x))
+        #else
+            #define _le64toh(x) le64toh(x)
+        #endif
+    #endif
+
+    #define ROTATE(x, b) (uint64_t)( ((x) << (b)) | ( (x) >> (64 - (b))) )
+
+    #define HALF_ROUND(a,b,c,d,s,t)	\
+        a += b; c += d;			    \
+        b = ROTATE(b, s) ^ a;		\
+        d = ROTATE(d, t) ^ c;		\
+        a = ROTATE(a, 32);          \
+
+    #define DOUBLE_ROUND(v0,v1,v2,v3)  \
+        HALF_ROUND(v0,v1,v2,v3,13,16); \
+        HALF_ROUND(v2,v1,v0,v3,17,21); \
+        HALF_ROUND(v0,v1,v2,v3,13,16); \
+        HALF_ROUND(v2,v1,v0,v3,17,21)
+
+    uint64_t siphash24(void* source, u64 source_size) {
+        const char key[16] = {
+            0x00, 0x01, 0x02, 0x03,
+            0x04, 0x05, 0x06, 0x07,
+            0x08, 0x09, 0x0A, 0x0B,
+            0x0C, 0x0D, 0x0E, 0x0F
+        };
+
+        const uint64_t *_key = (const uint64_t*)key;
+        uint64_t k0 = _le64toh(_key[0]);
+        uint64_t k1 = _le64toh(_key[1]);
+        uint64_t b = (uint64_t)source_size << 56;
+        const uint64_t* in = (const uint64_t*)source;
+
+        uint64_t v0 = k0 ^ 0x736f6d6570736575ULL;
+        uint64_t v1 = k1 ^ 0x646f72616e646f6dULL;
+        uint64_t v2 = k0 ^ 0x6c7967656e657261ULL;
+        uint64_t v3 = k1 ^ 0x7465646279746573ULL;
+
+        while (source_size >= 8) {
+            uint64_t mi = _le64toh(*in);
+            in += 1; source_size -= 8;
+            v3 ^= mi;
+            DOUBLE_ROUND(v0,v1,v2,v3);
+            v0 ^= mi;
+        }
+
+        uint64_t t = 0; 
+        uint8_t* pt = (uint8_t*)&t; 
+        const uint8_t* m = (const uint8_t*)in;
+        switch (source_size) {
+            case 7: pt[6] = m[6];
+            case 6: pt[5] = m[5];
+            case 5: pt[4] = m[4];
+            case 4: *((uint32_t*)&pt[0]) = *((uint32_t*)&m[0]); break;
+            case 3: pt[2] = m[2];
+            case 2: pt[1] = m[1];
+            case 1: pt[0] = m[0];
+        }
+        b |= _le64toh(t);
+
+        v3 ^= b;
+        DOUBLE_ROUND(v0,v1,v2,v3);
+        v0 ^= b; v2 ^= 0xff;
+        DOUBLE_ROUND(v0,v1,v2,v3);
+        DOUBLE_ROUND(v0,v1,v2,v3);
+
+        u64 ret = (v0 ^ v1) ^ (v2 ^ v3);
+        return ret;
+    }
+
+    bool byte_equality(void* c1, size_t c1_size, void* c2, size_t c2_size) {
+        return ckg_memory_compare(c1, c1_size, c2, c2_size);
+    }
+
+    float ckg_hashmap_load_factor(void* map) {
+        CKG_HashMapMeta* meta = (CKG_HashMapMeta*)map;
+        return (float)meta->count / (float)meta->capacity;
+    }
+
+    u64 ckit_hashmap_resolve_collision(void* map, void* key, u64 inital_hash_index) {
+        CKG_HashMapMeta* meta = (CKG_HashMapMeta*)map;
+        u8* entries_base_address = NULLPTR;
+        ckg_memory_copy(&entries_base_address, sizeof(void*), (u8*)map + meta->entry_offset, sizeof(void*));
+
+        u64 cannonical_hash_index = inital_hash_index;
+
+        // Date: May 16, 2025
+        // TODO(Jovanni): This probably needs to have a comparision function to actually be correct
+        while (true) {
+            u8* entry = entries_base_address + (cannonical_hash_index * meta->entry_size);
+            u8* entry_key = NULLPTR;
+            if (meta->key_is_ptr) {
+                ckg_memory_copy(&entry_key, sizeof(void*), entry + meta->entry_key_offset, sizeof(void*));
+            } else {
+                entry_key = entry + meta->entry_key_offset;
+            }
+
+            bool entry_filled = *(entry + meta->entry_filled_offset);
+            if (!entry_filled) {
+                break;
+            }
+
+            bool equality_match = meta->equal_fn(entry_key, meta->key_size, key, meta->key_size);
+            if (equality_match) {
+                break;
+            }
+
+            cannonical_hash_index++;
+            cannonical_hash_index = cannonical_hash_index % meta->capacity;
+        }
+
+        return cannonical_hash_index;
+    }
+
+    u64 ckg_string_hash(void* str, u64 str_length) {
+        (void)str_length;
+
+        u64 hash = 5381;
+        u8* str_ptr = str;
+        int c;
+
+        while ((c = *str_ptr++)) {
+            hash = ((hash << 5) + hash) + c;
+        }
+
+        return hash;
+    }
+
+    bool string_equality(void* c1, size_t c1_size, void* c2, size_t c2_size) {
+        (void)c1_size;
+        (void)c2_size;
+        
+        return ckg_str_equal(c1, ckg_cstr_length(c1), c2, ckg_cstr_length(c2));
+    }
+
+    u64 ckg_string_view_hash(void* view, u64 str_length) {
+        (void)str_length;
+        CKG_StringView* str_view = (CKG_StringView*)view;
+        u64 hash = 5381;
+        int c;
+
+        for (u64 i = 0; i < str_view->length; i++) {
+            c = str_view->data[i];
+            hash = ((hash << 5) + hash) + c;
+        }
+
+        return hash;
+    }
+
+    bool string_view_equality(void* c1, size_t c1_size, void* c2, size_t c2_size) {
+        (void)c1_size;
+        (void)c2_size;
+
+        CKG_StringView* s1 = (CKG_StringView*)c1;
+        CKG_StringView* s2 = (CKG_StringView*)c2;
+
+        return ckg_str_equal(s1->data, s1->length, s2->data, s2->length);
+    }
+
+    typedef struct HashMapContext {
+        CKG_HashMapMeta* meta;
+        void* temp_key_address;
+        void* entry;
+        void* entry_key_address;
+        void* entry_value_address;
+        bool* entry_filled_address;
+        u64 real_index;
+    } HashMapContext;
+
+    static HashMapContext ckg_hashmap_find_entry(void* map) {
+        HashMapContext context;
+        context.meta = (CKG_HashMapMeta*)map;
+        context.temp_key_address = NULLPTR;
+
+        if (context.meta->key_is_ptr) {
+            ckg_memory_copy(&context.temp_key_address, sizeof(void*), (u8*)map + context.meta->key_offset, sizeof(void*));
+        } else {
+            context.temp_key_address = (u8*)map + context.meta->key_offset;
+        }
+
+        u64 hash = context.meta->hash_fn(context.temp_key_address, context.meta->key_size);
+        u64 index = hash % context.meta->capacity;
+        context.real_index = ckit_hashmap_resolve_collision(map, context.temp_key_address, index);
+
+        u8* entries = NULLPTR;
+        ckg_memory_copy(&entries, sizeof(void*), (u8*)map + context.meta->entry_offset,  sizeof(void*));
+        context.entry = entries + (context.real_index * context.meta->entry_size);
+        context.entry_key_address = (u8*)context.entry + context.meta->entry_key_offset;
+        context.entry_value_address = (u8*)context.entry + context.meta->entry_value_offset;
+        context.entry_filled_address = (bool*)((u8*)context.entry + context.meta->entry_filled_offset);
+
+        return context;
+    }
+
+    bool ckg_hashmap_has_helper(void* map) {
+        HashMapContext context = ckg_hashmap_find_entry(map);
+        return *(bool*)(context.entry_filled_address);
+    }
+
+    void ckg_hashmap_get_helper(void* map) {
+        HashMapContext context = ckg_hashmap_find_entry(map);
+        ckg_assert_msg(*(bool*)(context.entry_filled_address), "The key doesn't exist in the hashmap!\n");
+        ckg_memory_copy((u8*)map + context.meta->value_offset, context.meta->value_size, context.entry_value_address, context.meta->value_size);
+    }
+
+    void ckg_hashmap_put_helper(void* map) {
+        if (ckg_hashmap_load_factor(map) >= CKG_HASHMAP_DEFAULT_LOAD_FACTOR) {
+            ckg_hashmap_grow(map);
+        }
+
+        HashMapContext context = ckg_hashmap_find_entry(map);
+        bool filled = *context.entry_filled_address;
+        if (!filled) {
+           context.meta->count++;
+        }
+        ckg_memory_copy(context.entry_key_address, context.meta->key_size, (u8*)map + context.meta->key_offset, context.meta->key_size);
+        ckg_memory_copy(context.entry_value_address, context.meta->value_size, (u8*)map + context.meta->value_offset, context.meta->value_size);
+        *context.entry_filled_address = 1;
+    }
+
+    void ckg_hashmap_pop_helper(void* map) {
+        HashMapContext context = ckg_hashmap_find_entry(map);
+        ckg_assert_msg(*context.entry_filled_address, "The key doesn't exist in the hashmap!\n");
+        ckg_memory_copy((u8*)map + context.meta->value_offset, context.meta->value_size, context.entry_value_address, context.meta->value_size);
+        *context.entry_filled_address = 0;
+    }
+
+    void ckg_hashmap_grow(void* map) {
+        if (ckg_hashmap_load_factor(map) < CKG_HASHMAP_DEFAULT_LOAD_FACTOR) {
+            return;
+        }
+
+        CKG_HashMapMeta* meta = (CKG_HashMapMeta*)map;
+        u8* entries_base_address = NULLPTR;
+        ckg_memory_copy(&entries_base_address, sizeof(void*), (u8*)map + meta->entry_offset, sizeof(void*));
+        u64 old_capacity = meta->capacity;
+        meta->capacity *= 2;
+        void* new_entries = ckg_alloc(meta->capacity * meta->entry_size);
+        ckg_memory_copy((u8*)map + meta->entry_offset, sizeof(void*), &new_entries, sizeof(void*));
+
+        // rehash
+        for (u64 i = 0; i < old_capacity; i++) {
+            u8* entry = entries_base_address + (i * meta->entry_size);
+            u8* entry_key = NULLPTR;
+            if (meta->key_is_ptr) {
+                ckg_memory_copy(&entry_key, sizeof(void*), entry + meta->entry_key_offset,  sizeof(void*));
+            } else {
+                entry_key = entry + meta->entry_key_offset;
+            }
+
+            bool entry_filled = *(bool*)(entry + meta->entry_filled_offset);
+            if (!entry_filled) {
+                continue;
+            }
+
+            u64 hash = meta->hash_fn(entry_key, meta->key_size);
+            u64 index = hash % meta->capacity;
+            u64 real_index = ckit_hashmap_resolve_collision((u8*)map, entry_key, index);
+
+            u8* new_entry = (u8*)new_entries + (real_index * meta->entry_size);
+            ckg_memory_copy(new_entry, meta->entry_size, entry, meta->entry_size);
+        }
+
+        ckg_free(entries_base_address);
+    }
+
+    //
+    // ========== END CKG_HashMap ==========
+    //
+#endif
+
 #if defined(CKIT_IMPL_INIT)
 	void ckit_init() {
         CKIT_Context context = {0};
@@ -1033,7 +1564,7 @@
         }
 
         //platform_console_shutdown();
-        ckit_memory_arena_unregister_all();
-        ckit_tracker_cleanup();
+        // ckit_memory_arena_unregister_all();
+        // ckit_tracker_cleanup();
     }
 #endif
