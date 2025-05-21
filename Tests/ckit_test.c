@@ -13,45 +13,45 @@ void test_vector_operations() {
 
 	// Create vector of int
 	int* intVector = ckit_vector_reserve(5, int);
-	for (u32 i = 0; i < 5; i++) {
+	for (int i = 0; i < 5; i++) {
 		ckit_vector_push(intVector, intArray[i]);
 	}
 
 	// Create vector of bool
 	bool* boolVector = ckit_vector_reserve(5, bool);
-	for (u32 i = 0; i < 5; i++) {
+	for (int i = 0; i < 5; i++) {
 		ckit_vector_push(boolVector, boolArray[i]);
 	}
 
 	// Create vector of char
 	char* charVector = ckit_vector_reserve(5, char);
-	for (u32 i = 0; i < 5; i++) {
+	for (int i = 0; i < 5; i++) {
 		ckit_vector_push(charVector, charArray[i]);
 	}
 
 	// Create vector of strings
 	char** stringVector = NULLPTR;
-	for (u32 i = 0; i < 5; i++) {
+	for (int i = 0; i < 5; i++) {
 		ckit_vector_push(stringVector, stringArray[i]);
 	}
 
 	// Test get
-	for (u32 i = 0; i < ckit_vector_count(intVector); i++) {
+	for (int i = 0; i < ckit_vector_count(intVector); i++) {
 		int element = intVector[i];
 		ckit_assert_msg(element == intArray[i], "Error: Incorrect element value\n");
 	}
 
-	for (u32 i = 0; i < ckit_vector_count(boolVector); i++) {
+	for (int i = 0; i < ckit_vector_count(boolVector); i++) {
 		bool element = boolVector[i];
 		ckit_assert_msg(element == boolArray[i], "Error: Incorrect element value\n");
 	}
 
-	for (u32 i = 0; i < ckit_vector_count(charVector); i++) {
+	for (int i = 0; i < ckit_vector_count(charVector); i++) {
 		char element = charVector[i];
 		ckit_assert_msg(element == charArray[i], "Error: Incorrect element value\n");
 	}
 
-	for (u32 i = 0; i < ckit_vector_count(stringVector); i++) {
+	for (int i = 0; i < ckit_vector_count(stringVector); i++) {
 		char* element = stringVector[i];
 		ckit_assert_msg(ckg_str_equal(element, ckg_cstr_length(element), stringArray[i], ckg_cstr_length(stringArray[i])), "Error: Incorrect element value\n");
 	}
@@ -104,12 +104,12 @@ void inital_operations() {
 	int* int_array = (int*)ckit_alloc(sizeof(int) * 5);
 	int* int_array2 = (int*)ckit_alloc(sizeof(int) * 5);
 	LOG_ERROR("Element: %d (SHOULD BE ZERO)\n\n", int_array[0]);
-	for (u32 i = 0; i < 5; i++) {
+	for (int i = 0; i < 5; i++) {
 		int_array2[i] = 1432;
 	}
 
 	ckit_memory_copy(int_array2, int_array, sizeof(int) * 5, sizeof(int) * 5);
-	for (u32 i = 0; i < 5; i++) {
+	for (int i = 0; i < 5; i++) {
 		ckit_assert_msg(int_array[i] == 1432, "Memory copy is fucked!");
 		LOG_SUCCESS("Element: %d\n", int_array[i]);
 	}
@@ -138,13 +138,13 @@ void middle_ground_opperations() {
 
 	// String str_to_be_split = ckit_str_create("They said it couldn't be done. They tried to recite the dark magics to me! THEY DON'T KNOW I WAS THERE WHEN THEY WERE WRITTEN!");
 	String* split_strings = ckit_str_split("They said it couldn't be done. They tried to recite the dark magics to me! THEY DON'T KNOW I WAS THERE WHEN THEY WERE WRITTEN!", " ");
-	for (u32 i = 0; i < ckit_vector_count(split_strings); i++) {
+	for (int i = 0; i < ckit_vector_count(split_strings); i++) {
 		LOG_SUCCESS("str #%d | %s\n", i, split_strings[i]);
 	}
 	ckit_vector_free(split_strings);
 
 	split_strings = ckit_str_split(" a ", " "); // Should return 
-	for (u32 i = 0; i < ckit_vector_count(split_strings); i++) {
+	for (int i = 0; i < ckit_vector_count(split_strings); i++) {
 		LOG_SUCCESS("str #%d | %s\n", i, split_strings[i]);
 	}
 	ckit_vector_free(split_strings);
@@ -169,14 +169,14 @@ void hashmap_operations() {
 		"144353454416231sdfsfdsfs",
 	};
 
-	for (u32 i = 0; i < 5; i++) {
+	for (int i = 0; i < 5; i++) {
 		void* ret = ckit_hashmap_put(name_to_age, names[i], value[i]);
 		if (ret) {
 			ckit_free(ret);
 		}
 	}
 
-	for (u32 i = 0; i < 5; i++) { // growing hashmap is broken
+	for (int i = 0; i < 5; i++) { // growing hashmap is broken
 		LOG_DEBUG("(key: %s | value: %s)\n", names[i], (char*)ckit_hashmap_get(name_to_age, names[i]));
 		ckit_assert(ckit_hashmap_has(name_to_age, names[i]));
 	}
@@ -204,14 +204,14 @@ void hashmap_operations() {
 		3, 2, 5, 1, 7
 	};
 
-	for (u32 i = 0; i < 10; i++) {
+	for (int i = 0; i < 10; i++) {
 		void* ret = ckit_hashmap_put(name_to_age_int, names2[i], (void*)&value_int[i]);
 		if (ret) {
 			ckit_free(ret);
 		}
 	}
 
-	for (u32 i = 0; i < 10; i++) { // growing hashmap is broken
+	for (int i = 0; i < 10; i++) { // growing hashmap is broken
 		LOG_DEBUG("(key: %s | value: %d)\n", names2[i], *((int*)ckit_hashmap_get(name_to_age_int, names2[i])));
 		ckit_assert(ckit_hashmap_has(name_to_age_int, names2[i]));
 	}
@@ -271,8 +271,8 @@ void linked_list_operations() {
 	LOG_DEBUG("list value: %s\n", test_str);
 	ckit_linked_list_free(linked_list);
 
-	CKIT_LinkedList* linked_list_int = ckit_linked_list_create(u32, false);	
-	u32 value1[5] = {
+	CKIT_LinkedList* linked_list_int = ckit_linked_list_create(int, false);	
+	int value1[5] = {
 		1,
 		2,
 		3,
@@ -285,31 +285,31 @@ void linked_list_operations() {
 	ckit_linked_list_push(linked_list_int, &value1[2]);
 	ckit_linked_list_push(linked_list_int, &value1[3]);
 	ckit_linked_list_push(linked_list_int, &value1[4]);
-	u32* test_u32 = (u32*)ckit_linked_list_pop(linked_list_int).data;
-	LOG_DEBUG("list value: %d\n", *test_u32);
-	ckit_free(test_u32);
+	int* test_int = (int*)ckit_linked_list_pop(linked_list_int).data;
+	LOG_DEBUG("list value: %d\n", *test_int);
+	ckit_free(test_int);
 
-	test_u32 = (u32*)ckit_linked_list_remove(linked_list_int, 2).data;
-	LOG_DEBUG("list value: %d\n", *test_u32);
-	ckit_free(test_u32);
+	test_int = (int*)ckit_linked_list_remove(linked_list_int, 2).data;
+	LOG_DEBUG("list value: %d\n", *test_int);
+	ckit_free(test_int);
 
-	test_u32 = (u32*)ckit_linked_list_pop(linked_list_int).data;
-	LOG_DEBUG("list value: %d\n", *test_u32);
-	ckit_free(test_u32);
+	test_int = (int*)ckit_linked_list_pop(linked_list_int).data;
+	LOG_DEBUG("list value: %d\n", *test_int);
+	ckit_free(test_int);
 
-	test_u32 = (u32*)ckit_linked_list_pop(linked_list_int).data;
-	LOG_DEBUG("list value: %d\n", *test_u32);
-	ckit_free(test_u32);
+	test_int = (int*)ckit_linked_list_pop(linked_list_int).data;
+	LOG_DEBUG("list value: %d\n", *test_int);
+	ckit_free(test_int);
 
-	test_u32 = (u32*)ckit_linked_list_pop(linked_list_int).data;
-	LOG_DEBUG("list value: %d\n", *test_u32);
-	ckit_free(test_u32);
+	test_int = (int*)ckit_linked_list_pop(linked_list_int).data;
+	LOG_DEBUG("list value: %d\n", *test_int);
+	ckit_free(test_int);
 	ckit_linked_list_free(linked_list_int);
 }
 
 void stack_operations() {
-	u32* stack_int = NULLPTR;
-	u32 int_value[5] = {
+	int* stack_int = NULLPTR;
+	int int_value[5] = {
 		15,
 		25,
 		35,
@@ -317,12 +317,12 @@ void stack_operations() {
 		55,
 	};
 
-	for (u32 i = 0; i < 5; i++) {
+	for (int i = 0; i < 5; i++) {
 		ckit_stack_push(stack_int, int_value[i]);
 	}
 
-	for (u32 i = 0; i < 5; i++) {
-		u32 value_back = ckit_stack_pop(stack_int);
+	for (int i = 0; i < 5; i++) {
+		int value_back = ckit_stack_pop(stack_int);
 		LOG_SUCCESS("stack_value #%d: %d\n", i + 1, value_back);
 	}
 	ckit_stack_free(stack_int);
@@ -336,14 +336,14 @@ void stack_operations() {
 		"jo234hyn234235325",
 	};
 
-	for (u32 i = 0; i < 5; i++) {
+	for (int i = 0; i < 5; i++) {
 		ckit_stack_push(stack_str, names[i]);
 	}
 
 	ckit_stack_push(stack_str, "WOWdsfsdfdsfsd");
 
-	u32 inital_count = ckit_stack_count(stack_str);
-	for (u32 i = 0; i < inital_count; i++) {
+	int inital_count = ckit_stack_count(stack_str);
+	for (int i = 0; i < inital_count; i++) {
 		char* value_back = (char*)ckit_stack_pop(stack_str);
 		LOG_SUCCESS("stack_value #%d: %s\n", i + 1, value_back);
 	}
@@ -373,7 +373,7 @@ int main() {
 	ckit_lexer_load_string(&lexer, "int x = 5; char* testing = \"hello\";");
 
 	CKIT_Token* token_stream = ckit_lexer_generate_token_stream(&lexer);
-	for (u32 i = 0; i < ckit_vector_count(token_stream); i++) {
+	for (int i = 0; i < ckit_vector_count(token_stream); i++) {
 		ckit_lexer_print_token(token_stream[i]);
 	}
 	*/
@@ -382,8 +382,8 @@ int main() {
 
 	linked_list_operations();
 	stack_operations();
-	u32 test_overflow = 5;
-	u32 max_value =  10;
+	int test_overflow = 5;
+	int max_value =  10;
 	LOG_SUCCESS("CLAMP OVERFLOW %d\n", CLAMP(65, test_overflow, max_value));
 
 	LOG_SUCCESS("CLAMP %d\n", CLAMP(5000, 40, 100));
