@@ -21,7 +21,6 @@ pc: ProjectConfig = ProjectConfig(
     project_dependencies = [        
         Dependency(
             name="ckg",
-            branch_name="CompleteRewrite",
         ),
     ],
     project_debug_with_visual_studio = False,
