@@ -1,5 +1,4 @@
 param (
-    [Parameter(Mandatory = $true)]
     [ValidateSet("debug", "release")]
     [string]$BuildType,
 
@@ -28,7 +27,9 @@ if (-not ($Build -or $Run -or $Debugger)) {
     exit 1
 }
 
-$BuildType = $BuildType.ToLower()
+if ($BuildType) {
+    $BuildType = $BuildType.ToLower()
+}
 
 if ($PSVersionTable.Platform -eq "Unix") {
     Set-Alias python python3
